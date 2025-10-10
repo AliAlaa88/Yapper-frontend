@@ -14,5 +14,9 @@
         {
             "path": "./.nuxt/tsconfig.node.json"
         }
-    ]
+    ],
+    "compilerOptions": {
+        "types": ["jest", "node"]
+        // plus other settings you already have (paths, etc.)
+    }
 }

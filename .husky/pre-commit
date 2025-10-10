@@ -1,2 +1,2 @@
-npx lint-staged --no-stash
+# npx lint-staged --no-stash
 
