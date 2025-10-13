@@ -1,1 +1,7 @@
-# npx --no -- commitlint --edit $1
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run commitlint
+if ! npx --no -- commitlint --edit "$1"; then
+  exit 1
+fi
