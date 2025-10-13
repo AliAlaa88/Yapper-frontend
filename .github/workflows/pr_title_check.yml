@@ -1,0 +1,67 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    name: Check PR Title Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --save-dev @commitlint/config-conventional
+
+      - name: Validate PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "$PR_TITLE" | npx commitlint --config commitlint.config.js
+
+      - name: Comment on PR if title is invalid
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ **PR Title Check Failed**
+
+              Your PR title does not follow the conventional commit format.
+
+              **Expected format:** \`type(scope): subject\`
+
+              **Allowed types:**
+              - \`feat\`: A new feature
+              - \`fix\`: A bug fix
+              - \`docs\`: Documentation changes
+              - \`style\`: Code style changes (formatting, etc.)
+              - \`refactor\`: Code refactoring
+              - \`perf\`: Performance improvements
+              - \`test\`: Adding or updating tests
+              - \`chore\`: Maintenance tasks
+              - \`ci\`: CI/CD changes
+
+              **Examples:**
+              - \`feat: add user authentication\`
+              - \`fix(api): resolve data fetching issue\`
+              - \`docs: update README with setup instructions\`
+
+              **Rules:**
+              - Type must be lowercase
+              - Subject must not start with uppercase
+              - Subject must not end with a period
+              - Maximum length: 100 characters
+
+              Please update your PR title and try again.`
+            })
