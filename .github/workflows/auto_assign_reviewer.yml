@@ -9,23 +9,27 @@ jobs:
     name: Auto Assign Reviewer
     runs-on: ubuntu-latest
     steps:
-      - name: Assign reviewer
+      - name: Assign reviewers
         uses: actions/github-script@v7
         with:
           script: |
             const prAuthor = context.payload.pull_request.user.login;
-            let reviewer;
+            const otherReviewers = ['Amrhanysayed', 'bedosaber77', 'hagar3bdelsalam', 'Safan05'];
+            let reviewers = [];
 
-            // Assign AliAlaa88 if author is not AliAlaa88, otherwise assign Amrhanysayed
             if (prAuthor !== 'AliAlaa88') {
-              reviewer = 'AliAlaa88';
+              reviewers = ['AliAlaa88', ...otherReviewers];
             } else {
-              reviewer = 'Amrhanysayed';
+              reviewers = otherReviewers;
             }
 
-            await github.rest.pulls.requestReviewers({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              reviewers: [reviewer]
-            });
+            reviewers = reviewers.filter(r => r !== prAuthor);
+
+            if (reviewers.length > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                reviewers: reviewers
+              });
+            }
