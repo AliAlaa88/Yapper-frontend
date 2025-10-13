@@ -13,9 +13,19 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.pulls.requestReviewers({
+            const prAuthor = context.payload.pull_request.user.login;
+            let reviewer;
+
+            // Assign AliAlaa88 if author is not AliAlaa88, otherwise assign Amrhanysayed
+            if (prAuthor !== 'AliAlaa88') {
+              reviewer = 'AliAlaa88';
+            } else {
+              reviewer = 'Amrhanysayed';
+            }
+
+            await github.rest.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              reviewers: ['AliAlaa88']
-            })
+              reviewers: [reviewer]
+            });
