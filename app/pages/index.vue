@@ -46,12 +46,29 @@
           </p>
           <div class="mt-10">
             <h3 class="font-semibold mb-3">Already have an account?</h3>
-            <button class="border border-gray-600 hover:bg-gray-800 text-white font-bold py-2.5 rounded-full w-full">
+            <button class="border border-gray-600 hover:bg-gray-800 text-white font-bold py-2.5 rounded-full w-full" @click="openModal">
             Sign in
             </button>
           </div>
         </div>
       </div>
     </div>
+    <SignInModal v-if="showModal" @close="closeModal" />
   </div>
 </template>
+
+<script lang="ts" setup>
+import { ref } from "vue";
+import SignInModal from "../shared/components/login.vue";
+
+const showModal = ref(false);
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+</script>
