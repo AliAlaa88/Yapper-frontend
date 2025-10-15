@@ -1,6 +1,8 @@
 <template>
   <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative">
+    <div class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative   
+             sm:rounded-2xl sm:max-w-sm sm:h-auto 
+             h-full sm:p-8 p-6 flex flex-col justify-center">
       <button
         class="absolute top-4 right-4 text-gray-400 hover:text-white"
         @click="$emit('close')"
@@ -91,6 +93,7 @@ const onNext = () => {
 
 const onForgotPassword = () => {
   console.log("Forgot password clicked");
+  window.location.href = "/forgotPasswordPage";
 };
 </script>
 

@@ -38,7 +38,7 @@
             <div class="flex-1 h-px bg-gray-700" />
           </div>
 
-          <button class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-full w-full">
+          <button class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-full w-full" @click="openCreateAccountModal">
             Create account
           </button>
           <p class="text-gray-400 text-xs leading-relaxed">
@@ -46,29 +46,40 @@
           </p>
           <div class="mt-10">
             <h3 class="font-semibold mb-3">Already have an account?</h3>
-            <button class="border border-gray-600 hover:bg-gray-800 text-white font-bold py-2.5 rounded-full w-full" @click="openModal">
+            <button class="border border-gray-600 hover:bg-gray-800 text-white font-bold py-2.5 rounded-full w-full" @click="openSignInModal">
             Sign in
             </button>
           </div>
         </div>
       </div>
     </div>
-    <SignInModal v-if="showModal" @close="closeModal" />
+    <SignInModal v-if="showSignInModal" @close="closeSignInModal" />
+    <CreateAccount v-if="createAccountModal" @close="closeCreateAccountModal" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import SignInModal from "../shared/components/login.vue";
+import CreateAccount from "../shared/components/createAccount.vue";
 
-const showModal = ref(false);
+const showSignInModal = ref(false);
+const createAccountModal = ref(false);
 
-const openModal = () => {
-  showModal.value = true;
+const openSignInModal = () => {
+  showSignInModal.value = true;
 };
 
-const closeModal = () => {
-  showModal.value = false;
+const closeSignInModal = () => {
+  showSignInModal.value = false;
+};
+
+const openCreateAccountModal = () => {
+  createAccountModal.value = true;
+};
+
+const closeCreateAccountModal = () => {
+  createAccountModal.value = false;
 };
 
 </script>
