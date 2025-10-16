@@ -1,11 +1,14 @@
-import { userInfoService } from '../modules/profile/services'
-// import { tweetService } from '../modules/tweet/services'
-// import { authService } from '../modules/auth/services'
+// /core/serviceRegistry.ts
+import { createUserInfoService } from '../modules/profile/services'
+// import { createTweetService } from '../modules/tweet/services'
+// import { createAuthService } from '../modules/auth/services'
 
-export const services = {
-    userInfoService,
-    //   tweetService,
-    //   authService,
+export const serviceFactories = {
+    userInfoService: createUserInfoService,
+    // tweetService: createTweetService,
+    // authService: createAuthService,
 }
 
-export type Services = typeof services
+export type Services = {
+    [K in keyof typeof serviceFactories]: ReturnType<(typeof serviceFactories)[K]>
+}

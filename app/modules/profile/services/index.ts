@@ -1,11 +1,14 @@
+// /modules/profile/services/index.ts
 import { userInfoServiceReal } from './userInfoService.real'
 import { userInfoServiceMock } from './userInfoService.mock'
-// import { useRuntimeConfig } from 'nuxt/app'
+import { useRuntimeConfig } from '#app'
 
-// const config = useRuntimeConfig()
-const isMock = true
+export const createUserInfoService = () => {
+    const config = useRuntimeConfig()
+    const isMock = config.public.mockApi === true
 
-console.log(isMock)
 
-export const userInfoService = isMock ? userInfoServiceMock : userInfoServiceReal
-export type UserInfoService = typeof userInfoService
+    // console.log('[createUserInfoService] mock mode:', isMock)
+
+    return isMock ? userInfoServiceMock : userInfoServiceReal
+}
