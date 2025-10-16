@@ -10,4 +10,9 @@ export default defineNuxtConfig({
     vite: {
         plugins: [tailwindcss()],
     },
+    plugins: [
+        './app/plugins/vue-query.client.ts',
+        './app/plugins/axios.client.ts',
+        './app/plugins/services.client.ts',
+    ],
 })
