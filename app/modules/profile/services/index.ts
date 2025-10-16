@@ -1,7 +1,10 @@
 import { userInfoServiceReal } from './userInfoService.real'
 import { userInfoServiceMock } from './userInfoService.mock'
+// import { useRuntimeConfig } from 'nuxt/app'
 
-const isMock = process.env.NUXT_PUBLIC_MOCK_API === 'true'
+// const config = useRuntimeConfig()
+const isMock = true
+
 console.log(isMock)
 
 export const userInfoService = isMock ? userInfoServiceMock : userInfoServiceReal
