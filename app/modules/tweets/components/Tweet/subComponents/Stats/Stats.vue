@@ -4,7 +4,7 @@
         <div class="group/tooltip relative">
             <button
                 id="reply"
-                class="group flex items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
                 @click.stop
             >
                 <div
@@ -28,7 +28,7 @@
         <div class="group/tooltip relative">
             <button
                 id="retweet"
-                class="group flex items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-green)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-green)] transition-colors"
                 @click.stop
             >
                 <div
@@ -53,7 +53,7 @@
         <div class="group/tooltip relative">
             <button
                 id="like"
-                class="group flex items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-red)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-red)] transition-colors"
                 @click.stop
             >
                 <div
@@ -78,7 +78,7 @@
         <div v-if="views" class="group/tooltip relative">
             <button
                 id="views"
-                class="group flex items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
                 @click.stop
             >
                 <div
@@ -102,7 +102,7 @@
         <div class="group/tooltip relative">
             <button
                 id="share"
-                class="group flex items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
                 @click.stop
             >
                 <div
