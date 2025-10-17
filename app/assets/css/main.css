@@ -1,1 +1,83 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+    /* X (Twitter) Color Palette */
+    --color-x-blue: #1d9bf0;
+    --color-x-blue-hover: #1a8cd8;
+    --color-x-blue-dark: #1871a8;
+
+    --color-x-black: #0f1419;
+    --color-x-dark: #14171a;
+    --color-x-gray-dark: #536471;
+    --color-x-gray: #71767b;
+    --color-x-gray-light: #8b98a5;
+    --color-x-gray-extra-light: #cfd9de;
+    --color-x-border: #eff3f4;
+    --color-x-background: #f7f9f9;
+    --color-x-white: #ffffff;
+
+    --color-x-red: #f4212e;
+    --color-x-red-hover: #e0152e;
+    --color-x-green: #00ba7c;
+    --color-x-green-hover: #00a368;
+    --color-x-yellow: #ffd400;
+    --color-x-yellow-hover: #f7c600;
+
+    /* Dark Mode Colors */
+    --color-x-bg-dark: #000000;
+    --color-x-bg-dark-secondary: #16181c;
+    --color-x-border-dark: #2f3336;
+    --color-x-text-dark: #e7e9ea;
+    --color-x-text-dark-secondary: #71767b;
+
+    /* Fonts */
+    --font-family-sans:
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-family-chirp:
+        'Chirp', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    /* Font Sizes */
+    --font-size-xs: 0.8125rem; /* 13px */
+    --font-size-sm: 0.9375rem; /* 15px */
+    --font-size-base: 1rem; /* 16px */
+    --font-size-lg: 1.25rem; /* 20px */
+    --font-size-xl: 1.5rem; /* 24px */
+    --font-size-2xl: 1.875rem; /* 30px */
+
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+}
+
+/* Custom utility classes for X styling */
+@layer utilities {
+    .text-x-primary {
+        color: var(--color-x-black);
+    }
+
+    .text-x-secondary {
+        color: var(--color-x-gray-dark);
+    }
+
+    .bg-x-hover {
+        background-color: rgba(15, 20, 25, 0.1);
+    }
+
+    .border-x {
+        border-color: var(--color-x-border);
+    }
+}
+
+/* Dark mode preferences */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-x-background: var(--color-x-bg-dark);
+        --color-x-white: var(--color-x-bg-dark-secondary);
+        --color-x-border: var(--color-x-border-dark);
+        --color-x-black: var(--color-x-text-dark);
+        --color-x-gray-dark: var(--color-x-text-dark-secondary);
+    }
+}
