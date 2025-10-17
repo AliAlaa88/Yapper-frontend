@@ -11,10 +11,11 @@ export const formatDate = (date: string) => {
     return tweetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-export const formatCount = (count: number) => {
-    if (count === 0) return ''
-    if (count < 1000) return count.toString()
-    if (count < 10000) return `${(count / 1000).toFixed(1)}K`
-    if (count < 1000000) return `${Math.floor(count / 1000)}K`
-    return `${(count / 1000000).toFixed(1)}M`
+export const formatCount = (count: number | string) => {
+    const countNumber = typeof count === 'string' ? parseInt(count) : count
+    if (countNumber === 0) return ''
+    if (countNumber < 1000) return countNumber.toString()
+    if (countNumber < 10000) return `${(countNumber / 1000).toFixed(1)}K`
+    if (countNumber < 1000000) return `${Math.floor(countNumber / 1000)}K`
+    return `${(countNumber / 1000000).toFixed(1)}M`
 }
