@@ -1,13 +1,14 @@
-// import { userInfoService } from '../modules/profile/services'
-// import { tweetService } from '../modules/tweet/services'
-// import { authService } from '../modules/auth/services'
+// /core/serviceRegistry.ts
+import { createUserInfoService } from '../modules/services'
+// import { createTweetService } from '../modules/tweet/services'
+// import { createAuthService } from '../modules/auth/services'
 
-// 1️⃣ Central object containing all services
-export const services = {
-    // userInfoService,
-    //   tweetService,
-    //   authService,
+export const serviceFactories = {
+    userInfoService: createUserInfoService,
+    // tweetService: createTweetService,
+    // authService: createAuthService,
 }
 
-// 2️⃣ Type representing all injected services
-export type Services = typeof services
+export type Services = {
+    [K in keyof typeof serviceFactories]: ReturnType<(typeof serviceFactories)[K]>
+}
