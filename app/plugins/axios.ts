@@ -1,10 +1,9 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
-import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
+import { defineNuxtPlugin } from 'nuxt/app'
 
 export default defineNuxtPlugin(() => {
-    const config = useRuntimeConfig()
-    const apiBase = config.public.apiUrl
+    const apiBase = process.env.NUXT_PUBLIC_API_URL
 
     const yapperApi: AxiosInstance = axios.create({
         baseURL: apiBase,

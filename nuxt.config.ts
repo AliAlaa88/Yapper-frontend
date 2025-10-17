@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from '@tailwindcss/vite'
 
-
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
@@ -17,9 +16,5 @@ export default defineNuxtConfig({
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
         },
     },
-    plugins: [
-        './app/plugins/vue-query.client.ts',
-        './app/plugins/axios.client.ts',
-        './app/plugins/services.ts',
-    ],
+    plugins: ['./app/plugins/axios.ts', './app/plugins/vue-query.ts', './app/plugins/services.ts'],
 })
