@@ -39,8 +39,3 @@ export const formatDetailDate = (date: string) => {
 
     return `${time} · ${dateFormatted}`
 }
-
-const navigateToUser = (username) => {
-    console.log(user)
-    navigateTo(`/${user.value.username}`)
-}

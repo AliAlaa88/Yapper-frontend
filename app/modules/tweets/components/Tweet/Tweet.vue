@@ -5,10 +5,18 @@
     >
         <div class="flex gap-3">
             <!-- Avatar column -->
-            <div class="flex-shrink-0">
-                
-                    <img :src="user.avatar" :alt="user.name" class="w-10 h-10 rounded-full cursor-pointer"  @click="navigateToUser"/>
-            </div>
+            <a 
+                class="flex-shrink-0" 
+                @click.stop="navigateToUser"
+                :href="user.username ? `/${user.username}` : '#'"
+                @click.prevent
+            >
+                <img 
+                    :src="user.avatar" 
+                    :alt="user.name" 
+                    class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                />
+            </a>
 
             <!-- Content column -->
             <div class="flex-1 min-w-0">
@@ -37,10 +45,10 @@ const navigateToTweet = () => {
     navigateTo(`/tweet/${id.value}`)
 }
 
-const navigateToUser = () => {
-    console.log(user);
+const navigateToUser = (event: Event) => {
+    event.stopPropagation()
+    console.log('Navigating to user:', user.value)
     navigateTo(`/${user.value.username}`)
-    // navigateTo(`/${user.value.link}`) if available ??
 }
 
 </script>
