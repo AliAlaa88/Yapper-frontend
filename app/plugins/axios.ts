@@ -3,7 +3,7 @@ import type { AxiosInstance } from 'axios'
 import { defineNuxtPlugin } from 'nuxt/app'
 
 export default defineNuxtPlugin(() => {
-    const apiBase = process.env.API_URL
+    const apiBase = process.env.NUXT_PUBLIC_API_URL
 
     const yapperApi: AxiosInstance = axios.create({
         baseURL: apiBase,

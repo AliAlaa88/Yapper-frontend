@@ -75,7 +75,7 @@
 
       <p class="text-center text-gray-400 text-sm">
         Don’t have an account?
-        <button class="text-blue-400 hover:underline">Sign up</button>
+        <button class="text-blue-400 hover:underline" @click="$emit('switch')">Sign up</button>
       </p>
     </div>
   </div>
