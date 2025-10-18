@@ -19,3 +19,28 @@ export const formatCount = (count: number | string) => {
     if (countNumber < 1000000) return `${Math.floor(countNumber / 1000)}K`
     return `${(countNumber / 1000000).toFixed(1)}M`
 }
+
+export const formatDetailDate = (date: string) => {
+    const tweetDate = new Date(date)
+
+    // Format time (7:54 PM)
+    const time = tweetDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+    })
+
+    // Format date (Oct 17, 2025)
+    const dateFormatted = tweetDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    })
+
+    return `${time} · ${dateFormatted}`
+}
+
+const navigateToUser = (username) => {
+    console.log(user)
+    navigateTo(`/${user.value.username}`)
+}
