@@ -127,6 +127,7 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '~/modules/tweets/types'
 import { formatCount } from '~/modules/tweets/utils/lib'
+import { toRefs } from 'vue'
 
 const props = defineProps<{
     stats: StatsType
