@@ -5,8 +5,10 @@ const mockUsers: UserProfile[] = [
         name: 'Ali',
         username: 'ali',
         bio: 'hi there!',
-        avatar_url: 'https://cdn.app.com/profiles/u877.jpg',
-        cover_url: 'https://cdn.app.com/profiles/u877.jpg',
+        avatar_url:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMEOvbEUtnNDEJOwt8taSM0LOv_C6kMh31mC-PHu9uAtnDz2ndfg7v1Fl0rGKnVamjXms&usqp=CAU',
+        cover_url:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMEOvbEUtnNDEJOwt8taSM0LOv_C6kMh31mC-PHu9uAtnDz2ndfg7v1Fl0rGKnVamjXms&usqp=CAU',
         followers_count: 5,
         following_count: 15,
         country: 'Egypt',
