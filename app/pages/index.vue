@@ -10,7 +10,14 @@
 <script setup lang="ts">
 const router = useRouter();
 
-onMounted(() => {
-    router.push('/auth');
-});
+async function getUser() {
+    const response = await fetch('https://jsonplaceholder.typicode.com/users')
+    const data = await response.json()
+    return data
+}
+
+const { data, isLoading, error } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUser,
+})
 </script>

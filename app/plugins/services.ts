@@ -1,6 +1,6 @@
 // /plugins/service.ts
 import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
-import { serviceFactories } from '../core/serviceRegistery'
+import { serviceFactories } from '../core/serviceRegistry'
 
 export default defineNuxtPlugin((nuxtApp) => {
     // Debug: Check runtime config
