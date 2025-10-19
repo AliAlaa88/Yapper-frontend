@@ -1,31 +1,16 @@
 import type { UserProfile } from '../types/user'
 const mockUsers: UserProfile[] = [
     {
-        id: '1',
-        username: 'mock_user',
-        displayName: 'Mock User',
-        bio: 'This is a mock user.',
-        followersCount: 1234,
-        followingCount: 567,
-        verified: true,
-    },
-    {
-        id: '2',
-        username: 'mock_user',
-        displayName: 'Mock User',
-        bio: 'This is a mock user.',
-        followersCount: 1234,
-        followingCount: 567,
-        verified: true,
-    },
-    {
-        id: '3',
-        username: 'mock_user',
-        displayName: 'Mock User',
-        bio: 'This is a mock user.',
-        followersCount: 1234,
-        followingCount: 567,
-        verified: true,
+        id: '0c059899-f706-4c8f-97d7-ba2e9fc22d6d',
+        name: 'Ali',
+        username: 'ali',
+        bio: 'hi there!',
+        avatar_url: 'https://cdn.app.com/profiles/u877.jpg',
+        cover_url: 'https://cdn.app.com/profiles/u877.jpg',
+        followers_count: 5,
+        following_count: 15,
+        country: 'Egypt',
+        created_at: '2025-10-30',
     },
 ]
 

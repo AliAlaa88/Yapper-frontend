@@ -1,15 +1,15 @@
 <template>
     <div class="border-b border-[#2f3336] bg-black">
         <!-- Cover Image -->
-        <CoverImage :cover-url="user?.coverUrl ?? ''" />
+        <CoverImage :cover-url="user?.cover_url ?? ''" />
 
         <!-- Profile Info -->
         <div class="px-4">
             <div class="-mt-[70px] mb-3 flex items-end justify-between">
                 <!-- Avatar -->
                 <ProfileAvatar
-                    :avatar-url="user?.avatarUrl ?? ''"
-                    :display-name="user?.displayName ?? ''"
+                    :avatar-url="user?.avatar_url ?? ''"
+                    :display-name="user?.name ?? ''"
                 />
 
                 <!-- Actions -->
@@ -19,14 +19,14 @@
             <!-- User Details -->
             <div class="pb-4">
                 <ProfileUserInfo
-                    :display-name="user?.displayName ?? ''"
+                    :display-name="user?.name ?? ''"
                     :username="user?.username ?? ''"
-                    :verified="user?.verified ?? false"
                 />
                 <ProfileBio :bio="user?.bio ?? ''" />
+                <ProfileCreatedAt :created-at="user?.created_at ?? ''" />
                 <ProfileStats
-                    :following-count="user?.followingCount ?? 0"
-                    :followers-count="user?.followersCount ?? 0"
+                    :following-count="user?.following_count ?? 0"
+                    :followers-count="user?.followers_count ?? 0"
                 />
             </div>
         </div>
@@ -39,6 +39,7 @@ import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
 import ProfileBio from './SubComponents/ProfileBio.vue'
+import ProfileCreatedAt from './SubComponents/ProfileCreatedAt.vue'
 import ProfileStats from './SubComponents/ProfileStats.vue'
 
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery.js'
