@@ -30,9 +30,9 @@ const props = defineProps<{
     avatarUrl?: string
     displayName: string
 }>()
+const photoStore = useProfilePhotoStore()
 
 const route = useRoute()
-const photoStore = useProfilePhotoStore()
 const username = computed(() => route.params.username as string)
 
 const handlePhotoClick = () => {

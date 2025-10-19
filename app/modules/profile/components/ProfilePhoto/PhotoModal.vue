@@ -1,6 +1,8 @@
 <template>
-    <div class="fixed inset-0 z-50 bg-black">
-        <div class="relative w-full h-full">
+    <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+        <div
+            class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative sm:rounded-2xl sm:max-w-sm sm:h-auto h-full sm:p-8 p-6 flex flex-col justify-center"
+        >
             <!-- Header with back button -->
             <div class="absolute top-0 left-0 right-0 p-4 flex items-center">
                 <NuxtLink
