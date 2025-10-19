@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import ForgetPassword from "~/shared/components/forgetPassword.vue";
+import ForgetPassword from "../components/forgetPassword.vue";
 const showModal = ref(true);
 const closeModal = () => {
   showModal.value = false;

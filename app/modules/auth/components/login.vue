@@ -11,13 +11,7 @@
       </button>
 
       <!-- Logo -->
-      <div class="flex justify-center mb-6">
-        <img
-        src="../../assets/logo-white.png"
-        alt="X Logo"
-        class="relative z-10 w-8 lg:w-10"
-      />
-      </div>
+       <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
       <!-- Title -->
       <h2 class="text-3xl font-bold text-left mb-6">Sign in to X</h2>
@@ -83,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
+import logo from "./logo.vue";
 const identifier = ref("");
 
 const onNext = () => {
@@ -93,7 +87,7 @@ const onNext = () => {
 
 const onForgotPassword = () => {
   console.log("Forgot password clicked");
-  window.location.href = "/forgotPasswordPage";
+  window.location.href = "/auth/forgot-password";
 };
 </script>
 
