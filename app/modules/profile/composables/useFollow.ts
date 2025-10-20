@@ -1,0 +1,76 @@
+import { ref, computed } from 'vue'
+import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
+
+export function useFollow (userId: string) {
+    const { userQuery, followMutation, unfollowMutation } = useUserActionsQuery(userId)
+    const user = userQuery.data
+    const hover = ref(false)
+    const showConfirm = ref(false)
+    const isFollower = computed(() => user.value?.is_follower ?? false)
+    const isFollowing = computed(() => user.value?.is_following ?? false)
+    const username = computed(() => user.value?.username)
+
+
+    function handleClick() {
+        console.log('isFollower', isFollower.value)
+        console.log('isFollowing', isFollowing.value)
+        if (!isFollowing.value) followMutation.mutate()
+        else {
+            showConfirm.value = true
+        }
+    }
+
+    function handleMouseOver() {
+        if(isFollowing.value)
+            hover.value = true
+    }
+
+    function handleMouseOut() {
+        if(isFollowing.value)
+            hover.value = false
+    }
+
+    const buttonText = computed(() => {
+        if (isFollower.value && !isFollowing.value) return 'Follow back'
+        else if (!isFollower.value && !isFollowing.value) return 'Follow'
+        else if (isFollowing.value && !hover.value) return 'Following'
+        else if (isFollowing.value && hover.value) return 'Unfollow'
+        else return 'undefined'
+    })
+
+    const buttonClass = computed(() => {
+        if (!isFollowing.value) {
+            if (!isFollower.value)
+                return 'bg-[#F7F9F9] text-[#15202B] border border-transparent px-[53px] py-[10px] w-[88px] h-[36px] hover:bg-[#E1E8ED]'
+            else return 'bg-[#F7F9F9] text-[#15202B] border border-transparent px-[57px] py-[10px] w-[88px] h-[36px] hover:bg-[#E1E8ED]'
+        } else {
+            // FOLLOWING or UNFOLLOW
+            return hover.value
+                ? 'bg-red-500/10 border-[0.1px] border-red-500/40 text-red-500 px-[53px] py-[10px] w-[88px] h-[36px]'
+                : 'bg-transparent border-[0.1px] border-white/40 text-white px-[53px] py-[10px] w-[88px] h-[36px]'
+        }
+    })
+
+    function confirmUnfollow() {
+        console.log('before unfollow', isFollowing.value)
+        unfollowMutation.mutate()
+        showConfirm.value = false
+        console.log('unfollow user', isFollowing.value)
+    }
+
+    function cancelUnfollow() {
+        showConfirm.value = false
+    }
+
+    return {
+        buttonClass,
+        buttonText,
+        handleMouseOut,
+        handleMouseOver,
+        handleClick,
+        showConfirm,
+        username,
+        confirmUnfollow,
+        cancelUnfollow,
+    }
+}
