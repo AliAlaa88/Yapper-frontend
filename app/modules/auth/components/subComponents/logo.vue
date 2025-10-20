@@ -1,7 +1,7 @@
 <template>
   <div :class="divClass">
     <img
-      src="../assets/logo-white.png"
+      src="../../assets/logo-white.png"
       alt="X Logo"
       :class="imgClass"
     />

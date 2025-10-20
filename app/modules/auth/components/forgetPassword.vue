@@ -11,7 +11,7 @@
       </button>
 
       <!-- Logo -->
-       <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
+      <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
       <!-- Title -->
       <h2 class="text-3xl font-bold text-left mb-6">Find your X account</h2>
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import logo from "./logo.vue";
+import logo from "./subComponents/logo.vue";
 
 const identifier = ref("");
 

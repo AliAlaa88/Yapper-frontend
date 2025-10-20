@@ -11,7 +11,7 @@
       </button>
 
       <!-- Logo -->
-      <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
+    <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
       <!-- Title -->
       <h2 class="text-3xl font-bold text-left mb-6">Create Your account</h2>
@@ -82,13 +82,15 @@
       >
         Next
       </button>
+      <!-- reCAPTCHA -->
+      <Recaptcha class="w-full" ref="recaptchaRef" @verified="onRecaptchaVerified" />
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import logo from "./logo.vue";
+import logo from "./subComponents/logo.vue";
+import Recaptcha from "./subComponents/recaptcha.vue";
 
 const name = ref("");
 const email = ref("");
@@ -119,13 +121,22 @@ const days = Array.from({ length: 31 }, (_, i) => i + 1);
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 120 }, (_, i) => currentYear - i);
 
-const onNext = () => {
+// Recaptcha token
+const recaptchaRef = ref<{ run: () => Promise<void> } | null>(null)
+const recaptcha = ref("");
+const onRecaptchaVerified = (token: string) => {
+  recaptcha.value = token;
+};
+const onNext = async () => {
   // Combine date values if needed
   const dateOfBirth = month.value && day.value && year.value 
     ? `${year.value}-${month.value.padStart(2, '0')}-${day.value.toString().padStart(2, '0')}`
     : '';
-  
-  console.log("Next clicked:", name.value, email.value, dateOfBirth);
+  if (!recaptcha.value) {
+    await recaptchaRef.value?.run()
+  } else {
+    console.log("Next clicked:", name.value, email.value, dateOfBirth, recaptcha.value);
+  }
 };
 
 </script>

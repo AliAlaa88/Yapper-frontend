@@ -60,8 +60,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import logo from "./logo.vue";
-import OAuth from "./OAuth.vue";
+import logo from "./subComponents/logo.vue";
+import OAuth from "./subComponents/OAuth.vue";
 const identifier = ref("");
 
 const onNext = () => {

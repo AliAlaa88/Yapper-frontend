@@ -36,7 +36,9 @@
         "prettier": "^3.6.2",
         "tailwindcss": "^4.1.14",
         "vue": "^3.5.22",
-        "vue-router": "^4.5.1"
+        "vue-recaptcha-v3": "^2.0.1",
+        "vue-router": "^4.5.1",
+        "vue3-recaptcha-v2": "^2.1.0"
     },
     "devDependencies": {
         "@babel/core": "^7.28.4",

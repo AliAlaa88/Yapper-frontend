@@ -41,8 +41,8 @@
 </template>
 
 <script lang="ts" setup>
-import logo from "../components/logo.vue";
-import OAuth from "../components/OAuth.vue";
+import logo from "../components/subComponents/logo.vue";
+import OAuth from "../components/subComponents/OAuth.vue";
 const router = useRouter();
 
 const goToLogin = () => {
