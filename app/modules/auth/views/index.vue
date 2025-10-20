@@ -13,15 +13,7 @@
         <h2 class="text-2xl sm:text-3xl font-bold mb-8">Join today.</h2>
 
         <div class="flex flex-col gap-3 max-w-90">
-          <button class="flex items-center justify-center gap-2 border border-gray-600 text-black bg-white font-semibold py-2.5 rounded-full w-full hover:bg-gray-200 transition">
-            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-5 h-5" />
-            Sign up with Google
-          </button>
-
-          <button class="flex items-center justify-center gap-2 border border-gray-600 text-black bg-white font-semibold py-2.5 rounded-full w-full hover:bg-gray-200 transition">
-            <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" class="w-5 h-5" />
-            Sign up with GitHub
-          </button>
+          <OAuth />
 
           <div class="flex items-center gap-2 text-gray-500 text-sm my-2">
             <div class="flex-1 h-px bg-gray-700" />
@@ -50,7 +42,7 @@
 
 <script lang="ts" setup>
 import logo from "../components/logo.vue";
-
+import OAuth from "../components/OAuth.vue";
 const router = useRouter();
 
 const goToLogin = () => {

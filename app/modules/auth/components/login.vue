@@ -16,25 +16,8 @@
       <!-- Title -->
       <h2 class="text-3xl font-bold text-left mb-6">Sign in to X</h2>
 
-      <!-- Google Sign-in -->
-      <button
-        class="w-full bg-white text-black rounded-full py-2 flex items-center justify-center space-x-2 hover:bg-gray-100 transition mb-3"
-      >
-        <img
-          src="https://www.svgrepo.com/show/475656/google-color.svg"
-          alt="Google"
-          class="w-5 h-5"
-        />
-        <span>Sign in with Google</span>
-      </button>
-
-      <!-- Github Sign-in -->
-      <button
-        class="w-full bg-white text-black rounded-full py-2 flex items-center justify-center space-x-2 hover:bg-gray-100 transition mb-6"
-      >
-        <i class="fa-brands fa-github text-xl"></i>
-        <span>Sign in with GitHub</span>
-      </button>
+      <!--OAuth Buttons-->
+      <OAuth />
 
       <!-- OR Divider -->
       <div class="flex items-center my-4">
@@ -78,6 +61,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import logo from "./logo.vue";
+import OAuth from "./OAuth.vue";
 const identifier = ref("");
 
 const onNext = () => {
