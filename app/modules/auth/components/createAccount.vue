@@ -91,6 +91,7 @@
 import { ref, computed } from "vue";
 import logo from "./subComponents/logo.vue";
 import Recaptcha from "./subComponents/recaptcha.vue";
+import { useRegisterQuery } from "../queries/useRegisterQuery";
 
 const name = ref("");
 const email = ref("");
@@ -127,6 +128,8 @@ const recaptcha = ref("");
 const onRecaptchaVerified = (token: string) => {
   recaptcha.value = token;
 };
+
+const registerMutation = useRegisterQuery()
 const onNext = async () => {
   // Combine date values if needed
   const dateOfBirth = month.value && day.value && year.value 
@@ -136,6 +139,16 @@ const onNext = async () => {
     await recaptchaRef.value?.run()
   } else {
     console.log("Next clicked:", name.value, email.value, dateOfBirth, recaptcha.value);
+    registerMutation.mutate({ Name: name.value, Email: email.value, Birth_date: dateOfBirth, Captcha_token: recaptcha.value }, {
+      onSuccess: (data) => {
+        console.log("Registration successful:", data);
+        // Open otp verification modal here
+        
+      },
+      onError: (error) => {
+        console.error("Registration failed:", error);
+      }
+    });
   }
 };
 

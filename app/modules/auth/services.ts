@@ -1,12 +1,20 @@
-import axios from 'axios';
-import OAuth from './components/subComponents/OAuth.vue';
+import { useNuxtApp } from '#app';
+import type { RegisterPayload } from './types/register';
 export const createAuthService = () => {
+    const { $yapperApi } = useNuxtApp();
+
     return {
         login: async () => {
             // Call API to log in user            
         },
-        registerStep1: async () => {
-            // Call API to register user
+        registerStep1: async (payload: RegisterPayload) => {
+            const response = await $yapperApi.post('https://dev.yapper.cmp27.space/auth/signup/step1', {
+                name: payload.Name,
+                email: payload.Email,
+                birth_date: payload.Birth_date,
+                captcha_token: payload.Captcha_token
+            });
+            return response.data;
         },
         registerStep2: async () => {
             // Call API to verify the code and complete registration
@@ -32,6 +40,5 @@ export const createAuthService = () => {
         getUserData: async () => {
             // Call API to get user data
         }
-        // Add more auth-related methods as needed
     };
 };
