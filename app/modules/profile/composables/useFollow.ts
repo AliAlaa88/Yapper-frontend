@@ -1,14 +1,11 @@
 import { ref, computed } from 'vue'
 import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
-
+import { useUserInfo } from './useUserInfo'
 export function useFollow (userId: string) {
-    const { userQuery, followMutation, unfollowMutation } = useUserActionsQuery(userId)
-    const user = userQuery.data
+    const { followMutation, unfollowMutation } = useUserActionsQuery(userId)
+    const { isFollower, isFollowing, username } = useUserInfo(userId)
     const hover = ref(false)
     const showConfirm = ref(false)
-    const isFollower = computed(() => user.value?.is_follower ?? false)
-    const isFollowing = computed(() => user.value?.is_following ?? false)
-    const username = computed(() => user.value?.username)
 
 
     function handleClick() {
