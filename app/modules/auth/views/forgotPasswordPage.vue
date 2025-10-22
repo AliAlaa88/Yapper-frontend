@@ -11,6 +11,6 @@ const showModal = ref(true);
 const closeModal = () => {
   showModal.value = false;
   // forward to home  rgba(91, 112, 131, 0.4);
-  window.location.href = "/";
+  window.location.href = "/auth";
 };
 </script>

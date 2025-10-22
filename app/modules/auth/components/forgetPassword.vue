@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
     <div class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative   
              sm:rounded-2xl sm:max-w-sm sm:h-auto 
              h-full sm:p-8 p-6 flex flex-col justify-center">

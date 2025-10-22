@@ -1,5 +1,5 @@
 import { useNuxtApp } from '#app';
-import type { RegisterPayload } from './types/register';
+import type { RegisterPayload,verifyAccountPayload,finalizeRegisterPayload } from './types/register';
 export const createAuthService = () => {
     const { $yapperApi } = useNuxtApp();
 
@@ -8,7 +8,7 @@ export const createAuthService = () => {
             // Call API to log in user            
         },
         registerStep1: async (payload: RegisterPayload) => {
-            const response = await $yapperApi.post('https://dev.yapper.cmp27.space/auth/signup/step1', {
+            const response = await $yapperApi.post('http://localhost:3000/auth/signup/step1', {
                 name: payload.Name,
                 email: payload.Email,
                 birth_date: payload.Birth_date,
@@ -16,14 +16,27 @@ export const createAuthService = () => {
             });
             return response.data;
         },
-        registerStep2: async () => {
-            // Call API to verify the code and complete registration
+        registerStep2: async (payload: verifyAccountPayload) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/signup/step2', {
+                email: payload.Email,
+                token: payload.token
+            });
+            return response.data;
         },
-        registerStep3: async () => {
-            // Call API to finalize registration with setting password
+        registerStep3: async (payload: finalizeRegisterPayload) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/signup/step3', {
+                email: payload.Email,
+                password: payload.Password,
+                username: payload.Username,
+                language: payload.Language
+            },{withCredentials: true});
+            return response.data;
         },
-        resendOTP: async () => {
-            // Call API to resend OTP code
+        resendOTP: async (email: string) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/resend-otp', {
+                email
+            });
+            return response.data;
         },
         forgotPassword: async () => {
             // Call API to initiate password reset
