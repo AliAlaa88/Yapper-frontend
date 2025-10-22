@@ -5,13 +5,17 @@
 
         <!-- Page Content (NuxtPage for child routes) -->
         <NuxtPage />
+
+        <!-- SnackBar-->
+        <SnackBar />
     </div>
 </template>
 
 <script setup lang="ts">
 // import type { UserProfile } from '../modules/profile/types/user'
 import ProfileHeader from '../modules/profile/components/ProfileHeader/ProfileHeader.vue'
-
+import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
+import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 // // TODO: This should come from API
 // const mockUser: UserProfile = {
 //     id: '1',
@@ -22,4 +26,5 @@ import ProfileHeader from '../modules/profile/components/ProfileHeader/ProfileHe
 //     followingCount: 567,
 //     verified: true,
 // }
+provide('snackbar', useSnackbar())
 </script>
