@@ -11,27 +11,38 @@
         >
             {{ buttonText }}
         </button>
-        <UnfollowConfirmModal
+        <ConfirmtionModal
             :show-confirm="showConfirm"
             :username="username ?? ''"
-            @unfollow="confirmUnfollow"
-            @cancel="cancelUnfollow" />
+            header-text="Unfollow"
+            background-color="bg-[#ebf1f1]"
+            text-color="text-black"
+            action="Unfollow"
+            hover-color="hover:bg-gray-200/90"
+            @click="confirmUnfollow"
+            @cancel="cancelUnfollow"
+        >
+            <p class="text-gray-200/50 text-[15px] leading-snug">
+                Their posts will no longer show up in your Following timeline.
+                You can still view their profile, unless their posts are protected.
+            </p>
+        </ConfirmtionModal>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useFollow } from '~/modules/profile/composables/useFollow'
-import UnfollowConfirmModal from './UnfollowConfirmModal.vue'
+import ConfirmtionModal from './ConfirmtionModal.vue'
 
 const props = defineProps<{userId: string}>()
 const {
     buttonClass,
     buttonText,
+    showConfirm,
+    username,
     handleMouseOut,
     handleMouseOver,
     handleClick,
-    showConfirm,
-    username,
     confirmUnfollow,
     cancelUnfollow,
 } = useFollow(props.userId)
