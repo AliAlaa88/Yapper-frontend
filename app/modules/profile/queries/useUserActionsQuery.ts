@@ -28,5 +28,54 @@ export function useUserActionsQuery(userId: string) {
         },
     })
 
-    return { userQuery, followMutation, unfollowMutation }
+    const blockMutation = useMutation({
+        mutationFn: () => $userInfoService.blockUser(userId),
+        onSuccess: (data) => {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+        },
+    })
+
+    const unblockMutation = useMutation({
+        mutationFn: () => $userInfoService.unblockUser(userId),
+        onSuccess: (data) => {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+        },
+    })
+
+    const muteMutation = useMutation({
+        mutationFn: () => $userInfoService.muteUser(userId),
+        onSuccess: (data) => {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+        },
+    })
+
+    const unmuteMutation = useMutation({
+        mutationFn: () => $userInfoService.unmuteUser(userId),
+        onSuccess: (data) => {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+        },
+    })
+
+    const removeFollowerMutation = useMutation({
+        mutationFn: () => $userInfoService.removeFollower(userId),
+        onSuccess: (data) => {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+        },
+    })
+
+    return {
+        userQuery,
+        followMutation,
+        unfollowMutation,
+        blockMutation,
+        unblockMutation,
+        muteMutation,
+        unmuteMutation,
+        removeFollowerMutation,
+    }
 }

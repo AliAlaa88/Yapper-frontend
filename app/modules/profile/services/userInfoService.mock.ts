@@ -29,9 +29,9 @@ const users: User[] = [
         name: 'sarah Mohamed',
         followers_count: 0,
         following_count: 1,
-        is_follower: false,
+        is_follower: true,
         is_following: true,
-        is_muted: false,
+        is_muted: true,
         is_blocked: false,
     },
 ]
@@ -67,5 +67,48 @@ export const userInfoServiceMock = {
         user.is_following = false
         if (user.followers_count > 0) user.followers_count--
         return user
+    },
+
+    async blockUser(userId: string) {
+        const user = users.find((user) => user.id === userId)
+        if (!user) throw new Error('user not found')
+        user.is_blocked = true
+        console.log('from service', user.is_blocked)
+        if (user.is_following) {
+            user.is_following = false
+            if (user.followers_count > 0) user.followers_count--
+        }
+        return user
+    },
+
+    async unblockUser(userId: string) {
+        const user = users.find((user) => user.id === userId)
+        if (!user) throw new Error('user not found')
+        user.is_blocked = false
+        return user
+    },
+
+    async muteUser(userId: string) {
+        const user = users.find((user) => user.id === userId)
+        if (!user) throw new Error('user not found')
+        user.is_muted = true
+        return user
+    },
+
+    async unmuteUser(userId: string) {
+        const user = users.find((user) => user.id === userId)
+        if (!user) throw new Error('user not found')
+        user.is_muted = false
+        return user
+    },
+
+    async removeFollower(userId: string) {
+        const user = users.find((user) => user.id === userId)
+        if (!user) throw new Error('user not found')
+        if (user.is_follower) {
+            user.is_follower = false
+            user.following_count--
+            // i think is should decrease the cout in my profile too (followers)
+        }
     },
 }
