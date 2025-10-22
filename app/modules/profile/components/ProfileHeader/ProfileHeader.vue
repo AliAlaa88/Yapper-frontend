@@ -13,9 +13,18 @@
                 />
 
                 <!-- Actions -->
-                <ProfileFollowAction
-                    v-if="user?.id"
-                    :user-id="user?.id ?? ''" />
+                <div class="flex gap-3">
+                    <ProfileActions
+                        v-if="user?.id"
+                        :user-id="user.id"
+                    />
+
+                    <ProfileFollowAction
+                        v-if="user?.id"
+                        :user-id="user.id"
+                    />
+                </div>
+
             </div>
 
             <!-- User Details -->
@@ -51,4 +60,5 @@ const username = route.params.username as string
 
 const userQuery = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
+provide('user-id', computed(() => user.value?.id))
 </script>
