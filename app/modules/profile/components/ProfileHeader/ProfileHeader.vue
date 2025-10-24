@@ -13,7 +13,18 @@
                 />
 
                 <!-- Actions -->
-                <ProfileActions />
+                <div class="flex gap-3">
+                    <ProfileActions
+                        v-if="user?.id"
+                    />
+
+                    <ProfileFollowAction
+                        v-if="user?.id"
+                    />
+
+                    <ProfileBlockedAction />
+                </div>
+
             </div>
 
             <!-- User Details -->
@@ -28,6 +39,7 @@
                     :following-count="user?.following_count ?? 0"
                     :followers-count="user?.followers_count ?? 0"
                 />
+                <ProfileMuteMessage />
             </div>
         </div>
     </div>
@@ -36,15 +48,18 @@
 <script setup lang="ts">
 import CoverImage from './SubComponents/CoverImage.vue'
 import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
-import ProfileActions from './SubComponents/ProfileActions.vue'
+import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
 import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
 import ProfileBio from './SubComponents/ProfileBio.vue'
 import ProfileCreatedAt from './SubComponents/ProfileCreatedAt.vue'
 import ProfileStats from './SubComponents/ProfileStats.vue'
-
-import { useUserInfoQuery } from '../../queries/useUserInfoQuery.js'
-
+import ProfileActions from './SubComponents/ProfileActions.vue'
+import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
+import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import { useRoute } from 'vue-router'
+import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
+
+
 const route = useRoute()
 const username = route.params.username as string
 

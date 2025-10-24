@@ -5,7 +5,7 @@ import { useRuntimeConfig } from '#app'
 
 export const createUserInfoService = () => {
     const config = useRuntimeConfig()
-    const isMock = config.public.mockApi === true
+    const isMock = config.public.mockApi === 'false'
 
 
     // console.log('[createUserInfoService] mock mode:', isMock)
