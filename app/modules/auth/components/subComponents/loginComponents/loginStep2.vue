@@ -64,7 +64,7 @@
 import { ref, computed } from "vue";
 import logo from "../logo.vue";
 import { useLoginQuery } from "../../../queries/useLoginQuery";
-
+import { useUserStore } from "~/modules/auth/stores/userStore";
 const password = ref("");
 const errorMessage = ref("");
 
@@ -85,15 +85,11 @@ const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
   const type = props.type;
   
-  console.log("Login clicked:", {
-    Email: props.identifier,
-    Password: password.value,
-    Type: type
-  });
-  
   loginMutation.mutate({ identifier: props.identifier, Password: password.value, Type: type }, {
-    onSuccess: (data) => {
-      console.log("Login Success:", data);
+    onSuccess: (data: any) => {
+      console.log("Login Success:", data.data);
+      const userStore = useUserStore();
+      userStore.setAuth(data.data);
       emit('finish');
     },
     onError: (error: any) => {

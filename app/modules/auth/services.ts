@@ -51,11 +51,26 @@ export const createAuthService = () => {
             });
             return response.data;
         },
-        forgotPassword: async () => {
-            // Call API to initiate password reset
+        forgotPassword: async (identifier: string) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/forget-password', {
+                identifier: identifier
+            });
+            return response.data;
         },
-        veriftyForgotPasswordOTP: async () => {
-            // Call API to verify OTP for password reset
+        verifyForgotPasswordOTP: async (identifier: string, otp: string) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/password/verify-otp', {
+                identifier: identifier,
+                token: otp
+            });
+            return response.data;
+        },
+        resetPassword: async (identifier: string, newPassword: string, reset_token: string) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/reset-password', {
+                identifier: identifier,
+                new_password: newPassword,
+                reset_token: reset_token
+            });
+            return response.data;
         },
         OAuthCompleteStep1: async () => {
             // Call API to complete OAuth registration step 1
@@ -64,7 +79,8 @@ export const createAuthService = () => {
             // Call API to complete OAuth registration step 2
         },
         getUserData: async () => {
-            // Call API to get user data
+            const response = await $yapperApi.get('http://localhost:3000/users/me', {withCredentials: true});
+            return response.data;
         }
     };
 };
