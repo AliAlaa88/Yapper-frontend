@@ -1,11 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
 import type { User } from '../types/user'
 
-
 export function useUserActionsQuery(userId: Ref<string | undefined>) {
-    const { $userInfoService } = useNuxtApp()
-    const queryClient = useQueryClient()
+    const { $userInfoService, $queryClient } = useNuxtApp()
 
     const userQuery = useQuery<User>({
         queryKey: computed(() => ['user', userId.value]),
@@ -16,7 +14,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.followUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
@@ -24,7 +22,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unfollowUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
@@ -32,7 +30,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.blockUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
@@ -40,7 +38,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unblockUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
@@ -48,7 +46,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.muteUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
@@ -56,7 +54,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unmuteUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
@@ -64,7 +62,7 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.removeFollower(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
