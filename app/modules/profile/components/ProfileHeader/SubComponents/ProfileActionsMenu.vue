@@ -7,7 +7,7 @@
             v-if="!isBlocked"
             class="cursor-pointer w-full text-white font-semibold text-left px-4 py-3
             hover:bg-gray-200/10 transition flex items-center first:rounded-t-xl"
-            @click="$emit('handle-mute')"
+            @click="handleMuteAndUnmute"
         >
             <MegaphoneOff v-if="!isMuted" class="w-4 h-4 mr-3" />
             <Megaphone v-else class="w-4 h-4 mr-3" />
@@ -17,7 +17,7 @@
             v-if="isFollower && !isBlocked"
             class="w-full text-white text-left font-semibold px-4 py-3 hover:bg-gray-200/10
             transition flex items-center cursor-pointer"
-            @click="$emit('action-type', 'remove')"
+            @click="handleRemove"
         >
             <UserRoundX class="w-4 h-4 mr-3" />
             Remove this follower
@@ -25,7 +25,7 @@
         <button
             class="w-full text-white text-left px-4 py-3 font-semibold hover:bg-gray-200/10
             transition flex items-center last:rounded-b-xl cursor-pointer first:rounded-t-xl"
-            @click="isBlocked ? $emit('action-type', 'unblock') : $emit('action-type', 'block')"
+            @click="handleBlockAndUnblock"
         >
             <Ban v-if="!isBlocked" class="w-4 h-4 mr-3" />
             <CircleCheckBig v-else class="w-4 h-4 mr-3" />
@@ -39,16 +39,44 @@
 <script setup lang="ts">
 import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig } from 'lucide-vue-next'
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+// import type { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
+import type { Ref } from 'vue'
+const showList = inject<Ref<boolean> | undefined>('show-list')
 
-const userId = inject<Ref<string>>('user-id')
+const userId = inject<Ref<string>>('user-id')!
 const {
-    isFollower,
     isBlocked,
     isMuted,
+    isFollower,
     username,
-} = useUserInfo(userId?.value ?? '')
+} = useUserInfo(userId)
 
+watch(isBlocked, (v) => console.log('isBlocked changed to', v))
 
-defineEmits(['action-type', 'handle-mute'])
+const userInteractions = useUserInteractions(userId)
+const {
+    handleBlockWithConfirmation,
+    handleMuteWithSnackbar,
+    handleRemoveFollowerWithConfirmation,
+    handleUnmuteWithSnackbar,
+    handleUnblockWithConfirmation,
+} = userInteractions
+
+function handleMuteAndUnmute() {
+    if (isMuted.value) handleUnmuteWithSnackbar(showList)
+    else handleMuteWithSnackbar(showList)
+}
+
+function handleBlockAndUnblock() {
+    if (isBlocked.value) {
+        console.log('el value --> ', isBlocked)
+        handleUnblockWithConfirmation(showList)
+    } else handleBlockWithConfirmation(showList)
+}
+
+function handleRemove() {
+    handleRemoveFollowerWithConfirmation(showList)
+}
 
 </script>

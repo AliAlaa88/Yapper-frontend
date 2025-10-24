@@ -1,5 +1,7 @@
 <template>
-    <div class="pb-3">
+    <div
+        v-if="!isBlocked"
+        class="pb-3">
         <button
             class="cursor-pointer font-bold text-[15px] leading-[20px] flex
             items-center justify-center whitespace-nowrap
@@ -11,39 +13,35 @@
         >
             {{ buttonText }}
         </button>
-        <ConfirmtionModal
-            :show-confirm="showConfirm"
-            :username="username ?? ''"
-            header-text="Unfollow"
-            background-color="bg-[#ebf1f1]"
-            text-color="text-black"
-            action="Unfollow"
-            hover-color="hover:bg-gray-200/90"
-            @click="confirmUnfollow"
-            @cancel="cancelUnfollow"
-        >
-            <p class="text-gray-200/50 text-[15px] leading-snug">
-                Their posts will no longer show up in your Following timeline.
-                You can still view their profile, unless their posts are protected.
-            </p>
-        </ConfirmtionModal>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useFollow } from '~/modules/profile/composables/useFollow'
-import ConfirmtionModal from './ConfirmtionModal.vue'
+import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 
-const props = defineProps<{userId: string}>()
+const userId = inject<Ref<string>>('user-id')!
+const {
+    isBlocked,
+    isFollowing,
+} = useUserInfo(userId)
+
 const {
     buttonClass,
     buttonText,
-    showConfirm,
-    username,
     handleMouseOut,
     handleMouseOver,
-    handleClick,
-    confirmUnfollow,
-    cancelUnfollow,
-} = useFollow(props.userId)
+} = useFollow(userId)
+
+const userInteractions = useUserInteractions(userId)
+const {
+    handleFollowAction,
+    handleUnfollowWithConfirmation,
+} = userInteractions
+
+function handleClick() {
+    if (!isFollowing.value) handleFollowAction()
+    else handleUnfollowWithConfirmation()
+}
 </script>
