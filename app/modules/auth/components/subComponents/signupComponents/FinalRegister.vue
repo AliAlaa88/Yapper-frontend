@@ -17,6 +17,16 @@
             Please enter your desired username and a strong password.
         </p>
 
+        <!-- Error Message -->
+        <p v-if="errorMessage" class="text-red-500 text-sm mb-4">
+          {{ errorMessage }}
+        </p>
+
+        <!-- Success Message -->
+        <p v-if="successMessage" class="text-green-500 text-sm mb-4">
+          {{ successMessage }}
+        </p>
+
         <!-- Username Input -->
         <input
             type="text"
@@ -83,18 +93,41 @@ const username = ref("");
 const password = ref("");
 const registerMutation = useRegisterS3Query();
 const language = ref("en");
+const errorMessage = ref("");
+const successMessage = ref("");
 const props=defineProps<{
   Email: string;
   recommendations: string[];
 }>();
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+  (e: 'next'): void;
+  (e: 'finish'): void;
+}>();
+
 const onNext = () => {
+  errorMessage.value = ""; // Clear previous errors
+  successMessage.value = ""; // Clear previous success messages
+  
   console.log("Next clicked:", username.value, password.value);
   registerMutation.mutate({ Email: props.Email, Username: username.value, Password: password.value, Language: language.value }, {
     onSuccess: (data) => {
       console.log("Registration Step 3 Success:", data);
+      successMessage.value = "Account created successfully!";     
+      setTimeout(() => {
+        emit('finish');
+      }, 1500);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Registration Step 3 Error:", error);
+      
+      const errorMsg = error?.response?.data?.message 
+        || error?.response?.data?.error 
+        || error?.message 
+        || "Registration failed. Please try again.";
+      
+      errorMessage.value = errorMsg;
     }
   });
 };

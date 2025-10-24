@@ -1,7 +1,7 @@
 <template>
   <createAccount v-if="showSignupStep1" @next="onNext" @close="$emit('close')" />
   <verifyOtp v-if="showVerifyOtp" @close="onCloseVerify" :Email="Email" @next="onFinal" />
-  <FinalRegister v-if="showFinalStep" @close="$emit('close')" :recommendations="Recommendations" :Email="Email" />
+  <FinalRegister v-if="showFinalStep" @close="$emit('close')" :recommendations="Recommendations" :Email="Email" @finish="$emit('finish')" />
 </template>
 
 <script setup lang="ts">

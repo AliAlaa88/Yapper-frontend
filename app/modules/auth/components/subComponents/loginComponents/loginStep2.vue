@@ -30,6 +30,9 @@
         v-model="password"
         class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
       />
+      
+      <!-- Error Message -->
+      <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
     <!-- Forgot password -->
       <div
@@ -60,23 +63,52 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import logo from "../logo.vue";
-const password = ref("");
+import { useLoginQuery } from "../../../queries/useLoginQuery";
 
+const password = ref("");
+const errorMessage = ref("");
 
 const props = defineProps<{
   identifier: string;
+  type:string;
 }>();
 
 const emit = defineEmits<{
-  (e: 'next', password: string): void;
+  (e: 'finish'): void;
   (e: 'close'): void;
   (e: 'switch'): void;
 }>();
 
-const onNext = () => {
-  emit('next', password.value);
-};
+const loginMutation = useLoginQuery();
 
+const onNext = () => {
+  errorMessage.value = ""; // Clear previous errors
+  const type = props.type;
+  
+  console.log("Login clicked:", {
+    Email: props.identifier,
+    Password: password.value,
+    Type: type
+  });
+  
+  loginMutation.mutate({ identifier: props.identifier, Password: password.value, Type: type }, {
+    onSuccess: (data) => {
+      console.log("Login Success:", data);
+      emit('finish');
+    },
+    onError: (error: any) => {
+      console.error("Login Error:", error);
+      
+      // Extract error message from backend response
+      const errorMsg = error?.response?.data?.message 
+        || error?.response?.data?.error 
+        || error?.message 
+        || "Invalid credentials. Please try again.";
+      
+      errorMessage.value = errorMsg;
+    }
+  });
+}
 
 const onForgotPassword = () => {
   console.log("Forgot password clicked");

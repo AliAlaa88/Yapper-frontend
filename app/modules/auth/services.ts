@@ -4,11 +4,18 @@ export const createAuthService = () => {
     const { $yapperApi } = useNuxtApp();
 
     return {
-        login: async (Email: string, Password: string) => {
+        checkIdentifierAvailability: async (identifier: string) => {
+            const response = await $yapperApi.post('http://localhost:3000/auth/check-identifier', {
+                identifier: identifier
+            });
+            return response.data;
+        },
+        login: async (identifier: string, Password: string, Type: string) => {
             // Call API to log in user
             const response = await $yapperApi.post('http://localhost:3000/auth/login', {
-                email: Email,
-                password: Password
+                identifier: identifier,
+                password: Password,
+                type: Type
             });
             return response.data;
         },

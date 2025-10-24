@@ -24,6 +24,9 @@
             v-model="otp"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
         />
+        
+        <!-- Error Message -->
+        <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
       <!-- Next Button -->
       <button
@@ -50,6 +53,7 @@ import { ref } from "vue";
 import { useRegisterS2Query, useResendOTPQuery } from "../../../queries/useRegisterQuery";
 
 const otp = ref("");
+const errorMessage = ref("");
 
 const registerMutation= useRegisterS2Query();
 const resendOTPMutation= useResendOTPQuery();
@@ -66,19 +70,29 @@ const emit = defineEmits<{
 }>();
 
 const onNext = () => {
+  errorMessage.value = ""; // Clear previous errors
   console.log("Next clicked:", otp.value);
-    registerMutation.mutate({token:otp.value,Email:props.Email},{
-      onSuccess:(Data)=>{
-        console.log("Registration Step 2 Success:",Data);
-        // Safely extract recommendations from various possible shapes
-        const rec = (Data as any)?.data?.recommendations ?? (Data as any)?.recommendations ?? (Data as any)?.result?.recommendations ?? [];
-        const recommendations = Array.isArray(rec) ? rec : [];
-        emit('next', recommendations);
-      },
-      onError:(error)=>{
-        console.error("Registration Step 2 Error:",error);
-      }
-    });
+  
+  registerMutation.mutate({token:otp.value,Email:props.Email},{
+    onSuccess:(Data: any)=>{
+      console.log("Registration Step 2 Success:",Data);
+      // Safely extract recommendations from various possible shapes
+      const rec = Data?.data?.recommendations ?? [];
+      const recommendations = Array.isArray(rec) ? rec : [];
+      emit('next', recommendations);
+    },
+    onError:(error: any)=>{
+      console.error("Registration Step 2 Error:",error);
+      
+      // Extract error message from backend response
+      const errorMsg = error?.response?.data?.message 
+        || error?.response?.data?.error 
+        || error?.message 
+        || "Invalid OTP. Please try again.";
+      
+      errorMessage.value = errorMsg;
+    }
+  });
 };
 
 const onResendCode = () => {

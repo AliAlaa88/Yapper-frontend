@@ -1,6 +1,6 @@
 <template>
   <AuthLayout>
-    <CreateAccount @close="goBack"  />
+    <CreateAccount @close="goBack" @finish="goBack" />
   </AuthLayout>
 </template>
 

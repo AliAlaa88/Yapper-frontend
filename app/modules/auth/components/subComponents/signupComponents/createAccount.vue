@@ -144,6 +144,9 @@ const onNext = async () => {
     error.value = "Please complete the reCAPTCHA.";
     await recaptchaRef.value?.run()
   } else {
+    error.value = ""; // Clear previous errors
+    success.value = "";
+    
     console.log("Next clicked:", name.value, email.value, dateOfBirth, recaptcha.value);
     registerMutation.mutate({ Name: name.value, Email: email.value, Birth_date: dateOfBirth, Captcha_token: recaptcha.value }, {
       onSuccess: (data) => {
@@ -151,10 +154,16 @@ const onNext = async () => {
         error.value = "";
         emit('next', email.value);
       },
-      onError: (err) => {
+      onError: (err: any) => {
         console.log(err);
-        // show error to user in UI
-        error.value = "Registration failed. Please try again.";
+        
+        // Extract error message from backend response
+        const errorMsg = err?.response?.data?.message 
+          || err?.response?.data?.error 
+          || err?.message 
+          || "Registration failed. Please try again.";
+        
+        error.value = errorMsg;
         success.value = "";
       }
     });

@@ -31,7 +31,7 @@
         v-model="identifier"
         class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
       />
-
+      <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
       <!-- Next Button -->
       <button
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
@@ -61,18 +61,21 @@ import { ref, computed } from "vue";
 import logo from "../logo.vue";
 import OAuth from "../OAuth.vue";
 import { getIdentifierType } from "../../../utils/identifierType";
+import { useCheckIdentifierAvailabilityQuery } from "~/modules/auth/queries/useLoginQuery";
 //import { useLoginQuery } from "../../../queries/useLoginQuery";
 
 const identifier = ref("");
-
+const errorMessage = ref("");
 // Computed property to determine the type of identifier
 const identifierType = computed(() => getIdentifierType(identifier.value));
 
 const emit = defineEmits<{
-  (e: 'next', identifier: string): void;
+  (e: 'next', identifier: string, identifierType: string): void;
   (e: 'close'): void;
   (e: 'switch'): void;
 }>();
+
+const checkMutation = useCheckIdentifierAvailabilityQuery();
 
 const onNext = () => {
   const type = identifierType.value;
@@ -83,8 +86,26 @@ const onNext = () => {
     isPhone: type === 'phone',
     isUsername: type === 'username'
   });
-
-  emit('next', identifier.value);
+  errorMessage.value = ""; // Clear previous errors
+  
+  checkMutation.mutate(identifier.value, {
+    onSuccess: (data) => {
+        console.log("Identifier exists. Proceeding to next step.");
+        const Type = (data as any)?.data?.type ?? type;
+        emit('next', identifier.value, Type);
+    },
+    onError: (error: any) => {
+        console.log("Identifier does not exist or error occurred:", error);
+        
+        // Extract error message from response
+        const errorMsg = error?.response?.data?.message 
+          || error?.response?.data?.error 
+          || error?.message 
+          || "Identifier does not exist or error occurred. Please try again.";
+        
+        errorMessage.value = errorMsg;
+    }
+  });
 };
 
 
