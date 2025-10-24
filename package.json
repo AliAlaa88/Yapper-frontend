@@ -12,7 +12,8 @@
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "prepare": "husky"
+        "prepare": "husky",
+        "mock-server": "json-server --watch app/mockServer/db.json --port 3001 --id post_id --routes app/mockServer/routes.json"
     },
     "lint-staged": {
         "*.{js,ts,vue}": [
@@ -25,6 +26,7 @@
     },
     "dependencies": {
         "@nuxt/eslint": "^1.9.0",
+        "@nuxtjs/i18n": "^10.1.1",
         "@pinia/nuxt": "^0.11.2",
         "@tailwindcss/vite": "^4.1.14",
         "@tanstack/vue-query": "^5.90.5",
@@ -52,6 +54,7 @@
         "husky": "^8.0.0",
         "jest": "^29.7.0",
         "jest-transform-stub": "^2.0.0",
+        "json-server": "^1.0.0-beta.3",
         "ts-jest": "^29.4.5"
     }
 }
