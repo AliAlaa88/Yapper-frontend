@@ -16,12 +16,10 @@
                 <div class="flex gap-3">
                     <ProfileActions
                         v-if="user?.id"
-                        :user-id="user.id"
                     />
 
                     <ProfileFollowAction
                         v-if="user?.id"
-                        :user-id="user.id"
                     />
                 </div>
 
@@ -39,6 +37,7 @@
                     :following-count="user?.following_count ?? 0"
                     :followers-count="user?.followers_count ?? 0"
                 />
+                <ProfileMuteMessage />
             </div>
         </div>
     </div>
@@ -51,14 +50,15 @@ import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
 import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
 import ProfileBio from './SubComponents/ProfileBio.vue'
 import ProfileStats from './SubComponents/ProfileStats.vue'
-
-import { useUserInfoQuery } from '../../queries/useUserInfoQuery.js'
-
+import ProfileActions from './SubComponents/ProfileActions.vue'
+import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
 import { useRoute } from 'vue-router'
+import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
+
+
 const route = useRoute()
 const username = route.params.username as string
 
 const userQuery = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
-provide('user-id', computed(() => user.value?.id))
 </script>
