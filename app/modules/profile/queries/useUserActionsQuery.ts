@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
-import type { User } from '../types/user'
+import type { UserAction } from '../types/user'
 
 export function useUserActionsQuery(userId: Ref<string | undefined>) {
     const { $userInfoService, $queryClient } = useNuxtApp()
 
-    const userQuery = useQuery<User>({
+    const userQuery = useQuery<UserAction>({
         queryKey: computed(() => ['user', userId.value]),
         queryFn: () => $userInfoService.getUserByID(userId.value!),
     })

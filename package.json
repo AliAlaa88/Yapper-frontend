@@ -13,7 +13,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "prepare": "husky",
-        "mock-server": "json-server --watch app/mockServer/db.json --port 3001 --id post_id --routes app/mockServer/routes.json"
+        "mock-server": "json-server --watch app/mockServer/db.json --port 3001 --routes app/mockServer/routes.json"
     },
     "lint-staged": {
         "*.{js,ts,vue}": [
@@ -53,7 +53,7 @@
         "husky": "^8.0.0",
         "jest": "^29.7.0",
         "jest-transform-stub": "^2.0.0",
-        "json-server": "^1.0.0-beta.3",
+        "json-server": "^0.17.4",
         "ts-jest": "^29.4.5"
     }
 }

@@ -1,50 +1,12 @@
-import type { User } from '../types/user'
+import type { UserAction } from '../types/user'
 import { useNuxtApp } from '#app'
 
-const users: User[] = [
-    {
-        id: '1',
-        username: 'me',
-        name: 'Hagar Abdelsalam',
-        followers_count: 2,
-        following_count: 1,
-        is_follower: false,
-        is_following: false,
-        is_muted: false,
-        is_blocked: false,
-    },
-    {
-        id: '2',
-        username: 'hagar',
-        name: 'hagar3bdelsalam',
-        followers_count: 1,
-        following_count: 1,
-        is_follower: true,
-        is_following: false,
-        is_muted: false,
-        is_blocked: false,
-    },
-    {
-        id: '3',
-        username: 'sarah',
-        name: 'sarah Mohamed',
-        followers_count: 10,
-        following_count: 20,
-        is_follower: true,
-        is_following: true,
-        is_muted: true,
-        is_blocked: false,
-    },
-]
+// move useNuxtApp outside the functions. here?
 
 export const userInfoServiceMock = {
-    // async getMyProfile():Promise<UserProfile> {
-    //     return Promise.resolve(mockUsers.at(0) as UserProfile)
-    // },
-
-    async getUserInfoByUsername(username: string): Promise<User> {
+    async getUserInfoByUsername(username: string): Promise<UserAction> {
         const { $axios } = useNuxtApp()
-        const response = await $axios.get<User[]>('/users', {
+        const response = await $axios.get<UserAction[]>('/users', {
             params: { username },
         })
         const user = response.data[0]
@@ -53,76 +15,181 @@ export const userInfoServiceMock = {
         }
         return user
     },
-  
-    async getUserInfoByUsername(username: string): Promise<User> {
-        console.log('Mock getUserInfoByUsername called with:', username)
-        const user = users.find((user) => user.username === username)
-        return Promise.resolve({...user} as User)
-    },
 
-    async getUserByID(userId: string): Promise<User> {
-        const user = users.find((user) => user.id === userId)
-        console.log(user)
-        return Promise.resolve({...user} as User)
-    },
-
-    async followUser(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
-        user.is_following = true
-        user.followers_count++
-        // should increase the number of my following
+    async getUserByID(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+        const response = await $axios.get<UserAction[]>('/users', {
+            params: { user_id: userId },
+        })
+        const user = response.data[0]
+        if (!user) {
+            throw new Error(`User not found: ${userId}`)
+        }
         return user
     },
 
-    async unfollowUser(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
-        user.is_following = false
-        if (user.followers_count > 0) user.followers_count--
-        return user
+    async followUser(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData = {
+            ...user,
+            is_following: true,
+            followers_count: user.followers_count + 1,
+        }
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
     },
 
-    async blockUser(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
-        user.is_blocked = true
-        console.log('from service', user.is_blocked)
+    async unfollowUser(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData = {
+            ...user,
+            is_following: false,
+            followers_count: user.followers_count > 0 ? user.followers_count - 1 : 0,
+        }
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
+    },
+
+    async blockUser(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData: UserAction = {
+            ...user,
+            is_blocked: true,
+        }
+
         if (user.is_following) {
-            user.is_following = false
-            if (user.followers_count > 0) user.followers_count--
+            updatedData.is_following = false
+            updatedData.followers_count = user.followers_count > 0 ? user.followers_count - 1 : 0
         }
-        return user
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
     },
 
-    async unblockUser(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
-        user.is_blocked = false
-        return user
+    async unblockUser(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData = {
+            ...user,
+            is_blocked: false,
+        }
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
     },
 
-    async muteUser(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
-        user.is_muted = true
-        return user
+    async muteUser(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData = {
+            ...user,
+            is_muted: true,
+        }
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
     },
 
-    async unmuteUser(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
-        user.is_muted = false
-        return user
+    async unmuteUser(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData = {
+            ...user,
+            is_muted: false,
+        }
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
     },
 
-    async removeFollower(userId: string) {
-        const user = users.find((user) => user.id === userId)
-        if (!user) throw new Error('user not found')
+    async removeFollower(userId: string): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData: UserAction = {
+            ...user,
+        }
+
         if (user.is_follower) {
-            user.is_follower = false
-            user.following_count--
+            updatedData.is_follower = false
+            updatedData.following_count = user.following_count > 0 ? user.following_count - 1 : 0
         }
-        return user
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PUT',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
     },
 }
