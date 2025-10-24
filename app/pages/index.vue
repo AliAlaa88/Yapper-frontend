@@ -14,7 +14,7 @@ async function getUser() {
     return data
 }
 
-const { data, isLoading, error } = useQuery({
+const { data } = useQuery({
     queryKey: ['user'],
     queryFn: getUser,
 })
