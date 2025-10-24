@@ -1,8 +1,8 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 export function useSnackbar() {
     const showSnackbar = ref(false)
-    const snackbar = reactive({
+    const snackbar = ref({
         username: '',
         message: '',
         action: '',
@@ -16,10 +16,10 @@ export function useSnackbar() {
         handleClick?: () => void,
     ) {
         showSnackbar.value = true
-        snackbar.username = username ?? ''
-        snackbar.message = message
-        snackbar.action = action ?? ''
-        snackbar.handleClick = handleClick ?? null
+        snackbar.value.username = username ?? ''
+        snackbar.value.message = message
+        snackbar.value.action = action ?? ''
+        snackbar.value.handleClick = handleClick ?? null
         setTimeout(() => (showSnackbar.value = false), 4000)
     }
 
