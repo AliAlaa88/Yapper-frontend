@@ -1,53 +1,50 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative   
-             sm:rounded-2xl sm:max-w-sm sm:h-auto 
-             h-full sm:p-8 p-6 flex flex-col justify-center">
-      <button
-        class="absolute top-4 right-4 text-gray-400 hover:text-white"
-        @click="$emit('close')"
-      >
-        ✕
-      </button>
-
-      <!-- Logo -->
-      <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
-
-      <!-- Title -->
-      <h2 class="text-3xl font-bold text-left mb-6">Find your X account</h2>
-      <!-- Description -->
-      <p class="text-gray-400 mb-6">
-       Enter the email, phone number, or username associated with your account to change your password.
-      </p>
-
-      <!-- Input -->
-      <input
-        type="text"
-        placeholder="Phone, email, or username"
-        v-model="identifier"
-        class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
-      />
-
-      <!-- Next Button -->
-      <button
-        class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
-        @click="onNext"
-      >
-        Next
-      </button>
-    </div>
-  </div>
+  <forgetPasswordStep1
+    v-if="showStep1"
+    @next="onNextS1"
+    @close="onClose"
+  />
+  <forgetPasswordStep2
+    v-if="showStep2"
+    :identifier="identifier"
+    @next="onNextS2"
+    @close="onClose"
+  />
+  <forgetPasswordStep3
+    v-if="showStep3"
+    :identifier="identifier"
+    :reset_token="resetToken"
+    @close="onClose"
+    @finish="$emit('finish')"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import logo from "./subComponents/logo.vue";
+import forgetPasswordStep1 from "./subComponents/forgetPasswordComponents/forgetPasswordStep1.vue";
+import forgetPasswordStep2 from "./subComponents/forgetPasswordComponents/forgetPasswordStep2.vue";
+import forgetPasswordStep3 from "./subComponents/forgetPasswordComponents/forgetPasswordStep3.vue";
+const showStep1 = ref(true);
+const showStep2 = ref(false);
+const showStep3 = ref(false);
+const identifier = ref('');
+const resetToken = ref('');
+const onNextS1 = (Identifier: string) => {
+  showStep1.value = false;
+  showStep2.value = true;
+  identifier.value = Identifier;
+};
 
-const identifier = ref("");
+const onNextS2 = (reset_token: string) => {
+  showStep2.value = false;
+  showStep3.value = true;
+  resetToken.value = reset_token;
+  console.log("Reset token received:", reset_token);
+};
 
-const onNext = () => {
-  // call backend to check email existance
-  console.log("Next clicked:", identifier.value);
+const onClose = () => {
+  console.log("Closing forget password flow");
+  navigateTo('/auth'); // Redirect to home or desired page
 };
 
 </script>

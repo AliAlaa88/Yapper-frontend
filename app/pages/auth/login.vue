@@ -1,6 +1,6 @@
 <template>
   <AuthLayout>
-    <SignInModal @close="goBack" @switch="goToSignup" />
+    <SignInModal @close="goBack" @switch="goToSignup" @finish="goBack" />
   </AuthLayout>
 </template>
 
