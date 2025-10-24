@@ -21,6 +21,8 @@
                     <ProfileFollowAction
                         v-if="user?.id"
                     />
+
+                    <ProfileBlockedAction />
                 </div>
 
             </div>
@@ -52,6 +54,7 @@ import ProfileBio from './SubComponents/ProfileBio.vue'
 import ProfileStats from './SubComponents/ProfileStats.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
+import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import { useRoute } from 'vue-router'
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
 
