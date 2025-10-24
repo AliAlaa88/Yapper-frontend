@@ -6,9 +6,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import verifyOtp from "./subComponents/verifyOtp.vue";
-import createAccount from "./subComponents/createAccount.vue";
-import FinalRegister from "./subComponents/FinalRegister.vue";
+import verifyOtp from "./subComponents/signupComponents/verifyOtp.vue";
+import createAccount from "./subComponents/signupComponents/createAccount.vue";
+import FinalRegister from "./subComponents/signupComponents/FinalRegister.vue";
 const showSignupStep1 = ref(true);
 const showVerifyOtp = ref(false);
 const showFinalStep = ref(false);

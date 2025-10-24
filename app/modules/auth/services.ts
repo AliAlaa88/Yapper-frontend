@@ -4,8 +4,13 @@ export const createAuthService = () => {
     const { $yapperApi } = useNuxtApp();
 
     return {
-        login: async () => {
-            // Call API to log in user            
+        login: async (Email: string, Password: string) => {
+            // Call API to log in user
+            const response = await $yapperApi.post('http://localhost:3000/auth/login', {
+                email: Email,
+                password: Password
+            });
+            return response.data;
         },
         registerStep1: async (payload: RegisterPayload) => {
             const response = await $yapperApi.post('http://localhost:3000/auth/signup/step1', {
@@ -14,6 +19,7 @@ export const createAuthService = () => {
                 birth_date: payload.Birth_date,
                 captcha_token: payload.Captcha_token
             });
+            console.log("Register Step 1 Response:", response.data);
             return response.data;
         },
         registerStep2: async (payload: verifyAccountPayload) => {
@@ -32,9 +38,9 @@ export const createAuthService = () => {
             },{withCredentials: true});
             return response.data;
         },
-        resendOTP: async (email: string) => {
+        resendOTP: async (Email: string) => {
             const response = await $yapperApi.post('http://localhost:3000/auth/resend-otp', {
-                email
+                email: Email
             });
             return response.data;
         },

@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-30 relative flex flex-col justify-center">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-20 relative flex flex-col justify-center">
       <button
         class="absolute top-4 left-4 w-10 h-10 text-gray-400 hover:text-white"
         @click="$emit('close')"
@@ -77,7 +77,7 @@
 <script setup lang="ts"> 
 
 import { ref } from "vue";
-import { useRegisterS3Query } from "../../queries/useRegisterQuery";
+import { useRegisterS3Query } from "../../../queries/useRegisterQuery";
 
 const username = ref("");
 const password = ref("");

@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import forgetPassword from '../../modules/auth/views/forgotPasswordPage.vue'
+import forgetPassword from '../../modules/auth/components/forgetPassword.vue'
 </script>

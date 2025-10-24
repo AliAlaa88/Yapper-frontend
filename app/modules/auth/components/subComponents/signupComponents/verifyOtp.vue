@@ -37,18 +37,24 @@
         Didn’t receive the code?
         <button class="text-blue-400 hover:underline" @click="onResendCode">Resend code</button>
       </p>
+      <div class="mt-4">
+        <p v-if="resendCodeSuccess" class="text-green-400 text-sm text-center">{{ resendCodeSuccess }}</p>
+        <p v-if="resendCodeFailure" class="text-red-400 text-sm text-center">{{ resendCodeFailure }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRegisterS2Query, useResendOTPQuery } from "../../queries/useRegisterQuery";
+import { useRegisterS2Query, useResendOTPQuery } from "../../../queries/useRegisterQuery";
 
 const otp = ref("");
 
 const registerMutation= useRegisterS2Query();
 const resendOTPMutation= useResendOTPQuery();
+const resendCodeSuccess=ref('');
+const resendCodeFailure=ref('');
 
 const props=defineProps<{
   Email: string;
@@ -80,9 +86,13 @@ const onResendCode = () => {
     resendOTPMutation.mutate(props.Email,{
       onSuccess:(data)=>{
         console.log("Resend OTP Success:",data);
+        resendCodeSuccess.value="OTP has been resent successfully.";
+        resendCodeFailure.value="";
       },
       onError:(error)=>{
-        console.error("Resend OTP Error:",error);
+        console.error("Resend OTP Error:",error.message);
+        resendCodeFailure.value= (error as any).response?.data?.message || error.message;
+        resendCodeSuccess.value="";
       }
     });
 };

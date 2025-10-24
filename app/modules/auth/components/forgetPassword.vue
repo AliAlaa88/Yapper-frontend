@@ -1,11 +1,11 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm">
     <div class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative   
              sm:rounded-2xl sm:max-w-sm sm:h-auto 
              h-full sm:p-8 p-6 flex flex-col justify-center">
       <button
         class="absolute top-4 right-4 text-gray-400 hover:text-white"
-        @click="$emit('close')"
+        @click="onClose"
       >
         ✕
       </button>
@@ -48,6 +48,10 @@ const identifier = ref("");
 const onNext = () => {
   // call backend to check email existance
   console.log("Next clicked:", identifier.value);
+};
+
+const onClose = () => {
+  window.location.href = "/auth"; // Redirect to home or desired page
 };
 
 </script>

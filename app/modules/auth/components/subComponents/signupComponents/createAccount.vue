@@ -89,9 +89,9 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import logo from "./logo.vue";
-import Recaptcha from "./recaptcha.vue";
-import { useRegisterS1Query } from "../../queries/useRegisterQuery";
+import logo from "../logo.vue";
+import Recaptcha from "../recaptcha.vue";
+import { useRegisterS1Query } from "../../../queries/useRegisterQuery";
 const name = ref("");
 const email = ref("");
 const month = ref("");
