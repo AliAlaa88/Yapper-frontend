@@ -27,8 +27,8 @@ const users: User[] = [
         id: '3',
         username: 'sarah',
         name: 'sarah Mohamed',
-        followers_count: 0,
-        following_count: 1,
+        followers_count: 10,
+        following_count: 20,
         is_follower: true,
         is_following: true,
         is_muted: true,
@@ -43,7 +43,8 @@ export const userInfoServiceMock = {
 
     async getUserInfoByUsername(username: string): Promise<User> {
         console.log('Mock getUserInfoByUsername called with:', username)
-        return Promise.resolve(users.find((user) => user.username === username) as User)
+        const user = users.find((user) => user.username === username)
+        return Promise.resolve({...user} as User)
     },
 
     async getUserByID(userId: string): Promise<User> {
@@ -108,7 +109,7 @@ export const userInfoServiceMock = {
         if (user.is_follower) {
             user.is_follower = false
             user.following_count--
-            // i think is should decrease the cout in my profile too (followers)
         }
+        return user
     },
 }

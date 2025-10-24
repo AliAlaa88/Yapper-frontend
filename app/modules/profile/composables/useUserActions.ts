@@ -1,12 +1,18 @@
 import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
 
-
-export function useUserActions(userId: string) {
-    const { blockMutation, unblockMutation, muteMutation, unmuteMutation, removeFollowerMutation } =
-        useUserActionsQuery(userId)
+export function useUserActions(userId: Ref<string | undefined>) {
+    const {
+        unfollowMutation,
+        blockMutation,
+        unblockMutation,
+        muteMutation,
+        unmuteMutation,
+        removeFollowerMutation,
+        followMutation,
+    } = useUserActionsQuery(userId)
 
     function handleUnmute() {
-        console.log('mute user')
+        console.log('unmute user')
         unmuteMutation.mutate()
     }
     function handleMute() {
@@ -27,11 +33,23 @@ export function useUserActions(userId: string) {
         removeFollowerMutation.mutate()
     }
 
+    function handleUnfollow() {
+        console.log('unfollow')
+        unfollowMutation.mutate()
+    }
+
+    function handleFollow() {
+        console.log('follow')
+        followMutation.mutate()
+    }
+
     return {
         handleUnmute,
         handleMute,
         handleBlock,
         handleUnblock,
         handleRemoveFollower,
+        handleUnfollow,
+        handleFollow,
     }
 }

@@ -3,68 +3,68 @@ import { useNuxtApp } from '#app'
 import type { User } from '../types/user'
 
 
-export function useUserActionsQuery(userId: string) {
+export function useUserActionsQuery(userId: Ref<string | undefined>) {
     const { $userInfoService } = useNuxtApp()
     const queryClient = useQueryClient()
 
     const userQuery = useQuery<User>({
-        queryKey: ['user', userId],
-        queryFn: () => $userInfoService.getUserByID(userId),
+        queryKey: computed(() => ['user', userId.value]),
+        queryFn: () => $userInfoService.getUserByID(userId.value!),
     })
 
     const followMutation = useMutation({
-        mutationFn: () => $userInfoService.followUser(userId),
+        mutationFn: () => $userInfoService.followUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
     const unfollowMutation = useMutation({
-        mutationFn: () => $userInfoService.unfollowUser(userId),
+        mutationFn: () => $userInfoService.unfollowUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
     const blockMutation = useMutation({
-        mutationFn: () => $userInfoService.blockUser(userId),
+        mutationFn: () => $userInfoService.blockUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
     const unblockMutation = useMutation({
-        mutationFn: () => $userInfoService.unblockUser(userId),
+        mutationFn: () => $userInfoService.unblockUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
     const muteMutation = useMutation({
-        mutationFn: () => $userInfoService.muteUser(userId),
+        mutationFn: () => $userInfoService.muteUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
     const unmuteMutation = useMutation({
-        mutationFn: () => $userInfoService.unmuteUser(userId),
+        mutationFn: () => $userInfoService.unmuteUser(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
     const removeFollowerMutation = useMutation({
-        mutationFn: () => $userInfoService.removeFollower(userId),
+        mutationFn: () => $userInfoService.removeFollower(userId.value),
         onSuccess: (data) => {
             console.log(data)
-            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
     })
 
