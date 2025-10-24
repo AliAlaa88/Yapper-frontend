@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
-    modules: ['@nuxt/eslint', '@pinia/nuxt'],
+    modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n'],
     ssr: false,
     css: ['~/assets/css/main.css'],
     vite: {
@@ -17,4 +17,28 @@ export default defineNuxtConfig({
         },
     },
     plugins: ['./app/plugins/axios.ts', './app/plugins/vue-query.ts', './app/plugins/services.ts'],
+    i18n: {
+        locales: [
+            {
+                code: 'en',
+                name: 'English',
+                dir: 'ltr',
+                file: 'en.json',
+            },
+            {
+                code: 'ar',
+                name: 'العربية',
+                dir: 'rtl',
+                file: 'ar.json',
+            },
+        ],
+        defaultLocale: 'en',
+        langDir: 'locales/',
+        strategy: 'no_prefix',
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'i18n_redirected',
+            redirectOn: 'root',
+        },
+    } as any,
 })
