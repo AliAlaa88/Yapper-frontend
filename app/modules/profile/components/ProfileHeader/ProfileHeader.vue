@@ -35,10 +35,7 @@
                     :verified="user?.verified ?? false"
                 />
                 <ProfileBio :bio="user?.bio ?? ''" />
-                <ProfileStats
-                    :following-count="user?.following_count ?? 0"
-                    :followers-count="user?.followers_count ?? 0"
-                />
+                <ProfileStats />
                 <ProfileMuteMessage />
             </div>
         </div>

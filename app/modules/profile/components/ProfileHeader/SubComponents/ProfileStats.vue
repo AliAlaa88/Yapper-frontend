@@ -12,8 +12,10 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-    followingCount: number
-    followersCount: number
-}>()
+import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+const userId = inject<Ref<string>>('user-id')!
+const {
+    followersCount,
+    followingCount,
+} = useUserInfo(userId)
 </script>
