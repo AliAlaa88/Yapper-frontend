@@ -1,7 +1,17 @@
 <template>
-    <div>
+    <div :dir="currentDirection" :lang="currentLocale">
         <NuxtLayout>
             <NuxtPage />
         </NuxtLayout>
     </div>
 </template>
+
+<script setup lang="ts">
+const { locale, locales } = useI18n()
+
+const currentLocale = computed(() => locale.value)
+const currentDirection = computed(() => {
+    const currentLocaleObj = locales.value.find((l: any) => l.code === locale.value)
+    return currentLocaleObj?.dir || 'ltr'
+})
+</script>

@@ -32,10 +32,13 @@
                 <ProfileUserInfo
                     :display-name="user?.name ?? ''"
                     :username="user?.username ?? ''"
-                    :verified="user?.verified ?? false"
                 />
                 <ProfileBio :bio="user?.bio ?? ''" />
-                <ProfileStats />
+                <ProfileCreatedAt :created-at="user?.created_at ?? ''" />
+                <ProfileStats
+                    :following-count="user?.following_count ?? 0"
+                    :followers-count="user?.followers_count ?? 0"
+                />
                 <ProfileMuteMessage />
             </div>
         </div>
@@ -48,6 +51,7 @@ import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
 import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
 import ProfileBio from './SubComponents/ProfileBio.vue'
+import ProfileCreatedAt from './SubComponents/ProfileCreatedAt.vue'
 import ProfileStats from './SubComponents/ProfileStats.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'

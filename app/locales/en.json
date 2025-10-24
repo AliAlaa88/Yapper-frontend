@@ -1,0 +1,48 @@
+{
+    "welcome": "Welcome to Yapper",
+    "hello": "Hello",
+    "goodbye": "Goodbye",
+    "language": "Language",
+    "switchLanguage": "Switch Language",
+    "currentLocale": "Current Locale",
+    "demo": {
+        "title": "i18n Demonstration",
+        "subtitle": "Internationalization with English and Arabic",
+        "description": "This page demonstrates the i18n implementation with translation, pluralization, interpolation, and RTL support."
+    },
+    "features": {
+        "title": "Features",
+        "translation": "Text Translation",
+        "pluralization": "Pluralization",
+        "interpolation": "Variable Interpolation",
+        "formatting": "Date & Number Formatting",
+        "rtl": "RTL Support"
+    },
+    "examples": {
+        "greeting": "Hello, {name}!",
+        "userCount": "No users | One user | {count} users",
+        "itemCount": "You have {count} item | You have {count} items"
+    },
+    "form": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit"
+    },
+    "messages": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "loading": "Loading...",
+        "noData": "No data available"
+    },
+    "navigation": {
+        "home": "Home",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout"
+    }
+}
