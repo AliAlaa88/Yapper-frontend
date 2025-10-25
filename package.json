@@ -13,7 +13,11 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "prepare": "husky",
-        "mock-server": "json-server --watch app/mockServer/db.json --port 3001 --routes app/mockServer/routes.json"
+        "mock-server": "json-server --watch app/mockServer/db.json --port 3001 --id post_id --routes app/mockServer/routes.json",
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "test:run": "vitest run",
+        "test:coverage": "vitest run --coverage"
     },
     "lint-staged": {
         "*.{js,ts,vue}": [
@@ -48,12 +52,15 @@
         "@commitlint/cli": "^20.1.0",
         "@commitlint/config-conventional": "^20.0.0",
         "@nuxt/test-utils": "^3.19.1",
+        "@vitejs/plugin-vue": "^6.0.1",
         "@vue/test-utils": "^2.4.6",
         "babel-jest": "^29.7.0",
+        "happy-dom": "^17.6.3",
         "husky": "^8.0.0",
         "jest": "^29.7.0",
         "jest-transform-stub": "^2.0.0",
         "json-server": "^0.17.4",
-        "ts-jest": "^29.4.5"
+        "ts-jest": "^29.4.5",
+        "vitest": "^3.2.4"
     }
 }
