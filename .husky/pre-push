@@ -1,0 +1,10 @@
+#!/bin/sh
+
+branch_name=$(git symbolic-ref --short HEAD)
+
+echo "$branch_name" | grep -Eq '^(feat|fix|chore|hotfix|docs|ci)/[a-z0-9._-]+$'
+if [ $? -ne 0 ]; then
+  echo "❌ Invalid branch name: $branch_name"
+  echo "👉 Branch name must start with feat/, fix/, chore/, docs/, ci/, or hotfix/ (e.g. feat/signup-page)"
+  exit 1
+fi
