@@ -1,5 +1,5 @@
 import type { UserAction } from '../types/user'
-import { useNuxtApp } from '#app'
+import { useNuxtApp } from 'nuxt/app'
 
 // move useNuxtApp outside the functions. here?
 
