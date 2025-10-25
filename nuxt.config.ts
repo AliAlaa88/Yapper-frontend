@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
-    modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n'],
+    modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/test-utils/module'],
     ssr: false,
     css: ['~/assets/css/main.css'],
     vite: {
@@ -40,5 +40,5 @@ export default defineNuxtConfig({
             cookieKey: 'i18n_redirected',
             redirectOn: 'root',
         },
-    } as any,
+    },
 })
