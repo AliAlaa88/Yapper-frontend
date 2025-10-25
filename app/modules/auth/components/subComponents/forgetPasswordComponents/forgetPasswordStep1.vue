@@ -1,14 +1,8 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-sm p-8 relative   
-             sm:rounded-2xl sm:max-w-sm sm:h-auto 
-             h-full sm:p-8 p-6 flex flex-col justify-center">
-      <button
-        class="absolute top-4 right-4 text-gray-400 hover:text-white"
-        @click="onClose"
-      >
-        ✕
-      </button>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center">
+      <!-- Close Button -->
+      <closeButton @close="$emit('close')" />
 
       <!-- Logo -->
       <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
@@ -46,37 +40,34 @@
 import { ref } from "vue";
 import logo from "../logo.vue";
 import { useForgotPasswordQuery } from "../../../queries/useForgetPasswordQuery";
+import closeButton from "../closeButton.vue";
 
 const identifier = ref("");
-const forgotPasswordMutation = useForgotPasswordQuery();
 const errorMessage = ref("");
 
 const emit = defineEmits<{
   (e: 'next', identifier: string): void;
+  (e: 'close'): void;
 }>();
 
-const onNext = () => {
-    forgotPasswordMutation.mutate({ identifier: identifier.value }, {
-        onSuccess: (data: any) => {
-        console.log("Forgot Password Step 1 Success:", data);
-        emit('next', identifier.value);
-        },
-        onError: (error: any) => {
-        console.error("Forgot Password Step 1 Error:", error);
-        errorMessage.value = error?.response?.data?.message 
-            || error?.response?.data?.error 
-            || error?.message 
-            || "An unexpected error occurred. Please try again.";
-        }
-    });
-};
+const forgotPasswordMutation = useForgotPasswordQuery(
+  (data: any) => {
+    console.log("Forgot Password Step 1 Success:", data);
+    errorMessage.value = "";
+    emit('next', identifier.value);
+  },
+  (error: any) => {
+    console.error("Forgot Password Step 1 Error:", error);
+    errorMessage.value = error?.response?.data?.message 
+      || error?.response?.data?.error 
+      || error?.message 
+      || "An unexpected error occurred. Please try again.";
+  }
+);
 
-const onClose = () => {
-  window.location.href = "/auth"; // Redirect to home or desired page
+const onNext = () => {
+  errorMessage.value = ""; // Clear previous errors
+  forgotPasswordMutation.mutate({ identifier: identifier.value });
 };
 
 </script>
-
-<style scoped>
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css";
-</style>

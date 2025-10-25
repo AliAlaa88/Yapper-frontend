@@ -8,16 +8,17 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "~/modules/auth/stores/userStore";
 const router = useRouter();
-
-async function getUser() {
-    const response = await fetch('https://jsonplaceholder.typicode.com/users')
-    const data = await response.json()
-    return data
-}
-
-const { data, isLoading, error } = useQuery({
-    queryKey: ['user'],
-    queryFn: getUser,
-})
+onMounted(() => {
+    const userStore = useUserStore();
+    const home = "home";
+    if (!userStore.isLoggedIn) {
+        router.push(`/${home}`);
+    } else {
+        router.push("/auth");
+    }
+});
 </script>

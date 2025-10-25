@@ -1,13 +1,8 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-20 relative flex flex-col justify-center">
-      <button
-        class="absolute top-4 right-4 text-gray-400 hover:text-white"
-        @click="$emit('close')"
-      >
-        ✕
-      </button>
-
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center">
+      <!-- Close Button -->
+      <closeButton @close="$emit('close')" />
       <!-- Logo -->
     <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -92,6 +87,7 @@ import { ref, computed } from "vue";
 import logo from "../logo.vue";
 import Recaptcha from "../recaptcha.vue";
 import { useRegisterS1Query } from "../../../queries/useRegisterQuery";
+import closeButton from "../closeButton.vue";
 const name = ref("");
 const email = ref("");
 const month = ref("");
@@ -128,10 +124,36 @@ const recaptcha = ref("");
 const onRecaptchaVerified = (token: string) => {
   recaptcha.value = token;
 };
-const registerMutation = useRegisterS1Query()
+const registerMutation = useRegisterS1Query(
+  (data) => {
+    success.value = "Registration successful! Please verify your email.";
+    error.value = "";
+    emit('next', email.value);
+  },
+  (err: any) => {
+    console.log(err);
+    const errorMsg = err?.response?.data?.message 
+      || err?.response?.data?.error 
+      || err?.message 
+      || "Registration failed. Please try again.";
+    
+    const step = err?.response?.data?.current_step || -1;
+    console.log("Current Step from error:", step);
+    if(step == 1){
+      console.log("Emitting next for step 1");
+      emit('next', email.value);
+    }
+    if(step == 2){
+      emit('GoToStep2', email.value);
+    }
+    error.value = errorMsg;
+    success.value = "";
+  }
+)
 const emit = defineEmits<{
   (e: 'next', email: string): void
   (e: 'close'): void
+  (e: 'GoToStep2', email: string): void
 }>()
 
 const onNext = async () => {
@@ -148,30 +170,8 @@ const onNext = async () => {
     success.value = "";
     
     console.log("Next clicked:", name.value, email.value, dateOfBirth, recaptcha.value);
-    registerMutation.mutate({ Name: name.value, Email: email.value, Birth_date: dateOfBirth, Captcha_token: recaptcha.value }, {
-      onSuccess: (data) => {
-        success.value = "Registration successful! Please verify your email.";
-        error.value = "";
-        emit('next', email.value);
-      },
-      onError: (err: any) => {
-        console.log(err);
-        
-        // Extract error message from backend response
-        const errorMsg = err?.response?.data?.message 
-          || err?.response?.data?.error 
-          || err?.message 
-          || "Registration failed. Please try again.";
-        
-        error.value = errorMsg;
-        success.value = "";
-      }
-    });
+    registerMutation.mutate({ Name: name.value, Email: email.value, Birth_date: dateOfBirth, Captcha_token: recaptcha.value });
   }
 };
 
 </script>
-
-<style scoped>
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css";
-</style>

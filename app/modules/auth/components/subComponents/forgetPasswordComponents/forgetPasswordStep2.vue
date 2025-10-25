@@ -1,12 +1,8 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-30 relative flex flex-col justify-center">
-      <button
-        class="absolute top-4 left-4 w-10 h-10 text-gray-400 hover:text-white"
-        @click="$emit('close')"
-      >
-        <i class="fas fa-arrow-left"></i>
-      </button>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center">
+      <!-- Close Button -->
+      <closeButton @close="$emit('close')" />
 
       <!-- Logo -->
        <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -43,10 +39,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useVerifyForgotPasswordOTPQuery } from "../../../queries/useForgetPasswordQuery";
+import closeButton from "../closeButton.vue";
 
 const otp = ref("");
 const errorMessage = ref("");
-const verifyOTPMutation= useVerifyForgotPasswordOTPQuery();
 
 const props=defineProps<{
   identifier: string;
@@ -57,20 +53,24 @@ const emit = defineEmits<{
   (e: 'next', reset_token: string): void;
 }>();
 
+const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
+  (data: any) => {
+    console.log("Verify OTP Success:", data);
+    errorMessage.value = "";
+    emit('next', data.data.resetToken);
+  },
+  (error: any) => {
+    console.error("Verify OTP Error:", error);
+    errorMessage.value = error?.response?.data?.message 
+      || error?.response?.data?.error 
+      || error?.message 
+      || "An error occurred. Please try again.";
+  }
+);
+
 const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
-  verifyOTPMutation.mutate({ identifier: props.identifier, token: otp.value }, {
-      onSuccess: (data: any) => {
-      console.log("Verify OTP Success:", data);
-      emit('next', data.data.resetToken);
-      },
-      onError: (error: any) => {
-        console.error("Verify OTP Error:", error);
-        errorMessage.value = error.response?.data?.message || "An error occurred. Please try again.";
-      }
-  });
- 
+  verifyOTPMutation.mutate({ identifier: props.identifier, token: otp.value });
 };
-
 
 </script>

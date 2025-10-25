@@ -1,12 +1,8 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-20 relative flex flex-col justify-center">
-      <button
-        class="absolute top-4 left-4 w-10 h-10 text-gray-400 hover:text-white"
-        @click="$emit('close')"
-      >
-        <i class="fas fa-arrow-left"></i>
-      </button>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center">
+      <!-- Back Button -->
+      <backButton @close="$emit('close')" />
 
       <!-- Logo -->
        <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -88,10 +84,10 @@
 
 import { ref } from "vue";
 import { useRegisterS3Query } from "../../../queries/useRegisterQuery";
+import backButton from "../backButton.vue";
 
 const username = ref("");
 const password = ref("");
-const registerMutation = useRegisterS3Query();
 const language = ref("en");
 const errorMessage = ref("");
 const successMessage = ref("");
@@ -106,29 +102,39 @@ const emit = defineEmits<{
   (e: 'finish'): void;
 }>();
 
+const registerMutation = useRegisterS3Query(
+  (data) => {
+    console.log("Registration Step 3 Success:", data);
+    successMessage.value = "Account created successfully!";
+    errorMessage.value = "";
+    
+    setTimeout(() => {
+      emit('finish');
+    }, 1500);
+  },
+  (error: any) => {
+    console.error("Registration Step 3 Error:", error);
+    
+    const errorMsg = error?.response?.data?.message 
+      || error?.response?.data?.error 
+      || error?.message 
+      || "Registration failed. Please try again.";
+    
+    errorMessage.value = errorMsg;
+    successMessage.value = "";
+  }
+);
+
 const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
   successMessage.value = ""; // Clear previous success messages
   
   console.log("Next clicked:", username.value, password.value);
-  registerMutation.mutate({ Email: props.Email, Username: username.value, Password: password.value, Language: language.value }, {
-    onSuccess: (data) => {
-      console.log("Registration Step 3 Success:", data);
-      successMessage.value = "Account created successfully!";     
-      setTimeout(() => {
-        emit('finish');
-      }, 1500);
-    },
-    onError: (error: any) => {
-      console.error("Registration Step 3 Error:", error);
-      
-      const errorMsg = error?.response?.data?.message 
-        || error?.response?.data?.error 
-        || error?.message 
-        || "Registration failed. Please try again.";
-      
-      errorMessage.value = errorMsg;
-    }
+  registerMutation.mutate({ 
+    Email: props.Email, 
+    Username: username.value, 
+    Password: password.value, 
+    Language: language.value 
   });
 };
 

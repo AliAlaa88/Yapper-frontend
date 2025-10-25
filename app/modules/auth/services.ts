@@ -1,18 +1,21 @@
 import { useNuxtApp } from '#app';
 import type { RegisterPayload,verifyAccountPayload,finalizeRegisterPayload } from './types/register';
+
 export const createAuthService = () => {
     const { $yapperApi } = useNuxtApp();
+    const config = useRuntimeConfig();
+    const API_URL = config.public.apiUrl;
 
     return {
         checkIdentifierAvailability: async (identifier: string) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/check-identifier', {
+            const response = await $yapperApi.post(`${API_URL}/auth/check-identifier`, {
                 identifier: identifier
             });
             return response.data;
         },
         login: async (identifier: string, Password: string, Type: string) => {
             // Call API to log in user
-            const response = await $yapperApi.post('http://localhost:3000/auth/login', {
+            const response = await $yapperApi.post(`${API_URL}/auth/login`, {
                 identifier: identifier,
                 password: Password,
                 type: Type
@@ -20,7 +23,7 @@ export const createAuthService = () => {
             return response.data;
         },
         registerStep1: async (payload: RegisterPayload) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/signup/step1', {
+            const response = await $yapperApi.post(`${API_URL}/auth/signup/step1`, {
                 name: payload.Name,
                 email: payload.Email,
                 birth_date: payload.Birth_date,
@@ -30,14 +33,14 @@ export const createAuthService = () => {
             return response.data;
         },
         registerStep2: async (payload: verifyAccountPayload) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/signup/step2', {
+            const response = await $yapperApi.post(`${API_URL}/auth/signup/step2`, {
                 email: payload.Email,
                 token: payload.token
             });
             return response.data;
         },
         registerStep3: async (payload: finalizeRegisterPayload) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/signup/step3', {
+            const response = await $yapperApi.post(`${API_URL}/auth/signup/step3`, {
                 email: payload.Email,
                 password: payload.Password,
                 username: payload.Username,
@@ -46,26 +49,26 @@ export const createAuthService = () => {
             return response.data;
         },
         resendOTP: async (Email: string) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/resend-otp', {
+            const response = await $yapperApi.post(`${API_URL}/auth/resend-otp`, {
                 email: Email
             });
             return response.data;
         },
         forgotPassword: async (identifier: string) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/forget-password', {
+            const response = await $yapperApi.post(`${API_URL}/auth/forget-password`, {
                 identifier: identifier
             });
             return response.data;
         },
         verifyForgotPasswordOTP: async (identifier: string, otp: string) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/password/verify-otp', {
+            const response = await $yapperApi.post(`${API_URL}/auth/password/verify-otp`, {
                 identifier: identifier,
                 token: otp
             });
             return response.data;
         },
         resetPassword: async (identifier: string, newPassword: string, reset_token: string) => {
-            const response = await $yapperApi.post('http://localhost:3000/auth/reset-password', {
+            const response = await $yapperApi.post(`${API_URL}/auth/reset-password`, {
                 identifier: identifier,
                 new_password: newPassword,
                 reset_token: reset_token
@@ -79,7 +82,7 @@ export const createAuthService = () => {
             // Call API to complete OAuth registration step 2
         },
         getUserData: async () => {
-            const response = await $yapperApi.get('http://localhost:3000/users/me', {withCredentials: true});
+            const response = await $yapperApi.get(`${API_URL}/users/me`, {withCredentials: true});
             return response.data;
         }
     };

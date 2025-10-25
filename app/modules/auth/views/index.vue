@@ -46,6 +46,7 @@ import OAuth from "../components/subComponents/OAuth.vue";
 const router = useRouter();
 
 const goToLogin = () => {
+  console.log("Navigating to login");
   router.push("/auth/login");
 };
 

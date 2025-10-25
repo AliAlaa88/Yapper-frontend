@@ -1,5 +1,5 @@
 <template>
-  <createAccount v-if="showSignupStep1" @next="onNext" @close="$emit('close')" />
+  <createAccount v-if="showSignupStep1" @next="onNext" @close="$emit('close')" @GoToStep2="GoToStep2" />
   <verifyOtp v-if="showVerifyOtp" @close="onCloseVerify" :Email="Email" @next="onFinal" />
   <FinalRegister v-if="showFinalStep" @close="$emit('close')" :recommendations="Recommendations" :Email="Email" @finish="$emit('finish')" />
 </template>
@@ -18,6 +18,7 @@ const onNext = async (email: string) => {
    showSignupStep1.value = false;
    showVerifyOtp.value = true;
    Email.value = email;
+   console.log("Email for OTP verification:", email);
 };
 
 const onFinal = async (recommendations: string[]) => {
@@ -31,8 +32,11 @@ const onCloseVerify = () => {
    showSignupStep1.value = true;
 };
 
-</script>
+const GoToStep2 = async (email: string) => {
+   showSignupStep1.value = false;
+   showFinalStep.value = true;
+   Email.value = email;
+   Recommendations.value = [];
+};
 
-<style scoped>
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css";
-</style>
+</script>

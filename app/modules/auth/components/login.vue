@@ -6,7 +6,6 @@
 <script setup lang="ts">
 import loginStep1 from "./subComponents/loginComponents/loginStep1.vue";
 import loginStep2 from "./subComponents/loginComponents/loginStep2.vue";
-import { useLoginQuery } from "../queries/useLoginQuery";
 import { ref } from "vue";
 const showStep2 = ref(false);
 const showStep1 = ref(true);
@@ -20,7 +19,3 @@ const onNext = (Identifier: string, Type: string) => {
 };
 
 </script>
-
-<style scoped>
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css";
-</style>

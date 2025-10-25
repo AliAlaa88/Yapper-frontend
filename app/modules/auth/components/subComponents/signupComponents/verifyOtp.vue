@@ -1,13 +1,8 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-30 relative flex flex-col justify-center">
-      <button
-        class="absolute top-4 left-4 w-10 h-10 text-gray-400 hover:text-white"
-        @click="$emit('close')"
-      >
-        <i class="fas fa-arrow-left"></i>
-      </button>
-
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center">
+      <!-- Back Button -->
+      <backButton @close="$emit('close')" />
       <!-- Logo -->
        <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -51,12 +46,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRegisterS2Query, useResendOTPQuery } from "../../../queries/useRegisterQuery";
-
+import backButton from "../backButton.vue";
 const otp = ref("");
 const errorMessage = ref("");
 
-const registerMutation= useRegisterS2Query();
-const resendOTPMutation= useResendOTPQuery();
 const resendCodeSuccess=ref('');
 const resendCodeFailure=ref('');
 
@@ -69,46 +62,50 @@ const emit = defineEmits<{
   (e: 'next', recommendations: string[]): void;
 }>();
 
+const registerMutation = useRegisterS2Query(
+  (Data: any) => {
+    console.log("Registration Step 2 Success:", Data);
+    // Safely extract recommendations from various possible shapes
+    const rec = Data?.data?.recommendations ?? [];
+    const recommendations = Array.isArray(rec) ? rec : [];
+    errorMessage.value = "";
+    emit('next', recommendations);
+  },
+  (error: any) => {
+    console.error("Registration Step 2 Error:", error);
+    
+    // Extract error message from backend response
+    const errorMsg = error?.response?.data?.message 
+      || error?.response?.data?.error 
+      || error?.message 
+      || "Invalid OTP. Please try again.";
+    
+    errorMessage.value = errorMsg;
+  }
+);
+
+const resendOTPMutation = useResendOTPQuery(
+  (data) => {
+    console.log("Resend OTP Success:", data);
+    resendCodeSuccess.value = "OTP has been resent successfully.";
+    resendCodeFailure.value = "";
+  },
+  (error: any) => {
+    console.error("Resend OTP Error:", error.message);
+    resendCodeFailure.value = error?.response?.data?.message || error.message;
+    resendCodeSuccess.value = "";
+  }
+);
+
 const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
   console.log("Next clicked:", otp.value);
-  
-  registerMutation.mutate({token:otp.value,Email:props.Email},{
-    onSuccess:(Data: any)=>{
-      console.log("Registration Step 2 Success:",Data);
-      // Safely extract recommendations from various possible shapes
-      const rec = Data?.data?.recommendations ?? [];
-      const recommendations = Array.isArray(rec) ? rec : [];
-      emit('next', recommendations);
-    },
-    onError:(error: any)=>{
-      console.error("Registration Step 2 Error:",error);
-      
-      // Extract error message from backend response
-      const errorMsg = error?.response?.data?.message 
-        || error?.response?.data?.error 
-        || error?.message 
-        || "Invalid OTP. Please try again.";
-      
-      errorMessage.value = errorMsg;
-    }
-  });
+  registerMutation.mutate({token: otp.value, Email: props.Email});
 };
 
 const onResendCode = () => {
   console.log("Resend code clicked");
-    resendOTPMutation.mutate(props.Email,{
-      onSuccess:(data)=>{
-        console.log("Resend OTP Success:",data);
-        resendCodeSuccess.value="OTP has been resent successfully.";
-        resendCodeFailure.value="";
-      },
-      onError:(error)=>{
-        console.error("Resend OTP Error:",error.message);
-        resendCodeFailure.value= (error as any).response?.data?.message || error.message;
-        resendCodeSuccess.value="";
-      }
-    });
+  resendOTPMutation.mutate(props.Email);
 };
 
 </script>

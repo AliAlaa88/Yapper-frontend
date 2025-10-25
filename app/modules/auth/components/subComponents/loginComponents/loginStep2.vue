@@ -1,12 +1,8 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-25 relative flex flex-col justify-center">
-      <button
-        class="absolute top-4 right-4 text-gray-400 hover:text-white"
-        @click="$emit('close')"
-      >
-        ✕
-      </button>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4">
+    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center">
+      <!-- Close Button -->
+      <closeButton @close="$emit('close')" />
 
       <!-- Logo -->
        <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -25,7 +21,7 @@
 
       <!-- Password -->
       <input
-        type="text"
+        type="password"
         placeholder="Password"
         v-model="password"
         class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
@@ -65,6 +61,8 @@ import { ref, computed } from "vue";
 import logo from "../logo.vue";
 import { useLoginQuery } from "../../../queries/useLoginQuery";
 import { useUserStore } from "~/modules/auth/stores/userStore";
+import closeButton from "../closeButton.vue";
+
 const password = ref("");
 const errorMessage = ref("");
 
@@ -79,32 +77,37 @@ const emit = defineEmits<{
   (e: 'switch'): void;
 }>();
 
-const loginMutation = useLoginQuery();
+const loginMutation = useLoginQuery(
+  (data: any) => {
+    console.log("Login Success:", data.data);
+    const userStore = useUserStore();
+    userStore.setAuth(data.data);
+    errorMessage.value = "";
+    emit('finish');
+  },
+  (error: any) => {
+    console.error("Login Error:", error);
+    
+    // Extract error message from backend response
+    const errorMsg = error?.response?.data?.message 
+      || error?.response?.data?.error 
+      || error?.message 
+      || "Invalid credentials. Please try again.";
+    
+    errorMessage.value = errorMsg;
+  }
+);
 
 const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
   const type = props.type;
   
-  loginMutation.mutate({ identifier: props.identifier, Password: password.value, Type: type }, {
-    onSuccess: (data: any) => {
-      console.log("Login Success:", data.data);
-      const userStore = useUserStore();
-      userStore.setAuth(data.data);
-      emit('finish');
-    },
-    onError: (error: any) => {
-      console.error("Login Error:", error);
-      
-      // Extract error message from backend response
-      const errorMsg = error?.response?.data?.message 
-        || error?.response?.data?.error 
-        || error?.message 
-        || "Invalid credentials. Please try again.";
-      
-      errorMessage.value = errorMsg;
-    }
+  loginMutation.mutate({ 
+    identifier: props.identifier, 
+    Password: password.value, 
+    Type: type 
   });
-}
+};
 
 const onForgotPassword = () => {
   console.log("Forgot password clicked");
