@@ -14,11 +14,11 @@
 
 <script setup lang="ts">
 function googleSignUp() {
-window.location.href = "https://dev.yapper.cmp27.space/auth/google";  
+window.location.href = `http://localhost:3000/auth/google`;
 }
 
 function githubSignUp() {
-  window.location.href = "https://dev.yapper.cmp27.space/auth/github";
+  window.location.href = `http://localhost:3000/auth/github`;
 }
 
 </script>

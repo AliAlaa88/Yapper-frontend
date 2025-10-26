@@ -1,4 +1,5 @@
 import { useNuxtApp } from '#app';
+import OAuth from './components/subComponents/OAuth.vue';
 import type { RegisterPayload,verifyAccountPayload,finalizeRegisterPayload } from './types/register';
 
 export const createAuthService = () => {
@@ -75,11 +76,22 @@ export const createAuthService = () => {
             });
             return response.data;
         },
-        OAuthCompleteStep1: async () => {
-            // Call API to complete OAuth registration step 1
+        OAuthCompleteStep1: async (OAuth_session_token: string, Birth_date: string) => {
+            console.log("OAuth Step 1:", { OAuth_session_token, Birth_date });
+            console.log("API URL:", `${API_URL}/auth/oauth/complete/step1`);
+            const response = await $yapperApi.post(`${API_URL}/auth/oauth/complete/step1`, {
+                oauth_session_token: OAuth_session_token,
+                birth_date: Birth_date
+            }, 
+            {withCredentials: true});
+            return response.data;
         },
-        OAuthCompleteStep2: async () => {
-            // Call API to complete OAuth registration step 2
+        OAuthCompleteStep2: async (OAuth_session_token: string, Username: string) => {
+            const response = await $yapperApi.post(`${API_URL}/auth/oauth/complete/step2`, {
+                oauth_session_token: OAuth_session_token,
+                username: Username
+            }, {withCredentials: true});
+            return response.data;
         },
         getUserData: async () => {
             const response = await $yapperApi.get(`${API_URL}/users/me`, {withCredentials: true});
