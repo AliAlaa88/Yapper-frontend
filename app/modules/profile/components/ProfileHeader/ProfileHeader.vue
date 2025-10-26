@@ -11,20 +11,18 @@
                     :avatar-url="user?.avatar_url ?? ''"
                     :display-name="user?.name ?? ''"
                 />
-
+                <div v-if="isMe" class="flex gap-3">
+                    <ProfileEditButton />
+                </div>
                 <!-- Actions -->
-                <div class="flex gap-3">
-                    <ProfileActions
-                        v-if="user?.id"
-                    />
+                <div v-else class="flex gap-3">
+                    <ProfileActions v-if="user?.id" />
+                    <!-- TODO: Add the chat icon here later -->
 
-                    <ProfileFollowAction
-                        v-if="user?.id"
-                    />
+                    <ProfileFollowAction v-if="user?.id" />
 
                     <ProfileBlockedAction />
                 </div>
-
             </div>
 
             <!-- User Details -->
@@ -48,6 +46,7 @@
 <script setup lang="ts">
 import CoverImage from './SubComponents/CoverImage.vue'
 import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
+import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
 import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
 import ProfileBio from './SubComponents/ProfileBio.vue'
@@ -58,11 +57,11 @@ import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
 import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import { useRoute } from 'vue-router'
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
-
+import { useMe } from '../../composables/useMe'
 
 const route = useRoute()
 const username = route.params.username as string
-
+const { isMe } = useMe(username)
 const userQuery = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
 </script>

@@ -13,7 +13,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "prepare": "husky",
-        "mock-server": "json-server --watch app/mockServer/db.json --port 3001 --id post_id --routes app/mockServer/routes.json",
+        "mock-server": "json-server --watch app/mockServer/db.json --port 3001",
         "test": "vitest",
         "test:ui": "vitest --ui",
         "test:run": "vitest run",
