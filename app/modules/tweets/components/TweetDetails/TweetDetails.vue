@@ -74,7 +74,7 @@
       </svg>
       <p class="text-red-500 text-lg">{{ error }}</p>
       <button 
-        @click="fetchTweetDetails(props.tweetId)" 
+        @click="fetchTweetDetails()" 
         class="mt-4 px-4 py-2 bg-[var(--color-x-blue)] text-white rounded-lg hover:bg-[var(--color-x-blue)]/90 transition-colors duration-200"
       >
         Try Again
@@ -84,25 +84,22 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, computed } from 'vue'
 import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 
-// Props
-const props = defineProps({
-  tweetId: {
-    type: String,
-    required: true
-  }
-})
+// Get tweet ID and username from route params
+const route = useRoute()
+const username = computed(() => route.params.username)
+const tweetId = computed(() => route.params.tweetId)
 
 // Emits
 const emit = defineEmits(['close'])
 
-// Use composable
+// Use composable with the tweet ID from route
 const {
   tweetDetails,
   isLoading,
@@ -110,16 +107,20 @@ const {
   replies,
   fetchTweetDetails,
   resetState
-} = useTweetDetails()
+} = useTweetDetails(tweetId.value)
 
 // Lifecycle hooks
 onMounted(() => {
-  fetchTweetDetails(props.tweetId)
+  if (tweetId.value) {
+    fetchTweetDetails()
+  }
 })
 
-// Watchers
-watch(() => props.tweetId, (newTweetId) => {
-  resetState()
-  fetchTweetDetails(newTweetId)
+// Watchers - watch for route changes
+watch(tweetId, (newTweetId) => {
+  if (newTweetId) {
+    resetState()
+    fetchTweetDetails()
+  }
 })
 </script>

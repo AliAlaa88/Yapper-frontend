@@ -9,17 +9,13 @@ export function useTweetDetails(tweetId: string) {
         return tweetDetails.value?.replies || []
     })
 
-    const resetState = () => {
-        // With queries, we don't need to manually reset state
-        // The query will handle this automatically
-    }
+
 
     return {
         tweetDetails,
         isLoading,
         error,
         replies,
-        fetchTweetDetails: refetch,
-        resetState,
+        fetchTweetDetails: refetch    
     }
 }

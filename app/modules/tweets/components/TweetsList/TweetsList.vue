@@ -56,7 +56,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Tweet as TweetType } from '~/modules/tweets/types'
 import { useTweetsQuery } from '~/modules/tweets/queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 
