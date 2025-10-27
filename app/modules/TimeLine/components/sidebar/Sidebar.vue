@@ -1,5 +1,5 @@
 <template>
-    <aside class="min-w-[275px] min-h-screen px-3 border-r border-x bg-primary">
+    <aside class="min-w-[275px] min-h-screen px-3 bg-primary">
         <nav class="flex flex-col gap-2 text-primary h-full">
             <NuxtLink to="/" class="flex items-center gap-5 p-3 rounded-full">
                 <div

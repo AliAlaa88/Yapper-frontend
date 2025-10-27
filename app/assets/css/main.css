@@ -121,6 +121,10 @@
         background-color: var(--color-x-yellow);
     }
 
+    .bg-gray {
+        background-color: var(--color-x-gray);
+    }
+
     /* Border colors */
     .border-primary {
         border-color: var(--color-x-border);
