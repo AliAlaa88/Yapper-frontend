@@ -1,20 +1,30 @@
 @import 'tailwindcss';
+
+/* ===========================
+   🎨 THEME VARIABLES
+   =========================== */
 @theme {
-    /* X (Twitter) Color Palette */
+    /* Brand Colors */
     --color-x-blue: #1d9bf0;
     --color-x-blue-hover: #1a8cd8;
     --color-x-blue-dark: #1871a8;
 
+    /* Neutral / Grayscale Palette */
     --color-x-black: #0f1419;
     --color-x-dark: #14171a;
     --color-x-gray-dark: #536471;
     --color-x-gray: #71767b;
     --color-x-gray-light: #8b98a5;
     --color-x-gray-extra-light: #cfd9de;
+
+    /* Borders & Surfaces */
     --color-x-border: #eff3f4;
     --color-x-background: #f7f9f9;
     --color-x-white: #ffffff;
+    --color-x-alternate: #0f1419; /* Light mode alternate (black) */
+    --color-x-text-alternate: #ffffff; /* Light mode = white */
 
+    /* Status Colors */
     --color-x-red: #f4212e;
     --color-x-red-hover: #e0152e;
     --color-x-green: #00ba7c;
@@ -22,14 +32,17 @@
     --color-x-yellow: #ffd400;
     --color-x-yellow-hover: #f7c600;
 
-    /* Dark Mode Colors */
+    /* Dark Mode Base */
     --color-x-bg-dark: #000000;
     --color-x-bg-dark-secondary: #16181c;
     --color-x-border-dark: #2f3336;
     --color-x-text-dark: #e7e9ea;
     --color-x-text-dark-secondary: #71767b;
+    --color-x-hover-dark: #2f3336;
 
-    /* Fonts */
+    /* ===========================
+       🖋 FONT SETTINGS
+       =========================== */
     --font-family-sans:
         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-family-chirp:
@@ -51,32 +64,163 @@
     --font-weight-extrabold: 800;
 }
 
-/* Custom utility classes for X styling */
+/* ===========================
+   ⚙️ CUSTOM UTILITIES
+   =========================== */
 @layer utilities {
-    .text-x-primary {
+    /* Text colors */
+    .text-primary {
         color: var(--color-x-black);
     }
 
-    .text-x-secondary {
+    .text-secondary {
         color: var(--color-x-gray-dark);
     }
 
-    .bg-x-hover {
-        background-color: rgba(15, 20, 25, 0.1);
+    .text-muted {
+        color: var(--color-x-gray);
     }
 
-    .border-x {
+    .text-light {
+        color: var(--color-x-gray-light);
+    }
+
+    .text-white {
+        color: var(--color-x-white);
+    }
+    .text-alternate {
+        color: var(--color-x-text-alternate);
+    }
+
+    /* Background colors */
+    .bg-primary {
+        background-color: var(--color-x-background);
+    }
+
+    .bg-alternate {
+        background-color: var(--color-x-alternate);
+    }
+
+    .bg-hover {
+        background-color: var(--color-x-hover-dark);
+    }
+
+    .bg-blue {
+        background-color: var(--color-x-blue);
+    }
+
+    .bg-green {
+        background-color: var(--color-x-green);
+    }
+
+    .bg-red {
+        background-color: var(--color-x-red);
+    }
+
+    .bg-yellow {
+        background-color: var(--color-x-yellow);
+    }
+
+    /* Border colors */
+    .border-primary {
         border-color: var(--color-x-border);
+    }
+
+    .border-dark {
+        border-color: var(--color-x-border-dark);
+    }
+
+    /* Font families */
+    .font-chirp {
+        font-family: var(--font-family-chirp);
+    }
+
+    .font-sans {
+        font-family: var(--font-family-sans);
+    }
+
+    /* Font weights */
+    .font-normal {
+        font-weight: var(--font-weight-normal);
+    }
+
+    .font-medium {
+        font-weight: var(--font-weight-medium);
+    }
+
+    .font-semibold {
+        font-weight: var(--font-weight-semibold);
+    }
+
+    .font-bold {
+        font-weight: var(--font-weight-bold);
+    }
+
+    .font-extrabold {
+        font-weight: var(--font-weight-extrabold);
+    }
+
+    /* Font sizes */
+    .text-xs {
+        font-size: var(--font-size-xs);
+    }
+
+    .text-sm {
+        font-size: var(--font-size-sm);
+    }
+
+    .text-base {
+        font-size: var(--font-size-base);
+    }
+
+    .text-lg {
+        font-size: var(--font-size-lg);
+    }
+
+    .text-xl {
+        font-size: var(--font-size-xl);
+    }
+
+    .text-2xl {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Hover utilities */
+    .hover\:bg-blue:hover {
+        background-color: var(--color-x-blue-hover);
+    }
+
+    .hover\:bg-red:hover {
+        background-color: var(--color-x-red-hover);
+    }
+
+    .hover\:bg-green:hover {
+        background-color: var(--color-x-green-hover);
+    }
+
+    .hover\:bg-yellow:hover {
+        background-color: var(--color-x-yellow-hover);
+    }
+
+    .hover\:bg-hover:hover {
+        background-color: var(--color-x-hover-dark);
     }
 }
 
-/* Dark mode preferences */
+/* ===========================
+   🌙 DARK MODE (auto via prefers-color-scheme)
+   =========================== */
 @media (prefers-color-scheme: dark) {
     :root {
+        --color-x-black: var(--color-x-text-dark);
+        --color-x-gray-dark: var(--color-x-text-dark-secondary);
         --color-x-background: var(--color-x-bg-dark);
         --color-x-white: var(--color-x-bg-dark-secondary);
         --color-x-border: var(--color-x-border-dark);
-        --color-x-black: var(--color-x-text-dark);
-        --color-x-gray-dark: var(--color-x-text-dark-secondary);
+        --color-x-hover-dark: var(--color-x-bg-dark-secondary);
+
+        /* Invert alternate color in dark mode */
+        --color-x-alternate: #ffffff;
+        --color-x-text-alternate: #0f1419; /* text becomes black */
     }
 }

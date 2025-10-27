@@ -1,12 +1,16 @@
 <template>
     <div>
-        <h1>User</h1>
-        <p>{{ data?.map((user: any) => user.name).join(', ') }}</p>
+        <h1 class="text-primary">User</h1>
+        <p class="text-primary">{{ data?.map((user: any) => user.name).join(', ') }}</p>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
+
+definePageMeta({
+    layout: 'main-layout',
+})
 
 async function getUser() {
     const response = await fetch('https://jsonplaceholder.typicode.com/users')

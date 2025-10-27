@@ -1,7 +1,9 @@
 <template>
-    <div :dir="currentDirection" :lang="currentLocale">
-        <NuxtPage />
-    </div>
+    <div :dir="currentDirection" :lang="currentLocale" class="bg-x-bg-dark">
+        <NuxtLayout class="w-full">
+            <NuxtPage />
+        </NuxtLayout>
+    </div>   
 </template>
 
 <script setup lang="ts">
