@@ -1,12 +1,12 @@
 // /core/serviceRegistry.ts
 // import { createUserInfoService } from '../modules/profile/services'
 // import { createTweetService } from '../modules/tweet/services'
-// import { createAuthService } from '../modules/auth/services'
+ import { createAuthService } from '../modules/auth/services'
 
 export const serviceFactories = {
     // userInfoService: createUserInfoService,
     // tweetService: createTweetService,
-    // authService: createAuthService,
+    authService: createAuthService,
 }
 
 export type Services = {
