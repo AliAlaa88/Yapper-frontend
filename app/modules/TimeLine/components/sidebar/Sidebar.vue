@@ -1,19 +1,22 @@
 <template>
     <aside class="min-w-[275px] min-h-screen px-3 border-r border-x bg-primary">
-        <nav class="flex flex-col justify-evenly text-primary h-full">
-            <NuxtLink
-                to="/"
-                class="flex items-center gap-5 px-3 py-3 rounded-full transition-colors duration-200 hover:bg-hover"
-            >
-                <img src="../../../../assets/logo-white.png" alt="logo" class="w-[32px] h-[32px]" />
+        <nav class="flex flex-col gap-2 text-primary h-full">
+            <NuxtLink to="/" class="flex items-center gap-5 p-3 rounded-full">
+                <div
+                    class="w-[64px] h-[64px] hover:bg-hover rounded-full flex items-center justify-center p-3"
+                >
+                    <img
+                        src="../../../../assets/logo-white.png"
+                        alt="logo"
+                        class="w-full h-full object-contain"
+                    />
+                </div>
             </NuxtLink>
             <div v-for="link in navLinks" :key="link.href">
-                <div
-                    class="flex items-center gap-5 p-3 rounded-full transition-colors duration-200"
-                >
+                <div class="flex items-center gap-5 p-3 rounded-full">
                     <NuxtLink
                         :to="link.href"
-                        class="flex items-center text-primary font-medium transition-colors duration-200 w-full"
+                        class="flex items-center text-primary font-medium w-full"
                     >
                         <div
                             class="text-xl hover:bg-hover w-fit flex items-center gap-2 flex-row hover:bg-hover p-3 rounded-full"
@@ -27,7 +30,7 @@
 
             <div>
                 <button
-                    class="py-3 px-4 bg-alternate rounded-full text-alternate font-medium transition-colors duration-200 hover:opacity-90 w-[90%]"
+                    class="py-3 px-4 bg-alternate rounded-full text-lg text-alternate font-medium transition-colors duration-200 hover:opacity-90 w-[90%]"
                 >
                     Post
                 </button>
