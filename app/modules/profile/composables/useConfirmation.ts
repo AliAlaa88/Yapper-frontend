@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 
 export function useConfirmation() {
     const showConfirmation = ref(false)
@@ -9,7 +10,7 @@ export function useConfirmation() {
         action: '',
         hover: '',
         message: '',
-        handleClick: () => {},
+        handleClick: null as null | (() => void),
     })
 
     function handleShowConfirmation(

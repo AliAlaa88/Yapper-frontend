@@ -1,7 +1,7 @@
 import { useUserActionsQuery } from '../queries/useUserActionsQuery'
-
+import { computed } from 'vue'
 export function useUserInfo(userId: Ref<string | undefined>) {
-    // const userQuery = useUserInfoQuery(username)
+
     const { userQuery } = useUserActionsQuery(userId)
 
     const user = userQuery.data
@@ -16,7 +16,6 @@ export function useUserInfo(userId: Ref<string | undefined>) {
     const avatarUrl = computed(() => user.value?.avatar_url ?? '')
     const followersCount = computed(() => user.value?.followers_count ?? '')
     const followingCount = computed(() => user.value?.following_count ?? '')
-    const verified = computed(() => user.value?.verified ?? false)
     const coverUrl = computed(() => user.value?.cover_url ?? '')
 
     return {
@@ -31,7 +30,6 @@ export function useUserInfo(userId: Ref<string | undefined>) {
         avatarUrl,
         followersCount,
         followingCount,
-        verified,
         coverUrl,
     }
 }
