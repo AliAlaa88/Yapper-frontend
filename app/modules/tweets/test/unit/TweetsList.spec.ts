@@ -3,10 +3,25 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import TweetsList from '../../components/TweetsList/TweetsList.vue'
 
+// Mock Nuxt's #app module
+vi.mock('#app', () => ({
+  navigateTo: vi.fn(),
+  useRoute: vi.fn(() => ({
+    params: {},
+    query: {},
+  })),
+}))
+
+// Mock navigation utilities
+vi.mock('../../utils/navigation', () => ({
+  getProfileUrl: vi.fn((user) => user.link || `/profile/${user.username}` || '#'),
+  getTweetUrl: vi.fn((tweet) => `/${tweet.user.username}/status/${tweet.id}`),
+}))
+
 // Mock the composable used by the component via relative path
 vi.mock('../../queries/useTweetQueries', () => {
   return {
-    useTweetsQuery: (fetchingSource?: any) => {
+    useTweetsQuery: vi.fn((fetchingSource?: any) => {
       // Default implementation: empty list
       return {
         data: ref([]),
@@ -14,7 +29,7 @@ vi.mock('../../queries/useTweetQueries', () => {
         error: ref(null),
         refetch: vi.fn(),
       }
-    },
+    }),
   }
 })
 
@@ -32,7 +47,7 @@ describe('TweetsList component', () => {
       isLoading: ref(true),
       error: ref(null),
       refetch: vi.fn(),
-    }))
+    }) as any)
 
     const wrapper = mount(TweetsList as any, {
       global: { stubs: { Tweet: true } },
@@ -49,7 +64,7 @@ describe('TweetsList component', () => {
       isLoading: ref(false),
       error: ref('Failed to load'),
       refetch,
-    }))
+    }) as any)
 
     const wrapper = mount(TweetsList as any, {
       global: { stubs: { Tweet: true } },
@@ -75,7 +90,7 @@ describe('TweetsList component', () => {
       isLoading: ref(false),
       error: ref(null),
       refetch: vi.fn(),
-    }))
+    })as any)
 
     // Stub the `Tweet` component so we can assert count
     const wrapper = mount(TweetsList as any, {
@@ -96,7 +111,7 @@ describe('TweetsList component', () => {
       isLoading: ref(false),
       error: ref(null),
       refetch: vi.fn(),
-    }))
+    }) as any)
 
     const wrapper = mount(TweetsList as any, {
       global: { stubs: { Tweet: true } },
@@ -118,7 +133,7 @@ describe('TweetsList component', () => {
       isLoading: ref(false),
       error: ref(null),
       refetch: vi.fn(),
-    }))
+    }) as any)
 
     // Provide a stub that renders the passed tweet prop so we can assert prop forwarding
     const TweetStub = {
@@ -132,7 +147,7 @@ describe('TweetsList component', () => {
 
     const stubNodes = wrapper.findAll('.tweet-stub')
     expect(stubNodes.length).toBe(2)
-    expect(stubNodes[0].text()).toBe('alice')
-    expect(stubNodes[1].text()).toBe('bob')
+    expect(stubNodes[0]?.text()).toBe('alice')
+    expect(stubNodes[1]?.text()).toBe('bob')
   })
 })
