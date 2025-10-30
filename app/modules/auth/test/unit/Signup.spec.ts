@@ -5,6 +5,7 @@ import Signup from '../../components/createAccount.vue';
 import createAccount from '../../components/subComponents/signupComponents/createAccount.vue';
 import verifyOtp from '../../components/subComponents/signupComponents/verifyOtp.vue';
 import FinalRegister from '../../components/subComponents/signupComponents/FinalRegister.vue';
+import CompleteAccount from '../../components/CompleteAccount.vue';
 
 // Mock the auth service
 const mockAuthService = {
@@ -84,6 +85,7 @@ describe('Signup Component', () => {
             expect(wrapper.findComponent(createAccount).exists()).toBe(true);
             expect(wrapper.findComponent(verifyOtp).exists()).toBe(false);
             expect(wrapper.findComponent(FinalRegister).exists()).toBe(false);
+            expect(wrapper.findComponent(CompleteAccount).exists()).toBe(false);
         });
 
         it('should display create account title', () => {
@@ -132,13 +134,13 @@ describe('Signup Component', () => {
             const wrapper = mountSignup();
             const selects = wrapper.findAll('select');
             
-            await selects[0].setValue('5'); // May
-            await selects[1].setValue('15'); // Day 15
-            await selects[2].setValue('1990'); // Year 1990
+            await selects[0]?.setValue('5'); // May
+            await selects[1]?.setValue('15'); // Day 15
+            await selects[2]?.setValue('1990'); // Year 1990
 
-            expect((selects[0].element as HTMLSelectElement).value).toBe('5');
-            expect((selects[1].element as HTMLSelectElement).value).toBe('15');
-            expect((selects[2].element as HTMLSelectElement).value).toBe('1990');
+            expect((selects[0]?.element as HTMLSelectElement).value).toBe('5');
+            expect((selects[1]?.element as HTMLSelectElement).value).toBe('15');
+            expect((selects[2]?.element as HTMLSelectElement).value).toBe('1990');
         });
 
         it('should show error if captcha not completed', async () => {
@@ -165,9 +167,9 @@ describe('Signup Component', () => {
 
             await nameInput.setValue('John Doe');
             await emailInput.setValue('john@example.com');
-            await selects[0].setValue('5'); // May
-            await selects[1].setValue('15'); // Day 15
-            await selects[2].setValue('1990'); // Year 1990
+            await selects[0]?.setValue('5'); // May
+            await selects[1]?.setValue('15'); // Day 15
+            await selects[2]?.setValue('1990'); // Year 1990
 
             // Verify captcha
             const captchaButton = wrapper.find('.recaptcha-mock button');
@@ -200,9 +202,9 @@ describe('Signup Component', () => {
 
             await nameInput.setValue('John Doe');
             await emailInput.setValue('john@example.com');
-            await selects[0].setValue('5');
-            await selects[1].setValue('15');
-            await selects[2].setValue('1990');
+            await selects[0]?.setValue('5');
+            await selects[1]?.setValue('15');
+            await selects[2]?.setValue('1990');
 
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
@@ -242,35 +244,6 @@ describe('Signup Component', () => {
             await flushPromises();
 
             expect(wrapper.text()).toContain('Email already exists');
-        });
-
-        it('should skip to step 3 if current_step is 2 in error', async () => {
-            mockAuthService.registerStep1.mockRejectedValue({
-                response: {
-                    data: {
-                        message: 'User already verified',
-                        current_step: 2,
-                    },
-                },
-            });
-
-            const wrapper = mountSignup();
-            
-            const nameInput = wrapper.find('input[type="text"]');
-            const emailInput = wrapper.find('input[type="email"]');
-
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('verified@example.com');
-
-            const captchaButton = wrapper.find('.recaptcha-mock button');
-            await captchaButton.trigger('click');
-            await flushPromises();
-
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            expect(wrapper.findComponent(FinalRegister).exists()).toBe(true);
         });
     });
 
@@ -389,7 +362,7 @@ describe('Signup Component', () => {
             await flushPromises();
 
             expect(wrapper.findComponent(FinalRegister).exists()).toBe(true);
-            expect(wrapper.text()).toContain('Choose username and a password');
+            expect(wrapper.text()).toContain('Enter a password');
         });
 
         it('should show error on invalid OTP', async () => {
@@ -513,11 +486,11 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            expect(wrapper.text()).toContain('Choose username and a password');
+            expect(wrapper.text()).toContain('Enter a password');
             expect(wrapper.findComponent(FinalRegister).exists()).toBe(true);
         });
 
-        it('should allow entering username and password', async () => {
+        it('should allow entering password', async () => {
             const wrapper = mountSignup();
             
             // Move to step 3
@@ -538,14 +511,11 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Fill final registration form
-            const usernameInput = wrapper.find('input[type="text"]');
+            // Fill final registration form (password only)
             const passwordInput = wrapper.find('input[type="password"]');
 
-            await usernameInput.setValue('johndoe');
             await passwordInput.setValue('Password123!');
 
-            expect((usernameInput.element as HTMLInputElement).value).toBe('johndoe');
             expect((passwordInput.element as HTMLInputElement).value).toBe('Password123!');
         });
 
@@ -577,14 +547,10 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Complete registration
-            const usernameInput = wrapper.find('input[type="text"]');
+            // Complete registration with password
             const passwordInput = wrapper.find('input[type="password"]');
-            const languageSelect = wrapper.find('select');
 
-            await usernameInput.setValue('johndoe');
             await passwordInput.setValue('Password123!');
-            await languageSelect.setValue('en');
 
             nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
             await nextButton?.trigger('click');
@@ -593,12 +559,12 @@ describe('Signup Component', () => {
             expect(mockAuthService.registerStep3).toHaveBeenCalledWith({
                 Email: 'john@example.com',
                 Password: 'Password123!',
-                Username: 'johndoe',
+                Username: 'john_doe', // First recommendation from step 2
                 Language: 'en'
             });
         });
 
-        it('should emit finish event on successful registration', async () => {
+        it('should show CompleteAccount component after successful registration', async () => {
             mockAuthService.registerStep3.mockResolvedValue({
                 data: {
                     access_token: 'test-token',
@@ -626,25 +592,30 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            const usernameInput = wrapper.find('input[type="text"]');
             const passwordInput = wrapper.find('input[type="password"]');
-            await usernameInput.setValue('johndoe');
             await passwordInput.setValue('Password123!');
             nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Wait for success message and finish emit (1500ms timeout in component)
+            // Wait for success message and CompleteAccount to show (1500ms timeout in component)
             await new Promise(resolve => setTimeout(resolve, 1600));
 
-            expect(wrapper.emitted('finish')).toBeTruthy();
+            expect(wrapper.findComponent(CompleteAccount).exists()).toBe(true);
         });
 
-        it('should show username recommendations', async () => {
+        it('should use first recommendation as username', async () => {
             mockAuthService.registerStep2.mockResolvedValue({
                 data: { 
                     message: 'OTP verified',
-                    recommendations: ['john_doe', 'johndoe123', 'doe_john']
+                    recommendations: ['doe_john', 'johndoe123', 'john_doe']
+                }
+            });
+
+            mockAuthService.registerStep3.mockResolvedValue({
+                data: {
+                    access_token: 'test-token',
+                    user: { id: 1, email: 'john@example.com', name: 'John Doe' }
                 }
             });
 
@@ -668,9 +639,19 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            expect(wrapper.text()).toContain('Recommended usernames');
-            expect(wrapper.text()).toContain('john_doe');
-            expect(wrapper.text()).toContain('johndoe123');
+            const passwordInput = wrapper.find('input[type="password"]');
+            await passwordInput.setValue('Password123!');
+            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
+            await nextButton?.trigger('click');
+            await flushPromises();
+
+            // Should use 'doe_john' which is the first recommendation
+            expect(mockAuthService.registerStep3).toHaveBeenCalledWith({
+                Email: 'john@example.com',
+                Password: 'Password123!',
+                Username: 'doe_john',
+                Language: 'en'
+            });
         });
     });
 });

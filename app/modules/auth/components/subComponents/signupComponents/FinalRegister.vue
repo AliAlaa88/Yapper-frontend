@@ -8,9 +8,9 @@
        <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
       <!-- Title -->
-      <h2 class="text-3xl font-bold text-left mb-6">Choose username and a password</h2>
+      <h2 class="text-3xl font-bold text-left mb-6">Enter a password</h2>
         <p class="text-gray-400 mb-6">
-            Please enter your desired username and a strong password.
+            Please enter a strong password.
         </p>
 
         <!-- Error Message -->
@@ -23,28 +23,6 @@
           {{ successMessage }}
         </p>
 
-        <!-- Username Input -->
-        <input
-            type="text"
-            placeholder="Enter username"
-            v-model="username"
-            class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
-        />
-
-        <!-- Username recommendations -->
-    <div v-if="props.recommendations && props.recommendations.length" class="my-2 text-sm text-gray-400">
-      <p>Recommended usernames:</p>
-      <ul class="mt-1 flex flex-wrap gap-2">
-        <li
-          v-for="(suggestion, index) in props.recommendations"
-          :key="index"
-          class="px-2 py-1 border border-gray-500 rounded-md cursor-pointer hover:bg-gray-700"
-          @click="username = suggestion"
-        >
-          {{ suggestion }}
-        </li>
-      </ul>
-    </div>
 
         <!-- Password Input -->
         <input
@@ -58,11 +36,6 @@
             Make sure your password is strong and secure.
         </p>
 
-        <!-- Choose Language -->
-        <select v-model="language" class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4">
-            <option value="en">English</option>
-            <option value="ar">العربية</option>
-        </select>
 
       <!-- Next Button -->
       <button
@@ -82,15 +55,15 @@ import { ref } from "vue";
 import { useRegisterS3Query } from "../../../queries/useRegisterQuery";
 import backButton from "../backButton.vue";
 
-const username = ref("");
 const password = ref("");
 const language = ref("en");
 const errorMessage = ref("");
 const successMessage = ref("");
 const props=defineProps<{
   Email: string;
-  recommendations: string[];
+  username: string;
 }>();
+
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -124,13 +97,13 @@ const registerMutation = useRegisterS3Query(
 const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
   successMessage.value = ""; // Clear previous success messages
-  
-  console.log("Next clicked:", username.value, password.value);
-  registerMutation.mutate({ 
-    Email: props.Email, 
-    Username: username.value, 
-    Password: password.value, 
-    Language: language.value 
+
+  console.log("Next clicked:", props.username, password.value);
+  registerMutation.mutate({
+    Email: props.Email,
+    Username: props.username,
+    Password: password.value,
+    Language: 'en'
   });
 };
 

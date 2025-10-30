@@ -136,16 +136,6 @@ const registerMutation = useRegisterS1Query(
       || err?.response?.data?.error 
       || err?.message 
       || "Registration failed. Please try again.";
-    
-    const step = err?.response?.data?.current_step || -1;
-    console.log("Current Step from error:", step);
-    if(step == 1){
-      console.log("Emitting next for step 1");
-      emit('next', email.value);
-    }
-    if(step == 2){
-      emit('GoToStep2', email.value);
-    }
     error.value = errorMsg;
     success.value = "";
   }
@@ -153,7 +143,6 @@ const registerMutation = useRegisterS1Query(
 const emit = defineEmits<{
   (e: 'next', email: string): void
   (e: 'close'): void
-  (e: 'GoToStep2', email: string): void
 }>()
 
 const onNext = async () => {

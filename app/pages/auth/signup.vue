@@ -1,6 +1,6 @@
 <template>
   <AuthLayout>
-    <CreateAccount @close="goBack" @finish="goBack" />
+    <CreateAccount @close="goBack" @finish="onSignupFinish" />
   </AuthLayout>
 </template>
 
@@ -11,6 +11,11 @@ import AuthLayout from "../../modules/auth/views/index.vue";
 const router = useRouter();
 
 const goBack = () => {
+  router.push("/auth");
+};
+
+const onSignupFinish = () => {
+  // Signup complete, redirect back to auth or home
   router.push("/auth");
 };
 </script>
