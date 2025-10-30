@@ -30,12 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Tweet as TweetType } from '~/modules/tweets/types'
+import type { Tweet as TweetType } from '../../../types/tweet.ts'
 import Publisher from './subComponents/Publisher/Publisher.vue'
 import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import { toRefs, computed } from 'vue'
-import { getProfileUrl, getTweetUrl } from '~/modules/tweets/utils/navigation'
+import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 
 const props = defineProps<{
     tweet: TweetType
