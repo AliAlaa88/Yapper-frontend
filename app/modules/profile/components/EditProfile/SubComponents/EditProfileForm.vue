@@ -1,0 +1,106 @@
+<template>
+    <div class="px-4 pt-6 pb-4 space-y-6">
+        <div class="relative">
+            <label
+                for="name"
+                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+            >
+                Name
+            </label>
+            <input
+                id="name"
+                :value="modelValue.name"
+                type="text"
+                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                maxlength="50"
+                @input="updateField('name', ($event.target as HTMLInputElement).value)"
+            />
+            <span class="absolute right-3 top-2 text-gray-500 text-[13px]">
+                {{ modelValue.name.length }}/50
+            </span>
+        </div>
+
+        <!-- Bio Field -->
+        <div class="relative">
+            <label
+                for="bio"
+                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+            >
+                Bio
+            </label>
+            <textarea
+                id="bio"
+                :value="modelValue.bio"
+                rows="3"
+                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
+                maxlength="160"
+                @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
+            />
+            <span class="absolute right-3 top-2 text-gray-500 text-[13px]">
+                {{ modelValue.bio.length }}/160
+            </span>
+        </div>
+
+        <!-- Location Field -->
+        <div class="relative">
+            <label
+                for="location"
+                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+            >
+                Location
+            </label>
+            <input
+                id="location"
+                :value="modelValue.country"
+                type="text"
+                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                maxlength="30"
+                @input="updateField('country', ($event.target as HTMLInputElement).value)"
+            />
+            <span class="absolute right-3 top-2 text-gray-500 text-[13px]">
+                {{ modelValue.country.length }}/30
+            </span>
+        </div>
+
+        <!-- Birth Date Field -->
+        <div class="relative">
+            <label
+                for="birthDate"
+                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+            >
+                Birth date
+            </label>
+            <input
+                id="birthDate"
+                :value="modelValue.created_at"
+                type="date"
+                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"
+                @input="updateField('created_at', ($event.target as HTMLInputElement).value)"
+            />
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+interface FormData {
+    name: string
+    bio: string
+    country: string
+    created_at: string
+}
+
+const props = defineProps<{
+    modelValue: FormData
+}>()
+
+const emit = defineEmits<{
+    'update:modelValue': [value: FormData]
+}>()
+
+const updateField = (field: keyof FormData, value: string) => {
+    emit('update:modelValue', {
+        ...props.modelValue,
+        [field]: value,
+    })
+}
+</script>
