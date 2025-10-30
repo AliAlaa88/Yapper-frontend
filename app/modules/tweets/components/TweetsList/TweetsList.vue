@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { toRef, computed } from 'vue'
 import { useTweetsQuery } from '~/modules/tweets/queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 
