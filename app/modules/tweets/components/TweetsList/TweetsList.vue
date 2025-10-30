@@ -1,11 +1,11 @@
 <template>
     <div class="max-w-[600px] mx-auto border-x border-x bg-[var(--color-x-white)] min-h-screen">
-        <!-- Header -->
-        <div
+        <!-- Header
+        <div v-if="fetchingSource !== `user`"
             class="sticky top-0 z-10 bg-[var(--color-x-white)]/80 backdrop-blur-md border-b border-x px-4 py-3"
         >
-            <h1 class="text-xl font-bold text-x-primary font-[var(--font-weight-bold)]">Home</h1>
-        </div>
+            <h1 class="text-xl font-bold text-x-primary font-[var(--font-weight-bold)]">{{ title }}</h1>
+        </div> -->
         
         <!-- Loading state -->
         <div v-if="isLoading" class="p-6 text-center">
