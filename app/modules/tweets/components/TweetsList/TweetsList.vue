@@ -64,8 +64,29 @@ const props = defineProps<{
     fetchingSource?: string | null
 }>()
 
-// Use the query instead of manual state management
-const { data: tweets, isLoading, error, refetch } = useTweetsQuery()
+// Convert prop to ref for reactivity
+const fetchingSourceRef = toRef(props, 'fetchingSource')
+
+// Use the query with the reactive fetchingSource
+const { data: tweets, isLoading, error, refetch } = useTweetsQuery(fetchingSourceRef)
+
+// Compute title based on fetchingSource
+const title = computed(() => {
+    const source = fetchingSourceRef.value
+    switch (source) {
+        case 'likes':
+            return 'Likes'
+        case 'media':
+            return 'Media'
+        case 'replies':
+            return 'Replies'
+        case 'user':
+            return 'Posts'
+        case 'home':
+        default:
+            return 'Home'
+    }
+})
 
 // Function to retry loading tweets
 const loadTweets = () => {
