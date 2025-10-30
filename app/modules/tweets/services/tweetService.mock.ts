@@ -37,10 +37,8 @@ export const tweetServiceMock = {
         const tweetsWithUserData = await Promise.all(
             response.data.map(async (serverTweet: any) => {
                 try {
-                    // Fetch user details from users table
-                    const userResponse = await $axios.get('/users', { 
-                        params: { user_id: serverTweet.user_id } 
-                    })
+                    // Fetch user details from users table using json-server query syntax
+                    const userResponse = await $axios.get(`/users?user_id=${serverTweet.user_id}`)
                     
                     if (userResponse.data.length > 0) {
                         const userData = userResponse.data[0]
@@ -64,9 +62,7 @@ export const tweetServiceMock = {
 
     async fetchTweetById(tweetId: string): Promise<Tweet | null> {
         const { $axios } = useNuxtApp()
-        const response = await $axios.get('/tweets', {
-            params: { post_id: tweetId }
-        })
+        const response = await $axios.get(`/tweets?post_id=${tweetId}`)
         
         if (response.data.length === 0) {
             return null
@@ -76,9 +72,7 @@ export const tweetServiceMock = {
         
         // Enhance with user information
         try {
-            const userResponse = await $axios.get('/users', { 
-                params: { user_id: serverTweet.user_id } 
-            })
+            const userResponse = await $axios.get(`/users?user_id=${serverTweet.user_id}`)
             
             if (userResponse.data.length > 0) {
                 const userData = userResponse.data[0]
@@ -100,9 +94,7 @@ export const tweetServiceMock = {
 
         // Fetch replies
         const { $axios } = useNuxtApp()
-        const repliesResponse = await $axios.get('/tweets', {
-            params: { type: 'reply' }
-        })
+        const repliesResponse = await $axios.get('/tweets?type=reply')
         
         const replies = repliesResponse.data
             .filter((reply: any) => reply.type === 'reply')
