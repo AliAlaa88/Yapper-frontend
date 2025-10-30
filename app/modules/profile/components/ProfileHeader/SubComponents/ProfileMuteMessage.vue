@@ -16,10 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
-import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
+import { useUserInfo } from '../../../composables/useUserInfo'
+import { useUserInteractions } from '../../../composables/useUserInteractions'
+import { inject, ref, watch } from 'vue'
 
 const userId = inject<Ref<string>>('user-id')!
+if (!userId) {
+    throw new Error('Missing required provide: user-id')
+}
 const { isMuted } = useUserInfo(userId)
 
 const showMuteMessage = ref(false)
