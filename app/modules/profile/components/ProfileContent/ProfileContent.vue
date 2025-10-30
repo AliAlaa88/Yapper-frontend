@@ -7,11 +7,7 @@
         <div class="min-h-[400px]">
             <!-- Posts Tab (default route) -->
             <div v-if="currentTab === 'posts'" class="bg-black">
-                <EmptyState
-                    icon="📝"
-                    title="No posts yet"
-                    description="When this user posts, they'll show up here."
-                />
+                <TweetsList :fetchingSource="'user'" />
             </div>
 
             <!-- Replies Tab -->
