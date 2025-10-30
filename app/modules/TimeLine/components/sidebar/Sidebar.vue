@@ -22,7 +22,7 @@
                             class="text-xl hover:bg-hover w-fit flex items-center gap-2 flex-row hover:bg-hover p-3 rounded-full"
                         >
                             <component :is="link.icon" class="w-[26px] h-[26px] text-primary" />
-                            <span class="text-primary">{{ link.label }}</span>
+                            <span class="text-primary">{{ link.label_en }}</span>
                         </div>
                     </NuxtLink>
                 </div>
@@ -43,32 +43,38 @@
 import { House, Search, Bell, Mail, User, Settings } from 'lucide-vue-next'
 const navLinks = [
     {
-        label: 'Home',
+        label_en: 'Home',
+        label_ar: 'الرئيسية',
         icon: House,
         href: '/',
     },
     {
-        label: 'Search',
+        label_en: 'Search',
+        label_ar: 'البحث',
         icon: Search,
         href: '/search',
     },
     {
-        label: 'Notifications',
+        label_en: 'Notifications',
+        label_ar: 'الإشعارات',
         icon: Bell,
         href: '/notifications',
     },
     {
-        label: 'Messages',
+        label_en: 'Messages',
+        label_ar: 'الرسائل',
         icon: Mail,
         href: '/messages',
     },
     {
-        label: 'Profile',
+        label_en: 'Profile',
+        label_ar: 'الملف الشخصي',
         icon: User,
         href: '/profile',
     },
     {
-        label: 'Settings',
+        label_en: 'Settings',
+        label_ar: 'الإعدادات',
         icon: Settings,
         href: '/settings',
     },

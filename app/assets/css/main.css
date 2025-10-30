@@ -16,6 +16,7 @@
     --color-x-gray: #71767b;
     --color-x-gray-light: #8b98a5;
     --color-x-gray-extra-light: #cfd9de;
+    --color-x-tooltip-bg: #cfd9de;
 
     /* Borders & Surfaces */
     --color-x-border: #eff3f4;
@@ -92,6 +93,22 @@
         color: var(--color-x-text-alternate);
     }
 
+    .text-blue {
+        color: var(--color-x-blue);
+    }
+
+    .text-green {
+        color: var(--color-x-green);
+    }
+
+    .text-red {
+        color: var(--color-x-red);
+    }
+
+    .text-yellow {
+        color: var(--color-x-yellow);
+    }
+
     /* Background colors */
     .bg-primary {
         background-color: var(--color-x-background);
@@ -123,6 +140,10 @@
 
     .bg-gray {
         background-color: var(--color-x-gray);
+    }
+
+    .bg-tooltip {
+        background-color: var(--color-x-tooltip-bg);
     }
 
     /* Border colors */
