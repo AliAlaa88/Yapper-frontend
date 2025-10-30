@@ -1,6 +1,7 @@
 import { useUserInfo } from './useUserInfo'
+import { ref, computed } from 'vue'
 export function useFollow(userId: Ref<string | undefined>) {
-    const { isFollower, isFollowing, username } = useUserInfo(userId)
+    const { isFollower, isFollowing} = useUserInfo(userId)
     const hover = ref(false)
 
     function handleMouseOver() {
@@ -37,6 +38,5 @@ export function useFollow(userId: Ref<string | undefined>) {
         buttonText,
         handleMouseOut,
         handleMouseOver,
-        username,
     }
 }
