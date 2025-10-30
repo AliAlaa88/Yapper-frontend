@@ -8,9 +8,7 @@
             <span
                 class="text-white text-xl font-bold leading-none">⋯</span>
         </button>
-        <ProfileActionsMenu
-            v-if="showList"
-        />
+        <ProfileActionsMenu />
     </div>
 </template>
 
