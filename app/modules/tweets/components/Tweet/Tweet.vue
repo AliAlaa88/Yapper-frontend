@@ -30,18 +30,26 @@
 </template>
 
 <script setup lang="ts">
-import type { Tweet as TweetType } from '../../../types/tweet.ts'
+import type { Tweet as TweetType } from '../../types/tweet.ts'
 import Publisher from './subComponents/Publisher/Publisher.vue'
 import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
-import { toRefs, computed } from 'vue'
+import { computed } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
+import { navigateTo } from '#app'
 
 const props = defineProps<{
     tweet: TweetType
 }>()
 
-const { id, content, user, stats, type, createdAt, updatedAt } = toRefs(props.tweet)
+// Use computed properties for reactive access to tweet properties
+const id = computed(() => props.tweet.id)
+const content = computed(() => props.tweet.content)
+const user = computed(() => props.tweet.user)
+const stats = computed(() => props.tweet.stats)
+const type = computed(() => props.tweet.type)
+const createdAt = computed(() => props.tweet.createdAt)
+const updatedAt = computed(() => props.tweet.updatedAt)
 
 // Use utility functions for URLs
 const profileUrl = computed(() => getProfileUrl(user.value))
