@@ -90,6 +90,7 @@ import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
+import { useRoute } from '#app'
 
 // Get tweet ID and username from route params
 const route = useRoute()

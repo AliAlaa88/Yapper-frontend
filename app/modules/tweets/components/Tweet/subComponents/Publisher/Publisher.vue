@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
-import type { User as UserType } from '~/modules/tweets/types'
-import { formatDate } from '~/modules/tweets/utils/lib'
-import { getProfileUrl } from '~/modules/tweets/utils/navigation'
+import type { User as UserType } from '../../../../types'
+import { formatDate } from '../../../../utils/lib'
+import { getProfileUrl } from '../../../../utils/navigation'
 
 const props = defineProps<{
     publisher: UserType
