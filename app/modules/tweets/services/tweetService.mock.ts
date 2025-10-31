@@ -59,7 +59,6 @@ const enhanceWithUserData = async (tweets: any[]): Promise<any[]> => {
 export const tweetServiceMock = {
     async fetchTweets(path:string): Promise<Tweet[]> {
         const { $axios } = useNuxtApp()
-        console.log(`Mock fetchTweets called with path: ${path}`,'axios instance:', $axios.getUri())
         const response = await $axios.get(path)
         
         // Client-side filtering for media tweets (json-server limitation)
