@@ -1,36 +1,60 @@
-// import { useUserInfoQuery } from '../queries/useUserInfoQuery'
-import type { User } from '../types/user'
+import type { Me } from '../types/user'
+import { useUserInfoQuery } from '../queries/useUserInfoQuery'
+import { ref, computed, watch } from 'vue'
 
-// TODO: fetch my data from auth store
-const me: User = {
-    user_id: '74f0598d-91f1-434d-85de-c611c5a57b9d',
-    name: 'Hagar Abdelsalam',
-    username: 'hagar_abdelsalam',
-    bio: null,
-    avatar_url: null,
-    cover_url: null,
-    followers_count: 0,
-    following_count: 1,
-    country: null,
-    created_at: '2025-10-30T20:31:39.712Z',
+const me = ref<Me | null>(null)
+const isInitialized = ref(false)
+
+const initializeMe = () => {
+    if (isInitialized.value) return
+
+    const { myQuery } = useUserInfoQuery('')
+
+    watch(
+        () => myQuery.data.value,
+        (newData) => {
+            if (newData) {
+                me.value = newData
+            }
+        },
+        { immediate: true },
+    )
+
+    isInitialized.value = true
 }
 
-// export functi useMe = (username: string): { isMe: boolean } => {
-//     return { isMe: username === me.username }
-// }
+export const getMe = (): Me | null => {
+    initializeMe()
+    return me.value
+}
+
+export const updateMe = (updatedData: Partial<Me>): Me => {
+    if (!me.value) {
+        throw new Error('No user data available to update')
+    }
+    me.value = { ...me.value, ...updatedData }
+    return me.value
+}
+
+export const setMe = (userData: Me): void => {
+    me.value = userData
+}
+
+export const clearMe = (): void => {
+    me.value = null
+    isInitialized.value = false
+}
+
+export const isMe = (username: string): boolean => {
+    initializeMe()
+    return me.value?.username === username
+}
 
 export function useMe(username: string) {
-    // const { myQuery } = useUserInfoQuery(username)
-    // const me = myQuery.data
-    // console.log('use me', me)
-    return {isMe : username === me.username}
-}
+    initializeMe()
 
-export const getMe = (): UserAction => {
-    return me
-}
-
-export const updateMe = (updatedData: Partial<UserAction>): UserAction => {
-    Object.assign(me, updatedData)
-    return me
+    return {
+        isMe: computed(() => me.value?.username === username),
+        me: computed(() => me.value),
+    }
 }

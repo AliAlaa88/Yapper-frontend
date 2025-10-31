@@ -1,4 +1,4 @@
-export interface User {
+export interface Me {
     user_id: string
     name: string
     username: string
@@ -11,23 +11,33 @@ export interface User {
     created_at: string
 }
 
-export interface UserAction extends User {
+export interface OtherUser {
+    user_id: string
+    name: string
+    username: string
+    bio: string | null
+    avatar_url: string | null
     is_follower: boolean
     is_following: boolean
     is_muted: boolean
-    is_blocked: boolean
-    top_mutual_followers: string[]
-    mutual_followers_count: number
+    cover_url?: string | null
+    is_blocked?: boolean
+    followers_count?: number
+    following_count?: number
+    country?: string | null
+    created_at?: string
+    top_mutual_followers?: OtherUser[]
+    mutual_followers_count?: string
 }
 
 export interface MeApiResponse {
-    data: User
+    data: Me
     count: number
     message: string
 }
 
-export interface UserApiResponse {
-    data: UserAction
+export interface OtherUserApiResponse {
+    data: OtherUser
     count: number
     message: string
 }

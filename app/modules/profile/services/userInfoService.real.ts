@@ -1,15 +1,15 @@
 import axios from 'axios'
 import type {
-    UserAction,
-    UserApiResponse,
-    ActionApiResponse,
-    User,
+    Me,
     MeApiResponse,
+    OtherUser,
+    OtherUserApiResponse,
+    ActionApiResponse,
 } from '../types/user'
 import { useNuxtApp } from 'nuxt/app'
 
 export const userInfoServiceReal = {
-    async getMe(): Promise<User> {
+    async getMe(): Promise<Me> {
         const { $axios } = useNuxtApp()
         try {
             const response = await $axios.get<MeApiResponse>('/users/me')
@@ -31,16 +31,17 @@ export const userInfoServiceReal = {
         }
     },
 
-    async getUserInfoByUsername(username: string): Promise<UserAction> {
+    async getUserInfoByUsername(username: string): Promise<OtherUser> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.get<UserApiResponse>(`/users/by/username/${username}`)
+            const response = await $axios.get<OtherUserApiResponse>(
+                `/users/by/username/${username}`,
+            )
+            console.log(response.data.data)
             if (!response.data || !response.data.data) {
                 throw new Error(`User not found: ${username}`)
             }
-            const userData = response.data.data
-            console.log('by username', userData)
-            return userData
+            return response.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -53,27 +54,37 @@ export const userInfoServiceReal = {
         }
     },
 
-    async getUserByID(userId: string): Promise<UserAction> {
-        const { $axios } = useNuxtApp()
-        try {
-            const response = await $axios.get<UserApiResponse>(`/users/${userId}`)
-            if (!response.data || !response.data.data) {
-                throw new Error(`User not found: ${userId}`)
-            }
-            const userData = response.data.data
-            console.log('by id', userData)
-            return userData
-        } catch (error: unknown) {
-            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
-                if (error.response?.status === 404) {
-                    throw new Error('User not found')
-                } else if (error.response?.status === 401) {
-                    throw new Error('Invalid or expired token')
-                }
-            }
-            throw new Error('Something went wrong')
-        }
-    },
+    // async getUserByID(userId: string): Promise<OtherUser> {
+    //     const { $axios } = useNuxtApp()
+    //     try {
+    //         const response = await $axios.get<OtherUserApiResponse>(`/users/${userId}`)
+    //         if (
+    //             !response.data ||
+    //             !response.data.data ||
+    //             response.data.data.length === 0
+    //         ) {
+    //             throw new Error(`User not found: ${userId}`)
+    //         }
+
+    //         const firstUser = response.data.data[0]
+
+    //         if (!firstUser || !firstUser.success || !firstUser.user) {
+    //             throw new Error(`User not found: ${userId}`)
+    //         }
+
+    //         console.log('by id', firstUser.user)
+    //         return firstUser.user
+    //     } catch (error: unknown) {
+    //         if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+    //             if (error.response?.status === 404) {
+    //                 throw new Error('User not found')
+    //             } else if (error.response?.status === 401) {
+    //                 throw new Error('Invalid or expired token')
+    //             }
+    //         }
+    //         throw new Error('Something went wrong')
+    //     }
+    // },
 
     async followUser(userId: string): Promise<void> {
         const { $axios } = useNuxtApp()
@@ -206,10 +217,10 @@ export const userInfoServiceReal = {
         }
     },
 
-    async updateUserProfile(userId: string, updates: Partial<UserAction>): Promise<UserAction> {
+    async updateUserProfile(userId: string, updates: Partial<Me>): Promise<Me> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.patch<UserApiResponse>('/users/me', updates)
+            const response = await $axios.patch<MeApiResponse>('/users/me', updates)
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to update user profile')
             }
