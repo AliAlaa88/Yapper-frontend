@@ -28,8 +28,8 @@ provide('snackbar', snackbar)
 const route = useRoute()
 const username = route.params.username as string
 
-const userQuery = useUserInfoQuery(username)
+const { userQuery } = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
-provide('user-id', computed(() => user.value?.id))
+provide('user-id', computed(() => user.value?.user_id))
 
 </script>

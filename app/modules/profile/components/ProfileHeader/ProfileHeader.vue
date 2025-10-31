@@ -16,10 +16,10 @@
                 </div>
                 <!-- Actions -->
                 <div v-else class="flex gap-3">
-                    <ProfileActions v-if="user?.id" />
+                    <ProfileActions v-if="user?.user_id" />
                     <!-- TODO: Add the chat icon here later -->
 
-                    <ProfileFollowAction v-if="user?.id" />
+                    <ProfileFollowAction v-if="user?.user_id" />
 
                     <ProfileBlockedAction />
                 </div>
@@ -62,6 +62,6 @@ import { useMe } from '../../composables/useMe'
 const route = useRoute()
 const username = route.params.username as string
 const { isMe } = useMe(username)
-const userQuery = useUserInfoQuery(username)
+const { userQuery } = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
 </script>
