@@ -1,7 +1,8 @@
 <template>
-    <div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-col w-full">
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
         <PostTweet :border="true" />
+        <TweetsList fetchingSource="tweets" class="w-full" />
     </div>
 </template>
 
@@ -10,6 +11,7 @@ import Tabs from '~/modules/Common/components/Tabs'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
 import { isLoggedIn } from '~/utils/helpers'
 import { onMounted } from 'vue'
+import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 const router = useRouter()
 
 onMounted(() => {
