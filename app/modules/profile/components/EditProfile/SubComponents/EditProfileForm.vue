@@ -2,13 +2,13 @@
     <div class="px-4 pt-6 pb-4 space-y-6">
         <div class="relative">
             <label
-                for="name"
+                for="edit-profile-name-input"
                 class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
             >
                 Name
             </label>
             <input
-                id="name"
+                id="edit-profile-name-input"
                 :value="modelValue.name"
                 type="text"
                 class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
@@ -23,13 +23,13 @@
         <!-- Bio Field -->
         <div class="relative">
             <label
-                for="bio"
+                for="edit-profile-bio-input"
                 class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
             >
                 Bio
             </label>
             <textarea
-                id="bio"
+                id="edit-profile-bio-input"
                 :value="modelValue.bio"
                 rows="3"
                 class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
@@ -44,13 +44,13 @@
         <!-- Location Field -->
         <div class="relative">
             <label
-                for="location"
+                for="edit-profile-location-input"
                 class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
             >
                 Location
             </label>
             <input
-                id="location"
+                id="edit-profile-location-input"
                 :value="modelValue.country"
                 type="text"
                 class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
@@ -65,13 +65,13 @@
         <!-- Birth Date Field -->
         <div class="relative">
             <label
-                for="birthDate"
+                for="edit-profile-birthdate-input"
                 class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
             >
                 Birth date
             </label>
             <input
-                id="birthDate"
+                id="edit-profile-birthdate-input"
                 :value="modelValue.created_at"
                 type="date"
                 class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"

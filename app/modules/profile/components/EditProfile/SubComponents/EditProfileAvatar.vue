@@ -13,6 +13,7 @@
                 class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center gap-2"
             >
                 <button
+                    id="avatar-upload-button"
                     aria-label="Upload profile photo"
                     class="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors duration-200"
                     @click="$emit('upload')"
@@ -21,6 +22,7 @@
                 </button>
                 <button
                     v-if="avatarUrl"
+                    id="avatar-remove-button"
                     aria-label="Remove profile photo"
                     class="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors duration-200"
                     @click="$emit('remove')"

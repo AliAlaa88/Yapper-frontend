@@ -3,7 +3,11 @@
         <div
             class="relative w-full h-full flex items-start justify-center overflow-y-auto py-4 sm:py-8"
         >
-            <div class="relative w-full max-w-[600px] bg-black rounded-2xl mx-4" @click.stop>
+            <div
+                id="edit-profile-modal"
+                class="relative w-full max-w-[600px] bg-black rounded-2xl mx-4"
+                @click.stop
+            >
                 <EditProfileHeader
                     :is-valid="isFormValid"
                     :is-saving="isSaving"
@@ -26,6 +30,7 @@
                 <EditProfileForm v-model="formData" />
 
                 <input
+                    id="cover-file-input"
                     ref="coverFileInput"
                     type="file"
                     accept="image/*"
@@ -33,6 +38,7 @@
                     @change="handleCoverFileChange"
                 />
                 <input
+                    id="avatar-file-input"
                     ref="avatarFileInput"
                     type="file"
                     accept="image/*"
