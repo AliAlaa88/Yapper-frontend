@@ -25,9 +25,13 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
     function handleBlockWithConfirmation(showList?: Ref<boolean>) {
         showConfirmation.value = true
         if (showList) showList.value = false
-        function handleClick() {
-            handleBlock()
-            handleShowSnackbar('Successfully blocked.', '', 'Unblock', handleUnblock)
+        async function handleClick() {
+            try {
+                await handleBlock()
+                handleShowSnackbar('Successfully blocked.', '', 'Unblock', handleUnblock)
+            } catch (error) {
+                console.error('failed to block user: ', error)
+            }
         }
         handleShowConfirmation(
             'Block',
@@ -62,21 +66,27 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleFollow()
     }
 
-    function handleMuteWithSnackbar(showList?: Ref<boolean>) {
-        console.log('hagarrrr')
-        handleMute()
-        showSnackbar.value = true
+    async function handleMuteWithSnackbar(showList?: Ref<boolean>) {
+        try {
+            await handleMute()
+            showSnackbar.value = true
+            handleShowSnackbar(' has been muted.', username.value, 'Undo', handleUnmuteWithSnackbar)
+        } catch (error) {
+            console.error('failed to mute: ', error)
+        }
         if (showList) showList.value = false
-        handleShowSnackbar(' has been muted.', username.value, 'Undo', handleUnmuteWithSnackbar)
-        console.log('snack', showSnackbar.value)
     }
 
     function handleRemoveFollowerWithConfirmation(showList?: Ref<boolean>) {
         showConfirmation.value = true
         if (showList) showList.value = false
-        function handleClick() {
-            handleRemoveFollower()
-            handleShowSnackbar(' is no longer following you.', username.value)
+        async function handleClick() {
+            try {
+                await handleRemoveFollower()
+                handleShowSnackbar(' is no longer following you.', username.value)
+            } catch (error) {
+                console.error('failed to remove follower: ', error)
+            }
         }
         handleShowConfirmation(
             'Remove',
@@ -120,11 +130,15 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         )
     }
 
-    function handleUnmuteWithSnackbar(showList?: Ref<boolean>) {
-        console.log('ununun')
-        handleUnmute()
+    async function handleUnmuteWithSnackbar(showList?: Ref<boolean>) {
+        try {
+            await handleUnmute()
+            showSnackbar.value = true
+            handleShowSnackbar(' has been unmuted.', username.value)
+        } catch(error) {
+            console.error('failed to unmute: ', error)
+        }
         if (showList) showList.value = false
-        handleShowSnackbar(' has been unmuted.', username.value)
     }
 
     return {
