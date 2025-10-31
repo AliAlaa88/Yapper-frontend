@@ -1,21 +1,24 @@
 <template>
-    <div>
-        <h1>User</h1>
-        <p>{{ data?.map((user: any) => user.name).join(', ') }}</p>
+    <div class="min-h-screen flex items-center justify-center bg-black text-white">
+        <div class="text-center">
+            <h1 class="text-4xl font-bold mb-4">Welcome to Yapper</h1>
+            <p class="text-gray-400 mb-6">Redirecting to authentication...</p>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query'
-
-async function getUser() {
-    const response = await fetch('https://jsonplaceholder.typicode.com/users')
-    const data = await response.json()
-    return data
-}
-
-const { data, isLoading, error } = useQuery({
-    queryKey: ['user'],
-    queryFn: getUser,
-})
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "~/modules/auth/stores/userStore";
+const router = useRouter();
+onMounted(() => {
+    const userStore = useUserStore();
+    const home = "home";
+    if (!userStore.isLoggedIn) {
+        router.push(`/${home}`);
+    } else {
+        router.push("/auth");
+    }
+});
 </script>
