@@ -1,7 +1,7 @@
 <template>
     <article
         :id="`tweet-${id}`"
-        class="border-b border-x-border px-4 py-3 hover:bg-x-background transition-colors cursor-pointer"
+        class="border-b border-x-border px-4 py-3 hover:bg-hover dark:hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
         <div class="flex gap-3">
