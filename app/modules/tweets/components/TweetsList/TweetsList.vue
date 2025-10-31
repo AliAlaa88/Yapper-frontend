@@ -34,7 +34,7 @@
         
         <!-- Tweets list -->
         <div v-else-if="tweets && tweets.length > 0" class="divide-y divide-x-border">
-            <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" />
+            <Tweet v-for="tweet in tweets" :key="tweet.tweet_id" :tweet="tweet" />
         </div>
         
         <!-- Empty state -->
