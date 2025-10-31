@@ -11,9 +11,7 @@
                 @click.stop="toggleList"
             >⋯</span>
         </button>
-        <ProfileActionsMenu
-            v-if="showList"
-        />
+        <ProfileActionsMenu />
     </div>
 </template>
 

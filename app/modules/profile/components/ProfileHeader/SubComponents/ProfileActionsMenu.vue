@@ -6,6 +6,7 @@
     >
         <button
             v-if="!isBlocked"
+            id="mute-button"
             class="cursor-pointer w-full text-white font-semibold text-left px-4 py-3
             hover:bg-gray-200/10 transition flex items-center first:rounded-t-xl"
             @click="handleMuteAndUnmute"
@@ -16,7 +17,9 @@
         </button>
         <button
             v-if="isFollower && !isBlocked"
-            class="w-full text-white text-left font-semibold px-4 py-3 hover:bg-gray-200/10
+            id="remove-follower-button"
+            class="w-full text-white text-left font-semibold px-4 py-3
+            hover:bg-gray-200/10
             transition flex items-center cursor-pointer"
             @click="handleRemove"
         >
@@ -24,7 +27,9 @@
             Remove this follower
         </button>
         <button
-            class="w-full text-white text-left px-4 py-3 font-semibold hover:bg-gray-200/10
+            id="block-button"
+            class="w-full text-white text-left px-4 py-3 font-semibold
+            hover:bg-gray-200/10
             transition flex items-center last:rounded-b-xl cursor-pointer first:rounded-t-xl"
             @click="handleBlockAndUnblock"
         >
@@ -46,6 +51,9 @@ import type { Ref } from 'vue'
 const showList = inject<Ref<boolean>>('show-list')!
 
 const userId = inject<Ref<string>>('user-id')!
+if (!userId) {
+    throw new Error('Missing required provide: user-id')
+}
 const {
     isBlocked,
     isMuted,
@@ -53,8 +61,6 @@ const {
     username,
 } = useUserInfo(userId)
 const dropdownRef = ref<HTMLElement | null>(null)
-
-watch(isBlocked, (v) => console.log('isBlocked changed to', v))
 
 const userInteractions = useUserInteractions(userId)
 const {

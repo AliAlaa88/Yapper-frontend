@@ -1,4 +1,4 @@
-import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
+import { useUserActionsQuery } from '../queries/useUserActionsQuery'
 
 export function useUserActions(userId: Ref<string | undefined>) {
     const {

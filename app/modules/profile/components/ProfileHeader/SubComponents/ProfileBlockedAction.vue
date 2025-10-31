@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
-import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
+import { useUserInfo } from '../../../composables/useUserInfo'
+import { useUserInteractions } from '../../../composables/useUserInteractions'
+import { inject, ref, computed } from 'vue'
 
 const userId = inject<Ref<string>>('user-id')!
 const {

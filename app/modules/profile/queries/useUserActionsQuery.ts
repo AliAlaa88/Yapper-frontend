@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
-import { useNuxtApp } from '#app'
+import { useNuxtApp } from 'nuxt/app'
 import type { UserAction } from '../types/user'
 
 export function useUserActionsQuery(userId: Ref<string | undefined>) {
