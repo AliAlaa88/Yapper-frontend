@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="showList"
+        ref="dropdownRef"
         class="absolute top-[-8px] right-0 mt-2 w-56 bg-black
         rounded-xl shadow-[0_0_7px_rgba(255,255,255,0.4)] z-50"
     >
@@ -44,11 +44,11 @@
 
 <script setup lang="ts">
 import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig } from 'lucide-vue-next'
-import { useUserInfo } from '../../../composables/useUserInfo'
-import { useUserInteractions } from '../../../composables/useUserInteractions'
+import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'
-import { inject } from 'vue'
-const showList = inject<Ref<boolean> | undefined>('show-list')
+const showList = inject<Ref<boolean>>('show-list')!
 
 const userId = inject<Ref<string>>('user-id')!
 if (!userId) {
@@ -60,6 +60,7 @@ const {
     isFollower,
     username,
 } = useUserInfo(userId)
+const dropdownRef = ref<HTMLElement | null>(null)
 
 const userInteractions = useUserInteractions(userId)
 const {
@@ -85,5 +86,17 @@ function handleBlockAndUnblock() {
 function handleRemove() {
     handleRemoveFollowerWithConfirmation(showList)
 }
+function handleClickOutside(event: MouseEvent) {
+    if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+        showList.value = false
+    }
+}
 
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
 </script>

@@ -11,36 +11,36 @@ export function useUserActions(userId: Ref<string | undefined>) {
         followMutation,
     } = useUserActionsQuery(userId)
 
-    function handleUnmute() {
+    async function handleUnmute() {
         console.log('unmute user')
-        unmuteMutation.mutate()
+        await unmuteMutation.mutateAsync()
     }
-    function handleMute() {
+    async function handleMute() {
         console.log('mute user')
-        muteMutation.mutate()
+        await muteMutation.mutateAsync()
     }
-    function handleBlock() {
+    async function handleBlock() {
         console.log('block user')
-        blockMutation.mutate()
+        await blockMutation.mutateAsync()
         console.log('after block user')
     }
-    function handleUnblock() {
+    async function handleUnblock() {
         console.log('unblock user')
-        unblockMutation.mutate()
+        await unblockMutation.mutateAsync()
     }
-    function handleRemoveFollower() {
+    async function handleRemoveFollower() {
         console.log('remove this follower')
-        removeFollowerMutation.mutate()
+        await removeFollowerMutation.mutateAsync()
     }
 
-    function handleUnfollow() {
+    async function handleUnfollow() {
         console.log('unfollow')
-        unfollowMutation.mutate()
+        await unfollowMutation.mutateAsync()
     }
 
-    function handleFollow() {
+    async function handleFollow() {
         console.log('follow')
-        followMutation.mutate()
+        await followMutation.mutateAsync()
     }
 
     return {

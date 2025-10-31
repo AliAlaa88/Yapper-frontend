@@ -3,8 +3,12 @@
         v-if="showConfirmation"
         class="fixed inset-0 flex items-center justify-center z-50
         bg-gray-700/50 shadow-lg"
+        @click="handleBackdropClick"
     >
-        <div class="bg-black text-white rounded-2xl p-7.5 w-[320px] shadow-lg space-y-4">
+        <div
+            class="bg-black text-white rounded-2xl p-7.5 w-[320px] shadow-lg space-y-4"
+            @click.stop
+        >
             <div class="space-y-2">
                 <h2 class="text-xl font-bold">
                     {{ confirmData.header }}
@@ -19,6 +23,7 @@
 
             <div class="space-y-3 mt-6">
                 <button
+                    id="confirm-button"
                     class="cursor-pointer w-full font-bold py-2.5 rounded-full transition"
                     :class="[
                         confirmData.bgColor,
@@ -29,6 +34,7 @@
                     {{ confirmData.action }}
                 </button>
                 <button
+                    id="cancel-confirm-button"
                     class="cursor-pointer w-full border
                     border-gray-600 font-bold py-2.5 rounded-full
                     hover:bg-gray-200/10 transition"
@@ -64,6 +70,9 @@ function handleCancel() {
 }
 function handleConfirmAction() {
     confirmData.value?.handleClick?.()
+    showConfirmation.value = false
+}
+function handleBackdropClick() {
     showConfirmation.value = false
 }
 </script>

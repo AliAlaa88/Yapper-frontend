@@ -5,7 +5,7 @@ export function useUserInfo(userId: Ref<string | undefined>) {
     const { userQuery } = useUserActionsQuery(userId)
 
     const user = userQuery.data
-    const id = computed(() => user.value?.id ?? '')
+    const id = computed(() => user.value?.user_id ?? '')
     const username = computed(() => user.value?.username ?? '')
     const isFollower = computed(() => user.value?.is_follower ?? false)
     const isFollowing = computed(() => user.value?.is_following ?? false)
