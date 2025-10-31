@@ -5,14 +5,9 @@
         @submit.prevent="handleSubmit"
     >
         <!-- User Avatar logo for now to be changed to the user avatar -->
-        <div>
-            <!-- <img
-                src="../../../../assets/logo-white.png"
-                alt="logo"
-                class="w-10 h-10 rounded-full"
-            /> -->
-            <Logo imgClass="w-10 h-10 rounded-full" />
-        </div>
+        <NuxtLink :to="`/profile/${user.username}`">
+            <img :src="user.avatar_url" :alt="user.name" class="w-10 h-10 rounded-full" />
+        </NuxtLink>
 
         <div class="flex-1">
             <textarea
@@ -84,8 +79,8 @@ import Tooltip from '~/modules/Common/components/toolTip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
-import Logo from '~/modules/Common/components/Logo'
-
+import { getUser } from '~/utils/helpers'
+import type { User as UserType } from '~/modules/auth/types/user'
 const props = withDefaults(
     defineProps<{
         border: boolean
@@ -94,6 +89,8 @@ const props = withDefaults(
         border: true,
     },
 )
+
+const user = getUser() as UserType
 
 const content = ref('')
 const showGifPicker = ref(false)
