@@ -12,15 +12,16 @@ import PostTweet from '~/modules/TimeLine/components/postTweet'
 // import { useRouter } from 'vue-router'
 // import { useUserStore } from '~/modules/auth/stores/userStore'
 
-
 const tabs = [
     {
         label: 'For You',
         value: 'foryou',
+        test_id: 'timeline-view-foryou-tab',
     },
     {
         label: 'Following',
         value: 'following',
+        test_id: 'timeline-view-following-tab',
     },
 ]
 
