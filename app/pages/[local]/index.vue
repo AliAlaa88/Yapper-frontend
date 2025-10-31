@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col gap-4 w-full">
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
-        <PostTweet />
+        <PostTweet :border="true" />
     </div>
 </template>
 

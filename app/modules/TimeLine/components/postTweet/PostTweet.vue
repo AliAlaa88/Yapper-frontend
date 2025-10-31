@@ -1,5 +1,9 @@
 <template>
-    <form class="flex flex-row gap-4 p-4 border-b border-primary" @submit.prevent="handleSubmit">
+    <form
+        class="flex flex-row gap-4 p-4"
+        :class="border ? 'border-b border-primary' : ''"
+        @submit.prevent="handleSubmit"
+    >
         <!-- User Avatar logo for now to be changed to the user avatar -->
         <div>
             <img
@@ -76,6 +80,15 @@ import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 
+const props = withDefaults(
+    defineProps<{
+        border: boolean
+    }>(),
+    {
+        border: true,
+    },
+)
+
 const content = ref('')
 const showGifPicker = ref(false)
 const showEmojiPicker = ref(false)
@@ -95,15 +108,16 @@ const handleSelectMedia = (files: File[]) => {
 
 const toggleGifPicker = () => {
     showGifPicker.value = !showGifPicker.value
+    showEmojiPicker.value = false
 }
 
 const handleGifSelect = (gifUrl: string) => {
-    console.log('Selected GIF:', gifUrl)
     showGifPicker.value = false
 }
 
 const toggleEmojiPicker = () => {
     showEmojiPicker.value = !showEmojiPicker.value
+    showGifPicker.value = false
 }
 
 const handleEmojiSelect = (emoji: any) => {

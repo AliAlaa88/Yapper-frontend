@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="isOpen"
-        class="absolute z-50 mt-2 w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden"
+        class="absolute z-[60] mt-2 w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
     >
         <div class="p-2 border-b border-primary flex gap-2">
             <input
