@@ -38,7 +38,7 @@ describe('navigation utilities', () => {
       expect(getProfileUrl(user)).toBe('#')
     })
 
-    it('returns # as fallback when link is empty string', () => {
+    it('returns /profile/johndoe when link is empty string', () => {
       const user: User = {
         id: 'user1',
         name: 'John Doe',
