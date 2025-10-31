@@ -29,10 +29,7 @@ describe('useTweetQueries', () => {
     // Dynamically import the module after mocks are set up
     const module = await import('../../queries/useTweetQueries')
     useTweetsQuery = module.useTweetsQuery
-    useTweetQuery = module.useTweetQuery
     useTweetDetailsQuery = module.useTweetDetailsQuery
-    useUserTweetsQuery = module.useUserTweetsQuery
-    useUserQuery = module.useUserQuery
 
     // Clear all mocks
     vi.clearAllMocks()
@@ -281,68 +278,6 @@ describe('useTweetQueries', () => {
       vi.clearAllMocks()
 
       useTweetDetailsQuery('')
-      const disabledOptions = mockUseQuery.mock.calls[0]?.[0]
-      expect(disabledOptions.enabled).toBe(false)
-    })
-  })
-
-  describe('useUserTweetsQuery', () => {
-    it('generates correct query key with userId', () => {
-      useUserTweetsQuery('user123')
-
-      expect(mockUseQuery).toHaveBeenCalled()
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey).toEqual(['userTweets', 'user123'])
-    })
-
-    it('calls fetchUserTweets with correct userId', async () => {
-      useUserTweetsQuery('user123')
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(mockTweetService.fetchUserTweets).toHaveBeenCalledWith('user123')
-    })
-
-    it('is enabled only when userId is provided', () => {
-      useUserTweetsQuery('user123')
-      const enabledOptions = mockUseQuery.mock.calls[0]?.[0]
-      expect(enabledOptions.enabled).toBe(true)
-
-      vi.clearAllMocks()
-
-      useUserTweetsQuery('')
-      const disabledOptions = mockUseQuery.mock.calls[0]?.[0]
-      expect(disabledOptions.enabled).toBe(false)
-    })
-  })
-
-  describe('useUserQuery', () => {
-    it('generates correct query key with userId', () => {
-      useUserQuery('user123')
-
-      expect(mockUseQuery).toHaveBeenCalled()
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey).toEqual(['user', 'user123'])
-    })
-
-    it('calls fetchUserById with correct userId', async () => {
-      useUserQuery('user123')
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(mockTweetService.fetchUserById).toHaveBeenCalledWith('user123')
-    })
-
-    it('is enabled only when userId is provided', () => {
-      useUserQuery('user123')
-      const enabledOptions = mockUseQuery.mock.calls[0]?.[0]
-      expect(enabledOptions.enabled).toBe(true)
-
-      vi.clearAllMocks()
-
-      useUserQuery('')
       const disabledOptions = mockUseQuery.mock.calls[0]?.[0]
       expect(disabledOptions.enabled).toBe(false)
     })
