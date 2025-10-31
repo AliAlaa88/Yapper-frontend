@@ -11,12 +11,14 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "~/modules/auth/stores/userStore";
+
 const router = useRouter();
+
 onMounted(() => {
     const userStore = useUserStore();
-    const home = "home";
-    if (!userStore.isLoggedIn) {
-        router.push(`/${home}`);
+    
+    if (userStore.isLoggedIn) {
+        router.push("/home");
     } else {
         router.push("/auth");
     }

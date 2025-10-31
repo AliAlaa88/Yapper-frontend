@@ -96,6 +96,39 @@ export const createAuthService = () => {
         getUserData: async () => {
             const response = await $yapperApi.get(`${API_URL}/users/me`, {withCredentials: true});
             return response.data;
+        },
+        logout: async () => {
+            const response = await $yapperApi.post(`${API_URL}/auth/logout`, {}, {withCredentials: true});
+            return response.data;
+        },
+        updateProfilePicture: async (profilePicture: File) => {
+            const formData = new FormData();
+            formData.append('profile_picture', profilePicture);
+            const response = await $yapperApi.post(`${API_URL}/users/profile-picture`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                withCredentials: true
+            });
+            return response.data;
+        },
+        updateUsername: async (username: string) => {
+            const response = await $yapperApi.patch(`${API_URL}/auth/update-username`, {
+                username: username
+            }, {withCredentials: true});
+            return response.data;
+        },
+        updateLanguage: async (language: string) => {
+            const response = await $yapperApi.patch(`${API_URL}/users/language`, {
+                language: language
+            }, {withCredentials: true});
+            return response.data;
+        },
+        updateInterests: async (interests: string[]) => {
+            const response = await $yapperApi.post(`${API_URL}/users/interests`, {
+                interests: interests
+            }, {withCredentials: true});
+            return response.data;
         }
     };
 };

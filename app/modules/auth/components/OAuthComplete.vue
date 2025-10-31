@@ -1,28 +1,28 @@
 <template>
-    <OAuthStep1 v-if="showStep1" :OAuth_session_token="oauth_session_token" @next="onNext" @close="onClose" />
-    <OAuthStep2 v-if="showStep2" :OAuth_session_token="oauth_session_token" :recommendations="recommendations" @back="onBack" @finish="$emit('finish')" />
+    <OAuthStep1 v-if="showStep1" :OAuth_session_token="oauth_session_token" @finish="onFinish" @close="onClose" />
+    <CompleteAccount v-if="showCompleteAccount" :skipImg="true" :Recommendations="recommendations" @close="onClose" @finish="navigateTo('/auth')" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import OAuthStep1 from './subComponents/OAuthComponents/OAuthStep1.vue';
-import OAuthStep2 from './subComponents/OAuthComponents/OAuthStep2.vue';
+import CompleteAccount from './CompleteAccount.vue';
 const props = defineProps<{
     oauth_session_token: string;
 }>();
 const oauth_session_token = ref(props.oauth_session_token);
 const showStep1 = ref(true);
-const showStep2 = ref(false);
+const showCompleteAccount = ref(false);
 const recommendations = ref<string[]>([]);
-const onNext = (Recommendations: string[]) => {
+const onFinish = (Recommendations: string[]) => {
     showStep1.value = false;
-    showStep2.value = true;
+    showCompleteAccount.value = true;
     recommendations.value = Recommendations;
 };
 
 const onBack = () => {
     console.log("Navigating back to Step 1");
-    showStep2.value = false;
+    showCompleteAccount.value = false;
     showStep1.value = true;
 };
 
