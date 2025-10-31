@@ -3,27 +3,27 @@
     <!-- Main Tweet -->
     <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-x-border">
       <Publisher 
-        :publisher="tweetDetails.tweet.user"
-        :created-at="tweetDetails.tweet.createdAt"
+        :publisher="mainTweetUser"
+        :created-at="tweetDetails.created_at"
         :is-detail="true"
       />
       <Content 
-        :content="tweetDetails.tweet.content"
+        :content="mainTweetContent"
       />
       <div class="text-x-gray-dark text-[15px] mb-4 border-b border-x-border pb-4">
         <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
-          {{ formatDetailDate(tweetDetails.tweet.createdAt) }}
+          {{ formatDetailDate(tweetDetails.created_at) }}
         </time>
       </div>
       <Stats 
-        :stats="tweetDetails.tweet.stats"
+        :stats="mainTweetStats"
       />
     </div>
 
     <!-- Replies Section -->
     <div v-if="tweetDetails && !isLoading && !error">
       <!-- No Replies State -->
-      <div v-if="replies.length === 0" class="text-center py-12 text-x-gray-dark">
+      <div v-if="transformedReplies.length === 0" class="text-center py-12 text-x-gray-dark">
         <MessageCircle class="w-16 h-16 text-x-gray-light mx-auto mb-4" :stroke-width="1" />
         <p class="text-lg">No replies yet</p>
         <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
@@ -32,7 +32,7 @@
       <!-- Replies List -->
       <div v-else>
         <div 
-          v-for="reply in replies" 
+          v-for="reply in transformedReplies" 
           :key="reply.id"
           :id="`tweet-reply-${reply.id}`"
           class="border-b border-x-border px-4 py-3 hover:bg-x-background transition-colors"
@@ -108,6 +108,58 @@ const {
   fetchTweetDetails,
   resetState
 } = useTweetDetails(tweetId.value)
+
+// Transform main tweet data
+const mainTweetUser = computed(() => {
+  if (!tweetDetails.value) return null
+  return {
+    ...tweetDetails.value.user,
+    avatar: tweetDetails.value.user.avatar_url || `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`
+  }
+})
+
+const mainTweetContent = computed(() => {
+  if (!tweetDetails.value) return null
+  return {
+    text: tweetDetails.value.content,
+    images: tweetDetails.value.imgs || [],
+    videos: tweetDetails.value.videos || []
+  }
+})
+
+const mainTweetStats = computed(() => {
+  if (!tweetDetails.value) return null
+  return {
+    likes: tweetDetails.value.likes_count,
+    replies: tweetDetails.value.replies_count,
+    retweets: tweetDetails.value.reposts_count,
+    views: tweetDetails.value.views_count
+  }
+})
+
+// Transform replies data
+const transformedReplies = computed(() => {
+  if (!replies.value) return []
+  return replies.value.map(reply => ({
+    id: reply.tweet_id,
+    user: {
+      ...reply.user,
+      avatar: reply.user.avatar_url
+    },
+    content: {
+      text: reply.content,
+      images: reply.imgs || [],
+      videos: reply.videos || []
+    },
+    stats: {
+      likes: reply.likes_count,
+      replies: reply.replies_count,
+      retweets: reply.reposts_count,
+      views: reply.views_count
+    },
+    createdAt: reply.createdAt
+  }))
+})
 
 // Lifecycle hooks
 onMounted(() => {
