@@ -102,7 +102,7 @@ describe('Login Component', () => {
 
         it('has Sign up link', () => {
             const wrapper = mountLogin();
-            expect(wrapper.text()).toContain("Don’t have an account?");
+            expect(wrapper.text()).toContain("Don't have an account?");
             expect(wrapper.text()).toContain('Sign up');
         });
     });

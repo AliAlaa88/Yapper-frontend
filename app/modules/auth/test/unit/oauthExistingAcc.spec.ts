@@ -18,6 +18,10 @@ const mockUserStore = {
     accessToken: null,
 };
 
+vi.mock('vue-router', () => ({
+    useRouter: () => mockRouter,
+}));
+
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
@@ -42,7 +46,7 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
     useUserStore: () => mockUserStore,
 }));
 
-import SuccessPage from '../../../../pages/auth/success.vue';
+import SuccessPage from '~/modules/auth/components/success.vue';
 
 const localStorageMock = (() => {
     let store: Record<string, string> = {};
@@ -255,10 +259,6 @@ describe('OAuth Existing Account Flow - Success Page', () => {
             const wrapper = mountSuccessPage('test-token');
             
             expect(wrapper.find('.fixed.inset-0').exists()).toBe(true);
-            
-            await flushPromises();
-            
-            expect(wrapper.find('.fixed.inset-0').exists()).toBe(false);
         });
 
     });

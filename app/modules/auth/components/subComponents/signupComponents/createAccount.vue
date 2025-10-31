@@ -139,10 +139,12 @@ const registerMutation = useRegisterS1Query(
   (err: any) => {
     console.log(err);
     const errorMsg = err?.response?.data?.message 
-      || err?.response?.data?.error 
       || err?.message 
       || "Registration failed. Please try again.";
-    error.value = errorMsg;
+    if(Array.isArray(errorMsg))
+      error.value = errorMsg[0];
+    else
+      error.value = errorMsg;
     success.value = "";
   }
 )

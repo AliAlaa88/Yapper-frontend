@@ -63,10 +63,12 @@ const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
   },
   (error: any) => {
     console.error("Verify OTP Error:", error);
-    errorMessage.value = error?.response?.data?.message 
-      || error?.response?.data?.error 
-      || error?.message 
+    const errorMsg = error?.response?.data?.message
       || "An error occurred. Please try again.";
+    if(Array.isArray(errorMsg))
+      errorMessage.value = errorMsg[0];
+    else
+      errorMessage.value = errorMsg;
   }
 );
 

@@ -8,20 +8,12 @@
       <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
       <!-- Back Button -->
-      <button
-        id="button-back-interests"
-        class="absolute top-8 left-8 text-gray-400 hover:text-white transition"
-        @click="$emit('back')"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
+      <backButton @close="$emit('back')" class="absolute top-6 left-6" />
 
       <!-- Title -->
       <h2 class="text-3xl font-bold text-left mb-6">What are you interested in?</h2>
       <p class="text-gray-400 mb-6">
-        Select at least 3 interests to help us tailor your feed. You can always change these later.
+        Select at least 3 interests to help us tailor your feed.
       </p>
 
       <!-- Interests Grid -->
@@ -82,6 +74,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import closeButton from "../closeButton.vue";
+import backButton from "../backButton.vue";
 import logo from "../logo.vue";
 
 interface Interest {

@@ -70,6 +70,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import closeButton from "../closeButton.vue";
+import backButton from "../backButton.vue";
 import logo from "../logo.vue";
 
 const previewImage = ref<string | null>(null);

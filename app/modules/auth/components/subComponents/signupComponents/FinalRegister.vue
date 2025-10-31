@@ -78,11 +78,12 @@ const registerMutation = useRegisterS3Query(
     console.error("Registration Step 3 Error:", error);
     
     const errorMsg = error?.response?.data?.message 
-      || error?.response?.data?.error 
-      || error?.message 
       || "Registration failed. Please try again.";
-    
-    errorMessage.value = errorMsg;
+
+    if(Array.isArray(errorMsg))
+      errorMessage.value = errorMsg[0];
+    else
+      errorMessage.value = errorMsg;
   }
 );
 

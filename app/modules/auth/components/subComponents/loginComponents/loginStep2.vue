@@ -91,13 +91,14 @@ const loginMutation = useLoginQuery(
   },
   (error: any) => {
     console.error("Login Error:", error);
-    // Extract error message from backend response
+    // Extract error message from backend response or network error
     const errorMsg = error?.response?.data?.message 
-      || error?.response?.data?.error 
       || error?.message 
       || "Invalid credentials. Please try again.";
-    
-    errorMessage.value = errorMsg;
+    if(Array.isArray(errorMsg))
+      errorMessage.value = errorMsg[0];
+    else
+      errorMessage.value = errorMsg;
     useUserStore().logout();
   }
 );

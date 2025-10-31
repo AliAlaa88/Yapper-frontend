@@ -78,11 +78,12 @@ const registerMutation = useRegisterS2Query(
     
     // Extract error message from backend response
     const errorMsg = error?.response?.data?.message 
-      || error?.response?.data?.error 
-      || error?.message 
       || "Invalid OTP. Please try again.";
-    
-    errorMessage.value = errorMsg;
+
+    if(Array.isArray(errorMsg))
+      errorMessage.value = errorMsg[0];
+    else
+      errorMessage.value = errorMsg;
   }
 );
 
@@ -94,8 +95,12 @@ const resendOTPMutation = useResendOTPQuery(
   },
   (error: any) => {
     console.error("Resend OTP Error:", error.message);
-    resendCodeFailure.value = error?.response?.data?.message || error.message;
+    const errorMsg = error?.response?.data?.message || error.message;
     resendCodeSuccess.value = "";
+    if(Array.isArray(errorMsg))
+      resendCodeFailure.value = errorMsg[0];
+    else
+      resendCodeFailure.value = errorMsg;
   }
 );
 

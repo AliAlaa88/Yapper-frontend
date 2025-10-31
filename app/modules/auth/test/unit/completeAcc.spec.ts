@@ -58,12 +58,51 @@ describe('CompleteAccount Component', () => {
         });
     });
 
-    describe('Profile Picture Step', () => {
+    describe('Profile Picture Step - Detailed Rendering', () => {
+        it('should render profile picture upload section', () => {
+            const wrapper = mountCompleteAccount({ skipImg: false });
+            const profilePicComponent = wrapper.findComponent(ProfilePicture);
+            
+            expect(profilePicComponent.text()).toContain('Pick a profile picture');
+            expect(profilePicComponent.text()).toContain('Have a favorite selfie? Upload it now.');
+        });
+
+        it('should have file input with correct attributes', () => {
+            const wrapper = mountCompleteAccount({ skipImg: false });
+            const profilePicComponent = wrapper.findComponent(ProfilePicture);
+            const fileInput = profilePicComponent.find('#input-profile-picture-complete');
+            
+            expect(fileInput.exists()).toBe(true);
+            expect(fileInput.attributes('type')).toBe('file');
+            expect(fileInput.attributes('accept')).toBe('image/*');
+        });
+
+        it('should have skip button visible', () => {
+            const wrapper = mountCompleteAccount({ skipImg: false });
+            const profilePicComponent = wrapper.findComponent(ProfilePicture);
+            const skipButton = profilePicComponent.find('#button-skip-profile-picture');
+            
+            expect(skipButton.exists()).toBe(true);
+            expect(skipButton.text()).toBe('Skip for now');
+        });
+
+        it('should show Next button after emitting next event with image', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: false });
+            const profilePicComponent = wrapper.findComponent(ProfilePicture);
+            
+            // Simulate the component emitting next event with image URL
+            await profilePicComponent.vm.$emit('next', 'https://example.com/sa3fan_avatar.jpg');
+            await flushPromises();
+            
+            // After emit, should move to username step
+            expect(wrapper.findComponent(Username).exists()).toBe(true);
+        });
+
         it('should move to Username step when Next is clicked', async () => {
             const wrapper = mountCompleteAccount({ skipImg: false });
             const profilePicComponent = wrapper.findComponent(ProfilePicture);
             
-            await profilePicComponent.vm.$emit('next', 'https://example.com/avatar.jpg');
+            await profilePicComponent.vm.$emit('next', 'https://example.com/sa3fan_avatar.jpg');
             await flushPromises();
 
             expect(wrapper.findComponent(ProfilePicture).exists()).toBe(false);
@@ -93,6 +132,110 @@ describe('CompleteAccount Component', () => {
     });
 
     describe('Username Step', () => {
+        it('should render username input section', () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            
+            expect(usernameComponent.text()).toContain('What should we call you?');
+            expect(usernameComponent.text()).toContain('Your @username is unique');
+        });
+
+        it('should have username input with test ID', () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            const usernameInput = usernameComponent.find('#input-username-complete');
+            
+            expect(usernameInput.exists()).toBe(true);
+            expect(usernameInput.attributes('placeholder')).toBe('username');
+            expect(usernameInput.attributes('maxlength')).toBe('15');
+        });
+
+        it('should allow entering sa3fan_test username', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            const usernameInput = usernameComponent.find('#input-username-complete');
+            
+            await usernameInput.setValue('sa3fan_test');
+            await flushPromises();
+            
+            expect((usernameInput.element as HTMLInputElement).value).toBe('sa3fan_test');
+        });
+
+        it('should display character counter', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            const usernameInput = usernameComponent.find('#input-username-complete');
+            
+            await usernameInput.setValue('sa3fan');
+            await flushPromises();
+            
+            expect(usernameComponent.text()).toContain('6/15');
+        });
+
+        it('should show "Available!" message for valid username', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            const usernameInput = usernameComponent.find('#input-username-complete');
+            
+            await usernameInput.setValue('sa3fan_test');
+            await flushPromises();
+            
+            const successMessage = usernameComponent.find('#success-message-username');
+            expect(successMessage.exists()).toBe(true);
+            expect(successMessage.text()).toBe('Available!');
+        });
+
+        it('should display recommendations', () => {
+            const recommendations = ['sa3fan_test', 'sa3fan_dev', 'developer_sa3fan'];
+            const wrapper = mountCompleteAccount({ 
+                skipImg: true, 
+                Recommendations: recommendations 
+            });
+            const usernameComponent = wrapper.findComponent(Username);
+            
+            expect(usernameComponent.text()).toContain('Recommended usernames:');
+            expect(usernameComponent.text()).toContain('sa3fan_test');
+            expect(usernameComponent.text()).toContain('sa3fan_dev');
+            expect(usernameComponent.text()).toContain('developer_sa3fan');
+        });
+
+        it('should allow clicking on recommendation to select it', async () => {
+            const recommendations = ['sa3fan_test', 'sa3fan_dev', 'developer_sa3fan'];
+            const wrapper = mountCompleteAccount({ 
+                skipImg: true, 
+                Recommendations: recommendations 
+            });
+            const usernameComponent = wrapper.findComponent(Username);
+            const firstRecommendation = usernameComponent.find('#recommendation-0-username');
+            
+            await firstRecommendation.trigger('click');
+            await flushPromises();
+            
+            const usernameInput = usernameComponent.find('#input-username-complete');
+            expect((usernameInput.element as HTMLInputElement).value).toBe('sa3fan_test');
+        });
+
+        it('should have Next button enabled for valid username', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            const usernameInput = usernameComponent.find('#input-username-complete');
+            
+            await usernameInput.setValue('sa3fan_test');
+            await flushPromises();
+            
+            const nextButton = usernameComponent.find('#button-next-username');
+            expect(nextButton.attributes('disabled')).toBeUndefined();
+        });
+
+        it('should have Skip button visible', () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            const usernameComponent = wrapper.findComponent(Username);
+            const skipButton = usernameComponent.find('#button-skip-username');
+            
+            expect(skipButton.exists()).toBe(true);
+            expect(skipButton.text()).toBe('Skip for now');
+        });
+
         it('should receive recommendations prop', () => {
             const recommendations = ['s3fan_test', 's3fan_test2', 's3fan_test3'];
             const wrapper = mountCompleteAccount({ 
@@ -143,6 +286,97 @@ describe('CompleteAccount Component', () => {
     });
 
     describe('Language Step', () => {
+        it('should render language selection section', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('next', 'sa3fan_test');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            expect(languageComponent.text()).toContain('Select your language');
+            expect(languageComponent.text()).toContain('This will help us personalize your Yapper experience');
+        });
+
+        it('should have search input for languages', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('next', 'sa3fan_test');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            const searchInput = languageComponent.find('#input-search-language');
+            
+            expect(searchInput.exists()).toBe(true);
+            expect(searchInput.attributes('placeholder')).toBe('Search languages...');
+        });
+
+        it('should display English and Arabic language options', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('next', 'sa3fan_test');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            const englishButton = languageComponent.find('#button-language-en');
+            const arabicButton = languageComponent.find('#button-language-ar');
+            
+            expect(englishButton.exists()).toBe(true);
+            expect(englishButton.text()).toContain('English');
+            expect(arabicButton.exists()).toBe(true);
+            expect(arabicButton.text()).toContain('Arabic');
+            expect(arabicButton.text()).toContain('العربية');
+        });
+
+        it('should allow selecting English language', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('next', 'sa3fan_test');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            const englishButton = languageComponent.find('#button-language-en');
+            
+            await englishButton.trigger('click');
+            await flushPromises();
+            
+            // English button should have the selected class
+            expect(englishButton.classes()).toContain('bg-blue-500');
+        });
+
+        it('should allow selecting Arabic language', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('next', 'sa3fan_test');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            const arabicButton = languageComponent.find('#button-language-ar');
+            
+            await arabicButton.trigger('click');
+            await flushPromises();
+            
+            // Arabic button should have the selected class
+            expect(arabicButton.classes()).toContain('bg-blue-500');
+        });
+
+        it('should have Skip button visible', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('next', 'sa3fan_test');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            const skipButton = languageComponent.find('#button-skip-language');
+            
+            expect(skipButton.exists()).toBe(true);
+            expect(skipButton.text()).toBe('Skip for now');
+        });
 
         it('should move to Interests step when Next is clicked', async () => {
             const wrapper = mountCompleteAccount({ skipImg: true });
@@ -191,6 +425,137 @@ describe('CompleteAccount Component', () => {
     });
 
     describe('Interests Step', () => {
+        it('should render interests selection section', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            expect(interestsComponent.text()).toContain('What are you interested in?');
+            expect(interestsComponent.text()).toContain('Select at least 3 interests to help us tailor your feed');
+        });
+
+        it('should display Technology interest button', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            const techButton = interestsComponent.find('#button-interest-tech');
+            
+            expect(techButton.exists()).toBe(true);
+            expect(techButton.text()).toContain('Technology');
+        });
+
+        it('should allow selecting multiple interests', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            const techButton = interestsComponent.find('#button-interest-tech');
+            const sportsButton = interestsComponent.find('#button-interest-sports');
+            const musicButton = interestsComponent.find('#button-interest-music');
+            
+            await techButton.trigger('click');
+            await flushPromises();
+            
+            await sportsButton.trigger('click');
+            await flushPromises();
+            
+            await musicButton.trigger('click');
+            await flushPromises();
+            
+            expect(techButton.classes()).toContain('bg-blue-500');
+            expect(sportsButton.classes()).toContain('bg-blue-500');
+            expect(musicButton.classes()).toContain('bg-blue-500');
+        });
+
+        it('should show selection counter', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            
+            expect(interestsComponent.text()).toContain('0 selected');
+        });
+
+        it('should require at least 3 interests message', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            
+            expect(interestsComponent.text()).toContain('3 more needed');
+        });
+
+        it('should have Next button disabled until 3 interests selected', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            const nextButton = interestsComponent.find('#button-next-interests');
+            
+            expect(nextButton.attributes('disabled')).toBeDefined();
+        });
+
+        it('should have Skip button visible', async () => {
+            const wrapper = mountCompleteAccount({ skipImg: true });
+            
+            const usernameComponent = wrapper.findComponent(Username);
+            await usernameComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const languageComponent = wrapper.findComponent(Language);
+            await languageComponent.vm.$emit('skip');
+            await flushPromises();
+
+            const interestsComponent = wrapper.findComponent(Interests);
+            const skipButton = interestsComponent.find('#button-skip-interests');
+            
+            expect(skipButton.exists()).toBe(true);
+            expect(skipButton.text()).toBe('Skip for now');
+        });
+
         it('should emit finish with all collected data when Finish is clicked', async () => {
             const wrapper = mountCompleteAccount({ skipImg: false });
             

@@ -8,15 +8,11 @@ export const useUpdateProfilePictureMutation = (
   const { $authService } = useNuxtApp();
 
   return useMutation({
-    mutationFn: async (profilePicture: string) => {
-      return await $authService.updateProfilePicture(profilePicture);
-    },
-    onSuccess: (data) => {
-      if (onSuccess) onSuccess(data);
-    },
-    onError: (error) => {
-      if (onError) onError(error);
-    },
+    mutationKey: ['updateProfilePicture'],
+    mutationFn: ({ profilePicture }: { profilePicture: File }) =>$authService.updateProfilePicture(profilePicture),
+    retry: false,
+    onSuccess: (data) => onSuccess?.(data),
+    onError: (error) => onError?.(error),
   });
 };
 
@@ -28,15 +24,11 @@ export const useUpdateUsernameMutation = (
   const { $authService } = useNuxtApp();
 
   return useMutation({
-    mutationFn: async (username: string) => {
-      return await $authService.updateUsername(username);
-    },
-    onSuccess: (data) => {
-      if (onSuccess) onSuccess(data);
-    },
-    onError: (error) => {
-      if (onError) onError(error);
-    },
+    mutationKey: ['updateUsername'],
+    mutationFn: ({ username }: { username: string }) => $authService.updateUsername(username),
+    retry: false,
+    onSuccess: (data) => onSuccess?.(data),
+    onError: (error) => onError?.(error),
   });
 };
 
@@ -48,15 +40,11 @@ export const useUpdateLanguageMutation = (
   const { $authService } = useNuxtApp();
 
   return useMutation({
-    mutationFn: async (language: string) => {
-      return await $authService.updateLanguage(language);
-    },
-    onSuccess: (data) => {
-      if (onSuccess) onSuccess(data);
-    },
-    onError: (error) => {
-      if (onError) onError(error);
-    },
+    mutationKey: ['updateLanguage'],
+    mutationFn: ({ language }: { language: string }) => $authService.updateLanguage(language),
+    retry: false,
+    onSuccess: (data) => onSuccess?.(data),
+    onError: (error) => onError?.(error),
   });
 };
 
@@ -68,14 +56,10 @@ export const useUpdateInterestsMutation = (
   const { $authService } = useNuxtApp();
 
   return useMutation({
-    mutationFn: async (interests: string[]) => {
-      return await $authService.updateInterests(interests);
-    },
-    onSuccess: (data) => {
-      if (onSuccess) onSuccess(data);
-    },
-    onError: (error) => {
-      if (onError) onError(error);
-    },
+    mutationKey: ['updateInterests'],
+    mutationFn: ({ interests }: { interests: string[] }) => $authService.updateInterests(interests),
+    retry: false,
+    onSuccess: (data) => onSuccess?.(data),
+    onError: (error) => onError?.(error),
   });
 };

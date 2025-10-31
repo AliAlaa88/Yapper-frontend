@@ -137,10 +137,13 @@ const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
   },
   (error: any) => {
     console.error("OAuth Step 1 Complete Error:", error);
-    errorMessage.value = error?.response?.data?.message 
-      || error?.response?.data?.error 
-      || error?.message 
+    const errorMsg = error?.response?.data?.message 
       || "An unexpected error occurred. Please try again.";
+
+    if(Array.isArray(errorMsg))
+      errorMessage.value = errorMsg[0];
+    else
+      errorMessage.value = errorMsg;
   }
 );
 
