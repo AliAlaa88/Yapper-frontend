@@ -5,19 +5,36 @@
     >
         <div class="flex gap-3">
             <!-- Avatar column -->
-             <div class="h-fit">
-                 <NuxtLink 
-                     class="flex-shrink-0" 
-                     @click.stop
-                     :to="profileUrl"
-                 >
-                     <img 
-                         :src="user.avatar" 
-                         :alt="user.name" 
-                         class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
-                     />
-                 </NuxtLink> 
-             </div>
+            <TooltipProvider :delay-duration="300">
+                <div class="h-fit">
+                    <NuxtLink 
+                        class="flex-shrink-0" 
+                        @click.stop
+                        :to="profileUrl"
+                    >
+                        <Tooltip>
+                            <TooltipTrigger as-child>
+                                <img 
+                                    :src="user.avatar" 
+                                    :alt="user.name" 
+                                    class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                                />
+                            </TooltipTrigger>
+                            <TooltipContent class="p-0">
+                                <UserCard
+                                    :id="user.id"
+                                    :name="user.name"
+                                    :username="user.username"
+                                    :avatar="user.avatar"
+                                    :bio="user.bio"
+                                    :followers-count="user.followers_count"
+                                    :following-count="user.following_count"
+                                />
+                            </TooltipContent>
+                        </Tooltip>
+                    </NuxtLink> 
+                </div>
+            </TooltipProvider>
 
             <!-- Content column -->
             <div class="flex-1 min-w-0">
@@ -34,6 +51,8 @@ import type { Tweet as TweetType } from '../../types/tweet.ts'
 import Publisher from './subComponents/Publisher/Publisher.vue'
 import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
+import UserCard from './subComponents/Publisher/UserCard.vue'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip'
 import { computed } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
