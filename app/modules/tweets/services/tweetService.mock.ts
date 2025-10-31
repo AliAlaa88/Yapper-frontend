@@ -12,10 +12,10 @@ const mapTweetFromServer = (serverTweet: any): Tweet => {
         },
         user: {
             id: serverTweet.user_id,
-            name: serverTweet.name || serverTweet.username, // Use name if available, fallback to username
+            name: serverTweet.name || serverTweet.username,
             username: serverTweet.username,
             avatar: serverTweet.avatar_url,
-            link: '', // Not provided in server structure
+            link: '',
         },
         stats: {
             likes: serverTweet.likes_count,
@@ -28,163 +28,78 @@ const mapTweetFromServer = (serverTweet: any): Tweet => {
     }
 }
 
-export const tweetServiceMock = {
-    async fetchTweets(): Promise<Tweet[]> {
-        const { $axios } = useNuxtApp()
-        const response = await $axios.get('/tweets')
-        
-        // Enhance tweets with user information from users table
-        const tweetsWithUserData = await Promise.all(
-            response.data.map(async (serverTweet: any) => {
-                try {
-                    // Fetch user details from users table using json-server query syntax
-                    const userResponse = await $axios.get(`/users?user_id=${serverTweet.user_id}`)
-                    
-                    if (userResponse.data.length > 0) {
-                        const userData = userResponse.data[0]
-                        // Merge server tweet with user data
-                        return {
-                            ...serverTweet,
-                            name: userData.name, // Get the actual name from users table
-                        }
-                    }
-                } catch (error) {
-                    console.warn('Failed to fetch user data for tweet:', serverTweet.post_id)
-                }
+// Helper function to enhance tweets with user data
+const enhanceWithUserData = async (tweets: any[]): Promise<any[]> => {
+    const { $axios } = useNuxtApp()
+    
+    return Promise.all(
+        tweets.map(async (serverTweet: any) => {
+            try {
+                const userResponse = await $axios.get(`/api/users?user_id=${serverTweet.user_id}`)
                 
-                // Return original tweet if user fetch fails
-                return serverTweet
-            })
-        )
+                if (userResponse.data.length > 0) {
+                    const userData = userResponse.data[0]
+                    return {
+                        ...serverTweet,
+                        name: userData.name,
+                    }
+                }
+            } catch (error) {
+                console.warn('Failed to fetch user data for tweet:', serverTweet.post_id)
+            }
+            
+            return serverTweet
+        })
+    )
+}
+
+export const tweetServiceMock = {
+    async fetchTweets(path:string): Promise<Tweet[]> {
+        const { $axios } = useNuxtApp()
+        console.log(`Mock fetchTweets called with path: ${path}`,'axios instance:', $axios.getUri())
+        const response = await $axios.get(path)
         
+        // Client-side filtering for media tweets (json-server limitation)
+        let tweets = response.data
+        const tweetsWithUserData = await enhanceWithUserData(tweets)
         return tweetsWithUserData.map(mapTweetFromServer)
     },
 
-    async fetchTweetById(tweetId: string): Promise<Tweet | null> {
-        const { $axios } = useNuxtApp()
-        const response = await $axios.get(`/tweets?post_id=${tweetId}`)
-        
-        if (response.data.length === 0) {
-            return null
-        }
-        
-        const serverTweet = response.data[0]
-        
-        // Enhance with user information
-        try {
-            const userResponse = await $axios.get(`/users?user_id=${serverTweet.user_id}`)
-            
-            if (userResponse.data.length > 0) {
-                const userData = userResponse.data[0]
-                serverTweet.name = userData.name
-            }
-        } catch (error) {
-            console.warn('Failed to fetch user data for tweet:', tweetId)
-        }
-        
-        return mapTweetFromServer(serverTweet)
-    },
-
     async fetchTweetDetails(tweetId: string): Promise<TweetDetails | null> {
-        // Fetch the main tweet
-        const tweet = await this.fetchTweetById(tweetId)
-        if (!tweet) {
+        const { $axios } = useNuxtApp()
+        
+        // Fetch the main tweet using the configured route
+        const tweetResponse = await $axios.get(`/api/tweets/${tweetId}`)
+        if (!tweetResponse.data || tweetResponse.data.length === 0) {
             return null
         }
-
-        // Fetch replies
-        const { $axios } = useNuxtApp()
-        const repliesResponse = await $axios.get('/tweets?type=reply')
         
-        const replies = repliesResponse.data
-            .filter((reply: any) => reply.type === 'reply')
-            .map(mapTweetFromServer)
+        const tweetData = Array.isArray(tweetResponse.data) ? tweetResponse.data[0] : tweetResponse.data
+        const [enhancedTweet] = await enhanceWithUserData([tweetData])
+        const tweet = mapTweetFromServer(enhancedTweet)
 
+        // Fetch replies for this tweet
+        const replies: Tweet[] = await this.fetchRepliesForTweet(tweetId);
         return {
             tweet,
             replies,
         }
     },
-
-    async fetchUserTweets(username: string): Promise<Tweet[]> {
+    
+    async fetchRepliesForTweet(tweetId: string): Promise<Tweet[]> {
         const { $axios } = useNuxtApp()
-        const response = await $axios.get(`/tweets?username=${username}`)
-        return response.data.map(mapTweetFromServer)
+        
+        // Fetch replies for the specific tweet
+        const response = await $axios.get(`/api/tweets/${tweetId}/replies`)
+        
+        let replies = response.data
+        const repliesWithUserData = await enhanceWithUserData(replies)
+        return repliesWithUserData.map(mapTweetFromServer)
     },
-
+    
     async fetchUserById(userId: string) {
         const { $axios } = useNuxtApp()
-        const response = await $axios.get(`/users?user_id=${userId}`)
+        const response = await $axios.get(`/api/users?user_id=${userId}`)
         return response.data.length > 0 ? response.data[0] : null
     },
-
-    async fetchLikedTweets(): Promise<Tweet[]> {
-        // TODO: Implement when likes data is available in db.json
-        // For now, return empty array or mock data
-        return []
-    },
-
-    async fetchMediaTweets(): Promise<Tweet[]> {
-        const { $axios } = useNuxtApp()
-        // json-server doesn't support complex queries, so we fetch all and filter client-side
-        const response = await $axios.get('/tweets')
-        
-        // Filter tweets that have images or videos
-        const mediaTweets = response.data.filter((tweet: any) => 
-            (tweet.images_url && tweet.images_url.length > 0) || 
-            (tweet.videos_url && tweet.videos_url.length > 0)
-        )
-        
-        // Enhance with user data
-        const tweetsWithUserData = await Promise.all(
-            mediaTweets.map(async (serverTweet: any) => {
-                try {
-                    const userResponse = await $axios.get(`/users?user_id=${serverTweet.user_id}`)
-                    
-                    if (userResponse.data.length > 0) {
-                        const userData = userResponse.data[0]
-                        return {
-                            ...serverTweet,
-                            name: userData.name,
-                        }
-                    }
-                } catch (error) {
-                    console.warn('Failed to fetch user data for tweet:', serverTweet.post_id)
-                }
-                
-                return serverTweet
-            })
-        )
-        
-        return tweetsWithUserData.map(mapTweetFromServer)
-    },
-
-    async fetchReplies(): Promise<Tweet[]> {
-        const { $axios } = useNuxtApp()
-        // json-server query parameter syntax
-        const response = await $axios.get('/tweets?type=reply')
-        
-        // Enhance with user data
-        const repliesWithUserData = await Promise.all(
-            response.data.map(async (serverTweet: any) => {
-                try {
-                    const userResponse = await $axios.get(`/users?user_id=${serverTweet.user_id}`)
-                    
-                    if (userResponse.data.length > 0) {
-                        const userData = userResponse.data[0]
-                        return {
-                            ...serverTweet,
-                            name: userData.name,
-                        }
-                    }
-                } catch (error) {
-                    console.warn('Failed to fetch user data for tweet:', serverTweet.post_id)
-                }
-                
-                return serverTweet
-            })
-        )
-        
-        return repliesWithUserData.map(mapTweetFromServer)
-    }
 }
