@@ -76,7 +76,6 @@ const tweetUrl = computed(() => getTweetUrl(props.tweet))
 
 const navigateToTweet = () => {
     if (tweetUrl.value !== '#') {
-        console.log('Navigating to tweet:', tweetUrl.value)
         navigateTo(tweetUrl.value)
     }
 }
