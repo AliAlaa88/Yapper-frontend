@@ -1,5 +1,5 @@
 <template>
-    <div ref="reference" class="inline-block">
+    <div ref="reference" class="inline-flex">
         <slot name="trigger" />
     </div>
 

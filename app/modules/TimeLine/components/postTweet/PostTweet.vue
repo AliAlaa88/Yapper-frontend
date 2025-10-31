@@ -21,16 +21,24 @@
                     <li>
                         <MediaUpload @select="handleSelectMedia" />
                     </li>
-                    <li>
-                        <Tooltip text="GIF" position="bottom">
+                    <li class="relative inline-flex">
+                        <Tooltip text="GIFs" position="bottom">
                             <template #trigger>
                                 <button
+                                    @click="toggleGifPicker"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
                                 >
                                     <ImagePlay class="w-5 h-5 text-blue" />
                                 </button>
                             </template>
                         </Tooltip>
+
+                        <!-- GifPicker positioned relative to button -->
+                        <GifPicker
+                            :is-open="showGifPicker"
+                            @select="handleGifSelect"
+                            @close="showGifPicker = false"
+                        />
                     </li>
                     <li>
                         <Tooltip text="Emoji" position="bottom">
@@ -56,10 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import { ImagePlay, Smile } from 'lucide-vue-next'
+import { Smile, ImagePlay } from 'lucide-vue-next'
 import Tooltip from '~/modules/Common/components/toolTip'
 import MediaUpload from './subComponents/MediaUpload'
+import GifPicker from './subComponents/GifPicker/GifPicker.vue'
+
 const content = ref('')
+const showGifPicker = ref(false)
 
 const disablePostButton = computed(() => {
     return content.value.trim().length === 0
@@ -72,5 +83,14 @@ const handleSubmit = () => {
 
 const handleSelectMedia = (files: File[]) => {
     console.log(files)
+}
+
+const toggleGifPicker = () => {
+    showGifPicker.value = !showGifPicker.value
+}
+
+const handleGifSelect = (gifUrl: string) => {
+    console.log('Selected GIF:', gifUrl)
+    showGifPicker.value = false
 }
 </script>
