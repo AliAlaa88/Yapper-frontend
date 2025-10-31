@@ -4,6 +4,9 @@ interface User {
     username: string
     avatar: string
     link?: string
+    bio?: string
+    followers_count?: number
+    following_count?: number
 }
 
 export type { User }
