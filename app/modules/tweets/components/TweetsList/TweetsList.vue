@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-[600px] mx-auto bg-x-white min-h-screen">
+    <div class="max-w-[600px] mx-auto bg-primary min-h-screen">
         <!-- Header
         <div v-if="fetchingSource !== `user`"
             class="sticky top-0 z-10 bg-[var(--color-x-white)]/80 backdrop-blur-md border-b border-x px-4 py-3"
@@ -11,7 +11,7 @@
         <div v-if="isLoading" class="p-6 text-center">
             <div class="inline-flex items-center space-x-2 text-x-secondary">
                 <div class="animate-spin rounded-full h-5 w-5 border-2 border-x-blue border-t-transparent"></div>
-                <span class="text-sm font-medium">Loading tweets...</span>
+                <span class="text-sm font-medium text-primary">Loading tweets...</span>
             </div>
         </div>
         
