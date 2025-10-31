@@ -18,5 +18,6 @@
     "compilerOptions": {
         "types": ["jest", "node"]
         // plus other settings you already have (paths, etc.)
-    }
+    },
+    "include": ["module/**/types/**/*.d.ts", "modules/**/*.ts", "modules/**/*.vue"]
 }

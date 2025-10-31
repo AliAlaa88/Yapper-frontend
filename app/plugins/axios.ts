@@ -1,9 +1,11 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
-import { defineNuxtPlugin } from 'nuxt/app'
+import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
 
 export default defineNuxtPlugin(() => {
-    const apiBase = process.env.NUXT_PUBLIC_API_URL||'https://dev.yapper.cmp27.space'
+    const config = useRuntimeConfig()
+    const isMockApi = config.public.mockApi === true
+    const apiBase = isMockApi ? 'http://localhost:3001' : (config.public.apiUrl as string)
 
     const yapperApi: AxiosInstance = axios.create({
         baseURL: apiBase,
@@ -12,7 +14,7 @@ export default defineNuxtPlugin(() => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
-        withCredentials: true,
+        withCredentials: !isMockApi,
     })
 
     yapperApi.interceptors.request.use(

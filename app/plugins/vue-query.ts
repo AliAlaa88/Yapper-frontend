@@ -21,4 +21,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     const queryClient = createQueryClient()
 
     nuxtApp.vueApp.use(VueQueryPlugin, { queryClient })
+
+    return {
+        provide: {
+            queryClient,
+        },
+    }
 })
