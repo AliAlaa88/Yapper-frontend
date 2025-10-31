@@ -6,11 +6,12 @@
     >
         <!-- User Avatar logo for now to be changed to the user avatar -->
         <div>
-            <img
+            <!-- <img
                 src="../../../../assets/logo-white.png"
                 alt="logo"
                 class="w-10 h-10 rounded-full"
-            />
+            /> -->
+            <Logo imgClass="w-10 h-10 rounded-full" />
         </div>
 
         <div class="flex-1">
@@ -83,6 +84,7 @@ import Tooltip from '~/modules/Common/components/toolTip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
+import Logo from '~/modules/Common/components/Logo'
 
 const props = withDefaults(
     defineProps<{

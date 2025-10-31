@@ -1,146 +1,161 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4">
-    <div class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center">
-      <!-- Close Button -->
-      <closeButton @close="$emit('close')" />
-
-      <!-- Logo -->
-      <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
-
-      <!-- Back Button -->
-      <backButton @close="$emit('back')" class="absolute top-6 left-6" />
-
-      <!-- Title -->
-      <h2 class="text-3xl font-bold text-left mb-6">What should we call you?</h2>
-      <p class="text-gray-400 mb-6">
-        Your @username is unique. You can always change it later.
-      </p>
-
-      <!-- Username Input -->
-      <div class="mb-6">
-        <div class="relative">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">@</span>
-          <input
-            id="input-username-complete"
-            v-model="username"
-            type="text"
-            placeholder="username"
-            class="w-full bg-gray-900 text-white rounded-full px-4 pl-8 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            maxlength="15"
-            @input="validateUsername"
-          />
-        </div>
-        <div class="flex justify-between mt-2 px-4">
-          <p v-if="errorMessage" id="error-message-username" class="text-red-500 text-sm">{{ errorMessage }}</p>
-          <p v-else-if="username.length > 0" id="success-message-username" class="text-green-500 text-sm">Available!</p>
-          <p v-else class="text-transparent text-sm">.</p>
-          <p class="text-gray-500 text-sm">{{ username.length }}/15</p>
-        </div>
-      </div>
-
-      <!-- Recommendations -->
-    <div v-if="props.Recommendations && props.Recommendations.length" class="my-2 text-sm text-gray-400">
-      <p>Recommended usernames:</p>
-      <ul class="mt-1 flex flex-wrap gap-2">
-        <li
-          v-for="(suggestion, index) in props.Recommendations"
-          :key="index"
-          :id="`recommendation-${index}-username`"
-          class="px-2 py-1 border border-gray-500 rounded-md cursor-pointer hover:bg-gray-700"
-          @click="username = suggestion"
+    <div
+        class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
+    >
+        <div
+            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
         >
-          {{ suggestion }}
-        </li>
-      </ul>
-    </div>
+            <!-- Close Button -->
+            <closeButton @close="$emit('close')" />
 
-      <!-- Next Button -->
-      <button
-        id="button-next-username"
-        :disabled="!isValid"
-        :class="[
-          'w-full font-semibold rounded-full py-2 transition mb-3',
-          isValid 
-            ? 'bg-white text-black hover:bg-gray-200' 
-            : 'bg-gray-800 text-gray-500 cursor-not-allowed'
-        ]"
-        @click="onNext"
-      >
-        Next
-      </button>
+            <!-- Logo -->
+            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-      <!-- Skip Button -->
-      <button
-        id="button-skip-username"
-        class="w-full text-gray-400 hover:text-white transition"
-        @click="onSkip"
-      >
-        Skip for now
-      </button>
+            <!-- Back Button -->
+            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+
+            <!-- Title -->
+            <h2 class="text-3xl font-bold text-left mb-6">What should we call you?</h2>
+            <p class="text-gray-400 mb-6">
+                Your @username is unique. You can always change it later.
+            </p>
+
+            <!-- Username Input -->
+            <div class="mb-6">
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                    <input
+                        id="input-username-complete"
+                        v-model="username"
+                        type="text"
+                        placeholder="username"
+                        class="w-full bg-gray-900 text-white rounded-full px-4 pl-8 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        maxlength="15"
+                        @input="validateUsername"
+                    />
+                </div>
+                <div class="flex justify-between mt-2 px-4">
+                    <p v-if="errorMessage" id="error-message-username" class="text-red-500 text-sm">
+                        {{ errorMessage }}
+                    </p>
+                    <p
+                        v-else-if="username.length > 0"
+                        id="success-message-username"
+                        class="text-green-500 text-sm"
+                    >
+                        Available!
+                    </p>
+                    <p v-else class="text-transparent text-sm">.</p>
+                    <p class="text-gray-500 text-sm">{{ username.length }}/15</p>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div
+                v-if="props.Recommendations && props.Recommendations.length"
+                class="my-2 text-sm text-gray-400"
+            >
+                <p>Recommended usernames:</p>
+                <ul class="mt-1 flex flex-wrap gap-2">
+                    <li
+                        v-for="(suggestion, index) in props.Recommendations"
+                        :key="index"
+                        :id="`recommendation-${index}-username`"
+                        class="px-2 py-1 border border-gray-500 rounded-md cursor-pointer hover:bg-gray-700"
+                        @click="username = suggestion"
+                    >
+                        {{ suggestion }}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Next Button -->
+            <button
+                id="button-next-username"
+                :disabled="!isValid"
+                :class="[
+                    'w-full font-semibold rounded-full py-2 transition mb-3',
+                    isValid
+                        ? 'bg-white text-black hover:bg-gray-200'
+                        : 'bg-gray-800 text-gray-500 cursor-not-allowed',
+                ]"
+                @click="onNext"
+            >
+                Next
+            </button>
+
+            <!-- Skip Button -->
+            <button
+                id="button-skip-username"
+                class="w-full text-gray-400 hover:text-white transition"
+                @click="onSkip"
+            >
+                Skip for now
+            </button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import closeButton from "../closeButton.vue";
-import backButton from "../backButton.vue";
-import logo from "../logo.vue";
+import { ref, computed } from 'vue'
+import closeButton from '../closeButton.vue'
+import backButton from '../backButton.vue'
+import Logo from '~/modules/Common/components/Logo'
 
-const username = ref("");
-const errorMessage = ref("");
+const username = ref('')
+const errorMessage = ref('')
 
 const emit = defineEmits<{
-  (e: 'next', username: string): void;
-  (e: 'skip'): void;
-  (e: 'back'): void;
-  (e: 'close'): void;
-}>();
+    (e: 'next', username: string): void
+    (e: 'skip'): void
+    (e: 'back'): void
+    (e: 'close'): void
+}>()
 
 const props = defineProps<{
-  Recommendations: string[];
-}>();
+    Recommendations: string[]
+}>()
 
 const validateUsername = () => {
-  const value = username.value;
-  
-  if (value.length === 0) {
-    errorMessage.value = "";
-    return;
-  }
+    const value = username.value
 
-  // Username validation rules
-  if (value.length < 3) {
-    errorMessage.value = "Username must be at least 3 characters";
-    return;
-  }
+    if (value.length === 0) {
+        errorMessage.value = ''
+        return
+    }
 
-  // Only alphanumeric and underscores
-  if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-    errorMessage.value = "Only letters, numbers, and underscores allowed";
-    return;
-  }
+    // Username validation rules
+    if (value.length < 3) {
+        errorMessage.value = 'Username must be at least 3 characters'
+        return
+    }
 
-  // Cannot start with a number
-  if (/^[0-9]/.test(value)) {
-    errorMessage.value = "Username cannot start with a number";
-    return;
-  }
+    // Only alphanumeric and underscores
+    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        errorMessage.value = 'Only letters, numbers, and underscores allowed'
+        return
+    }
 
-  errorMessage.value = "";
-};
+    // Cannot start with a number
+    if (/^[0-9]/.test(value)) {
+        errorMessage.value = 'Username cannot start with a number'
+        return
+    }
+
+    errorMessage.value = ''
+}
 
 const isValid = computed(() => {
-  return username.value.length >= 3 && !errorMessage.value;
-});
+    return username.value.length >= 3 && !errorMessage.value
+})
 
 const onNext = () => {
-  if (isValid.value) {
-    emit('next', username.value);
-  }
-};
+    if (isValid.value) {
+        emit('next', username.value)
+    }
+}
 
 const onSkip = () => {
-  emit('skip');
-};
+    emit('skip')
+}
 </script>

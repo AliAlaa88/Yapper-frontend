@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000',
+            apiUrl: process.env.NUXT_PUBLIC_API_URL,
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
             giphyApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY || '',
             recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,

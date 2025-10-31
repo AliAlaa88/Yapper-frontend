@@ -5,11 +5,12 @@
                 <div
                     class="w-[64px] h-[64px] hover:bg-hover rounded-full flex items-center justify-center p-3"
                 >
-                    <img
+                    <!-- <img
                         src="../../../../assets/logo-white.png"
                         alt="logo"
                         class="w-full h-full object-contain"
-                    />
+                    /> -->
+                    <Logo imgClass="w-full h-full object-contain" />
                 </div>
             </NuxtLink>
             <div v-for="link in navLinks" :key="link.href">
@@ -49,6 +50,7 @@
 import { House, Search, Bell, Mail, User, Settings } from 'lucide-vue-next'
 import PostTweet from '../postTweet/PostTweet.vue'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
+import Logo from '~/modules/Common/components/Logo'
 
 const navLinks = [
     {
