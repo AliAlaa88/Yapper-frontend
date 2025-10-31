@@ -65,13 +65,32 @@ const props = defineProps<{
 }>()
 
 // Use computed properties for reactive access to tweet properties
-const id = computed(() => props.tweet.id)
-const content = computed(() => props.tweet.content)
-const user = computed(() => props.tweet.user)
-const stats = computed(() => props.tweet.stats)
+const id = computed(() => props.tweet.tweet_id)
+
+// Transform content string to Content object
+const content = computed(() => ({
+    text: props.tweet.content,
+    images: props.tweet.imgs || [],
+    videos: props.tweet.videos || []
+}))
+
+// Transform user to include avatar property
+const user = computed(() => ({
+    ...props.tweet.user,
+    avatar: props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`
+}))
+
+// Transform stats to the expected format
+const stats = computed(() => ({
+    likes: props.tweet.likes_count,
+    replies: props.tweet.replies_count,
+    retweets: props.tweet.reposts_count,
+    views: props.tweet.views_count
+}))
+
 const type = computed(() => props.tweet.type)
-const createdAt = computed(() => props.tweet.createdAt)
-const updatedAt = computed(() => props.tweet.updatedAt)
+const createdAt = computed(() => props.tweet.created_at)
+const updatedAt = computed(() => props.tweet.updated_at)
 
 // Use utility functions for URLs
 const profileUrl = computed(() => getProfileUrl(user.value))
