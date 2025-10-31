@@ -3,15 +3,20 @@
         v-if="isOpen"
         class="absolute z-[60] mt-2 w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
     >
-        <div class="p-2 border-b border-primary flex gap-2">
+        <div class="p-2 border-b border-primary flex gap-2" id="gif-picker-container">
             <input
                 v-model="query"
                 type="text"
                 placeholder="Search GIFs..."
+                id="gif-picker-search-input"
                 @input="searchGifs"
                 class="w-full px-2 py-1 rounded bg-primary outline-none text-sm text-primary placeholder:text-muted"
             />
-            <button @click="$emit('close')" class="text-muted hover:text-primary">
+            <button
+                @click="$emit('close')"
+                class="text-muted hover:text-primary"
+                id="close-gif-picker-btn"
+            >
                 <X class="w-4 h-4" />
             </button>
         </div>

@@ -5,7 +5,7 @@
     >
         <div class="p-2 border-b border-primary flex justify-between items-center">
             <span class="text-primary font-semibold text-sm">Emoji</span>
-            <button @click="$emit('close')" class="text-muted hover:text-primary">
+            <button @click="$emit('close')" class="text-muted hover:text-primary" id="close-emoji-picker-btn">
                 <X class="w-4 h-4" />
             </button>
         </div>

@@ -16,6 +16,7 @@
                 <div class="flex items-center gap-5 p-3 rounded-full">
                     <NuxtLink
                         :to="link.href"
+                        :id="`sidebar-link-${link.href}`"
                         class="flex items-center text-primary font-medium w-full"
                     >
                         <div
@@ -32,6 +33,7 @@
                 <button
                     class="py-3 px-4 bg-alternate rounded-full text-lg text-alternate font-medium transition-colors duration-200 hover:opacity-90 w-[90%]"
                     @click="handleOpen"
+                    id="sidebar-post-btn"
                 >
                     Post
                 </button>

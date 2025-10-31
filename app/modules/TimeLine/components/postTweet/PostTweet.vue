@@ -17,6 +17,7 @@
             <textarea
                 placeholder="What's happening?"
                 v-model="content"
+                id="post-tweet-textarea"
                 class="w-full h-24 p-4 border-b border-primary resize-none bg-primary text-primary placeholder:text-muted focus:outline-none focus:border-blue focus:bg-primary"
             ></textarea>
             <!--  post footer -->
@@ -30,6 +31,7 @@
                             <template #trigger>
                                 <button
                                     @click="toggleGifPicker"
+                                    id="post-tweet-gif-picker-btn"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
                                 >
                                     <ImagePlay class="w-5 h-5 text-blue" />
@@ -49,6 +51,7 @@
                             <template #trigger>
                                 <button
                                     @click="toggleEmojiPicker"
+                                    id="post-tweet-emoji-picker-btn"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
                                 >
                                     <Smile class="w-5 h-5 text-blue" />
@@ -64,6 +67,7 @@
                 </ul>
                 <button
                     :disabled="disablePostButton"
+                    id="post-tweet-post-btn"
                     class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Post

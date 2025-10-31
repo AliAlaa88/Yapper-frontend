@@ -3,6 +3,7 @@
         <template #trigger>
             <button
                 @click="openMediaDrawer"
+                id="post-tweet-media-upload-btn"
                 class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
             >
                 <Image class="w-5 h-5 text-blue" />
@@ -14,6 +15,7 @@
         ref="fileInput"
         type="file"
         accept="image/*,video/*"
+        id="post-tweet-media-upload-input"
         style="display: none"
         @change="onFileChange"
     />

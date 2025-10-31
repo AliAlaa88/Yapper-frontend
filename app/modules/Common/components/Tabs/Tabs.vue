@@ -4,8 +4,9 @@
             <li
                 v-for="tab in tabs"
                 :key="tab.value"
-                class="flex-1 text-center cursor-pointer transition-all duration-200 hover:bg-hover "
+                class="flex-1 text-center cursor-pointer transition-all duration-200 hover:bg-hover"
                 @click="handleChange(tab.value)"
+                :id="tab.test_id"
             >
                 <button
                     class="relative w-full px-4 py-4 text-base font-medium transition-colors duration-200"
@@ -28,6 +29,7 @@
 interface Tab {
     label: string
     value: string
+    test_id?: string
 }
 
 interface Props {

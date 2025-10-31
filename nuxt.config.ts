@@ -15,9 +15,7 @@ export default defineNuxtConfig({
             apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000',
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
             giphyApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY || '',
-            recaptcha:
-                process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-                '6LfOssorAAAAAEU9QXy9tnI69SWwGKOziQ5lKZNh',
+            recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
         },
     },
 
