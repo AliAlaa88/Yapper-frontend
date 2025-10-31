@@ -1,6 +1,6 @@
 <template>
-    <div :dir="currentDirection" :lang="currentLocale">
-        <NuxtLayout>
+    <div :dir="currentDirection" :lang="currentLocale" class="bg-x-bg-dark">
+        <NuxtLayout class="w-full">
             <NuxtPage />
         </NuxtLayout>
     </div>
