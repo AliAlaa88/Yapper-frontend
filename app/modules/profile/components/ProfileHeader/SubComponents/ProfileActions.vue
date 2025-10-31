@@ -6,6 +6,7 @@
             @click="showList = true"
         >
             <span
+                id="menu-button"
                 class="text-white text-xl font-bold leading-none"
                 @click.stop="toggleList"
             >⋯</span>
