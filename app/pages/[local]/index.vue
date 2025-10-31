@@ -8,9 +8,9 @@
 <script setup lang="ts">
 import Tabs from '../../modules/Common/components/Tabs'
 import PostTweet from '../../modules/TimeLine/components/postTweet'
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '~/modules/auth/stores/userStore'
+// import { onMounted } from 'vue'
+// import { useRouter } from 'vue-router'
+// import { useUserStore } from '~/modules/auth/stores/userStore'
 definePageMeta({
     layout: 'main-layout',
 })
@@ -32,14 +32,14 @@ function handleChange(tab: string) {
     activeTab.value = tab
 }
 
-const router = useRouter()
-onMounted(() => {
-    const userStore = useUserStore()
-    const home = 'home'
-    if (!userStore.isLoggedIn) {
-        router.push(`/${home}`)
-    } else {
-        router.push('/auth')
-    }
-})
+// const router = useRouter()
+// onMounted(() => {
+//     const userStore = useUserStore()
+//     const home = 'home'
+//     if (!userStore.isLoggedIn) {
+//         router.push(`/${home}`)
+//     } else {
+//         router.push('/auth')
+//     }
+// })
 </script>
