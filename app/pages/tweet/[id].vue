@@ -7,20 +7,10 @@
             >
                 <div class="flex items-center gap-4">
                     <button
-                        @click="$router.back()"
+                        @click="$router.back"
                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[var(--color-x-gray-light)] transition-colors"
                     >
-                        <svg class="w-5 h-5" 
-                             fill="none" 
-                             stroke="currentColor" 
-                             viewBox="0 0 24 24">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 19l-7-7 7-7"
-                            ></path>
-                        </svg>
+                        <ArrowLeft :size="20" class="cursor-pointer"/>
                     </button>
                     <h1 class="text-xl font-bold text-[var(--color-x-black)]">Tweet</h1>
                 </div>
@@ -36,6 +26,7 @@
 
 <script setup>
 import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
+import { ArrowLeft } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
