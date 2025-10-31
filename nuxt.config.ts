@@ -12,13 +12,19 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000',
+            apiUrl: process.env.NUXT_PUBLIC_API_URL,
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
-            recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LfOssorAAAAAEU9QXy9tnI69SWwGKOziQ5lKZNh',
+            giphyApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY || '',
+            recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
         },
     },
 
-    plugins: ['./app/plugins/axios.ts', './app/plugins/vue-query.ts', './app/plugins/services.ts', './app/plugins/recaptcha.ts'],
+    plugins: [
+        './app/plugins/axios.ts',
+        './app/plugins/vue-query.ts',
+        './app/plugins/services.ts',
+        './app/plugins/recaptcha.ts',
+    ],
     i18n: {
         locales: [
             {

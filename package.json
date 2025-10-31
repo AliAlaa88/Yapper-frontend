@@ -29,6 +29,8 @@
         ]
     },
     "dependencies": {
+        "@floating-ui/vue": "^1.1.9",
+        "@headlessui/vue": "^1.7.23",
         "@nuxt/eslint": "^1.9.0",
         "@nuxtjs/i18n": "^10.1.1",
         "@pinia/nuxt": "^0.11.2",
@@ -45,6 +47,7 @@
         "vue": "^3.5.22",
         "vue-recaptcha-v3": "^2.0.1",
         "vue-router": "^4.5.1",
+        "vue3-emoji-picker": "^1.1.8",
         "vue3-recaptcha-v2": "^2.1.0"
     },
     "devDependencies": {

@@ -4,7 +4,7 @@
       <!-- Close Button -->
       <closeButton @close="$emit('close')" />
       <!-- Logo -->
-    <logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+    <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
       <!-- Title -->
       <h2 class="text-3xl font-bold text-left mb-6">Create Your account</h2>
@@ -90,7 +90,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import logo from "../logo.vue";
+import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from "../recaptcha.vue";
 import { useRegisterS1Query } from "../../../queries/useRegisterQuery";
 import closeButton from "../closeButton.vue";
