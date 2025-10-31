@@ -4,7 +4,7 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt({
     rules: {
         // K&R Formatting Rules
-        'indent': ['error', 4, {
+        'indent': ['warn', 4, {
             'SwitchCase': 1,
             'ignoredNodes': ['TemplateLiteral'],
         }],

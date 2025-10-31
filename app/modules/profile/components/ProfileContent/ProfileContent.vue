@@ -57,6 +57,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import ProfileTabs from './SubComponents/ProfileTabs.vue'
 import EmptyState from './SubComponents/EmptyState.vue'
+import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config'
 import { defineVitestProject } from '@nuxt/test-utils/config'
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 import path from 'path'
 
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
                         '~': path.resolve(__dirname, './app'),
                         '@': path.resolve(__dirname, './app'),
                         '#app': path.resolve(__dirname, './node_modules/nuxt/dist/app'),
+                        '#imports': resolve(__dirname, '.nuxt/imports')
                     },
                 },
                 test: {

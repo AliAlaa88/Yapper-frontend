@@ -1,6 +1,6 @@
 <template>
     <form
-        class="flex flex-row gap-4 p-4"
+        class="flex flex-row gap-4 p-4 bg-primary"
         :class="border ? 'border-b border-primary' : ''"
         @submit.prevent="handleSubmit"
     >
