@@ -78,8 +78,7 @@ export const userInfoServiceReal = {
     async followUser(userId: string): Promise<void> {
         const { $axios } = useNuxtApp()
         try {
-            await $axios.post<ActionApiResponse>(
-                `/users/${userId}/follow`)
+            await $axios.post<ActionApiResponse>(`/users/${userId}/follow`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -118,9 +117,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.post<ActionApiResponse>(
-                `/users/${userId}/block`,
-            )
+            await $axios.post<ActionApiResponse>(`/users/${userId}/block`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -158,9 +155,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.post<ActionApiResponse>(
-                `/users/${userId}/mute`,
-            )
+            await $axios.post<ActionApiResponse>(`/users/${userId}/mute`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -212,8 +207,28 @@ export const userInfoServiceReal = {
     },
 
     async updateUserProfile(userId: string, updates: Partial<UserAction>): Promise<UserAction> {
-        throw new Error(
-            `userInfoServiceReal.updateUserProfile not implemented yet${userId}${JSON.stringify(updates)}`,
-        )
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.patch<UserApiResponse>('/users/me', updates)
+            if (!response.data || !response.data.data) {
+                throw new Error('Failed to update user profile')
+            }
+            const userData = response.data.data
+            console.log('updated profile', userData)
+            return userData
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 400) {
+                    throw new Error('Invalid update data')
+                } else if (error.response?.status === 409) {
+                    throw new Error('Username already taken')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
     },
 }
