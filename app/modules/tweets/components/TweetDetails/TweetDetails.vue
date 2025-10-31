@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-[var(--color-x-white)]">
+  <div class="bg-x-white">
     <!-- Main Tweet -->
-    <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-[var(--color-x-border)]">
+    <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-x-border">
       <Publisher 
         :publisher="tweetDetails.tweet.user"
         :created-at="tweetDetails.tweet.createdAt"
@@ -10,7 +10,7 @@
       <Content 
         :content="tweetDetails.tweet.content"
       />
-      <div class="text-[var(--color-x-gray-dark)] text-[15px] mb-4 border-b border-[var(--color-x-border)] pb-4">
+      <div class="text-x-gray-dark text-[15px] mb-4 border-b border-x-border pb-4">
         <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
           {{ formatDetailDate(tweetDetails.tweet.createdAt) }}
         </time>
@@ -23,8 +23,8 @@
     <!-- Replies Section -->
     <div v-if="tweetDetails && !isLoading && !error">
       <!-- No Replies State -->
-      <div v-if="replies.length === 0" class="text-center py-12 text-[var(--color-x-gray-dark)]">
-        <MessageCircle class="w-16 h-16 text-[var(--color-x-gray-light)] mx-auto mb-4" :stroke-width="1" />
+      <div v-if="replies.length === 0" class="text-center py-12 text-x-gray-dark">
+        <MessageCircle class="w-16 h-16 text-x-gray-light mx-auto mb-4" :stroke-width="1" />
         <p class="text-lg">No replies yet</p>
         <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
       </div>
@@ -35,11 +35,11 @@
           v-for="reply in replies" 
           :key="reply.id"
           :id="`tweet-reply-${reply.id}`"
-          class="border-b border-[var(--color-x-border)] px-4 py-3 hover:bg-[var(--color-x-background)] transition-colors"
+          class="border-b border-x-border px-4 py-3 hover:bg-x-background transition-colors"
         >
           <div class="flex gap-3">
             <!-- Avatar column -->
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
               <img :id="`reply-avatar-${reply.id}`" :src="reply.user.avatar" :alt="reply.user.name" class="w-10 h-10 rounded-full" />
             </div>
             <!-- Content column -->
@@ -62,8 +62,8 @@
 
     <!-- Loading State -->
     <div v-if="isLoading" class="p-8 text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-x-blue)] mx-auto mb-4"></div>
-      <p class="text-[var(--color-x-gray-dark)]">Loading tweet details...</p>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-x-blue mx-auto mb-4"></div>
+      <p class="text-x-gray-dark">Loading tweet details...</p>
     </div>
 
     <!-- Error State -->
@@ -73,7 +73,7 @@
       <button 
         id="tweet-detail-retry-button"
         @click="fetchTweetDetails()" 
-        class="mt-4 px-4 py-2 bg-[var(--color-x-blue)] text-white rounded-lg hover:bg-[var(--color-x-blue)]/90 transition-colors duration-200"
+        class="mt-4 px-4 py-2 bg-x-blue text-white rounded-lg hover:bg-x-blue/90 transition-colors duration-200"
       >
         Try Again
       </button>

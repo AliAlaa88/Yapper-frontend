@@ -1,15 +1,15 @@
 <template>
-    <div class="max-w-[600px] mx-auto border-x border-x bg-[var(--color-x-white)] min-h-screen">
+    <div class="max-w-[600px] mx-auto border-x  bg-(--color-x-white) min-h-screen">
         <!-- Header with back button -->
-        <div class="sticky top-0 z-10 bg-[var(--color-x-white)]/80 backdrop-blur-md border-b border-x px-4 py-3">
+        <div class="sticky top-0 z-10 bg-(--color-x-white)/80 backdrop-blur-md border-b border-x-dark px-4 py-3">
             <div class="flex items-center gap-4">
                 <button 
                     @click="$router.back" 
-                    class="p-2 rounded-full hover:bg-[var(--color-x-background)] transition-colors"
+                    class="p-2 rounded-full hover:bg-x-background transition-colors"
                 >
-                    <ArrowLeft :size="20" class="cursor-pointer"/>
+                    <ArrowLeft :size="20" class="cursor-pointer text-x-text-dark"/>
                 </button>
-                <h1 class="text-xl font-bold text-x-primary font-[var(--font-weight-bold)]">Tweet</h1>
+                <h1 class="text-xl text-x-text-dark font-bold">Post</h1>
             </div>
         </div>
 

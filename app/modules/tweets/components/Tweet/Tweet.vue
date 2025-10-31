@@ -1,7 +1,7 @@
 <template>
     <article
         :id="`tweet-${id}`"
-        class="border-b border-[var(--color-x-border)] px-4 py-3 hover:bg-[var(--color-x-background)] transition-colors cursor-pointer"
+        class="border-b border-x-border px-4 py-3 hover:bg-x-background transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
         <div class="flex gap-3">
@@ -10,7 +10,7 @@
                 <div class="h-fit">
                     <NuxtLink 
                         :id="`tweet-avatar-link-${id}`"
-                        class="flex-shrink-0" 
+                        class="shrink-0" 
                         @click.stop
                         :to="profileUrl"
                     >

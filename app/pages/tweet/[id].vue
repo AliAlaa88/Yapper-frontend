@@ -1,23 +1,23 @@
 <template>
-    <div class="min-h-screen bg-[var(--color-x-background)]">
-        <div class="max-w-[600px] mx-auto border-x border-[var(--color-x-border)]">
+    <div class="min-h-screen bg-x-background">
+        <div class="max-w-[600px] mx-auto border-x border-x-border">
             <!-- Header with back button -->
             <div
-                class="sticky top-0 z-10 bg-[var(--color-x-white)]/80 backdrop-blur-md border-b border-[var(--color-x-border)] px-4 py-3"
+                class="sticky top-0 z-10 bg-(--color-x-white)/80 backdrop-blur-md border-b border-[var(--color-x-border)] px-4 py-3"
             >
                 <div class="flex items-center gap-4">
                     <button
                         @click="$router.back"
                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[var(--color-x-gray-light)] transition-colors"
                     >
-                        <ArrowLeft :size="20" class="cursor-pointer"/>
+                        <ArrowLeft :size="20" class="cursor-pointer x-"/>
                     </button>
-                    <h1 class="text-xl font-bold text-[var(--color-x-black)]">Tweet</h1>
+                    <h1 class="text-l font-bold text-white">Tweet</h1>
                 </div>
             </div>
 
             <!-- Tweet Details Content -->
-            <div class="bg-[var(--color-x-white)]">
+            <div class="bg-(--color-x-white)">
                 <TweetDetails v-if="tweetId" :tweet-id="tweetId" @close="handleClose" />
             </div>
         </div>

@@ -4,18 +4,18 @@
         <div class="group/tooltip relative">
             <button
                 id="tweet-reply-button"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
                 @click.stop
             >
                 <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-blue)]/10 transition-colors"
+                    class="p-2 rounded-full group-hover:bg-x-blue/10ors"
                 >
                     <MessageCircle :size="18" />
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(replies) }}</span>
+                <span class="text-[13px] min-w-5">{{ formatCount(replies) }}</span>
             </button>
             <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
             >
                 Reply
             </span>
@@ -24,18 +24,18 @@
         <div class="group/tooltip relative">
             <button
                 id="tweet-retweet-button"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-green)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-green transition-colors"
                 @click.stop
             >
                 <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-green)]/10 transition-colors"
+                    class="p-2 rounded-full group-hover:bg-x-green/10 transition-colors"
                 >
                     <Repeat2 :size="18" />
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(retweets) }}</span>
+                <span class="text-[13px] min-w-5">{{ formatCount(retweets) }}</span>
             </button>
             <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
             >
                 Retweet
             </span>
@@ -45,18 +45,18 @@
         <div class="group/tooltip relative">
             <button
                 id="tweet-like-button"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-red)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-red transition-colors"
                 @click.stop
             >
                 <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-red)]/10 transition-colors"
+                    class="p-2 rounded-full group-hover:bg-x-red/10 transition-colors"
                 >
                     <Heart :size="18" />
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(likes) }}</span>
+                <span class="text-[13px] min-w-5">{{ formatCount(likes) }}</span>
             </button>
             <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
             >
                 Like
             </span>
@@ -66,18 +66,18 @@
         <div v-if="views" class="group/tooltip relative">
             <button
                 id="tweet-views-button"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
                 @click.stop
             >
                 <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-blue)]/10 transition-colors"
+                    class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors"
                 >
                     <BarChart3 :size="18" />
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(views || 0) }}</span>
+                <span class="text-[13px] min-w-5">{{ formatCount(views || 0) }}</span>
             </button>
             <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
             >
                 Views
             </span>
@@ -86,17 +86,17 @@
         <div class="group/tooltip relative">
             <button
                 id="tweet-share-button"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
+                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
                 @click.stop
             >
                 <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-blue)]/10 transition-colors"
+                    class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors"
                 >
                     <Share :size="18" />
                 </div>
             </button>
             <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
             >
                 Share
             </span>

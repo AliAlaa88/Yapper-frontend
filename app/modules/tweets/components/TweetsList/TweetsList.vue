@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-[600px] mx-auto border-x border-x bg-[var(--color-x-white)] min-h-screen">
+    <div class="max-w-[600px] mx-auto bg-x-white min-h-screen">
         <!-- Header
         <div v-if="fetchingSource !== `user`"
             class="sticky top-0 z-10 bg-[var(--color-x-white)]/80 backdrop-blur-md border-b border-x px-4 py-3"
@@ -10,21 +10,21 @@
         <!-- Loading state -->
         <div v-if="isLoading" class="p-6 text-center">
             <div class="inline-flex items-center space-x-2 text-x-secondary">
-                <div class="animate-spin rounded-full h-5 w-5 border-2 border-[var(--color-x-blue)] border-t-transparent"></div>
-                <span class="text-sm font-[var(--font-weight-medium)]">Loading tweets...</span>
+                <div class="animate-spin rounded-full h-5 w-5 border-2 border-x-blue border-t-transparent"></div>
+                <span class="text-sm font-medium">Loading tweets...</span>
             </div>
         </div>
         
         <!-- Error state -->
         <div v-else-if="error" class="p-6 text-center">
-            <div class="bg-[var(--color-x-background)] rounded-xl p-4 border border-x">
-                <div class="text-[var(--color-x-red)] text-sm font-[var(--font-weight-medium)] mb-3">
+            <div class="bg-x-background rounded-xl p-4 border border-x">
+                <div class="text-x-red text-sm font-medium mb-3">
                     {{ error }}
                 </div>
                 <button 
                     id="tweets-list-retry-button"
                     @click="loadTweets" 
-                    class="inline-flex items-center px-4 py-2 bg-[var(--color-x-blue)] text-white text-sm font-[var(--font-weight-bold)] rounded-full hover:bg-[var(--color-x-blue-hover)] transition-colors duration-200"
+                    class="inline-flex items-center px-4 py-2 bg-x-blue text-white text-sm font-bold rounded-full hover:bg-x-blue-hover transition-colors duration-200"
                 >
                     <RotateCw class="w-4 h-4 mr-2" />
                     Try again
@@ -33,17 +33,17 @@
         </div>
         
         <!-- Tweets list -->
-        <div v-else-if="tweets && tweets.length > 0" class="divide-y divide-[var(--color-x-border)]">
+        <div v-else-if="tweets && tweets.length > 0" class="divide-y divide-x-border">
             <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" />
         </div>
         
         <!-- Empty state -->
         <div v-else class="p-8 text-center">
             <div class="max-w-sm mx-auto">
-                <div class="w-16 h-16 mx-auto mb-4 bg-[var(--color-x-background)] rounded-full flex items-center justify-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-x-background rounded-full flex items-center justify-center">
                     <Twitter class="w-8 h-8 text-x-secondary" />
                 </div>
-                <h3 class="text-lg font-[var(--font-weight-bold)] text-x-primary mb-2">No tweets yet</h3>
+                <h3 class="text-lg font-bold text-x-primary mb-2">No tweets yet</h3>
                 <p class="text-sm text-x-secondary leading-relaxed">
                     When tweets are posted, they'll show up here. Check back later!
                 </p>
