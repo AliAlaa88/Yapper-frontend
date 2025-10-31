@@ -15,6 +15,7 @@
 
         <!-- OTP Input -->
         <input
+            id="input-otp-forgot-password-s2"
             type="text"
             placeholder="Enter OTP"
             v-model="otp"
@@ -22,10 +23,11 @@
         />
         
         <!-- Error Message -->
-        <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
+        <p v-if="errorMessage" id="error-message-forgot-password-s2" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
       <!-- Next Button -->
       <button
+        id="button-next-forgot-password-s2"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >
@@ -61,10 +63,12 @@ const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
   },
   (error: any) => {
     console.error("Verify OTP Error:", error);
-    errorMessage.value = error?.response?.data?.message 
-      || error?.response?.data?.error 
-      || error?.message 
+    const errorMsg = error?.response?.data?.message
       || "An error occurred. Please try again.";
+    if(Array.isArray(errorMsg))
+      errorMessage.value = errorMsg[0];
+    else
+      errorMessage.value = errorMsg;
   }
 );
 

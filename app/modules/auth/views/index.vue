@@ -21,7 +21,11 @@
             <div class="flex-1 h-px bg-gray-700" />
           </div>
 
-          <button class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-full w-full" @click="goToSignup">
+          <button 
+            data-testid="button-createAccount-authHome"
+            class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-full w-full" 
+            @click="goToSignup"
+          >
             Create account
           </button>
           <p class="text-gray-400 text-xs leading-relaxed">
@@ -29,7 +33,11 @@
           </p>
           <div class="mt-10">
             <h3 class="font-semibold mb-3">Already have an account?</h3>
-            <button class="border border-gray-600 hover:bg-gray-800 text-white font-bold py-2.5 rounded-full w-full" @click="goToLogin">
+            <button 
+              data-testid="button-signIn-authHome"
+              class="border border-gray-600 hover:bg-gray-800 text-white font-bold py-2.5 rounded-full w-full" 
+              @click="goToLogin"
+            >
             Sign in
             </button>
           </div>
@@ -43,6 +51,7 @@
 <script lang="ts" setup>
 import logo from "../components/subComponents/logo.vue";
 import OAuth from "../components/subComponents/OAuth.vue";
+import { useRouter } from "vue-router";
 const router = useRouter();
 
 const goToLogin = () => {

@@ -12,6 +12,7 @@ const showStep1 = ref(true);
 const identifier = ref('');
 const type=ref('');
 const onNext = (Identifier: string, Type: string) => {
+  console.log("Identifier received in Login:", Identifier);
   showStep2.value = true;
   showStep1.value = false;
   identifier.value = Identifier;
