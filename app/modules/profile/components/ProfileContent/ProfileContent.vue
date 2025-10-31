@@ -1,10 +1,14 @@
 <template>
     <div class="bg-black">
         <!-- Tabs Navigation -->
-        <ProfileTabs :tabs="tabs" />
+        <ProfileTabs
+            v-if="!isBlocked"
+            :tabs="tabs" />
 
         <!-- Content Area - switches based on route -->
-        <div class="min-h-[400px]">
+        <div
+            v-if="!isBlocked"
+            class="min-h-[650px]">
             <!-- Posts Tab (default route) -->
             <div v-if="currentTab === 'posts'" class="bg-black">
                 <EmptyState
@@ -41,6 +45,10 @@
                 />
             </div>
         </div>
+        <ProfileBlockedContent
+            v-if="isBlocked"
+            :username="username"
+        />
     </div>
 </template>
 
@@ -50,8 +58,16 @@ import { useRoute } from 'vue-router'
 import ProfileTabs from './SubComponents/ProfileTabs.vue'
 import EmptyState from './SubComponents/EmptyState.vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
+import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
+import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+
 
 const route = useRoute()
+const userId = inject<Ref<string>>('user-id')!
+const {
+    isBlocked,
+    username,
+} = useUserInfo(userId)
 
 // Determine current tab based on route path
 const currentTab = computed(() => {

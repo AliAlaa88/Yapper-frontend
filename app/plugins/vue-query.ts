@@ -23,4 +23,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     nuxtApp.vueApp.use(VueQueryPlugin, { queryClient })
     nuxtApp.vueApp.component('VueQueryDevtools', VueQueryDevtools)
+
+    return {
+        provide: {
+            queryClient,
+        },
+    }
 })

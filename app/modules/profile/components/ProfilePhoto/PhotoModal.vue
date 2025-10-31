@@ -8,20 +8,7 @@
                     class="text-white hover:bg-white/10 p-2 rounded-full transition-colors duration-200"
                     @click="closeModal"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
+                    <X />
                 </button>
             </div>
 
@@ -42,9 +29,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from '#app'
+import { useRoute, useRouter } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
 import { useProfilePhotoStore } from '../../stores/photo'
+import { X } from 'lucide-vue-next'
+import { onMounted, onUnmounted } from 'vue'
 
 const route = useRoute()
 const router = useRouter()

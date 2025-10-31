@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "build": "nuxt build",
-        "dev": "nuxt dev",
+        "dev": "nuxt dev --port 3001",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
@@ -29,6 +29,8 @@
         ]
     },
     "dependencies": {
+        "@floating-ui/vue": "^1.1.9",
+        "@headlessui/vue": "^1.7.23",
         "@nuxt/eslint": "^1.9.0",
         "@nuxtjs/i18n": "^10.1.1",
         "@pinia/nuxt": "^0.11.2",
@@ -49,7 +51,10 @@
         "tailwind-merge": "^3.3.1",
         "tailwindcss": "^4.1.14",
         "vue": "^3.5.22",
-        "vue-router": "^4.5.1"
+        "vue-recaptcha-v3": "^2.0.1",
+        "vue-router": "^4.5.1",
+        "vue3-emoji-picker": "^1.1.8",
+        "vue3-recaptcha-v2": "^2.1.0"
     },
     "devDependencies": {
         "@babel/core": "^7.28.4",
@@ -62,7 +67,7 @@
         "@vitest/coverage-v8": "3.2.4",
         "@vue/test-utils": "^2.4.6",
         "babel-jest": "^29.7.0",
-        "happy-dom": "^17.6.3",
+        "happy-dom": "^17.0.0",
         "husky": "^8.0.0",
         "jest": "^29.7.0",
         "jest-transform-stub": "^2.0.0",

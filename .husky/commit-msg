@@ -1,7 +1,9 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+msg_file=$1
+msg=$(cat "$msg_file")
 
-# Run commitlint
-if ! npx --no -- commitlint --edit "$1"; then
+# Conventional commits rule
+if ! echo "$msg" | grep -Eq "^(feat|fix|chore|docs|refactor|test|style|perf|ci)\(.+\): .+"; then
+  echo "❌ Invalid commit message format!"
+  echo "👉 Example: feat(auth): add login endpoint"
   exit 1
 fi
