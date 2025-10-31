@@ -192,4 +192,26 @@ export const userInfoServiceMock = {
 
         return updatedUser.data
     },
+
+    async updateUserProfile(userId: string, updates: Partial<UserAction>): Promise<UserAction> {
+        const { $axios } = useNuxtApp()
+
+        const response = await $axios.get<UserAction>(`/users/${userId}`)
+        const user = response.data
+
+        if (!user) throw new Error('User not found')
+
+        const updatedData = {
+            ...user,
+            ...updates,
+        }
+
+        const updatedUser = await $axios.request<UserAction>({
+            method: 'PATCH',
+            url: `/users/${userId}`,
+            data: updatedData,
+        })
+
+        return updatedUser.data
+    },
 }

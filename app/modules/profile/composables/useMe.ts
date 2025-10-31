@@ -21,3 +21,12 @@ const me: UserAction = {
 export const useMe = (username: string): { isMe: boolean } => {
     return { isMe: username === me.username }
 }
+
+export const getMe = (): UserAction => {
+    return me
+}
+
+export const updateMe = (updatedData: Partial<UserAction>): UserAction => {
+    Object.assign(me, updatedData)
+    return me
+}
