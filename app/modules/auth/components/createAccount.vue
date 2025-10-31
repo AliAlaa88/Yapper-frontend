@@ -2,7 +2,7 @@
   <createAccount v-if="showSignupStep1" @next="onNext" @close="$emit('close')"/>
   <verifyOtp v-if="showVerifyOtp" @close="onCloseVerify" :Email="Email" @next="onFinal" />
   <FinalRegister v-if="showFinalStep" @close="$emit('close')" :username="username" :Email="Email" @finish="onSignupFinish" />
-  <CompleteAccount v-if="showCompleteAccount" @close="onCompleteAccountClose" @finish="onCompleteAccountFinish" />
+  <CompleteAccount v-if="showCompleteAccount" @close="onCompleteAccountClose" @finish="onCompleteAccountFinish" :Recommendations="Recommendations" />
 </template>
 
 <script setup lang="ts">

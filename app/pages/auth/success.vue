@@ -8,7 +8,6 @@
 import { ref } from 'vue';
 import { useUserStore } from '~/modules/auth/stores/userStore';
 import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery';
-
 const router = useRouter();
 const userStore = useUserStore();
 const urlParams = new URLSearchParams(window.location.search);
@@ -18,6 +17,7 @@ const isLoading = ref(true);
 if (userToken.value) {
     userStore.accessToken = userToken.value;
     if (process.client) {
+        console.log("Storing access token in localStorage");
         localStorage.setItem('access_token', userToken.value);
     }
 
@@ -35,10 +35,11 @@ if (userToken.value) {
         (error) => {
             console.error("Failed to fetch user data:", error);
             isLoading.value = false;
-            router.push('/');
+            router.push('/auth');
+            userStore.logout();
         }
     );
 } else {
-    router.push('/');
+    router.push('/auth');
 }
 </script>

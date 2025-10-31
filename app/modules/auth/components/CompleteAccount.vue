@@ -1,8 +1,8 @@
 <template>
   <ProfilePicture v-if="showProfilePicture" @next="onProfilePictureNext" @skip="onProfilePictureSkip" @close="$emit('close')" />
-  <Username v-if="showUsername" @next="onUsernameNext" @skip="onUsernameSkip" @back="onUsernameBack" />
-  <Language v-if="showLanguage" @next="onLanguageNext" @skip="onLanguageSkip" @back="onLanguageBack" />
-  <Interests v-if="showInterests" @finish="onInterestsFinish" @skip="onInterestsSkip" @back="onInterestsBack" />
+  <Username v-if="showUsername" @next="onUsernameNext" @skip="onUsernameSkip" @back="onUsernameBack" @close="$emit('close')" :Recommendations="props.Recommendations" />
+  <Language v-if="showLanguage" @next="onLanguageNext" @skip="onLanguageSkip" @back="onLanguageBack" @close="$emit('close')" />
+  <Interests v-if="showInterests" @finish="onInterestsFinish" @skip="onInterestsSkip" @back="onInterestsBack" @close="$emit('close')"/>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +12,7 @@ import Username from "./subComponents/CompleteAccountComponents/Username.vue";
 import Language from "./subComponents/CompleteAccountComponents/Language.vue";
 import Interests from "./subComponents/CompleteAccountComponents/Interests.vue";
 
-const showProfilePicture = ref(true);
+const showProfilePicture = ref(false);
 const showUsername = ref(false);
 const showLanguage = ref(false);
 const showInterests = ref(false);
@@ -23,6 +23,18 @@ const profileData = ref({
   language: null as string | null,
   interests: [] as string[],
 });
+
+const props = defineProps<{
+  Recommendations: string[];
+  skipImg?: boolean;
+}>();
+
+if (props.skipImg) {
+  showUsername.value = true;
+}
+else {
+  showProfilePicture.value = true;
+}
 
 const emit = defineEmits<{
   (e: 'close'): void;

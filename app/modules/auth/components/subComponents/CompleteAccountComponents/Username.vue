@@ -44,6 +44,21 @@
         </div>
       </div>
 
+      <!-- Recommendations -->
+    <div v-if="props.Recommendations && props.Recommendations.length" class="my-2 text-sm text-gray-400">
+      <p>Recommended usernames:</p>
+      <ul class="mt-1 flex flex-wrap gap-2">
+        <li
+          v-for="(suggestion, index) in props.Recommendations"
+          :key="index"
+          class="px-2 py-1 border border-gray-500 rounded-md cursor-pointer hover:bg-gray-700"
+          @click="username = suggestion"
+        >
+          {{ suggestion }}
+        </li>
+      </ul>
+    </div>
+
       <!-- Next Button -->
       <button
         :disabled="!isValid"
@@ -82,6 +97,10 @@ const emit = defineEmits<{
   (e: 'skip'): void;
   (e: 'back'): void;
   (e: 'close'): void;
+}>();
+
+const props = defineProps<{
+  Recommendations: string[];
 }>();
 
 const validateUsername = () => {

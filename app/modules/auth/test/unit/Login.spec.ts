@@ -120,7 +120,7 @@ describe('Login Component', () => {
             mockAuthService.checkIdentifierAvailability.mockRejectedValue({
                 response: {
                     data: {
-                        message: 'Identifier not found',
+                        message: 'Sa3fan test is not finding the identifier',
                     },
                 },
             });
@@ -133,7 +133,7 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            expect(wrapper.text()).toContain('Identifier not found');
+            expect(wrapper.text()).toContain('Sa3fan test is not finding the identifier');
         });
 
         it('proceeds to step 2 when identifier check succeeds', async () => {
@@ -151,7 +151,6 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Should now show step 2
             expect(wrapper.findComponent(loginStep1).exists()).toBe(false);
             expect(wrapper.findComponent(loginStep2).exists()).toBe(true);
         });
@@ -191,7 +190,7 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            expect(wrapper.find('input[type="text"]').exists()).toBe(true); // Password field
+            expect(wrapper.find('input[type="text"]').exists()).toBe(true); 
         });
 
         it('allows typing in password input', async () => {
@@ -203,7 +202,6 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Now in step 2, find password input
             const passwordInput = wrapper.find('input[type="password"]');
             
             if (passwordInput) {
@@ -216,7 +214,7 @@ describe('Login Component', () => {
             mockAuthService.login.mockRejectedValue({
                 response: {
                     data: {
-                        message: 'Invalid credentials',
+                        message: 'Backend Error Message, Sa3fan in Testing',
                     },
                 },
             });
@@ -229,16 +227,13 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // In step 2 now
             const passwordInput = wrapper.find('input[type="password"]');
             const loginButton = wrapper.findAll('button').find(btn => btn.text() === 'Login');
-
             if (passwordInput && loginButton) {
                 await passwordInput.setValue('wrongpassword');
                 await loginButton.trigger('click');
                 await flushPromises();
-
-                expect(wrapper.text()).toContain('Invalid credentials');
+                expect(wrapper.text()).toContain('Backend Error Message, Sa3fan in Testing');
             }
         });
 
@@ -269,7 +264,6 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // In step 2 now
             const passwordInput = wrapper.find('input[type="password"]');
             const loginButton = wrapper.findAll('button').find(btn => btn.text() === 'Login');
 
@@ -311,7 +305,6 @@ describe('Login Component', () => {
 
             const wrapper = mountLogin();
 
-            // Step 1: Enter identifier
             const identifierInput = wrapper.find('input[type="text"]');
             await identifierInput.setValue('user@example.com');
             
@@ -319,10 +312,8 @@ describe('Login Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Verify step 2 is shown
             expect(wrapper.findComponent(loginStep2).exists()).toBe(true);
 
-            // Step 2: Enter password
             const passwordInput = wrapper.find('input[type="password"]');
             const loginButton = wrapper.findAll('button').find(btn => btn.text() === 'Login');
             
@@ -331,7 +322,6 @@ describe('Login Component', () => {
                 await loginButton.trigger('click');
                 await flushPromises();
 
-                // Verify login was successful
                 expect(mockAuthService.checkIdentifierAvailability).toHaveBeenCalledWith('user@example.com');
                 expect(mockAuthService.login).toHaveBeenCalledWith(
                     'user@example.com',

@@ -18,10 +18,6 @@
           {{ errorMessage }}
         </p>
 
-        <!-- Success Message -->
-        <p v-if="successMessage" class="text-green-500 text-sm mb-4">
-          {{ successMessage }}
-        </p>
 
 
         <!-- Password Input -->
@@ -42,7 +38,7 @@
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >
-        Next
+        Sign Up
       </button>
 
     </div>
@@ -58,7 +54,6 @@ import backButton from "../backButton.vue";
 const password = ref("");
 const language = ref("en");
 const errorMessage = ref("");
-const successMessage = ref("");
 const props=defineProps<{
   Email: string;
   username: string;
@@ -74,12 +69,8 @@ const emit = defineEmits<{
 const registerMutation = useRegisterS3Query(
   (data) => {
     console.log("Registration Step 3 Success:", data);
-    successMessage.value = "Account created successfully!";
     errorMessage.value = "";
-    
-    setTimeout(() => {
-      emit('finish');
-    }, 1500);
+    emit('finish');
   },
   (error: any) => {
     console.error("Registration Step 3 Error:", error);
@@ -90,13 +81,11 @@ const registerMutation = useRegisterS3Query(
       || "Registration failed. Please try again.";
     
     errorMessage.value = errorMsg;
-    successMessage.value = "";
   }
 );
 
 const onNext = () => {
   errorMessage.value = ""; // Clear previous errors
-  successMessage.value = ""; // Clear previous success messages
 
   console.log("Next clicked:", props.username, password.value);
   registerMutation.mutate({

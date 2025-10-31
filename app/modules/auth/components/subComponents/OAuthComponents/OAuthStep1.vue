@@ -66,7 +66,7 @@
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >
-        Next
+        Sign Up
       </button>
     </div>
   </div>
@@ -77,12 +77,15 @@ import closeButton from '../closeButton.vue';
 import logo from '../logo.vue';
 import { ref } from 'vue';
 import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery';
+import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery';
 import OAuth from '../OAuth.vue';
+import { data, r } from 'happy-dom/lib/PropertySymbol.js';
 
 const month = ref("");
 const day = ref("");
 const year = ref("");
 const errorMessage = ref("");
+const recommendations = ref<string[]>([]);
 // Month options
 const months = [
   { value: "1", label: "January" },
@@ -107,15 +110,26 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 120 }, (_, i) => currentYear - i);
 
 const emit = defineEmits<{
-  (e: 'next', recommendations: string[]): void;
   (e: 'close'): void;
+  (e: 'finish', Recommendations: string[]): void;
 }>();
+
+const props = defineProps<{
+  OAuth_session_token: string;
+}>();
+
 const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
   (data: any) => {
     console.log("OAuth Step 1 Complete Success:", data);
     errorMessage.value = "";
-    const recommendations = data?.data?.usernames || [];
-    emit('next', recommendations);
+    console.log("Recommended usernames:", data?.data?.usernames);
+    recommendations.value = data?.data?.usernames || [];
+    console.log("Recommendations value:", recommendations.value);
+    
+    oauthCompleteStep2Mutation.mutate({
+      OAuth_session_token: props.OAuth_session_token,
+      Username: recommendations.value[0] || '',
+    });
   },
   (error: any) => {
     console.error("OAuth Step 1 Complete Error:", error);
@@ -126,9 +140,19 @@ const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
   }
 );
 
-const props = defineProps<{
-  OAuth_session_token: string;
-}>();
+const oauthCompleteStep2Mutation = useOAuthCompleteStep2Query(
+  (data: any) => {
+    console.log("OAuth Step 2 Complete Success:", data);
+    errorMessage.value = "";
+    emit('finish', recommendations.value);
+  },
+  (error: any) => {
+    console.error("OAuth Step 2 Complete Error:", error);
+    errorMessage.value = error?.response?.data?.message 
+      || error?.response?.data?.error 
+      || error?.message 
+      || "An unexpected error occurred. Please try again.";
+  } )
 
 
 const onNext = async () => {
@@ -146,7 +170,6 @@ const onNext = async () => {
       OAuth_session_token: props.OAuth_session_token,
       Birth_date: dateOfBirth
     });
-
 };
 
 </script>

@@ -87,7 +87,6 @@ const loginMutation = useLoginQuery(
   },
   (error: any) => {
     console.error("Login Error:", error);
-    
     // Extract error message from backend response
     const errorMsg = error?.response?.data?.message 
       || error?.response?.data?.error 
@@ -95,6 +94,7 @@ const loginMutation = useLoginQuery(
       || "Invalid credentials. Please try again.";
     
     errorMessage.value = errorMsg;
+    useUserStore().logout();
   }
 );
 

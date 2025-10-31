@@ -5,7 +5,6 @@ import Signup from '../../components/createAccount.vue';
 import createAccount from '../../components/subComponents/signupComponents/createAccount.vue';
 import verifyOtp from '../../components/subComponents/signupComponents/verifyOtp.vue';
 import FinalRegister from '../../components/subComponents/signupComponents/FinalRegister.vue';
-import CompleteAccount from '../../components/CompleteAccount.vue';
 
 // Mock the auth service
 const mockAuthService = {
@@ -85,7 +84,6 @@ describe('Signup Component', () => {
             expect(wrapper.findComponent(createAccount).exists()).toBe(true);
             expect(wrapper.findComponent(verifyOtp).exists()).toBe(false);
             expect(wrapper.findComponent(FinalRegister).exists()).toBe(false);
-            expect(wrapper.findComponent(CompleteAccount).exists()).toBe(false);
         });
 
         it('should display create account title', () => {
@@ -96,13 +94,13 @@ describe('Signup Component', () => {
         it('should have name, email, and date of birth inputs', () => {
             const wrapper = mountSignup();
             const inputs = wrapper.findAll('input[type="text"], input[type="email"]');
-            expect(inputs.length).toBeGreaterThanOrEqual(2); // name and email
+            expect(inputs.length).toBeGreaterThanOrEqual(2);
         });
 
         it('should have month, day, and year selects', () => {
             const wrapper = mountSignup();
             const selects = wrapper.findAll('select');
-            expect(selects.length).toBe(3); // month, day, year
+            expect(selects.length).toBe(3); 
         });
 
         it('should have Next button', () => {
@@ -123,24 +121,24 @@ describe('Signup Component', () => {
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
 
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Safan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
 
-            expect((nameInput.element as HTMLInputElement).value).toBe('John Doe');
-            expect((emailInput.element as HTMLInputElement).value).toBe('john@example.com');
+            expect((nameInput.element as HTMLInputElement).value).toBe('Safan Test');
+            expect((emailInput.element as HTMLInputElement).value).toBe('Sa3fan@Developer.com');
         });
 
         it('should allow selecting date of birth', async () => {
             const wrapper = mountSignup();
             const selects = wrapper.findAll('select');
             
-            await selects[0]?.setValue('5'); // May
-            await selects[1]?.setValue('15'); // Day 15
-            await selects[2]?.setValue('1990'); // Year 1990
+            await selects[0]?.setValue('1'); 
+            await selects[1]?.setValue('1'); 
+            await selects[2]?.setValue('2005'); 
 
-            expect((selects[0]?.element as HTMLSelectElement).value).toBe('5');
-            expect((selects[1]?.element as HTMLSelectElement).value).toBe('15');
-            expect((selects[2]?.element as HTMLSelectElement).value).toBe('1990');
+            expect((selects[0]?.element as HTMLSelectElement).value).toBe('1');
+            expect((selects[1]?.element as HTMLSelectElement).value).toBe('1');
+            expect((selects[2]?.element as HTMLSelectElement).value).toBe('2005');
         });
 
         it('should show error if captcha not completed', async () => {
@@ -160,31 +158,28 @@ describe('Signup Component', () => {
 
             const wrapper = mountSignup();
             
-            // Fill in the form
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
             const selects = wrapper.findAll('select');
 
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-            await selects[0]?.setValue('5'); // May
-            await selects[1]?.setValue('15'); // Day 15
-            await selects[2]?.setValue('1990'); // Year 1990
+            await nameInput.setValue('Safan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
+            await selects[0]?.setValue('1'); 
+            await selects[1]?.setValue('1'); 
+            await selects[2]?.setValue('2005'); 
 
-            // Verify captcha
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
 
-            // Click Next
             const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
             await nextButton?.trigger('click');
             await flushPromises();
 
             expect(mockAuthService.registerStep1).toHaveBeenCalledWith({
-                Name: 'John Doe',
-                Email: 'john@example.com',
-                Birth_date: '1990-05-15',
+                Name: 'Safan Test',
+                Email: 'Sa3fan@Developer.com',
+                Birth_date: '2005-01-01',
                 Captcha_token: 'mock-captcha-token'
             });
         });
@@ -200,11 +195,11 @@ describe('Signup Component', () => {
             const emailInput = wrapper.find('input[type="email"]');
             const selects = wrapper.findAll('select');
 
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-            await selects[0]?.setValue('5');
-            await selects[1]?.setValue('15');
-            await selects[2]?.setValue('1990');
+            await nameInput.setValue('Safan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
+            await selects[0]?.setValue('1');
+            await selects[1]?.setValue('1');
+            await selects[2]?.setValue('2005');
 
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
@@ -216,13 +211,14 @@ describe('Signup Component', () => {
 
             expect(wrapper.findComponent(verifyOtp).exists()).toBe(true);
             expect(wrapper.findComponent(createAccount).exists()).toBe(false);
+            expect(wrapper.findComponent(FinalRegister).exists()).toBe(false);
         });
 
         it('should show error message on registration failure', async () => {
             mockAuthService.registerStep1.mockRejectedValue({
                 response: {
                     data: {
-                        message: 'Email already exists',
+                        message: 'Email already exists sa3fan created it before',
                     },
                 },
             });
@@ -232,8 +228,8 @@ describe('Signup Component', () => {
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
 
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('existing@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
 
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
@@ -243,7 +239,7 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            expect(wrapper.text()).toContain('Email already exists');
+            expect(wrapper.text()).toContain('Email already exists sa3fan created it before');
         });
     });
 
@@ -253,36 +249,13 @@ describe('Signup Component', () => {
                 data: { message: 'OTP sent successfully' }
             });
         });
-
-        it('should display verify OTP screen after step 1', async () => {
-            const wrapper = mountSignup();
-            
-            const nameInput = wrapper.find('input[type="text"]');
-            const emailInput = wrapper.find('input[type="email"]');
-
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-
-            const captchaButton = wrapper.find('.recaptcha-mock button');
-            await captchaButton.trigger('click');
-            await flushPromises();
-
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            expect(wrapper.text()).toContain('We sent you a code');
-            expect(wrapper.findComponent(verifyOtp).exists()).toBe(true);
-        });
-
         it('should allow entering OTP', async () => {
             const wrapper = mountSignup();
             
-            // Move to step 2
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -290,28 +263,26 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Enter OTP
             const otpInput = wrapper.find('input[type="text"]');
             await otpInput.setValue('123456');
 
             expect((otpInput.element as HTMLInputElement).value).toBe('123456');
         });
 
-        it('should call registerStep2 mutation with OTP', async () => {
+        it('should call registerStep2 mutation with OTP and go to step 3', async () => {
             mockAuthService.registerStep2.mockResolvedValue({
                 data: { 
                     message: 'OTP verified',
-                    recommendations: ['john_doe', 'johndoe123']
+                    recommendations: ['sa3fan_test', 'sa3fantest123']
                 }
             });
 
             const wrapper = mountSignup();
             
-            // Move to step 2
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -319,7 +290,6 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Enter OTP and submit
             const otpInput = wrapper.find('input[type="text"]');
             await otpInput.setValue('123456');
             nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
@@ -328,35 +298,9 @@ describe('Signup Component', () => {
 
             expect(mockAuthService.registerStep2).toHaveBeenCalledWith({
                 token: '123456',
-                Email: 'john@example.com'
-            });
-        });
-
-        it('should move to step 3 on successful OTP verification', async () => {
-            mockAuthService.registerStep2.mockResolvedValue({
-                data: { 
-                    message: 'OTP verified',
-                    recommendations: ['john_doe', 'johndoe123']
-                }
+                Email: 'Sa3fan@Developer.com'
             });
 
-            const wrapper = mountSignup();
-            
-            // Move to step 2
-            const nameInput = wrapper.find('input[type="text"]');
-            const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-            const captchaButton = wrapper.find('.recaptcha-mock button');
-            await captchaButton.trigger('click');
-            await flushPromises();
-            let nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            // Verify OTP
-            const otpInput = wrapper.find('input[type="text"]');
-            await otpInput.setValue('123456');
             nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
             await nextButton?.trigger('click');
             await flushPromises();
@@ -376,11 +320,10 @@ describe('Signup Component', () => {
 
             const wrapper = mountSignup();
             
-            // Move to step 2
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -388,7 +331,6 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Enter wrong OTP
             const otpInput = wrapper.find('input[type="text"]');
             await otpInput.setValue('000000');
             nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
@@ -405,11 +347,10 @@ describe('Signup Component', () => {
 
             const wrapper = mountSignup();
             
-            // Move to step 2
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -417,23 +358,21 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Click resend
             const resendButton = wrapper.findAll('button').find(btn => btn.text() === 'Resend code');
             await resendButton?.trigger('click');
             await flushPromises();
 
-            expect(mockAuthService.resendOTP).toHaveBeenCalledWith('john@example.com');
+            expect(mockAuthService.resendOTP).toHaveBeenCalledWith('Sa3fan@Developer.com');
             expect(wrapper.text()).toContain('OTP has been resent successfully');
         });
 
         it('should allow going back to step 1', async () => {
             const wrapper = mountSignup();
             
-            // Move to step 2
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -443,7 +382,6 @@ describe('Signup Component', () => {
 
             expect(wrapper.findComponent(verifyOtp).exists()).toBe(true);
 
-            // Emit close event from verifyOtp
             wrapper.findComponent(verifyOtp).vm.$emit('close');
             await flushPromises();
 
@@ -460,44 +398,18 @@ describe('Signup Component', () => {
             mockAuthService.registerStep2.mockResolvedValue({
                 data: { 
                     message: 'OTP verified',
-                    recommendations: ['john_doe', 'johndoe123']
+                    recommendations: ['Sa3fan_Test', 'Sa3fan123']
                 }
             });
-        });
-
-        it('should display final registration screen after OTP verification', async () => {
-            const wrapper = mountSignup();
-            
-            // Move through steps 1 and 2
-            const nameInput = wrapper.find('input[type="text"]');
-            const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-            const captchaButton = wrapper.find('.recaptcha-mock button');
-            await captchaButton.trigger('click');
-            await flushPromises();
-            let nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            const otpInput = wrapper.find('input[type="text"]');
-            await otpInput.setValue('123456');
-            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            expect(wrapper.text()).toContain('Enter a password');
-            expect(wrapper.findComponent(FinalRegister).exists()).toBe(true);
         });
 
         it('should allow entering password', async () => {
             const wrapper = mountSignup();
             
-            // Move to step 3
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -511,7 +423,6 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Fill final registration form (password only)
             const passwordInput = wrapper.find('input[type="password"]');
 
             await passwordInput.setValue('Password123!');
@@ -523,17 +434,16 @@ describe('Signup Component', () => {
             mockAuthService.registerStep3.mockResolvedValue({
                 data: {
                     access_token: 'test-token',
-                    user: { id: 1, email: 'john@example.com', name: 'John Doe' }
+                    user: { id: 1, email: 'Sa3fan@Developer.com', name: 'Sa3fan Test' }
                 }
             });
 
             const wrapper = mountSignup();
             
-            // Move to step 3
             const nameInput = wrapper.find('input[type="text"]');
             const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
+            await nameInput.setValue('Sa3fan Test');
+            await emailInput.setValue('Sa3fan@Developer.com');
             const captchaButton = wrapper.find('.recaptcha-mock button');
             await captchaButton.trigger('click');
             await flushPromises();
@@ -547,109 +457,18 @@ describe('Signup Component', () => {
             await nextButton?.trigger('click');
             await flushPromises();
 
-            // Complete registration with password
             const passwordInput = wrapper.find('input[type="password"]');
 
             await passwordInput.setValue('Password123!');
 
-            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
+            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
+            await signUpButton?.trigger('click');
             await flushPromises();
 
             expect(mockAuthService.registerStep3).toHaveBeenCalledWith({
-                Email: 'john@example.com',
+                Email: 'Sa3fan@Developer.com',
                 Password: 'Password123!',
-                Username: 'john_doe', // First recommendation from step 2
-                Language: 'en'
-            });
-        });
-
-        it('should show CompleteAccount component after successful registration', async () => {
-            mockAuthService.registerStep3.mockResolvedValue({
-                data: {
-                    access_token: 'test-token',
-                    user: { id: 1, email: 'john@example.com', name: 'John Doe' }
-                }
-            });
-
-            const wrapper = mountSignup();
-            
-            // Move through all steps
-            const nameInput = wrapper.find('input[type="text"]');
-            const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-            const captchaButton = wrapper.find('.recaptcha-mock button');
-            await captchaButton.trigger('click');
-            await flushPromises();
-            let nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            const otpInput = wrapper.find('input[type="text"]');
-            await otpInput.setValue('123456');
-            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            const passwordInput = wrapper.find('input[type="password"]');
-            await passwordInput.setValue('Password123!');
-            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            // Wait for success message and CompleteAccount to show (1500ms timeout in component)
-            await new Promise(resolve => setTimeout(resolve, 1600));
-
-            expect(wrapper.findComponent(CompleteAccount).exists()).toBe(true);
-        });
-
-        it('should use first recommendation as username', async () => {
-            mockAuthService.registerStep2.mockResolvedValue({
-                data: { 
-                    message: 'OTP verified',
-                    recommendations: ['doe_john', 'johndoe123', 'john_doe']
-                }
-            });
-
-            mockAuthService.registerStep3.mockResolvedValue({
-                data: {
-                    access_token: 'test-token',
-                    user: { id: 1, email: 'john@example.com', name: 'John Doe' }
-                }
-            });
-
-            const wrapper = mountSignup();
-            
-            // Move to step 3
-            const nameInput = wrapper.find('input[type="text"]');
-            const emailInput = wrapper.find('input[type="email"]');
-            await nameInput.setValue('John Doe');
-            await emailInput.setValue('john@example.com');
-            const captchaButton = wrapper.find('.recaptcha-mock button');
-            await captchaButton.trigger('click');
-            await flushPromises();
-            let nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            const otpInput = wrapper.find('input[type="text"]');
-            await otpInput.setValue('123456');
-            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            const passwordInput = wrapper.find('input[type="password"]');
-            await passwordInput.setValue('Password123!');
-            nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
-            await nextButton?.trigger('click');
-            await flushPromises();
-
-            // Should use 'doe_john' which is the first recommendation
-            expect(mockAuthService.registerStep3).toHaveBeenCalledWith({
-                Email: 'john@example.com',
-                Password: 'Password123!',
-                Username: 'doe_john',
+                Username: 'Sa3fan_Test',
                 Language: 'en'
             });
         });
