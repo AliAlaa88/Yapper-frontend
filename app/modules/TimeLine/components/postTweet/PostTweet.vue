@@ -40,16 +40,22 @@
                             @close="showGifPicker = false"
                         />
                     </li>
-                    <li>
+                    <li class="relative inline-flex">
                         <Tooltip text="Emoji" position="bottom">
                             <template #trigger>
                                 <button
+                                    @click="toggleEmojiPicker"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
                                 >
                                     <Smile class="w-5 h-5 text-blue" />
                                 </button>
                             </template>
                         </Tooltip>
+                        <EmojiPicker
+                            :is-open="showEmojiPicker"
+                            @select="handleEmojiSelect"
+                            @close="showEmojiPicker = false"
+                        />
                     </li>
                 </ul>
                 <button
@@ -68,9 +74,11 @@ import { Smile, ImagePlay } from 'lucide-vue-next'
 import Tooltip from '~/modules/Common/components/toolTip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
+import EmojiPicker from './subComponents/EmojiPicker'
 
 const content = ref('')
 const showGifPicker = ref(false)
+const showEmojiPicker = ref(false)
 
 const disablePostButton = computed(() => {
     return content.value.trim().length === 0
@@ -92,5 +100,13 @@ const toggleGifPicker = () => {
 const handleGifSelect = (gifUrl: string) => {
     console.log('Selected GIF:', gifUrl)
     showGifPicker.value = false
+}
+
+const toggleEmojiPicker = () => {
+    showEmojiPicker.value = !showEmojiPicker.value
+}
+
+const handleEmojiSelect = (emoji: any) => {
+    content.value += emoji.i
 }
 </script>
