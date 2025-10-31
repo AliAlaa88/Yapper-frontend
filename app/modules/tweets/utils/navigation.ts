@@ -5,7 +5,7 @@ export const getProfileUrl = (user: User): string => {
 }
 
 export const getTweetUrl = (tweet: Tweet): string => {
-  return tweet.user.username && tweet.id ? `/${tweet.user.username}/status/${tweet.id}` : '#'
+  return tweet.user.username && tweet.tweet_id ? `/${tweet.user.username}/status/${tweet.tweet_id}` : '#'
 }
 
 export const getTweetUrlFromParts = (username: string, tweetId: string): string => {
