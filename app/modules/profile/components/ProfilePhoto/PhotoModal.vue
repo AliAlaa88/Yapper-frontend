@@ -29,10 +29,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from '#app'
+import { useRoute, useRouter } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
 import { useProfilePhotoStore } from '../../stores/photo'
 import { X } from 'lucide-vue-next'
+import { onMounted, onUnmounted } from 'vue'
 
 const route = useRoute()
 const router = useRouter()

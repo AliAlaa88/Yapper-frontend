@@ -1,10 +1,12 @@
 <template>
     <div
+        v-if="showList"
         class="absolute top-[-8px] right-0 mt-2 w-56 bg-black
         rounded-xl shadow-[0_0_7px_rgba(255,255,255,0.4)] z-50"
     >
         <button
             v-if="!isBlocked"
+            id="mute-button"
             class="cursor-pointer w-full text-white font-semibold text-left px-4 py-3
             hover:bg-gray-200/10 transition flex items-center first:rounded-t-xl"
             @click="handleMuteAndUnmute"
@@ -15,7 +17,9 @@
         </button>
         <button
             v-if="isFollower && !isBlocked"
-            class="w-full text-white text-left font-semibold px-4 py-3 hover:bg-gray-200/10
+            id="remove-follower-button"
+            class="w-full text-white text-left font-semibold px-4 py-3
+            hover:bg-gray-200/10
             transition flex items-center cursor-pointer"
             @click="handleRemove"
         >
@@ -23,7 +27,9 @@
             Remove this follower
         </button>
         <button
-            class="w-full text-white text-left px-4 py-3 font-semibold hover:bg-gray-200/10
+            id="block-button"
+            class="w-full text-white text-left px-4 py-3 font-semibold
+            hover:bg-gray-200/10
             transition flex items-center last:rounded-b-xl cursor-pointer first:rounded-t-xl"
             @click="handleBlockAndUnblock"
         >
@@ -38,21 +44,22 @@
 
 <script setup lang="ts">
 import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig } from 'lucide-vue-next'
-import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
-// import type { useUserInfo } from '~/modules/profile/composables/useUserInfo'
-import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
+import { useUserInfo } from '../../../composables/useUserInfo'
+import { useUserInteractions } from '../../../composables/useUserInteractions'
 import type { Ref } from 'vue'
+import { inject } from 'vue'
 const showList = inject<Ref<boolean> | undefined>('show-list')
 
 const userId = inject<Ref<string>>('user-id')!
+if (!userId) {
+    throw new Error('Missing required provide: user-id')
+}
 const {
     isBlocked,
     isMuted,
     isFollower,
     username,
 } = useUserInfo(userId)
-
-watch(isBlocked, (v) => console.log('isBlocked changed to', v))
 
 const userInteractions = useUserInteractions(userId)
 const {

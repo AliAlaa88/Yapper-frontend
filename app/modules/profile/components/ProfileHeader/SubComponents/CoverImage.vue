@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from '#app'
-import { useProfilePhotoStore } from '~/modules/profile/stores/photo'
+import { useRoute } from 'nuxt/app'
+import { useProfilePhotoStore } from '../../../stores/photo'
 
 const props = defineProps<{
     coverUrl?: string

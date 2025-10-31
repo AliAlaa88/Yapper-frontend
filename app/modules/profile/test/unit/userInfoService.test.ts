@@ -112,4 +112,164 @@ describe('userInfoService', () => {
             expect(result.followers_count).toBe(99)
         })
     })
+
+    describe('blockUser', () => {
+        it('block user that i do not follow', async () => {
+            const mockUser = {
+                username: 'testuser',
+                display_name: 'Test User',
+                followers_count: 100,
+                following_count: 50,
+                is_following: false,
+                is_follower: false,
+                is_blocked: false,
+                is_muted: false,
+            }
+
+            const updatedUser = {
+                ...mockUser,
+                is_blocked: true,
+            }
+
+            mockAxios.get.mockResolvedValue({ data: mockUser })
+            mockAxios.request.mockResolvedValue({ data: updatedUser })
+
+            const result = await userInfoServiceMock.blockUser('123')
+            expect(result.is_blocked).toBe(true)
+        })
+
+        it('block following user', async () => {
+            const mockUser = {
+                username: 'testuser',
+                display_name: 'Test User',
+                followers_count: 100,
+                following_count: 50,
+                is_following: true,
+                is_follower: false,
+                is_blocked: false,
+                is_muted: false,
+            }
+
+            const updatedUser = {
+                ...mockUser,
+                is_blocked: true,
+                is_following: false,
+                followers_count: 99,
+            }
+
+            mockAxios.get.mockResolvedValue({ data: mockUser })
+            mockAxios.request.mockResolvedValue({ data: updatedUser })
+
+            const result = await userInfoServiceMock.blockUser('123')
+            expect(result.is_blocked).toBe(true)
+            expect(result.is_following).toBe(false)
+            expect(result.followers_count).toBe(99)
+        })
+    })
+
+    describe('unblockUser', () => {
+        it('unblock user', async () => {
+            const mockUser = {
+                username: 'testuser',
+                display_name: 'Test User',
+                followers_count: 100,
+                following_count: 50,
+                is_following: false,
+                is_follower: false,
+                is_blocked: true,
+                is_muted: false,
+            }
+
+            const updatedUser = {
+                ...mockUser,
+                is_blocked: false,
+            }
+
+            mockAxios.get.mockResolvedValue({ data: mockUser })
+            mockAxios.request.mockResolvedValue({ data: updatedUser })
+
+            const result = await userInfoServiceMock.unblockUser('123')
+            expect(result.is_blocked).toBe(false)
+        })
+    })
+
+    describe('muteUser', () => {
+        it('mute user', async () => {
+            const mockUser = {
+                username: 'testuser',
+                display_name: 'Test User',
+                followers_count: 100,
+                following_count: 50,
+                is_following: false,
+                is_follower: false,
+                is_blocked: false,
+                is_muted: false,
+            }
+
+            const updatedUser = {
+                ...mockUser,
+                is_muted: true,
+            }
+
+            mockAxios.get.mockResolvedValue({ data: mockUser })
+            mockAxios.request.mockResolvedValue({ data: updatedUser })
+
+            const result = await userInfoServiceMock.muteUser('123')
+            expect(result.is_muted).toBe(true)
+        })
+    })
+
+    describe('umuteUser', () => {
+        it('unmute user', async () => {
+            const mockUser = {
+                username: 'testuser',
+                display_name: 'Test User',
+                followers_count: 100,
+                following_count: 50,
+                is_following: false,
+                is_follower: false,
+                is_blocked: false,
+                is_muted: true,
+            }
+
+            const updatedUser = {
+                ...mockUser,
+                is_muted: false,
+            }
+
+            mockAxios.get.mockResolvedValue({ data: mockUser })
+            mockAxios.request.mockResolvedValue({ data: updatedUser })
+
+            const result = await userInfoServiceMock.unmuteUser('123')
+            expect(result.is_muted).toBe(false)
+        })
+    })
+
+    describe('removeFollower', () => {
+        it('remove this follower', async () => {
+            const mockUser = {
+                username: 'testuser',
+                display_name: 'Test User',
+                followers_count: 100,
+                following_count: 50,
+                is_following: false,
+                is_follower: true,
+                is_blocked: false,
+                is_muted: true,
+            }
+
+            const updatedUser = {
+                ...mockUser,
+                is_follower: false,
+                following_count: 49,
+            }
+
+            mockAxios.get.mockResolvedValue({ data: mockUser })
+            mockAxios.request.mockResolvedValue({ data: updatedUser })
+
+            const result = await userInfoServiceMock.removeFollower('123')
+            expect(result.following_count).toBe(49)
+            expect(result.is_follower).toBe(false)
+        })
+    })
 })

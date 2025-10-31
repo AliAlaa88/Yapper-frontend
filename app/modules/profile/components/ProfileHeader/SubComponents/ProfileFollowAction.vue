@@ -17,10 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { useFollow } from '~/modules/profile/composables/useFollow'
-import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
-import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
-
+import { useFollow } from '../../../composables/useFollow'
+import { useUserInfo } from '../../../composables/useUserInfo'
+import { useUserInteractions } from '../../../composables/useUserInteractions'
+import { inject } from 'vue'
 const userId = inject<Ref<string>>('user-id')!
 const {
     isBlocked,
