@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from '#app'
+import { useRoute, useRouter } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
 import { useProfilePhotoStore } from '../../stores/photo'
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery'

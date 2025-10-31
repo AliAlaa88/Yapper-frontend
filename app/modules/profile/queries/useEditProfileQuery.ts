@@ -7,7 +7,8 @@ export function useEditProfileMutation(userId: string, username: string) {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: (updates: UserAction) => $userInfoService.updateUserProfile(userId, updates),
+        mutationFn: (updates: Partial<UserAction>) =>
+            $userInfoService.updateUserProfile(userId, updates),
         onSuccess: (updatedUser: UserAction) => {
             queryClient.setQueryData(['user', username], updatedUser)
             updateMe(updatedUser)
