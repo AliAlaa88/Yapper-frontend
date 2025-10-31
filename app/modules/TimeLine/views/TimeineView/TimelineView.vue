@@ -8,9 +8,15 @@
 <script setup lang="ts">
 import Tabs from '~/modules/Common/components/Tabs'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
-// import { onMounted } from 'vue'
-// import { useRouter } from 'vue-router'
-// import { useUserStore } from '~/modules/auth/stores/userStore'
+import { isLoggedIn } from '~/utils/helpers'
+import { onMounted } from 'vue'
+const router = useRouter()
+
+onMounted(() => {
+    if (!isLoggedIn()) {
+        router.push('/auth')
+    }
+})
 
 const tabs = [
     {
@@ -31,7 +37,6 @@ function handleChange(tab: string) {
     activeTab.value = tab
 }
 
-// const router = useRouter()
 // onMounted(() => {
 //     const userStore = useUserStore()
 //     const home = 'home'

@@ -53,18 +53,15 @@
 <script lang="ts" setup>
 import Logo from '~/modules/Common/components/Logo'
 import OAuth from '../components/subComponents/OAuth.vue'
-import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/userStore'
+import { useRouter } from 'vue-router'
+import { isLoggedIn } from '~/utils/helpers'
 const router = useRouter()
 
-const userStore = useUserStore()
 onBeforeMount(() => {
-  console.log('User logged in status:', userStore.isLoggedIn);
-  console.log('User data:', localStorage.getItem('user') , localStorage.getItem('access_token'));
-  if (userStore.isLoggedIn) {
-    router.push('/');
-}
-});
+    if (isLoggedIn()) {
+        return navigateTo('/')
+    }
+})
 
 const goToLogin = () => {
     console.log('Navigating to login')

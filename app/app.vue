@@ -7,7 +7,6 @@
 </template>
 
 <script setup lang="ts">
-// import 'vue-gif-emoji-picker/dist/style.css'
 const { locale, locales } = useI18n()
 
 const currentLocale = computed(() => locale.value)
