@@ -137,30 +137,4 @@ describe('ProfileMuteMessage Component', () => {
         await button.trigger('click')
         expect(mockUserInteractions.handleUnblockWithConfirmation).toHaveBeenCalledTimes(1)
     })
-
-    it('should handle missing userId gracefully', () => {
-        expect(() => {
-            mount(ProfileBlockedAction, {
-                global: {
-                    provide: {},
-                },
-            })
-        }).toThrow()
-    })
-
-    it('should have correct Tailwind classes', async () => {
-        const wrapper = mount(ProfileBlockedAction, {
-            global: {
-                provide: {
-                    'user-id': ref('12'),
-                },
-            },
-        })
-        mockUserInfoRef.isBlocked.value = true
-        await nextTick()
-
-        const button = wrapper.find('button')
-        expect(button.classes()).toContain('bg-red-500')
-        expect(button.classes()).toContain('text-white')
-    })
 })

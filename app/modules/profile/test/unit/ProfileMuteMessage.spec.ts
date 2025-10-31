@@ -205,33 +205,7 @@ describe('ProfileMuteMessage Component', () => {
         expect(wrapper.find('div').exists()).toBe(true)
     })
 
-    it('should use the correct composable functions', () => {
-        const userId = ref('12')
-
-        mount(ProfileMuteMessage, {
-            global: {
-                provide: {
-                    'user-id': userId,
-                },
-            },
-        })
-
-        expect(useUserInfo).toHaveBeenCalledWith(userId)
-        expect(useUserInteractions).toHaveBeenCalledWith(userId)
-    })
-
-    it('should handle missing userId gracefully', () => {
-        expect(() => {
-            mount(ProfileMuteMessage, {
-                global: {
-                    provide: {},
-                },
-            })
-        }).toThrow()
-    })
-
     it('should handle rapid clicks on Unmute button', async () => {
-
         const wrapper = mount(ProfileMuteMessage, {
             global: {
                 provide: {

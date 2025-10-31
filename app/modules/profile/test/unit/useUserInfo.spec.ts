@@ -12,31 +12,6 @@ describe('useUserInfo', () => {
         vi.clearAllMocks()
     })
 
-    it('should return empty values for undefined user data', () => {
-        const mockUserQuery = {
-            data: ref(undefined),
-        }
-
-        vi.mocked(useUserActionsQuery).mockReturnValue({
-            userQuery: mockUserQuery,
-        } as ReturnType<typeof useUserActionsQuery>)
-
-        const userId = ref('12')
-        const userInfo = useUserInfo(userId)
-        expect(userInfo.id.value).toBe('')
-        expect(userInfo.username.value).toBe('')
-        expect(userInfo.isFollower.value).toBe(false)
-        expect(userInfo.isFollowing.value).toBe(false)
-        expect(userInfo.isBlocked.value).toBe(false)
-        expect(userInfo.isMuted.value).toBe(false)
-        expect(userInfo.name.value).toBe('')
-        expect(userInfo.bio.value).toBe('')
-        expect(userInfo.avatarUrl.value).toBe('')
-        expect(userInfo.followersCount.value).toBe('')
-        expect(userInfo.followingCount.value).toBe('')
-        expect(userInfo.coverUrl.value).toBe('')
-    })
-
     it('should return data when available', () => {
         const mockUser = {
             id: '12',

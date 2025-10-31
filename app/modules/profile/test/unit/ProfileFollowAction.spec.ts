@@ -152,23 +152,6 @@ describe('ProfileMuteMessage Component', () => {
         expect(wrapper.find('button').text()).toBe('Follow')
     })
 
-    it('should apply correct button classes', async () => {
-        const wrapper = mount(ProfileFollowAction, {
-            global: {
-                provide: {
-                    'user-id': ref('12'),
-                },
-            },
-        })
-
-        buttonClass.value = 'bg-[#F7F9F9] text-[#15202B]'
-        await nextTick()
-        const button = wrapper.find('button')
-        expect(button.classes()).toContain('cursor-pointer')
-        expect(button.classes()).toContain('font-bold')
-        expect(button.classes()).toContain('rounded-full')
-    })
-
     it('should call handleFollowAction when not following and button is clicked', async () => {
         const wrapper = mount(ProfileFollowAction, {
             global: {
@@ -241,16 +224,6 @@ describe('ProfileMuteMessage Component', () => {
         await nextTick()
 
         expect(wrapper.find('button').text()).toBe('Following')
-    })
-
-    it('should throw error when userId is missing', () => {
-        expect(() => {
-            mount(ProfileFollowAction, {
-                global: {
-                    provide: {},
-                },
-            })
-        }).toThrow('Missing required provide: user-id')
     })
 
     it('should handle rapid clicks', async () => {

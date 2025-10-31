@@ -26,7 +26,6 @@ describe('useConfirmation', () => {
         })
     })
 
-
     it('should show confirmation with all data', () => {
         const { showConfirmation, confirmData, handleShowConfirmation } = useConfirmation()
         const mockHandleClick = vi.fn()

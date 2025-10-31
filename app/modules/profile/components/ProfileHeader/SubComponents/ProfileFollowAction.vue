@@ -22,9 +22,6 @@ import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import { inject } from 'vue'
 const userId = inject<Ref<string>>('user-id')!
-if (!userId) {
-    throw new Error('Missing required provide: user-id')
-}
 const {
     isBlocked,
     isFollowing,

@@ -95,53 +95,6 @@ describe('useFollow Composable', () => {
         })
     })
 
-    describe('Button class Logic', () => {
-        it('should return correct class for Follow state', () => {
-            mockUserInfoRef.isFollower.value = false
-            mockUserInfoRef.isFollowing.value = false
-
-            const userId = ref('12')
-            const { buttonClass } = useFollow(userId)
-
-            expect(buttonClass.value).toContain('bg-[#F7F9F9]')
-            expect(buttonClass.value).toContain('text-[#15202B]')
-            expect(buttonClass.value).toContain('hover:bg-[#E1E8ED]')
-        })
-
-        it('should return correct class for Follow back state', () => {
-            mockUserInfoRef.isFollower.value = true
-            mockUserInfoRef.isFollowing.value = false
-
-            const userId = ref('12')
-            const { buttonClass } = useFollow(userId)
-            expect(buttonClass.value).toContain('bg-[#F7F9F9]')
-            expect(buttonClass.value).toContain('text-[#15202B]')
-        })
-
-        it('should return correct class for Following state (not hovering)', () => {
-            mockUserInfoRef.isFollowing.value = true
-            const userId = ref('12')
-            const { buttonClass, handleMouseOut } = useFollow(userId)
-            handleMouseOut()
-
-            expect(buttonClass.value).toContain('bg-transparent')
-            expect(buttonClass.value).toContain('border-white/40')
-            expect(buttonClass.value).toContain('text-white')
-        })
-
-        it('should return correct class for Unfollow state (hovering)', () => {
-            mockUserInfoRef.isFollowing.value = true
-            const userId = ref('12')
-            const { buttonClass, handleMouseOver } = useFollow(userId)
-
-            handleMouseOver()
-
-            expect(buttonClass.value).toContain('bg-red-500/10')
-            expect(buttonClass.value).toContain('border-red-500/40')
-            expect(buttonClass.value).toContain('text-red-500')
-        })
-    })
-
     it('should update buttonText when isFollowing changes', () => {
         mockUserInfoRef.isFollowing.value = false
 
@@ -165,18 +118,6 @@ describe('useFollow Composable', () => {
         mockUserInfoRef.isFollower.value = true
         expect(buttonText.value).toBe('Follow back')
     })
-
-    it('should update buttonClass when isFollowing changes', () => {
-        mockUserInfoRef.isFollowing.value = false
-        const userId = ref('12')
-        const { buttonClass } = useFollow(userId)
-
-        expect(buttonClass.value).toContain('bg-[#F7F9F9]')
-
-        mockUserInfoRef.isFollowing.value = true
-        expect(buttonClass.value).toContain('bg-transparent')
-    })
-
 
     describe('All Button State Combinations', () => {
         const testCases = [

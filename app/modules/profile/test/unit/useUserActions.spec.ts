@@ -32,72 +32,56 @@ describe('useUserActions', () => {
     it('should call unmuteMutation when handleUnmute is called', () => {
         const userId = ref('12')
         const { handleUnmute } = useUserActions(userId)
-
         handleUnmute()
-
         expect(mockMutations.unmuteMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should call muteMutation when handleMute is called', () => {
         const userId = ref('12')
         const { handleMute } = useUserActions(userId)
-
         handleMute()
-
         expect(mockMutations.muteMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should call blockMutation when handleBlock is called', () => {
         const userId = ref('12')
         const { handleBlock } = useUserActions(userId)
-
         handleBlock()
-
         expect(mockMutations.blockMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should call unblockMutation when handleUnblock is called', () => {
         const userId = ref('12')
         const { handleUnblock } = useUserActions(userId)
-
         handleUnblock()
-
         expect(mockMutations.unblockMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should call removeFollowerMutation when handleRemoveFollower is called', () => {
         const userId = ref('12')
         const { handleRemoveFollower } = useUserActions(userId)
-
         handleRemoveFollower()
-
         expect(mockMutations.removeFollowerMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should call unfollowMutation when handleUnfollow is called', () => {
         const userId = ref('12')
         const { handleUnfollow } = useUserActions(userId)
-
         handleUnfollow()
-
         expect(mockMutations.unfollowMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should call followMutation when handleFollow is called', () => {
         const userId = ref('12')
         const { handleFollow } = useUserActions(userId)
-
         handleFollow()
-
         expect(mockMutations.followMutation.mutate).toHaveBeenCalledTimes(1)
     })
 
     it('should work with different userId', () => {
         const userId = ref('different-user')
         const { handleBlock } = useUserActions(userId)
-
         handleBlock()
-
         expect(useUserActionsQuery).toHaveBeenCalledWith(userId)
         expect(mockMutations.blockMutation.mutate).toHaveBeenCalled()
     })

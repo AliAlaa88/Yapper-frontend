@@ -21,9 +21,6 @@ import { useUserInteractions } from '../../../composables/useUserInteractions'
 import { inject, ref, watch } from 'vue'
 
 const userId = inject<Ref<string>>('user-id')!
-if (!userId) {
-    throw new Error('Missing required provide: user-id')
-}
 const { isMuted } = useUserInfo(userId)
 
 const showMuteMessage = ref(false)
