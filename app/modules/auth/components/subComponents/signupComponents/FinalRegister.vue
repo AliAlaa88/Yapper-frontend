@@ -14,7 +14,7 @@
         </p>
 
         <!-- Error Message -->
-        <p v-if="errorMessage" class="text-red-500 text-sm mb-4">
+        <p v-if="errorMessage" id="error-message-signup-s3" class="text-red-500 text-sm mb-4">
           {{ errorMessage }}
         </p>
 
@@ -22,6 +22,7 @@
 
         <!-- Password Input -->
         <input
+            id="input-password-signup-s3"
             type="password"
             placeholder="Enter password"
             v-model="password"
@@ -35,6 +36,7 @@
 
       <!-- Next Button -->
       <button
+        id="button-signup-s3"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >

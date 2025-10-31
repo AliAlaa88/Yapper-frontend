@@ -9,6 +9,7 @@
 
       <!-- Back Button -->
       <button
+        id="button-back-language"
         class="absolute top-8 left-8 text-gray-400 hover:text-white transition"
         @click="$emit('back')"
       >
@@ -26,6 +27,7 @@
       <!-- Language Search -->
       <div class="mb-4">
         <input
+          id="input-search-language"
           v-model="searchQuery"
           type="text"
           placeholder="Search languages..."
@@ -38,6 +40,7 @@
         <button
           v-for="lang in filteredLanguages"
           :key="lang.code"
+          :id="`button-language-${lang.code}`"
           :class="[
             'w-full text-left px-4 py-3 rounded-lg transition flex items-center justify-between',
             selectedLanguage === lang.code 
@@ -60,6 +63,7 @@
 
       <!-- Next Button -->
       <button
+        id="button-next-language"
         :disabled="!selectedLanguage"
         :class="[
           'w-full font-semibold rounded-full py-2 transition mb-3',
@@ -74,6 +78,7 @@
 
       <!-- Skip Button -->
       <button
+        id="button-skip-language"
         class="w-full text-gray-400 hover:text-white transition"
         @click="onSkip"
       >

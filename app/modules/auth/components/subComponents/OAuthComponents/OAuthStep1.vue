@@ -19,6 +19,7 @@
         <!-- Month -->
         <div class="flex-1 relative">
           <select
+            id="select-month-oauth-s1"
             v-model="month"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
           >
@@ -31,6 +32,7 @@
         <!-- Day -->
         <div class="flex-1 relative">
           <select
+            id="select-day-oauth-s1"
             v-model="day"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
           >
@@ -43,6 +45,7 @@
         <!-- Year -->
         <div class="flex-1 relative">
           <select
+            id="select-year-oauth-s1"
             v-model="year"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
           >
@@ -54,7 +57,7 @@
       </div>
 
       <!-- Error Message -->
-      <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
+      <p v-if="errorMessage" id="error-message-oauth-s1" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
       <p class="text-gray-400 text-xs mb-4">
         By signing up, you agree to our Terms, Data Policy and Cookies Policy.
@@ -63,6 +66,7 @@
 
       <!-- Next Button -->
       <button
+        id="button-signup-oauth-s1"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >

@@ -1,5 +1,6 @@
 <template>
       <button
+        id="button-back"
         class="absolute top-4 left-4 text-gray-400 hover:text-white"
         @click="$emit('close')"
       >

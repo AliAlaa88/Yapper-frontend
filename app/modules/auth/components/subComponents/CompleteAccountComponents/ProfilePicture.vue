@@ -33,6 +33,7 @@
       <!-- Upload Button -->
       <label class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3 cursor-pointer text-center">
         <input 
+          id="input-profile-picture-complete"
           type="file" 
           accept="image/*" 
           class="hidden" 
@@ -42,10 +43,11 @@
       </label>
 
       <!-- Error Message -->
-      <p v-if="errorMessage" class="text-red-500 text-sm mb-4 text-center">{{ errorMessage }}</p>
+      <p v-if="errorMessage" id="error-message-profile-picture" class="text-red-500 text-sm mb-4 text-center">{{ errorMessage }}</p>
 
       <!-- Next Button -->
       <button
+        id="button-next-profile-picture"
         v-if="previewImage"
         class="w-full bg-blue-500 text-white font-semibold rounded-full py-2 hover:bg-blue-600 transition mb-3"
         @click="onNext"
@@ -55,6 +57,7 @@
 
       <!-- Skip Button -->
       <button
+        id="button-skip-profile-picture"
         class="w-full text-gray-400 hover:text-white transition"
         @click="onSkip"
       >

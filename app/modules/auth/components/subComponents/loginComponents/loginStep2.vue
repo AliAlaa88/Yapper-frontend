@@ -12,6 +12,7 @@
 
       <!-- Email -->
       <input
+        id="input-identifier-readonly-login-s2"
         type="text"
         placeholder= "{{ props.identifier }}"
         :value="props.identifier"
@@ -21,6 +22,7 @@
 
       <!-- Password -->
       <input
+        id="input-password-login-s2"
         type="password"
         placeholder="Password"
         v-model="password"
@@ -28,10 +30,11 @@
       />
       
       <!-- Error Message -->
-      <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
+      <p v-if="errorMessage" id="error-message-login-s2" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
     <!-- Forgot password -->
       <div
+        id="link-forgot-password-login-s2"
         class="text-blue-400 hover:underline mb-6 cursor-pointer text-left"
         @click="onForgotPassword"
       >
@@ -40,6 +43,7 @@
 
       <!-- Login Button -->
       <button
+        id="button-login-s2"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >
@@ -49,8 +53,8 @@
 
 
       <p class="text-center text-gray-400 text-sm">
-        Don’t have an account?
-        <button class="text-blue-400 hover:underline" @click="$emit('switch')">Sign up</button>
+        Don't have an account?
+        <button id="button-switch-to-signup-login-s2" class="text-blue-400 hover:underline" @click="$emit('switch')">Sign up</button>
       </p>
     </div>
   </div>

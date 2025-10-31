@@ -9,6 +9,7 @@
 
       <!-- Back Button -->
       <button
+        id="button-back-interests"
         class="absolute top-8 left-8 text-gray-400 hover:text-white transition"
         @click="$emit('back')"
       >
@@ -29,6 +30,7 @@
           <button
             v-for="interest in interests"
             :key="interest.id"
+            :id="`button-interest-${interest.id}`"
             :class="[
               'px-4 py-3 rounded-full text-sm font-medium transition border-2',
               selectedInterests.includes(interest.id)
@@ -52,6 +54,7 @@
 
       <!-- Next Button -->
       <button
+        id="button-next-interests"
         :disabled="selectedInterests.length < 3"
         :class="[
           'w-full font-semibold rounded-full py-2 transition mb-3',
@@ -66,6 +69,7 @@
 
       <!-- Skip Button -->
       <button
+        id="button-skip-interests"
         class="w-full text-gray-400 hover:text-white transition"
         @click="onSkip"
       >

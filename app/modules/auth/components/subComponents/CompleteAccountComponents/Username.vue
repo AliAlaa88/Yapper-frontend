@@ -9,6 +9,7 @@
 
       <!-- Back Button -->
       <button
+        id="button-back-username"
         class="absolute top-8 left-8 text-gray-400 hover:text-white transition"
         @click="$emit('back')"
       >
@@ -28,6 +29,7 @@
         <div class="relative">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">@</span>
           <input
+            id="input-username-complete"
             v-model="username"
             type="text"
             placeholder="username"
@@ -37,8 +39,8 @@
           />
         </div>
         <div class="flex justify-between mt-2 px-4">
-          <p v-if="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
-          <p v-else-if="username.length > 0" class="text-green-500 text-sm">Available!</p>
+          <p v-if="errorMessage" id="error-message-username" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          <p v-else-if="username.length > 0" id="success-message-username" class="text-green-500 text-sm">Available!</p>
           <p v-else class="text-transparent text-sm">.</p>
           <p class="text-gray-500 text-sm">{{ username.length }}/15</p>
         </div>
@@ -51,6 +53,7 @@
         <li
           v-for="(suggestion, index) in props.Recommendations"
           :key="index"
+          :id="`recommendation-${index}-username`"
           class="px-2 py-1 border border-gray-500 rounded-md cursor-pointer hover:bg-gray-700"
           @click="username = suggestion"
         >
@@ -61,6 +64,7 @@
 
       <!-- Next Button -->
       <button
+        id="button-next-username"
         :disabled="!isValid"
         :class="[
           'w-full font-semibold rounded-full py-2 transition mb-3',
@@ -75,6 +79,7 @@
 
       <!-- Skip Button -->
       <button
+        id="button-skip-username"
         class="w-full text-gray-400 hover:text-white transition"
         @click="onSkip"
       >

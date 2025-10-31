@@ -14,6 +14,7 @@
 
         <!-- OTP Input -->
         <input
+            id="input-otp-signup-s2"
             type="text"
             placeholder="Enter OTP"
             v-model="otp"
@@ -21,10 +22,11 @@
         />
         
         <!-- Error Message -->
-        <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
+        <p v-if="errorMessage" id="error-message-signup-s2" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
       <!-- Next Button -->
       <button
+        id="button-next-signup-s2"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >
@@ -32,12 +34,12 @@
       </button>
 
       <p class="text-center text-gray-400 text-sm">
-        Didn’t receive the code?
-        <button class="text-blue-400 hover:underline" @click="onResendCode">Resend code</button>
+        Didn't receive the code?
+        <button id="button-resend-code-signup-s2" class="text-blue-400 hover:underline" @click="onResendCode">Resend code</button>
       </p>
       <div class="mt-4">
-        <p v-if="resendCodeSuccess" class="text-green-400 text-sm text-center">{{ resendCodeSuccess }}</p>
-        <p v-if="resendCodeFailure" class="text-red-400 text-sm text-center">{{ resendCodeFailure }}</p>
+        <p v-if="resendCodeSuccess" id="success-message-resend-signup-s2" class="text-green-400 text-sm text-center">{{ resendCodeSuccess }}</p>
+        <p v-if="resendCodeFailure" id="error-message-resend-signup-s2" class="text-red-400 text-sm text-center">{{ resendCodeFailure }}</p>
       </div>
     </div>
   </div>

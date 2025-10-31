@@ -12,6 +12,7 @@
 
       <!-- Name Input -->
       <input
+        id="input-name-signup-s1"
         type="text"
         placeholder="name"
         v-model="name"
@@ -20,6 +21,7 @@
 
       <!-- Email Input -->
       <input
+        id="input-email-signup-s1"
         type="email"
         placeholder="email"
         v-model="email"
@@ -34,6 +36,7 @@
         <!-- Month -->
         <div class="flex-1 relative">
           <select
+            id="select-month-signup-s1"
             v-model="month"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
           >
@@ -46,6 +49,7 @@
         <!-- Day -->
         <div class="flex-1 relative">
           <select
+            id="select-day-signup-s1"
             v-model="day"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
           >
@@ -58,6 +62,7 @@
         <!-- Year -->
         <div class="flex-1 relative">
           <select
+            id="select-year-signup-s1"
             v-model="year"
             class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
           >
@@ -70,6 +75,7 @@
 
       <!-- Next Button -->
       <button
+        id="button-next-signup-s1"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onNext"
       >
@@ -77,7 +83,7 @@
       </button>
       <!-- reCAPTCHA -->
       <Recaptcha class="w-full" ref="recaptchaRef" @verified="onRecaptchaVerified" />
-      <h1 class="text-red-500 text-sm mt-2" v-if="error">{{ error }}</h1>
+      <h1 id="error-message-signup-s1" class="text-red-500 text-sm mt-2" v-if="error">{{ error }}</h1>
       <h1 class="text-green-500 text-sm mt-2" v-if="success">{{ success }}</h1>
     </div>
   </div>

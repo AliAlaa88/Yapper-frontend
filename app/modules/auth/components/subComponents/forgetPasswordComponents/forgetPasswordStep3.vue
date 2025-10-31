@@ -16,6 +16,7 @@
 
       <!-- Input -->
       <input
+        id="input-password-forgot-password-s3"
         type="password"
         placeholder="enter your new password"
         v-model="password"
@@ -23,6 +24,7 @@
       />
 
     <input
+        id="input-verify-password-forgot-password-s3"
         type="password"
         placeholder="verify your new password"
         v-model="verifyPassword"
@@ -30,10 +32,11 @@
     />
 
       <!-- Error Message -->
-      <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
+      <p v-if="errorMessage" id="error-message-forgot-password-s3" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
       <!-- Next Button -->
       <button
+        id="button-reset-password-forgot-password-s3"
         class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
         @click="onFinish"
       >
