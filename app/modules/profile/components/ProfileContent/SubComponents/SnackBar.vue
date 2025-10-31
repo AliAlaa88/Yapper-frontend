@@ -15,6 +15,7 @@
             </span>
             <button
                 v-if="snackbar.action"
+                id="snackbar-button"
                 class="font-semibold hover:underline cursor-pointer ml-3"
                 @click="handleActionClick">
                 {{ snackbar.action }}

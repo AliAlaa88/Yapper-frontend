@@ -7,6 +7,7 @@
             You have muted posts from this account.
         </span>
         <span
+            id="unmute-button"
             class="cursor-pointer hover:underline text-blue-400"
             @click="handleClick"
         >
