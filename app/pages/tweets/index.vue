@@ -1,5 +1,5 @@
 <template>
-    <TweetsList :fetchingSource="null" />
+    <TweetsList :fetchingSource="'/tweets'" />
 </template>
 
 <script setup lang="ts">
