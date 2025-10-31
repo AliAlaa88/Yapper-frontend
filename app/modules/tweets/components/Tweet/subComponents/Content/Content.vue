@@ -16,6 +16,7 @@
             <img
                 v-for="(image, index) in content.images"
                 :key="image"
+                :id="`tweet-image-${index}`"
                 :src="image"
                 alt="Tweet image"
                 class="w-full object-cover"

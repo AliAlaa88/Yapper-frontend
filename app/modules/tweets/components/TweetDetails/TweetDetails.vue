@@ -11,7 +11,7 @@
         :content="tweetDetails.tweet.content"
       />
       <div class="text-[var(--color-x-gray-dark)] text-[15px] mb-4 border-b border-[var(--color-x-border)] pb-4">
-        <time class="hover:underline cursor-pointer">
+        <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
           {{ formatDetailDate(tweetDetails.tweet.createdAt) }}
         </time>
       </div>
@@ -34,12 +34,13 @@
         <div 
           v-for="reply in replies" 
           :key="reply.id"
+          :id="`tweet-reply-${reply.id}`"
           class="border-b border-[var(--color-x-border)] px-4 py-3 hover:bg-[var(--color-x-background)] transition-colors"
         >
           <div class="flex gap-3">
             <!-- Avatar column -->
             <div class="flex-shrink-0">
-              <img :src="reply.user.avatar" :alt="reply.user.name" class="w-10 h-10 rounded-full" />
+              <img :id="`reply-avatar-${reply.id}`" :src="reply.user.avatar" :alt="reply.user.name" class="w-10 h-10 rounded-full" />
             </div>
             <!-- Content column -->
             <div class="flex-1 min-w-0">
@@ -70,6 +71,7 @@
       <AlertTriangle class="w-16 h-16 text-red-300 mx-auto mb-4" :stroke-width="1" />
       <p class="text-red-500 text-lg">{{ error }}</p>
       <button 
+        id="tweet-detail-retry-button"
         @click="fetchTweetDetails()" 
         class="mt-4 px-4 py-2 bg-[var(--color-x-blue)] text-white rounded-lg hover:bg-[var(--color-x-blue)]/90 transition-colors duration-200"
       >

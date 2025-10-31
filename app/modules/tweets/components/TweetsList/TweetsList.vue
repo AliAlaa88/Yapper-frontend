@@ -22,6 +22,7 @@
                     {{ error }}
                 </div>
                 <button 
+                    id="tweets-list-retry-button"
                     @click="loadTweets" 
                     class="inline-flex items-center px-4 py-2 bg-[var(--color-x-blue)] text-white text-sm font-[var(--font-weight-bold)] rounded-full hover:bg-[var(--color-x-blue-hover)] transition-colors duration-200"
                 >

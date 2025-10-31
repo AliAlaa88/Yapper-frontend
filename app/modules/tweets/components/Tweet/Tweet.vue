@@ -1,5 +1,6 @@
 <template>
     <article
+        :id="`tweet-${id}`"
         class="border-b border-[var(--color-x-border)] px-4 py-3 hover:bg-[var(--color-x-background)] transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
@@ -8,6 +9,7 @@
             <TooltipProvider :delay-duration="300">
                 <div class="h-fit">
                     <NuxtLink 
+                        :id="`tweet-avatar-link-${id}`"
                         class="flex-shrink-0" 
                         @click.stop
                         :to="profileUrl"
@@ -15,6 +17,7 @@
                         <Tooltip>
                             <TooltipTrigger as-child>
                                 <img 
+                                    :id="`tweet-avatar-${id}`"
                                     :src="user.avatar" 
                                     :alt="user.name" 
                                     class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"

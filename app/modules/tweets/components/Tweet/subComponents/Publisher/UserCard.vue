@@ -2,10 +2,11 @@
     <div class="w-[300px] p-4 space-y-3 bg-white dark:bg-[var(--color-x-bg-dark-secondary)]">
         <!-- Header with avatar and follow button -->
         <div class="flex items-start justify-between">
-            <NuxtLink :to="profileLink">
-                <img :src="avatar" :alt="name" class="w-16 h-16 rounded-full hover:opacity-90 transition-opacity" />
+            <NuxtLink :id="`user-card-avatar-link-${id}`" :to="profileLink">
+                <img :id="`user-card-avatar-${id}`" :src="avatar" :alt="name" class="w-16 h-16 rounded-full hover:opacity-90 transition-opacity" />
             </NuxtLink>
             <button 
+                :id="`user-card-follow-button-${id}`"
                 class="px-4 py-1.5 rounded-full font-bold text-sm bg-[var(--color-x-black)] dark:bg-white text-white dark:text-[var(--color-x-bg-dark)] hover:bg-[var(--color-x-dark)] dark:hover:bg-gray-200 transition-colors"
             >
                 Follow
@@ -14,7 +15,7 @@
 
         <!-- Name and Username -->
         <div>
-            <NuxtLink :to="profileLink" class="font-bold text-[var(--color-x-black)] dark:text-[var(--color-x-text-dark)] hover:underline text-[17px] leading-5 block">
+            <NuxtLink :id="`user-card-name-link-${id}`" :to="profileLink" class="font-bold text-[var(--color-x-black)] dark:text-[var(--color-x-text-dark)] hover:underline text-[17px] leading-5 block">
                 {{ name }}
             </NuxtLink>
             <span class="text-[var(--color-x-gray-dark)] dark:text-[var(--color-x-text-dark-secondary)] text-[15px]">@{{ username }}</span>

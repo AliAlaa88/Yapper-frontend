@@ -5,8 +5,8 @@
             <div class="flex items-center gap-3 mb-4">
                 <Tooltip>
                     <TooltipTrigger as-child>
-                        <NuxtLink :to="linkComputed">
-                            <img :src="avatar" :alt="name" class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity" />
+                        <NuxtLink :id="`publisher-avatar-link-${id}`" :to="linkComputed">
+                            <img :id="`publisher-avatar-${id}`" :src="avatar" :alt="name" class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity" />
                         </NuxtLink>
                     </TooltipTrigger>
                     <TooltipContent class="p-0">
@@ -24,7 +24,7 @@
                 <div class="flex flex-col">
                     <Tooltip>
                         <TooltipTrigger as-child>
-                            <NuxtLink :to="linkComputed" class="font-bold text-[var(--color-x-black)] hover:underline text-[20px] leading-6">
+                            <NuxtLink :id="`publisher-name-link-${id}`" :to="linkComputed" class="font-bold text-[var(--color-x-black)] hover:underline text-[20px] leading-6">
                                 {{ name }}
                             </NuxtLink>
                         </TooltipTrigger>
@@ -49,7 +49,7 @@
         <div v-else class="flex items-center gap-1 mb-0.5">
             <Tooltip>
                 <TooltipTrigger as-child>
-                    <NuxtLink :to="linkComputed" class="font-bold text-[var(--color-x-black)] hover:underline text-[15px]">
+                    <NuxtLink :id="`publisher-name-link-timeline-${id}`" :to="linkComputed" class="font-bold text-[var(--color-x-black)] hover:underline text-[15px]">
                         {{ name }}
                     </NuxtLink>
                 </TooltipTrigger>

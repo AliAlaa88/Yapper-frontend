@@ -3,7 +3,7 @@
         <!-- Reply -->
         <div class="group/tooltip relative">
             <button
-                id="reply"
+                id="tweet-reply-button"
                 class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
                 @click.stop
             >
@@ -23,7 +23,7 @@
         <!-- Retweet -->
         <div class="group/tooltip relative">
             <button
-                id="retweet"
+                id="tweet-retweet-button"
                 class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-green)] transition-colors"
                 @click.stop
             >
@@ -44,7 +44,7 @@
         <!-- Like -->
         <div class="group/tooltip relative">
             <button
-                id="like"
+                id="tweet-like-button"
                 class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-red)] transition-colors"
                 @click.stop
             >
@@ -65,7 +65,7 @@
         <!-- Views -->
         <div v-if="views" class="group/tooltip relative">
             <button
-                id="views"
+                id="tweet-views-button"
                 class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
                 @click.stop
             >
@@ -85,7 +85,7 @@
         <!-- Share -->
         <div class="group/tooltip relative">
             <button
-                id="share"
+                id="tweet-share-button"
                 class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
                 @click.stop
             >
