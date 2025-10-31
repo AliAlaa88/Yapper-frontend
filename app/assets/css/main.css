@@ -247,5 +247,15 @@
         /* Invert alternate color in dark mode */
         --color-x-alternate: #ffffff;
         --color-x-text-alternate: #0f1419; /* text becomes black */
+        }
+}
+@media (prefers-color-scheme: light) {
+    :root {
+        --color-x-alternate: #0f1419;
+        --color-x-text-alternate: #ffffff;
+        --color-x-hover-dark: #ebebeb;
+        --color-x-bg-dark: #0f1419;
+        --color-x-bg-dark-secondary: #ffffff;
     }
+    
 }
