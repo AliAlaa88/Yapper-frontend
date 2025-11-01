@@ -1,12 +1,8 @@
 <template>
-    <div
-        v-if="!isBlocked"
-        class="pb-3">
+    <div v-if="!isBlocked" class="pb-3">
         <button
             id="follow-button"
-            class="cursor-pointer font-bold text-[15px] leading-[20px] flex
-            items-center justify-center whitespace-nowrap
-            rounded-full transition-colors duration-200"
+            class="cursor-pointer font-bold text-[15px] leading-[20px] flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200"
             :class="buttonClass"
             @click="handleClick"
             @mouseover="handleMouseOver"
@@ -23,23 +19,12 @@ import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import { inject } from 'vue'
 const userId = inject<Ref<string>>('user-id')!
-const {
-    isBlocked,
-    isFollowing,
-} = useUserInfo(userId)
+const { isBlocked, isFollowing } = useUserInfo(userId)
 
-const {
-    buttonClass,
-    buttonText,
-    handleMouseOut,
-    handleMouseOver,
-} = useFollow(userId)
+const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId)
 
 const userInteractions = useUserInteractions(userId)
-const {
-    handleFollowAction,
-    handleUnfollowWithConfirmation,
-} = userInteractions
+const { handleFollowAction, handleUnfollowWithConfirmation } = userInteractions
 
 function handleClick() {
     if (!isFollowing.value) handleFollowAction()

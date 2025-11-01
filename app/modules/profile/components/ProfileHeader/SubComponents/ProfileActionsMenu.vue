@@ -17,7 +17,7 @@
         <button
             v-if="isFollower && !isBlocked"
             id="remove-follower-button"
-            class="w-full text-primary text-left font-semibold px-4 py-3 hover:bg-hover transition flex items-center cursor-pointer"
+            class="w-full text-primary text-left  font-semibold px-4 py-3 hover:bg-hover transition flex items-center cursor-pointer"
             @click="handleRemove"
         >
             <UserRoundX class="w-4 h-4 mr-3" />
