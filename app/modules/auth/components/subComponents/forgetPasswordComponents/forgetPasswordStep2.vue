@@ -8,6 +8,9 @@
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
 
+            <!-- Back Button -->
+            <backButton @close="$emit('back')" />
+
             <!-- Logo -->
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -51,9 +54,12 @@
 import { ref } from 'vue'
 import { useVerifyForgotPasswordOTPQuery } from '../../../queries/useForgetPasswordQuery'
 import closeButton from '../closeButton.vue'
+import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 
-const otp = ref('')
+// Use v-model for otp
+const otp = defineModel<string>('otp', { default: '' })
+
 const errorMessage = ref('')
 
 const props = defineProps<{
@@ -62,6 +68,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'close'): void
+    (e: 'back'): void
     (e: 'next', reset_token: string): void
 }>()
 
