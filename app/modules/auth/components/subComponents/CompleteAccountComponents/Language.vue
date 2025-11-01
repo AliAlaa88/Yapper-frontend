@@ -3,7 +3,7 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -16,30 +16,17 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">Select your language</h2>
-            <p class="text-gray-400 mb-6">This will help us personalize your Yapper experience.</p>
-
-            <!-- Language Search -->
-            <div class="mb-4">
-                <input
-                    id="input-search-language"
-                    v-model="searchQuery"
-                    type="text"
-                    placeholder="Search languages..."
-                    class="w-full bg-gray-900 text-white rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
+            <p class="text-muted mb-6">This will help us personalize your Yapper experience.</p>
 
             <!-- Language List -->
-            <div class="max-h-64 overflow-y-auto mb-6 custom-scrollbar">
+            <div class="mb-6">
                 <button
-                    v-for="lang in filteredLanguages"
+                    v-for="lang in languages"
                     :key="lang.code"
                     :id="`button-language-${lang.code}`"
                     :class="[
                         'w-full text-left px-4 py-3 rounded-lg transition flex items-center justify-between',
-                        selectedLanguage === lang.code
-                            ? 'bg-blue-500 text-white'
-                            : 'hover:bg-gray-800',
+                        selectedLanguage === lang.code ? 'bg-blue text-primary' : 'hover:bg-hover',
                     ]"
                     @click="selectLanguage(lang.code)"
                 >
@@ -66,8 +53,8 @@
                 :class="[
                     'w-full font-semibold rounded-full py-2 transition mb-3',
                     selectedLanguage
-                        ? 'bg-white text-black hover:bg-gray-200'
-                        : 'bg-gray-800 text-gray-500 cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate  cursor-pointer'
+                        : 'bg-alternate text-alternate cursor-not-allowed',
                 ]"
                 @click="onNext"
             >
@@ -77,7 +64,7 @@
             <!-- Skip Button -->
             <button
                 id="button-skip-language"
-                class="w-full text-gray-400 hover:text-white transition"
+                class="w-full text-muted hover:text-primary transition duration-200"
                 @click="onSkip"
             >
                 Skip for now
@@ -87,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
@@ -104,7 +91,6 @@ const languages: Language[] = [
 ]
 
 const selectedLanguage = ref<string>('')
-const searchQuery = ref('')
 
 const emit = defineEmits<{
     (e: 'next', language: string): void
@@ -112,17 +98,6 @@ const emit = defineEmits<{
     (e: 'back'): void
     (e: 'close'): void
 }>()
-
-const filteredLanguages = computed(() => {
-    if (!searchQuery.value) return languages
-
-    const query = searchQuery.value.toLowerCase()
-    return languages.filter(
-        (lang) =>
-            lang.name.toLowerCase().includes(query) ||
-            lang.nativeName.toLowerCase().includes(query),
-    )
-})
 
 const selectLanguage = (code: string) => {
     selectedLanguage.value = code
@@ -138,23 +113,3 @@ const onSkip = () => {
     emit('skip')
 }
 </script>
-
-<style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(55, 65, 81, 0.3);
-    border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(107, 114, 128, 0.5);
-    border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(107, 114, 128, 0.7);
-}
-</style>

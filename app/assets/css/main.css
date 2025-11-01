@@ -235,6 +235,42 @@
     .hover\:bg-hover:hover {
         background-color: var(--color-x-hover-dark);
     }
+    .hover\:text-primary:hover {
+        color: var(--color-x-primary);
+    }
+    .hover\:text-muted:hover {
+        color: var(--color-x-muted);
+    }
+    .hover\:text-light:hover {
+        color: var(--color-x-light);
+    }
+    .hover\:text-white:hover {
+        color: var(--color-x-white);
+    }
+    .hover\:text-alternate:hover {
+        color: var(--color-x-alternate);
+    }
+    .hover\:text-blue:hover {
+        color: var(--color-x-blue);
+    }
+    .hover\:text-green:hover {
+        color: var(--color-x-green);
+    }
+    .hover\:text-red:hover {
+        color: var(--color-x-red);
+    }
+    .hover\:text-yellow:hover {
+        color: var(--color-x-yellow);
+    }
+    .hover\:text-gray:hover {
+        color: var(--color-x-gray);
+    }
+    .hover\:text-tooltip:hover {
+        color: var(--color-x-tooltip);
+    }
+    .hover\:text-border:hover {
+        color: var(--color-x-border);
+    }
 }
 
 /* ===========================

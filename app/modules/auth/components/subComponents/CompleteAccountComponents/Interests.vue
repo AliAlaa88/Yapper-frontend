@@ -3,7 +3,7 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -16,9 +16,7 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">What are you interested in?</h2>
-            <p class="text-gray-400 mb-6">
-                Select at least 3 interests to help us tailor your feed.
-            </p>
+            <p class="text-muted mb-6">Select at least 3 interests to help us tailor your feed.</p>
 
             <!-- Interests Grid -->
             <div class="max-h-64 overflow-y-auto mb-6 custom-scrollbar">
@@ -30,8 +28,8 @@
                         :class="[
                             'px-4 py-3 rounded-full text-sm font-medium transition border-2',
                             selectedInterests.includes(interest.id)
-                                ? 'bg-blue-500 border-blue-500 text-white'
-                                : 'border-gray-600 text-gray-300 hover:border-gray-400',
+                                ? 'bg-blue text-primary border-blue-400 text-primary'
+                                : 'border-muted text-muted hover:border-hover',
                         ]"
                         @click="toggleInterest(interest.id)"
                     >
@@ -41,7 +39,7 @@
             </div>
 
             <!-- Selection Counter -->
-            <p class="text-center text-gray-400 text-sm mb-6">
+            <p class="text-center text-muted text-sm mb-6">
                 {{ selectedInterests.length }} selected
                 <span v-if="selectedInterests.length < 3" class="text-red-400">
                     ({{ 3 - selectedInterests.length }} more needed)
@@ -55,8 +53,8 @@
                 :class="[
                     'w-full font-semibold rounded-full py-2 transition mb-3',
                     selectedInterests.length >= 3
-                        ? 'bg-white text-black hover:bg-gray-200'
-                        : 'bg-gray-800 text-gray-500 cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate  cursor-pointer'
+                        : 'bg-alternate text-alternate cursor-not-allowed',
                 ]"
                 @click="onNext"
             >
@@ -66,7 +64,7 @@
             <!-- Skip Button -->
             <button
                 id="button-skip-interests"
-                class="w-full text-gray-400 hover:text-white transition"
+                class="w-full text-muted hover:text-alternate transition duration-200"
                 @click="onSkip"
             >
                 Skip for now
