@@ -2,12 +2,14 @@
     <div
         v-if="showList"
         ref="dropdownRef"
-        class="absolute top-[-8px] right-0 mt-2 w-56 bg-primary rounded-xl shadow-[0_0_7px_rgba(255,255,255,0.4)] z-50"
+        class="absolute top-[-8px] right-0 mt-2 w-56 bg-primary
+        rounded-xl shadow-[0_0_7px_rgba(255,255,255,0.4)] z-50"
     >
         <button
             v-if="!isBlocked"
             id="mute-button"
-            class="cursor-pointer w-full text-primary font-semibold text-left px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
+            class="cursor-pointer w-full text-primary font-semibold text-left
+            px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
             @click="handleMuteAndUnmute"
         >
             <MegaphoneOff v-if="!isMuted" class="w-4 h-4 mr-3" />
@@ -17,7 +19,8 @@
         <button
             v-if="isFollower && !isBlocked"
             id="remove-follower-button"
-            class="w-full text-primary text-left  font-semibold px-4 py-3 hover:bg-hover transition flex items-center cursor-pointer"
+            class="w-full text-primary text-left  font-semibold px-4 py-3
+            hover:bg-hover transition flex items-center cursor-pointer"
             @click="handleRemove"
         >
             <UserRoundX class="w-4 h-4 mr-3" />
@@ -25,7 +28,8 @@
         </button>
         <button
             id="block-button"
-            class="w-full text-primary text-left px-4 py-3 font-semibold hover:bg-hover transition flex items-center last:rounded-b-xl cursor-pointer first:rounded-t-xl"
+            class="w-full text-primary text-left px-4 py-3 font-semibold hover:bg-hover
+            transition flex items-center last:rounded-b-xl cursor-pointer first:rounded-t-xl"
             @click="handleBlockAndUnblock"
         >
             <Ban v-if="!isBlocked" class="w-4 h-4 mr-3" />
@@ -68,7 +72,6 @@ function handleMuteAndUnmute() {
 
 function handleBlockAndUnblock() {
     if (isBlocked.value) {
-        console.log('el value --> ', isBlocked)
         handleUnblockWithConfirmation(showList)
     } else handleBlockWithConfirmation(showList)
 }

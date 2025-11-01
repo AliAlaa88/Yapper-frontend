@@ -23,13 +23,13 @@ export function useFollow(userId: Ref<string | undefined>) {
     const buttonClass = computed(() => {
         if (!isFollowing.value) {
             if (!isFollower.value)
-                return 'bg-[#F7F9F9] text-[#15202B] border border-transparent px-[53px] py-[10px] w-[88px] h-[36px] hover:bg-[#E1E8ED]'
+                return 'bg-alternate text-alternate border border-transparent px-[53px] py-[10px] w-[88px] h-[36px] hover:opacity-90'
             else
-                return 'bg-[#F7F9F9] text-[#15202B] border border-transparent px-[57px] py-[10px] w-[88px] h-[36px] hover:bg-[#E1E8ED]'
+                return 'bg-alternate text-alternate border border-transparent px-[57px] py-[10px] w-[88px] h-[36px] hover:opacity-90'
         } else {
             return hover.value
-                ? 'bg-red-500/10 border-[0.1px] border-red-500/40 text-red-500 px-[53px] py-[10px] w-[88px] h-[36px]'
-                : 'bg-transparent border-[0.1px] border-white/40 text-white px-[53px] py-[10px] w-[88px] h-[36px]'
+                ? 'bg-red/10 border border-red text-red px-[53px] py-[10px] w-[88px] h-[36px]'
+                : 'bg-transparent border border-primary text-primary px-[53px] py-[10px] w-[88px] h-[36px]'
         }
     })
 

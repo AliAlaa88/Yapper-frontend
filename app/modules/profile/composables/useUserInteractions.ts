@@ -36,9 +36,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleShowConfirmation(
             'Block',
             'Block',
-            'bg-red-500',
-            'text-white',
-            'hover:bg-red-500/85',
+            'bg-red',
+            'text-primary',
+            'hover:opacity-90',
             `They will be able to see your public posts,
             but will no longer be able to engage with them.
             @${username.value} will also not be able to follow or message you,
@@ -53,9 +53,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleShowConfirmation(
             'Unfollow',
             'Unfollow',
-            'bg-[#ebf1f1]',
-            'text-black',
-            'hover:bg-gray-200/90',
+            'bg-alternate',
+            'text-alternate',
+            'hover:opacity-90',
             'Their posts will no longer show up in your Following timeline. You can still view their profile, unless their posts are protected.',
             handleUnfollow,
             username.value,
@@ -91,9 +91,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleShowConfirmation(
             'Remove',
             'Remove this follower',
-            'bg-red-500',
-            'text-white',
-            'hover:bg-red-500/85',
+            'bg-red',
+            'text-primary',
+            'hover:opacity-90',
             `@${username.value} will be removed from
             your followers and won’t be notified by Yappper.
             They can follow you again in the future. `,
@@ -107,9 +107,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleShowConfirmation(
             'Unblock',
             'Unblock',
-            'bg-[#ebf1f1]',
-            'text-black',
-            'hover:bg-gray-200/90',
+            'bg-alternate',
+            'text-alternate',
+            'hover:opacity-90',
             'They will be able to follow you and engage with your public posts.',
             handleUnblock,
             username.value,
@@ -121,9 +121,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleShowConfirmation(
             'UnMute',
             'UnMute',
-            'bg-[#ebf1f1]',
-            'text-black',
-            'hover:bg-gray-200/90',
+            'bg-alternate',
+            'text-alternate',
+            'hover:opacity-90',
             'Posts from this account will now be allowed in your Home timeline. ',
             handleUnmuteWithSnackbar,
             username.value,

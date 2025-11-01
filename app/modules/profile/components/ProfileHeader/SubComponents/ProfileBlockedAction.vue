@@ -7,7 +7,7 @@
             class="cursor-pointer font-bold text-[15px] leading-[20px] flex
             items-center justify-center whitespace-nowrap
             rounded-full transition-colors duration-200
-            bg-red-500 hover:bg-red-500/85 text-white
+            bg-red hover:opacity-95 text-primary
             px-[45px] py-[10px] w-[88px] h-[36px]"
             @click="handleUnblockWithConfirmation()"
             @mouseover="hover = true"

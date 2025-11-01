@@ -5,15 +5,18 @@
         @click="handleBackdropClick"
     >
         <div
-            class="bg-black text-primary rounded-2xl p-7.5 w-[320px] shadow-lg space-y-4"
+            class="bg-primary text-primary rounded-2xl p-7.5 w-[330px] shadow-lg space-y-4"
             @click.stop
         >
             <div class="space-y-2">
                 <h2 class="text-primary text-xl font-bold">
                     {{ confirmData.header }}
-                    <span v-if="confirmData.username !== ''" class="font-normal mr-[-3px]">@</span>
-                    {{ confirmData.username }}
-                    <span v-if="confirmData.username !== ''" class="ml-[-3px]">?</span>
+                    <span
+                        v-if="confirmData.username !== ''"
+                        class="font-bold whitespace-nowrap"
+                    >
+                        <span class="font-normal">@</span>{{ confirmData.username }}?
+                    </span>
                 </h2>
                 <p class="text-muted text-[15px] leading-snug">
                     {{ confirmData.message }}
@@ -31,7 +34,8 @@
                 </button>
                 <button
                     id="cancel-confirm-button"
-                    class="cursor-pointer w-full border border-gray-600 font-bold py-2.5 rounded-full hover:bg-gray-200/10 transition"
+                    class="cursor-pointer w-full border border-primary
+                    font-bold py-2.5 rounded-full hover:bg-hover transition"
                     @click="handleCancel"
                 >
                     Cancel
