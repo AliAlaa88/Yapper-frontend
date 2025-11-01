@@ -24,6 +24,7 @@
     --color-x-white: #ffffff;
     --color-x-alternate: #0f1419; /* Light mode alternate (black) */
     --color-x-text-alternate: #ffffff; /* Light mode = white */
+    --color-x-hover-alternate: #ebebeb;
 
     /* Status Colors */
     --color-x-red: #f4212e;
@@ -120,6 +121,10 @@
 
     .bg-hover {
         background-color: var(--color-x-hover-dark);
+    }
+
+    .bg-hover-alternate {
+        background-color: var(--color-x-hover-alternate);
     }
 
     .bg-blue {
@@ -247,7 +252,8 @@
         /* Invert alternate color in dark mode */
         --color-x-alternate: #ffffff;
         --color-x-text-alternate: #0f1419; /* text becomes black */
-        }
+        --color-x-hover-alternate: var(--color-x-hover-alternate);
+    }
 }
 @media (prefers-color-scheme: light) {
     :root {
@@ -257,5 +263,4 @@
         --color-x-bg-dark: #0f1419;
         --color-x-bg-dark-secondary: #ffffff;
     }
-    
 }
