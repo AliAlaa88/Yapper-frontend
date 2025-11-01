@@ -1,12 +1,12 @@
 <template>
     <div class="mt-3 flex gap-5">
         <div class="flex gap-1">
-            <span class="font-bold text-white">{{ followingCount }}</span>
-            <span class="text-[#71767b]">Following</span>
+            <span class="font-bold text-primary">{{ followingCount }}</span>
+            <span class="text-muted">Following</span>
         </div>
         <div class="flex gap-1">
-            <span class="font-bold text-white">{{ followersCount }}</span>
-            <span class="text-[#71767b]">Followers</span>
+            <span class="font-bold text-primary">{{ followersCount }}</span>
+            <span class="text-muted">Followers</span>
         </div>
     </div>
 </template>

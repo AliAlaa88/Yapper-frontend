@@ -74,7 +74,7 @@
 
 <script setup lang="ts">
 import { Smile, ImagePlay } from 'lucide-vue-next'
-import Tooltip from '~/modules/Common/components/toolTip'
+import Tooltip from '~/modules/Common/components/ToolTip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'

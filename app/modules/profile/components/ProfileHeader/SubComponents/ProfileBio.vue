@@ -1,5 +1,5 @@
 <template>
-    <p v-if="bio && !isBlocked" class="mt-3 text-[15px] leading-6 text-white">{{ bio }}</p>
+    <p v-if="bio && !isBlocked" class="mt-3 text-[15px] leading-6 text-primary">{{ bio }}</p>
 </template>
 
 <script setup lang="ts">
@@ -10,8 +10,5 @@ defineProps<{
 }>()
 
 const userId = inject<Ref<string>>('user-id')!
-const {
-    isBlocked,
-} = useUserInfo(userId)
-
+const { isBlocked } = useUserInfo(userId)
 </script>

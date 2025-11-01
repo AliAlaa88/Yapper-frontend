@@ -1,5 +1,5 @@
 <template>
-    <div class="border-b border-[#2f3336] bg-black">
+    <div class="border-b border-primary bg-primary">
         <!-- Cover Image -->
         <CoverImage :cover-url="user?.cover_url ?? ''" />
 

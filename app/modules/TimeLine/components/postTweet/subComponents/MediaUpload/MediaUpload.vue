@@ -23,7 +23,7 @@
 
 <script setup>
 import { Image } from 'lucide-vue-next'
-import Tooltip from '~/modules/Common/components/toolTip'
+import Tooltip from '~/modules/Common/components/ToolTip'
 import { ref } from 'vue'
 
 const emit = defineEmits(['select'])
