@@ -4,7 +4,7 @@ import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
 
 export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig()
-    const isMockApi = config.public.mockApi === true
+    const isMockApi = config.public.mockApi.toString() === 'true'
     const apiBase = isMockApi ? 'http://localhost:3001' : (config.public.apiUrl as string)
 
     const yapperApi: AxiosInstance = axios.create({
@@ -29,7 +29,7 @@ export default defineNuxtPlugin(() => {
         },
         (error) => {
             return Promise.reject(error)
-        }
+        },
     )
 
     yapperApi.interceptors.response.use(
@@ -43,7 +43,7 @@ export default defineNuxtPlugin(() => {
                 }
             }
             return Promise.reject(error)
-        }
+        },
     )
 
     return {

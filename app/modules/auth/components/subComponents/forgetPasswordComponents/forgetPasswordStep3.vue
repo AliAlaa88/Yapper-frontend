@@ -3,7 +3,7 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -14,7 +14,7 @@
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">Reset Your Password</h2>
             <!-- Description -->
-            <p class="text-gray-400 mb-6">
+            <p class="text-muted mb-6">
                 Enter your new password below to reset your account password.
             </p>
 
@@ -24,7 +24,7 @@
                 type="password"
                 placeholder="enter your new password"
                 v-model="password"
-                class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
+                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
             />
 
             <input
@@ -32,14 +32,14 @@
                 type="password"
                 placeholder="verify your new password"
                 v-model="verifyPassword"
-                class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
+                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
             />
 
             <!-- Error Message -->
             <p
                 v-if="errorMessage"
                 id="error-message-forgot-password-s3"
-                class="text-red-500 text-sm mb-4"
+                class="text-red text-sm mb-4"
             >
                 {{ errorMessage }}
             </p>
@@ -47,7 +47,7 @@
             <!-- Next Button -->
             <button
                 id="button-reset-password-forgot-password-s3"
-                class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onFinish"
             >
                 Reset Password

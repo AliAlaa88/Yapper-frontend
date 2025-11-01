@@ -27,7 +27,7 @@
 
                     <button
                         data-testid="button-createAccount-authHome"
-                        class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-full w-full"
+                        class="bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200 w-full"
                         @click="goToSignup"
                     >
                         Create account

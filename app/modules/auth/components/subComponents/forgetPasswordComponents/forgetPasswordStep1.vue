@@ -3,7 +3,7 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -14,7 +14,7 @@
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">Find your X account</h2>
             <!-- Description -->
-            <p class="text-gray-400 mb-6">
+            <p class="text-muted mb-6">
                 Enter the email, phone number, or username associated with your account to change
                 your password.
             </p>
@@ -32,7 +32,7 @@
             <p
                 v-if="errorMessage"
                 id="error-message-forgot-password-s1"
-                class="text-red-500 text-sm mb-4"
+                class="text-red text-sm mb-4"
             >
                 {{ errorMessage }}
             </p>
@@ -40,7 +40,7 @@
             <!-- Next Button -->
             <button
                 id="button-next-forgot-password-s1"
-                class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onNext"
             >
                 Next
