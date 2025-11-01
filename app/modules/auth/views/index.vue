@@ -59,12 +59,6 @@ import { useRouter } from 'vue-router'
 import { isLoggedIn } from '~/utils/helpers'
 const router = useRouter()
 
-onBeforeMount(() => {
-    if (isLoggedIn()) {
-        return navigateTo('/')
-    }
-})
-
 const goToLogin = () => {
     console.log('Navigating to login')
     router.push('/auth/login')

@@ -3,7 +3,7 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -13,12 +13,12 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">Pick a profile picture</h2>
-            <p class="text-gray-400 mb-6">Have a favorite selfie? Upload it now.</p>
+            <p class="text-muted mb-6">Have a favorite selfie? Upload it now.</p>
 
             <!-- Profile Picture Preview -->
             <div class="flex justify-center mb-6">
                 <div
-                    class="relative w-32 h-32 rounded-full bg-gray-800 border-2 border-gray-600 overflow-hidden"
+                    class="relative w-32 h-32 rounded-full bg-primary border-2 border-primary overflow-hidden"
                 >
                     <img
                         v-if="previewImage"
@@ -26,10 +26,7 @@
                         alt="Profile Preview"
                         class="w-full h-full object-cover"
                     />
-                    <div
-                        v-else
-                        class="w-full h-full flex items-center justify-center text-gray-500"
-                    >
+                    <div v-else class="w-full h-full flex items-center justify-center text-muted">
                         <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
                             <path
                                 fill-rule="evenodd"
@@ -43,7 +40,7 @@
 
             <!-- Upload Button -->
             <label
-                class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3 cursor-pointer text-center"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200 text-center"
             >
                 <input
                     id="input-profile-picture-complete"
@@ -59,7 +56,7 @@
             <p
                 v-if="errorMessage"
                 id="error-message-profile-picture"
-                class="text-red-500 text-sm mb-4 text-center"
+                class="text-red text-sm mb-4 text-center"
             >
                 {{ errorMessage }}
             </p>
@@ -68,7 +65,7 @@
             <button
                 id="button-next-profile-picture"
                 v-if="previewImage"
-                class="w-full bg-blue-500 text-white font-semibold rounded-full py-2 hover:bg-blue-600 transition mb-3"
+                class="w-full bg-blue text-primary cursor-pointer font-semibold rounded-full py-2 hover:bg-hover-blue transition duration-200 mb-3"
                 @click="onNext"
             >
                 Next
@@ -77,7 +74,7 @@
             <!-- Skip Button -->
             <button
                 id="button-skip-profile-picture"
-                class="w-full text-gray-400 hover:text-white transition"
+                class="w-full text-muted cursor-pointer hover:text-primary transition duration-200"
                 @click="onSkip"
             >
                 Skip for now
