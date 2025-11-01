@@ -2,7 +2,8 @@
     <div v-if="!isBlocked" class="pb-3">
         <button
             id="follow-button"
-            class="cursor-pointer font-bold text-[15px] leading-[20px] flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200"
+            class="cursor-pointer font-bold text-[15px] leading-[20px] flex items-center
+            justify-center whitespace-nowrap rounded-full transition-colors duration-200"
             :class="buttonClass"
             @click="handleClick"
             @mouseover="handleMouseOver"

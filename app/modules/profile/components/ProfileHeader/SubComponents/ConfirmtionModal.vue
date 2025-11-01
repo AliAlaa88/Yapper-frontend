@@ -5,7 +5,8 @@
         @click="handleBackdropClick"
     >
         <div
-            class="bg-primary text-primary rounded-2xl p-7.5 w-[330px] shadow-lg space-y-4"
+            class="bg-primary text-primary rounded-2xl p-7.5 w-[330px] max-w-[90%]
+            sm:w-[330px] overflow-y-auto shadow-lg space-y-4"
             @click.stop
         >
             <div class="space-y-2">
