@@ -12,7 +12,10 @@
             >⋯</span
             >
         </button>
-        <ProfileActionsMenu />
+        <div v-if="showList">
+            <div class="fixed inset-0 bg-gray-700/50 z-40 sm:hidden" />
+            <ProfileActionsMenu />
+        </div>
     </div>
 </template>
 
