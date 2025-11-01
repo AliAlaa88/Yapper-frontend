@@ -43,6 +43,7 @@
 
         <div class="px-4">
             <button
+                id="cancel-menu-button"
                 class="w-full cursor-pointer border border-primary text-center font-semibold py-2.5
                 hover:bg-hover rounded-full transition mt-2 mb-3 text-primary sm:hidden"
                 @click="showList = false">
