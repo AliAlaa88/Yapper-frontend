@@ -3,7 +3,7 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -19,9 +19,9 @@
 
             <!-- OR Divider -->
             <div class="flex items-center my-4 w-full">
-                <div class="flex-1 h-px bg-gray-600"></div>
-                <span class="px-3 text-gray-400 text-sm">or</span>
-                <div class="flex-1 h-px bg-gray-600"></div>
+                <div class="flex-1 h-px bg-primary"></div>
+                <span class="px-3 text-primary text-sm">or</span>
+                <div class="flex-1 h-px bg-primary"></div>
             </div>
 
             <!-- Input -->
@@ -30,15 +30,15 @@
                 type="text"
                 placeholder="Phone, email, or username"
                 v-model="identifier"
-                class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
+                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
             />
-            <p v-if="errorMessage" id="error-message-login-s1" class="text-red-500 text-sm mb-4">
+            <p v-if="errorMessage" id="error-message-login-s1" class="text-red text-sm mb-4">
                 {{ errorMessage }}
             </p>
             <!-- Next Button -->
             <button
                 id="button-next-login-s1"
-                class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
                 @click="onNext"
             >
                 Next
@@ -47,17 +47,17 @@
             <!-- Forgot password -->
             <button
                 id="button-forgot-password-login"
-                class="w-full border border-gray-600 text-white rounded-full py-2 hover:bg-gray-800 transition mb-6"
+                class="w-full border border-primary bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-6"
                 @click="onForgotPassword"
             >
                 Forgot password?
             </button>
 
-            <p class="text-center text-gray-400 text-sm">
+            <p class="text-center text-primary text-sm">
                 Don't have an account?
                 <button
                     id="button-switch-to-signup"
-                    class="text-blue-400 hover:underline"
+                    class="text-blue hover:underline font-semibold cursor-pointer transition duration-200"
                     @click="$emit('switch')"
                 >
                     Sign up
