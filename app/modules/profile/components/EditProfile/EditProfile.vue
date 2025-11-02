@@ -5,7 +5,7 @@
         >
             <div
                 id="edit-profile-modal"
-                class="relative w-full max-w-[600px] bg-black rounded-2xl mx-4"
+                class="relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
                 @click.stop
             >
                 <EditProfileHeader

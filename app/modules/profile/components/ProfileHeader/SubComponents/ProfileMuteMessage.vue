@@ -1,14 +1,9 @@
 <template>
-    <div
-        v-if="showMuteMessage"
-        class="mt-3"
-    >
-        <span class="text-[#71767b] text-[15px]">
-            You have muted posts from this account.
-        </span>
+    <div v-if="showMuteMessage" class="mt-3">
+        <span class="text-muted text-[15px]"> You have muted posts from this account. </span>
         <span
             id="unmute-button"
-            class="cursor-pointer hover:underline text-blue-400"
+            class="cursor-pointer hover:underline text-blue"
             @click="handleClick"
         >
             Unmute
@@ -28,12 +23,15 @@ const showMuteMessage = ref(false)
 const userInteractions = useUserInteractions(userId)
 const { handleUnmuteWithConfirmation } = userInteractions
 
-watch(() => isMuted.value, (newVal) => {
-    if (newVal) {
-        console.log('muted new value from message', newVal)
-        showMuteMessage.value = true
-    } else showMuteMessage.value = false
-})
+watch(
+    () => isMuted.value,
+    (newVal) => {
+        if (newVal) {
+            console.log('muted new value from message', newVal)
+            showMuteMessage.value = true
+        } else showMuteMessage.value = false
+    },
+)
 
 function handleClick() {
     handleUnmuteWithConfirmation()
