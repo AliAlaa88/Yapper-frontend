@@ -17,8 +17,8 @@
             ></textarea>
             <!--  post footer -->
             <div class="flex flex-row justify-between items-center mt-4">
-                <ul class="flex flex-row gap-2">
-                    <li>
+                <ul class="flex flex-row gap-2 items-center">
+                    <li class="relative inline-flex">
                         <MediaUpload @select="handleSelectMedia" />
                     </li>
                     <li class="relative inline-flex">

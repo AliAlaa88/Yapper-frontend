@@ -6,7 +6,8 @@ export const tweetServiceReal = {
         const {$axios} = useNuxtApp()
         const response = await $axios.get(`${path}`)
         // Assuming the API returns tweets in the correct format already
-        const tweets: Tweet[] = response.data.data.data.filter((tweet: any) => tweet.tweet_id)
+        // console.log("Fetched Tweets Response:", response.data);
+        const tweets: Tweet[] = response.data.data.tweets.filter((tweet: any) => tweet.tweet_id)
         // console.log("Fetched Tweets:", tweets);                                                                                                                                                                             
         return tweets;
     },

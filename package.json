@@ -6,7 +6,7 @@
         "build": "nuxt build",
         "dev": "nuxt dev --port 3001",
         "generate": "nuxt generate",
-        "preview": "nuxt preview",
+        "preview": "nuxt preview --port 3001",
         "postinstall": "nuxt prepare",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",

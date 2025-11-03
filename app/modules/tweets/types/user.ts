@@ -7,8 +7,8 @@ interface User {
     is_following?: boolean
     link?: string
     bio?: string
-    followers_count?: number
-    following_count?: number
+    followers?: number
+    following?: number
 }
 
 export type { User }
