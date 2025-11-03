@@ -2,7 +2,7 @@ import { useUserActions } from './useUserActions'
 import type { useConfirmation } from './useConfirmation'
 import type { useSnackbar } from './useSnackbar'
 import { useUserInfo } from './useUserInfo'
-
+import { inject } from 'vue'
 
 export function useUserInteractions(userId: Ref<string | undefined>) {
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
@@ -62,8 +62,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         )
     }
 
-    function handleFollowAction() {
-        handleFollow()
+    async function handleFollowAction() {
+        try {
+            await handleFollow()
+        } catch (error) {
+            console.error('Failed to follow:', error)
+        }
     }
 
     async function handleMuteWithSnackbar(showList?: Ref<boolean>) {
@@ -103,7 +107,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
 
     function handleUnblockWithConfirmation(showList?: Ref<boolean>) {
         showConfirmation.value = true
-        if(showList) showList.value = false
+        if (showList) showList.value = false
         handleShowConfirmation(
             'Unblock',
             'Unblock',
@@ -135,7 +139,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             await handleUnmute()
             showSnackbar.value = true
             handleShowSnackbar(' has been unmuted.', username.value)
-        } catch(error) {
+        } catch (error) {
             console.error('failed to unmute: ', error)
         }
         if (showList) showList.value = false

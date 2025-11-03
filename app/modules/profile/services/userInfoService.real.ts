@@ -56,6 +56,9 @@ export const userInfoServiceReal = {
 
     async getUserByID(userId: string): Promise<OtherUser> {
         const { $axios } = useNuxtApp()
+        if (!userId) {
+            throw new Error('User ID is required')
+        }
         try {
             const response = await $axios.get<OtherUserApiResponse>(`/users/${userId}`)
             if (!response.data || !response.data.data) {
