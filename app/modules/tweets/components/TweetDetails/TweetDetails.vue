@@ -112,7 +112,7 @@ const {
 // Transform main tweet data
 const mainTweetUser = computed(() => {
   if (!tweetDetails.value) return null
-  console.log(tweetDetails.value);
+  // console.log(tweetDetails.value);
   return {
     ...tweetDetails.value.user,
     avatar: tweetDetails.value.user.avatar_url || `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`
