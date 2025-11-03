@@ -126,14 +126,14 @@ describe('useFollow Composable', () => {
                 isFollowing: false,
                 hover: false,
                 expectedText: 'Follow',
-                expectedClassContains: 'bg-[#F7F9F9]',
+                expectedClassContains: 'bg-alternate',
             },
             {
                 isFollower: true,
                 isFollowing: false,
                 hover: false,
                 expectedText: 'Follow back',
-                expectedClassContains: 'bg-[#F7F9F9]',
+                expectedClassContains: 'bg-alternate',
             },
             {
                 isFollower: false,
@@ -154,14 +154,14 @@ describe('useFollow Composable', () => {
                 isFollowing: true,
                 hover: true,
                 expectedText: 'Unfollow',
-                expectedClassContains: 'bg-red-500/10',
+                expectedClassContains: 'bg-red/10',
             },
             {
                 isFollower: true,
                 isFollowing: true,
                 hover: true,
                 expectedText: 'Unfollow',
-                expectedClassContains: 'bg-red-500/10',
+                expectedClassContains: 'bg-red/10',
             },
         ]
 
@@ -180,7 +180,6 @@ describe('useFollow Composable', () => {
                     } else {
                         handleMouseOut()
                     }
-
                     expect(buttonText.value).toBe(expectedText)
                     expect(buttonClass.value).toContain(expectedClassContains)
                 })

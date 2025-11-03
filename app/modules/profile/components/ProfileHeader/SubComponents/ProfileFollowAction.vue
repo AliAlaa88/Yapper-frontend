@@ -5,6 +5,7 @@
             class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
             justify-center whitespace-nowrap rounded-full transition-colors duration-200"
             :class="buttonClass"
+            :disabled="isFollowCooldown"
             @click="handleClick"
             @mouseover="handleMouseOver"
             @mouseout="handleMouseOut"
@@ -18,7 +19,8 @@
 import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
+
 const userId = inject<Ref<string>>('user-id')!
 const { isBlocked, isFollowing } = useUserInfo(userId)
 
@@ -26,9 +28,21 @@ const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(u
 
 const userInteractions = useUserInteractions(userId)
 const { handleFollowAction, handleUnfollowWithConfirmation } = userInteractions
+const isFollowCooldown = ref(false)
+const COOLDOWN_TIME = 2000
 
-function handleClick() {
-    if (!isFollowing.value) handleFollowAction()
-    else handleUnfollowWithConfirmation()
+async function handleClick() {
+    if (isFollowCooldown.value) return
+
+    if (!isFollowing.value) {
+        await handleFollowAction()
+
+        isFollowCooldown.value = true
+        setTimeout(() => {
+            isFollowCooldown.value = false
+        }, COOLDOWN_TIME)
+    } else {
+        handleUnfollowWithConfirmation()
+    }
 }
 </script>

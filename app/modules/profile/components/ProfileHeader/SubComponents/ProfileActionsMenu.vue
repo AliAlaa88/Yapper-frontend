@@ -57,7 +57,7 @@
 import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig } from 'lucide-vue-next'
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
 import type { Ref } from 'vue'
 const showList = inject<Ref<boolean>>('show-list')!
 

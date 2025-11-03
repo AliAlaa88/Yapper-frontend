@@ -47,6 +47,8 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
+
 interface ConfirmationState {
     username?: string
     header: string
@@ -68,8 +70,8 @@ function handleCancel() {
     showConfirmation.value = false
 }
 function handleConfirmAction() {
-    confirmData.value?.handleClick?.()
     showConfirmation.value = false
+    confirmData.value?.handleClick?.()
 }
 function handleBackdropClick() {
     showConfirmation.value = false
