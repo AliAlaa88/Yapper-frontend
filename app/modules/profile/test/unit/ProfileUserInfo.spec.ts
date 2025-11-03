@@ -7,14 +7,6 @@ const mockUsers = {
         name: 'Mohamed Hassan',
         username: 'mhassan123',
     },
-    user2: {
-        name: 'Nour Ahmed',
-        username: 'nourahmed90',
-    },
-    user3: {
-        name: 'Sara Ibrahim',
-        username: 'saraib',
-    },
 }
 
 describe('ProfileUserInfo Component', () => {
@@ -30,30 +22,6 @@ describe('ProfileUserInfo Component', () => {
         expect(wrapper.text()).toContain('@mhassan123')
     })
 
-    it('renders Nour Ahmed user info from db.json', () => {
-        const wrapper = mount(ProfileUserInfo, {
-            props: {
-                displayName: mockUsers.user2.name,
-                username: mockUsers.user2.username,
-            },
-        })
-
-        expect(wrapper.find('h1').text()).toBe('Nour Ahmed')
-        expect(wrapper.text()).toContain('@nourahmed90')
-    })
-
-    it('renders Sara Ibrahim user info from db.json', () => {
-        const wrapper = mount(ProfileUserInfo, {
-            props: {
-                displayName: mockUsers.user3.name,
-                username: mockUsers.user3.username,
-            },
-        })
-
-        expect(wrapper.find('h1').text()).toBe('Sara Ibrahim')
-        expect(wrapper.text()).toContain('@saraib')
-    })
-
     it('displays username with @ symbol', () => {
         const wrapper = mount(ProfileUserInfo, {
             props: {
@@ -64,6 +32,6 @@ describe('ProfileUserInfo Component', () => {
 
         const usernameElement = wrapper.find('p')
         expect(usernameElement.text()).toBe('@mhassan123')
-        expect(usernameElement.classes()).toContain('text-[#71767b]')
+        expect(usernameElement.classes()).toContain('text-muted')
     })
 })

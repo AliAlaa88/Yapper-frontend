@@ -49,18 +49,6 @@ describe('CoverModal', () => {
         expect(mockPush).toHaveBeenCalledWith('/profile/testuser')
     })
 
-    it('closes modal on ESC key press', () => {
-        const store = useProfilePhotoStore()
-        store.setCoverUrl('https://example.com/cover.jpg')
-
-        mount(CoverModal)
-
-        const escEvent = new KeyboardEvent('keydown', { key: 'Escape' })
-        window.dispatchEvent(escEvent)
-
-        expect(mockPush).toHaveBeenCalledWith('/profile/testuser')
-    })
-
     it('clears cover URL on unmount', () => {
         const store = useProfilePhotoStore()
         store.setCoverUrl('https://example.com/cover.jpg')

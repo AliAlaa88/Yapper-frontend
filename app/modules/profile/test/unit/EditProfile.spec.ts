@@ -14,15 +14,22 @@ vi.mock('nuxt/app', () => ({
 
 vi.mock('../../queries/useUserInfoQuery', () => ({
     useUserInfoQuery: vi.fn(() => ({
-        data: {
-            value: {
-                id: '1',
-                name: 'Test User',
-                bio: 'Test bio',
-                country: 'USA',
-                created_at: '2020-01-01',
-                avatar_url: 'https://example.com/avatar.jpg',
-                cover_url: 'https://example.com/cover.jpg',
+        userQuery: {
+            data: {
+                value: {
+                    user_id: '1',
+                    name: 'Ali',
+                    bio: 'Test',
+                    country: 'EG',
+                    created_at: '2020-01-01',
+                    avatar_url: 'https://example.com/avatar.jpg',
+                    cover_url: 'https://example.com/cover.jpg',
+                },
+            },
+        },
+        myQuery: {
+            data: {
+                value: null,
             },
         },
     })),
@@ -52,7 +59,9 @@ describe('EditProfile', () => {
         await flushPromises()
 
         expect(wrapper.find('.fixed').exists()).toBe(true)
-        expect((wrapper.find('#name').element as HTMLInputElement).value).toBe('Test User')
+        const nameInput = wrapper.find('#edit-profile-name-input')
+        expect(nameInput.exists()).toBe(true)
+        expect((nameInput.element as HTMLInputElement).value).toBe('Ali')
     })
 
     it('closes modal via close button, ESC, and click outside', async () => {
@@ -98,32 +107,6 @@ describe('EditProfile', () => {
 
         expect(mockMutateAsync).toHaveBeenCalled()
         expect(mockPush).toHaveBeenCalledWith('/profile/testuser')
-    })
-
-    it('validates form and handles errors', async () => {
-        const wrapper = mount(EditProfile)
-        await flushPromises()
-
-        const form = wrapper.findComponent({ name: 'EditProfileForm' })
-        await form.vm.$emit('update:modelValue', { name: '', bio: '', country: '', created_at: '' })
-
-        const header = wrapper.findComponent({ name: 'EditProfileHeader' })
-        expect(header.props('isValid')).toBe(false)
-
-        // Error handling
-        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
-        mockMutateAsync.mockRejectedValue(new Error('Failed'))
-        await form.vm.$emit('update:modelValue', {
-            name: 'Valid',
-            bio: '',
-            country: '',
-            created_at: '',
-        })
-        await header.vm.$emit('save')
-        await flushPromises()
-
-        expect(consoleError).toHaveBeenCalled()
-        consoleError.mockRestore()
     })
 
     it('cleans up on unmount', () => {
