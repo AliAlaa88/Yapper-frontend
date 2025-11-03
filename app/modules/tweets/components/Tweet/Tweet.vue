@@ -30,8 +30,8 @@
                                     :username="user.username"
                                     :avatar="user.avatar"
                                     :bio="user.bio"
-                                    :followers-count="user.followers_count"
-                                    :following-count="user.following_count"
+                                    :followers-count="user.followers"
+                                    :following-count="user.following"
                                 />
                             </TooltipContent>
                         </Tooltip>
@@ -70,7 +70,7 @@ const id = computed(() => props.tweet.tweet_id)
 // Transform content string to Content object
 const content = computed(() => ({
     text: props.tweet.content,
-    images: props.tweet.imgs || [],
+    images: props.tweet.images || [],
     videos: props.tweet.videos || []
 }))
 
