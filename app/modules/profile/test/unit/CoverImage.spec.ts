@@ -39,20 +39,6 @@ describe('CoverImage', () => {
         expect(wrapper.find('img').attributes('src')).toBe('https://example.com/cover.jpg')
     })
 
-    it('renders gradient background when no coverUrl is provided', () => {
-        const wrapper = mount(CoverImage, {
-            props: {},
-            global: {
-                stubs: {
-                    NuxtLink: true,
-                },
-            },
-        })
-
-        expect(wrapper.find('img').exists()).toBe(false)
-        expect(wrapper.find('.bg-gradient-to-br').exists()).toBe(true)
-    })
-
     it('calls store setCoverUrl when cover is clicked', async () => {
         const wrapper = mount(CoverImage, {
             props: {

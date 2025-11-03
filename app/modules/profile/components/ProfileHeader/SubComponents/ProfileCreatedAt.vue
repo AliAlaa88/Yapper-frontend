@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+import { inject } from 'vue'
 
 defineProps<{
     createdAt?: string

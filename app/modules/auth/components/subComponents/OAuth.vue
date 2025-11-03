@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRuntimeConfig } from '#app'
 const config = useRuntimeConfig()
 
 function googleSignUp() {

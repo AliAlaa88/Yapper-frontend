@@ -35,6 +35,5 @@ watch(
 
 function handleClick() {
     handleUnmuteWithConfirmation()
-    showMuteMessage.value = false
 }
 </script>
