@@ -85,11 +85,18 @@ jobs:
                       set -e
                       cd ~/yapper  # path to your app on VM
 
-                      echo "🧭 Getting current running image tag..."
-                      CURRENT_TAG=$(FRONT_IMG_TAG="" docker compose ps -q frontend | xargs docker inspect -f '{{ index .Config.Labels "com.docker.compose.image" }}' | cut -d':' -f2 || echo "unknown")
+                      echo "🧭 Getting current running front image tag..."
+                      FRONT_CURRENT_TAG=$(docker compose ps -q frontend | xargs docker inspect -f '{{ index .Config.Labels "com.docker.compose.image" }}' | cut -d':' -f2 || echo "unknown")
+
+                      echo "🧭 Getting current running api image tag..."
+                      CURRENT_TAG=$(docker compose ps -q api | xargs docker inspect -f '{{ index .Config.Labels "com.docker.compose.image" }}' | cut -d':' -f2 || echo "unknown")
+
+                      # Export current API tag for docker-compose to use
+                      export IMG_TAG=$CURRENT_TAG
 
                       echo "🐳 Setting new image tag for deployment..."
-                      echo "Deploying version: $FRONT_IMG_TAG"
+                      echo "Deploying frontend version: $FRONT_IMG_TAG"
+                      echo "Keeping API version: $IMG_TAG"
 
                       echo "🔄 Pulling new image and restarting app container..."
                       FRONT_IMG_TAG=$FRONT_IMG_TAG docker compose pull frontend
@@ -124,10 +131,10 @@ jobs:
                       if [ "$HEALTH_CHECK_PASSED" = "true" ]; then
                         echo "✅ Dev deployment successful for version $FRONT_IMG_TAG"
                       else
-                        echo "❌ Health check failed after $MAX_RETRIES retries! Rolling back app container..."
-                        if [ "$CURRENT_TAG" != "unknown" ]; then
-                          FRONT_IMG_TAG=$CURRENT_TAG docker compose up -d frontend
-                          echo "🔙 Rolled back to $CURRENT_TAG"
+                        echo "❌ Health check failed after $MAX_RETRIES retries! Rolling back frontend container..."
+                        if [ "$FRONT_CURRENT_TAG" != "unknown" ]; then
+                          FRONT_IMG_TAG=$FRONT_CURRENT_TAG IMG_TAG=$CURRENT_TAG docker compose up -d frontend
+                          echo "🔙 Rolled back frontend to $FRONT_CURRENT_TAG"
                         fi
                         exit 1
                       fi
