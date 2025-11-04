@@ -23,9 +23,7 @@ logs
 .env.*
 !.env.example
 bun.lock
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
-package-lock.json
 
 coverage
