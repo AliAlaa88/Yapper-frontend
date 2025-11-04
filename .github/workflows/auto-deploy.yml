@@ -17,7 +17,7 @@ jobs:
               id: get_tag
               run: |
                   # Fetch tags from Docker Hub (public API, no auth needed for public repos)
-                  REPO="${{ secrets.DOCKER_USERNAME }}/yapper-frontend"
+                  REPO="alialaa88/yapper-frontend"
 
                   echo "🔍 Fetching tags from Docker Hub for $REPO..."
 
@@ -64,13 +64,13 @@ jobs:
 
                   push: true
                   tags: |
-                      ${{ secrets.DOCKER_USERNAME }}/yapper-frontend:${{ steps.get_tag.outputs.new_tag }}
-                      ${{ secrets.DOCKER_USERNAME }}/yapper-frontend:dev
+                      alialaa88/yapper-frontend:${{ steps.get_tag.outputs.new_tag }}
+                      alialaa88/yapper-frontend:dev
 
             - name: Confirm image push
               run: |
-                  echo "✅ Image pushed: ${{ secrets.DOCKER_USERNAME }}/yapper-frontend:${{ steps.get_tag.outputs.new_tag }}"
-                  echo "✅ Image tagged: ${{ secrets.DOCKER_USERNAME }}/yapper-frontend:dev"
+                  echo "✅ Image pushed: alialaa88/yapper-frontend:${{ steps.get_tag.outputs.new_tag }}"
+                  echo "✅ Image tagged: alialaa88/yapper-frontend:dev"
 
             - name: SSH into Dev VM and deploy
               uses: appleboy/ssh-action@v1.0.0
@@ -86,13 +86,15 @@ jobs:
                       cd ~/yapper  # path to your app on VM
 
                       echo "🧭 Getting current running front image tag..."
-                      FRONT_CURRENT_TAG=$(docker compose ps -q frontend | xargs docker inspect -f '{{ index .Config.Labels "com.docker.compose.image" }}' | cut -d':' -f2 || echo "unknown")
+                      FRONT_CURRENT_TAG=$(docker compose ps frontend --format json | jq -r '.Image' | cut -d':' -f2 || echo "unknown")
 
                       echo "🧭 Getting current running api image tag..."
-                      CURRENT_TAG=$(docker compose ps -q api | xargs docker inspect -f '{{ index .Config.Labels "com.docker.compose.image" }}' | cut -d':' -f2 || echo "unknown")
+                      CURRENT_TAG=$(docker compose ps api --format json | jq -r '.Image' | cut -d':' -f2 || echo "unknown")
 
                       # Export current API tag for docker-compose to use
                       export IMG_TAG=$CURRENT_TAG
+
+                      echo "📋 Current tags - Frontend: $FRONT_CURRENT_TAG, API: $CURRENT_TAG"
 
                       echo "🐳 Setting new image tag for deployment..."
                       echo "Deploying frontend version: $FRONT_IMG_TAG"
