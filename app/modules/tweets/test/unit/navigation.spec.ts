@@ -66,17 +66,22 @@ describe('navigation utilities', () => {
   describe('getTweetUrl', () => {
     it('returns tweet URL with username and tweet ID', () => {
       const tweet: Tweet = {
-        id: 'tweet123',
-        content: { text: 'Hello world', images: [], videos: [] },
+        tweet_id: 'tweet123',
+        content: 'Hello world',
+        images: [],
+        videos: [],
         user: {
           id: 'user1',
           name: 'John Doe',
           username: 'johndoe',
-          avatar: '/avatar.jpg',
+          avatar_url: '/avatar.jpg',
+          verified : false
         },
-        stats: { likes: 0, replies: 0, retweets: 0 },
+        likes_count: 0,
+        replies_count: 0,
+        reposts_count: 0,
         type: 'tweet',
-        createdAt: '2025-10-17T12:00:00.000Z',
+        created_at: '2025-10-17T12:00:00.000Z',
       }
 
       expect(getTweetUrl(tweet)).toBe('/johndoe/status/tweet123')
@@ -138,17 +143,20 @@ describe('navigation utilities', () => {
 
     it('works with reply type tweets', () => {
       const tweet: Tweet = {
-        id: 'reply123',
-        content: { text: 'Reply message', images: [], videos: [] },
+        tweet_id: 'reply123',
+        content:  'Reply message',
         user: {
           id: 'user2',
           name: 'Jane Smith',
           username: 'janesmith',
-          avatar: '/avatar2.jpg',
+          avatar_url: '/avatar2.jpg',
+          verified : true
         },
-        stats: { likes: 5, replies: 0, retweets: 0 },
+        likes_count: 5,
+        replies_count: 2,
+        reposts_count: 1,
         type: 'reply',
-        createdAt: '2025-10-17T12:00:00.000Z',
+        created_at: '2025-10-17T12:00:00.000Z',
       }
 
       expect(getTweetUrl(tweet)).toBe('/janesmith/status/reply123')
