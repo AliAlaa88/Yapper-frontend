@@ -65,9 +65,9 @@
                     />
                 </TooltipContent>
             </Tooltip>
-            <span class="text-[var(--color-x-gray-dark)] text-[15px]">@{{ username }}</span>
-            <span class="text-[var(--color-x-gray-dark)] text-[15px]">·</span>
-            <span class="text-[var(--color-x-gray-dark)] text-[15px] hover:underline cursor-pointer">
+            <span class="text-x-gray-dark text-[15px]">@{{ username }}</span>
+            <span class="text-x-gray-dark text-[15px]">·</span>
+            <span class="text-x-gray-dark text-[15px] hover:underline cursor-pointer">
                 {{ formatDate(createdAt) }}
             </span>
         </div>
@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
-import type { User as UserType } from '../../../../types'
+import type { User as UserType } from '../../../../../Common/types/user'
 import { formatDate } from '../../../../utils/lib'
 import { getProfileUrl } from '../../../../utils/navigation'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip'

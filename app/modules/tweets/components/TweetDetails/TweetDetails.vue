@@ -158,7 +158,7 @@ const transformedReplies = computed(() => {
       retweets: reply.reposts_count,
       views: reply.views_count
     },
-    createdAt: reply.createdAt
+    createdAt: reply.created_at
   }))
 })
 
