@@ -9,8 +9,9 @@ describe('navigation utilities', () => {
         id: 'user1',
         name: 'John Doe',
         username: 'johndoe',
-        avatar: '/avatar.jpg',
+        avatar_url: '/avatar.jpg',
         link: '/custom/profile/link',
+        verified:false,
       }
 
       expect(getProfileUrl(user)).toBe('/custom/profile/link')
@@ -21,7 +22,8 @@ describe('navigation utilities', () => {
         id: 'user1',
         name: 'John Doe',
         username: 'johndoe',
-        avatar: '/avatar.jpg',
+        avatar_url: '/avatar.jpg',
+        verified:false,
       }
 
       expect(getProfileUrl(user)).toBe('/profile/johndoe')
@@ -32,7 +34,8 @@ describe('navigation utilities', () => {
         id: 'user1',
         name: 'John Doe',
         username: '',
-        avatar: '/avatar.jpg',
+        avatar_url: '/avatar.jpg',
+        verified:false,
       }
 
       expect(getProfileUrl(user)).toBe('#')
@@ -43,8 +46,9 @@ describe('navigation utilities', () => {
         id: 'user1',
         name: 'John Doe',
         username: 'johndoe',
-        avatar: '/avatar.jpg',
+        avatar_url: '/avatar.jpg',
         link: '',
+        verified:false,
       }
 
       expect(getProfileUrl(user)).toBe('/profile/johndoe')
@@ -55,8 +59,9 @@ describe('navigation utilities', () => {
         id: 'user1',
         name: 'John Doe',
         username: 'johndoe',
-        avatar: '/avatar.jpg',
+        avatar_url: '/avatar.jpg',
         link: '/external/profile',
+        verified:false,
       }
 
       expect(getProfileUrl(user)).toBe('/external/profile')
@@ -82,6 +87,10 @@ describe('navigation utilities', () => {
         reposts_count: 0,
         type: 'tweet',
         created_at: '2025-10-17T12:00:00.000Z',
+        views_count: 0,
+        qoutes_count: 0,
+        is_liked: false,
+        is_reposted: false,
       }
 
       expect(getTweetUrl(tweet)).toBe('/johndoe/status/tweet123')
@@ -89,17 +98,25 @@ describe('navigation utilities', () => {
 
     it('returns # when tweet has no username', () => {
       const tweet: Tweet = {
-        id: 'tweet123',
-        content: { text: 'Hello world', images: [], videos: [] },
+        tweet_id: 'tweet123',
+        content: 'Hello world',
+        images: [], videos: [],
         user: {
           id: 'user1',
           name: 'John Doe',
           username: '',
-          avatar: '/avatar.jpg',
+          avatar_url: '/avatar.jpg',
+          verified:false,
         },
-        stats: { likes: 0, replies: 0, retweets: 0 },
+        likes_count: 0,
+        replies_count: 0,
+        reposts_count: 0,
         type: 'tweet',
-        createdAt: '2025-10-17T12:00:00.000Z',
+        created_at: '2025-10-17T12:00:00.000Z',
+        views_count: 0,
+        qoutes_count: 0,
+        is_liked: false,
+        is_reposted: false,
       }
 
       expect(getTweetUrl(tweet)).toBe('#')
@@ -107,17 +124,25 @@ describe('navigation utilities', () => {
 
     it('returns # when tweet has no ID', () => {
       const tweet: Tweet = {
-        id: '',
-        content: { text: 'Hello world', images: [], videos: [] },
+        tweet_id: '',
+        content: 'Hello world',
+        images: [], videos: [],
         user: {
           id: 'user1',
           name: 'John Doe',
           username: 'johndoe',
-          avatar: '/avatar.jpg',
+          avatar_url: '/avatar.jpg',
+          verified:false,
         },
-        stats: { likes: 0, replies: 0, retweets: 0 },
+        likes_count: 0,
+        replies_count: 0,
+        reposts_count: 0,
         type: 'tweet',
-        createdAt: '2025-10-17T12:00:00.000Z',
+        created_at: '2025-10-17T12:00:00.000Z',
+        views_count: 0,
+        qoutes_count: 0,
+        is_liked: false,
+        is_reposted: false,
       }
 
       expect(getTweetUrl(tweet)).toBe('#')
@@ -125,17 +150,25 @@ describe('navigation utilities', () => {
 
     it('returns # when both username and ID are missing', () => {
       const tweet: Tweet = {
-        id: '',
-        content: { text: 'Hello world', images: [], videos: [] },
+        tweet_id: '',
+        content: 'Hello world',
+        images: [], videos: [],
         user: {
           id: 'user1',
           name: 'John Doe',
           username: '',
-          avatar: '/avatar.jpg',
+          avatar_url: '/avatar.jpg',
+          verified:false,
         },
-        stats: { likes: 0, replies: 0, retweets: 0 },
+        likes_count: 0,
+        replies_count: 0,
+        reposts_count: 0,
         type: 'tweet',
-        createdAt: '2025-10-17T12:00:00.000Z',
+        created_at: '2025-10-17T12:00:00.000Z',
+        views_count: 0,
+        qoutes_count: 0,
+        is_liked: false,
+        is_reposted: false,
       }
 
       expect(getTweetUrl(tweet)).toBe('#')
@@ -157,6 +190,10 @@ describe('navigation utilities', () => {
         reposts_count: 1,
         type: 'reply',
         created_at: '2025-10-17T12:00:00.000Z',
+        views_count: 50,
+        qoutes_count: 0,
+        is_liked: false,
+        is_reposted: false,
       }
 
       expect(getTweetUrl(tweet)).toBe('/janesmith/status/reply123')
