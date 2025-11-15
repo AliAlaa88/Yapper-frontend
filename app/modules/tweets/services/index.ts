@@ -5,10 +5,7 @@ import { useRuntimeConfig } from '#app'
 
 export const createTweetService = () => {
     const config = useRuntimeConfig()
-    const mockApi = config.public.mockApi
-    const isMock = mockApi === 'true' || (mockApi as any) === true
-
-    // console.log('[createTweetService] mock mode:', isMock)
+    const isMock = config.public.mockApi.toString() === 'true'
 
     return isMock ? tweetServiceMock : tweetServiceReal
 }

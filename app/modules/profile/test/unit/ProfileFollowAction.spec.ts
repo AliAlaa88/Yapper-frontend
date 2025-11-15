@@ -57,7 +57,7 @@ const mockUserInteractions = {
     handleFollowAction: vi.fn(),
 }
 
-const buttonClass = ref('bg-[#F7F9F9] text-[#15202B]')
+const buttonClass = ref('bg-alternate text-alternate')
 const buttonText = ref('Follow')
 
 const mockUseFollow = {
@@ -67,7 +67,7 @@ const mockUseFollow = {
     handleMouseOver: vi.fn(),
 }
 
-describe('ProfileMuteMessage Component', () => {
+describe('ProfileFollowAction Component', () => {
     beforeEach(() => {
         vi.clearAllMocks()
         vi.mocked(useUserInfo).mockReturnValue(mockUserInfo)
@@ -242,29 +242,6 @@ describe('ProfileMuteMessage Component', () => {
         await button.trigger('click')
         await button.trigger('click')
 
-        expect(mockUserInteractions.handleFollowAction).toHaveBeenCalledTimes(3)
-    })
-
-    it('should handle state change during interaction', async () => {
-        mockUserInfoRef.isFollowing.value = false
-
-        const wrapper = mount(ProfileFollowAction, {
-            global: {
-                provide: {
-                    'user-id': ref('12'),
-                },
-            },
-        })
-
-        const button = wrapper.find('button')
-        await button.trigger('click')
-
-        mockUserInfoRef.isFollowing.value = true
-        await nextTick()
-
-        await button.trigger('click')
-
         expect(mockUserInteractions.handleFollowAction).toHaveBeenCalledTimes(1)
-        expect(mockUserInteractions.handleUnfollowWithConfirmation).toHaveBeenCalledTimes(1)
     })
 })

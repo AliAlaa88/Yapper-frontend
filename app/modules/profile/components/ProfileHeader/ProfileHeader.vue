@@ -1,21 +1,21 @@
 <template>
-    <div class="border-b border-[#2f3336] bg-black">
+    <div class="border-b border-primary bg-primary">
         <!-- Cover Image -->
         <CoverImage :cover-url="user?.cover_url ?? ''" />
 
         <!-- Profile Info -->
         <div class="px-4">
-            <div class="-mt-[70px] mb-3 flex items-end justify-between">
+            <div class="-mt-[70px] mb-3 flex items-end justify-between flex-wrap gap-2">
                 <!-- Avatar -->
                 <ProfileAvatar
                     :avatar-url="user?.avatar_url ?? ''"
                     :display-name="user?.name ?? ''"
                 />
-                <div v-if="isMe" class="flex gap-3">
+                <div v-if="isMee" class="flex gap-3">
                     <ProfileEditButton />
                 </div>
                 <!-- Actions -->
-                <div v-else class="flex gap-3">
+                <div v-else class="flex flex-wrap gap-3">
                     <ProfileActions v-if="user?.user_id" />
                     <!-- TODO: Add the chat icon here later -->
 
@@ -55,13 +55,21 @@ import ProfileStats from './SubComponents/ProfileStats.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
 import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
 import { useMe } from '../../composables/useMe'
 
 const route = useRoute()
 const username = route.params.username as string
-const { isMe } = useMe(username)
-const { userQuery } = useUserInfoQuery(username)
-const user = computed(() => userQuery.data.value)
+const { userQuery, myQuery } = useUserInfoQuery(username)
+const { isMe: isMeComputed } = useMe(username)
+const isMee = computed(() => isMeComputed.value)
+
+const user = computed(() => {
+    if (isMee.value) {
+        return myQuery.data.value
+    }
+    return userQuery.data.value
+})
 </script>

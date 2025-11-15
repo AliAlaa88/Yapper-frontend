@@ -8,7 +8,7 @@ interface Tweet {
     type: TweetType
     parent_tweet_id?: string
     content: string
-    imgs?: string[]
+    images?: string[]
     videos?: string[]
     gifs?: string[]
     likes_count: number

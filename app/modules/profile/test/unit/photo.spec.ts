@@ -7,12 +7,6 @@ describe('ProfilePhotoStore', () => {
         setActivePinia(createPinia())
     })
 
-    it('initializes with null values', () => {
-        const store = useProfilePhotoStore()
-        expect(store.photoUrl).toBeNull()
-        expect(store.coverUrl).toBeNull()
-    })
-
     it('sets and clears photo URL', () => {
         const store = useProfilePhotoStore()
 

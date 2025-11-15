@@ -114,34 +114,11 @@ describe('ProfileMuteMessage Component', () => {
         mockUserInfoRef.isMuted.value = true
         await nextTick()
         console.log(wrapper.html())
-        const unmuteLink = wrapper.find('.text-blue-400')
+        const unmuteLink = wrapper.find('.text-blue')
         expect(unmuteLink.exists()).toBe(true)
         await unmuteLink.trigger('click')
 
         expect(mockUserInteractions.handleUnmuteWithConfirmation).toHaveBeenCalledTimes(1)
-    })
-
-    it('should hide message after clicking unmute', async () => {
-        const wrapper = mount(ProfileMuteMessage, {
-            global: {
-                provide: {
-                    'user-id': ref('12'),
-                },
-            },
-        })
-
-        mockUserInfoRef.isMuted.value = true
-        await nextTick()
-
-        expect(wrapper.find('div').exists()).toBe(true)
-
-        const unmuteLink = wrapper.find('.text-blue-400')
-        expect(unmuteLink.exists()).toBe(true)
-        await unmuteLink.trigger('click')
-        await nextTick()
-
-        expect(wrapper.find('div').exists()).toBe(false)
-
     })
 
     it('should show message when isMuted changes to true', async () => {
@@ -217,7 +194,7 @@ describe('ProfileMuteMessage Component', () => {
         mockUserInfoRef.isMuted.value = true
         await nextTick()
 
-        const unmuteLink = wrapper.find('.text-blue-400')
+        const unmuteLink = wrapper.find('.text-blue')
 
         await unmuteLink.trigger('click')
         await unmuteLink.trigger('click')

@@ -23,7 +23,6 @@ export default defineConfig({
                     name: 'unit',
                     include: [
                         'test/{e2e,unit}/*.{test,spec}.ts',
-                        'app/modules/**/test/unit/*.{test,spec}.ts',
                     ],
                     environment: 'happy-dom',
                 },

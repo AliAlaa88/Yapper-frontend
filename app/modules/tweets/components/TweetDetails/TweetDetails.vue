@@ -40,7 +40,7 @@
           <div class="flex gap-3">
             <!-- Avatar column -->
             <div class="shrink-0">
-              <img :id="`reply-avatar-${reply.id}`" :src="reply.user.avatar" :alt="reply.user.name" class="w-10 h-10 rounded-full" />
+              <img :id="`reply-avatar-${reply.id}`" :src="reply.user.avatar_url" :alt="reply.user.name" class="w-10 h-10 rounded-full" />
             </div>
             <!-- Content column -->
             <div class="flex-1 min-w-0">
@@ -112,6 +112,7 @@ const {
 // Transform main tweet data
 const mainTweetUser = computed(() => {
   if (!tweetDetails.value) return null
+  // console.log(tweetDetails.value);
   return {
     ...tweetDetails.value.user,
     avatar: tweetDetails.value.user.avatar_url || `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`
@@ -122,7 +123,7 @@ const mainTweetContent = computed(() => {
   if (!tweetDetails.value) return null
   return {
     text: tweetDetails.value.content,
-    images: tweetDetails.value.imgs || [],
+    images: tweetDetails.value.images || [],
     videos: tweetDetails.value.videos || []
   }
 })

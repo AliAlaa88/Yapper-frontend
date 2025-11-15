@@ -5,7 +5,7 @@
         >
             <div
                 id="edit-profile-modal"
-                class="relative w-full max-w-[600px] bg-black rounded-2xl mx-4"
+                class="relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
                 @click.stop
             >
                 <EditProfileHeader
@@ -66,7 +66,7 @@ const route = useRoute()
 const router = useRouter()
 
 const username = route.params.username as string
-const userQuery = useUserInfoQuery(username)
+const { userQuery } = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
 
 const photoStore = useProfilePhotoStore()
@@ -83,8 +83,8 @@ const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
 
 // Edit profile mutation - will be initialized when user is available
-const userId = computed(() => user.value?.id || '')
-const editProfileMutation = useEditProfileMutation(userId.value, username)
+const userId = computed(() => user.value?.user_id || '')
+const editProfileMutation = useEditProfileMutation(userId.value)
 
 const isSaving = computed(() => editProfileMutation.isPending.value)
 

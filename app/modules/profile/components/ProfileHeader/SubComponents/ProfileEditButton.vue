@@ -1,6 +1,6 @@
 <template>
     <button
-        class="cursor-pointer font-bold text-[15px] leading-[20px] flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200 bg-transparent border-[0.1px] border-white/40 text-white px-[53px] py-[10px] w-[88px] h-[36px] hover:bg-white/10"
+        class="cursor-pointer font-bold text-[15px] leading-[20px] flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200 bg-transparent border-[0.1px] border-primary text-primary px-[53px] py-[10px] w-[88px] h-[36px] hover:bg-hover"
         @click="handleEditProfile"
     >
         Edit profile

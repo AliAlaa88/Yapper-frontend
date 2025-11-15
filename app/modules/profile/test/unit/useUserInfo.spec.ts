@@ -14,7 +14,7 @@ describe('useUserInfo', () => {
 
     it('should return data when available', () => {
         const mockUser = {
-            id: '12',
+            user_id: '12',
             username: 'hagar',
             is_follower: true,
             is_following: false,
@@ -55,7 +55,7 @@ describe('useUserInfo', () => {
 
     it('should be reactive to user data changes', () => {
         const mockUser = ref({
-            id: '12',
+            user_id: '12',
             username: 'hagar',
             is_follower: true,
             is_following: false,
@@ -93,7 +93,7 @@ describe('useUserInfo', () => {
 
     it('should handle partial data', () => {
         const mockUser = {
-            id: '12',
+            user_id: '12',
             username: 'hagar',
         }
 

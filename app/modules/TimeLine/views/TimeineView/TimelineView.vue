@@ -2,7 +2,10 @@
     <div class="flex flex-col w-full">
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
         <PostTweet :border="true" />
-        <TweetsList fetchingSource="tweets" class="w-full" />
+        <TweetsList
+            :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/for-you'}`"
+            class="w-full"
+        />
     </div>
 </template>
 
@@ -38,14 +41,4 @@ const activeTab = ref('foryou')
 function handleChange(tab: string) {
     activeTab.value = tab
 }
-
-// onMounted(() => {
-//     const userStore = useUserStore()
-//     const home = 'home'
-//     if (!userStore.isLoggedIn) {
-//         router.push(`/${home}`)
-//     } else {
-//         router.push('/auth')
-//     }
-// })
 </script>

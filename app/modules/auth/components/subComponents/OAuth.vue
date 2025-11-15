@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-3 max-w-90">
+    <div class="flex flex-col gap-3">
         <button
             id="button-google-oauth"
             class="flex items-center justify-center gap-2 border border-gray-600 text-black bg-white font-semibold py-2.5 rounded-full w-full hover:bg-gray-200 transition"
@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRuntimeConfig } from '#app'
 const config = useRuntimeConfig()
 
 function googleSignUp() {

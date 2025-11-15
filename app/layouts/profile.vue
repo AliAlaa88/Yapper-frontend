@@ -19,6 +19,7 @@ import { useSnackbar } from '../modules/profile/composables/useSnackbar'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useConfirmation } from '~/modules/profile/composables/useConfirmation'
 import { useUserInfoQuery } from '~/modules/profile/queries/useUserInfoQuery'
+import { provide, computed } from 'vue'
 
 const confirmation = useConfirmation()
 provide('confirmation', confirmation)
