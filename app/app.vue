@@ -1,12 +1,15 @@
 <template>
-    <div :dir="currentDirection" :lang="currentLocale" class="bg-x-bg-dark">
+    <div :dir="currentDirection" :lang="currentLocale" class="bg-primary">
         <NuxtLayout class="w-full">
+            <StyleButton />
             <NuxtPage />
         </NuxtLayout>
     </div>
 </template>
 
 <script setup lang="ts">
+import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
+
 const { locale, locales } = useI18n()
 
 const currentLocale = computed(() => locale.value)
