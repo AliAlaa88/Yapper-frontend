@@ -1,7 +1,7 @@
 <template>
     <div :dir="currentDirection" :lang="currentLocale" class="bg-primary">
+        <StyleButton />
         <NuxtLayout class="w-full">
-            <StyleButton />
             <NuxtPage />
         </NuxtLayout>
     </div>
