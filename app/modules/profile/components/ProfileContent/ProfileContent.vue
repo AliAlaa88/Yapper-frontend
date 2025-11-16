@@ -14,8 +14,8 @@
             <div v-if="currentTab === 'posts'" class="bg-primary">
                 <EmptyState
                     icon="📝"
-                    title="No posts yet"
-                    description="When this user posts, they'll show up here."
+                    :title="t('profile.emptyState.noPosts.title')"
+                    :description="t('profile.emptyState.noPosts.description')"
                 />
             </div>
 
@@ -23,8 +23,8 @@
             <div v-else-if="currentTab === 'replies'" class="bg-primary">
                 <EmptyState
                     icon="💬"
-                    title="No replies yet"
-                    description="When this user replies to posts, they'll show up here."
+                    :title="t('profile.emptyState.noReplies.title')"
+                    :description="t('profile.emptyState.noReplies.description')"
                 />
             </div>
 
@@ -32,8 +32,8 @@
             <div v-else-if="currentTab === 'media'" class="bg-primary">
                 <EmptyState
                     icon="📷"
-                    title="No media yet"
-                    description="Photos and videos will appear here."
+                    :title="t('profile.emptyState.noMedia.title')"
+                    :description="t('profile.emptyState.noMedia.description')"
                 />
             </div>
 
@@ -41,8 +41,8 @@
             <div v-else-if="currentTab === 'likes'" class="bg-primary">
                 <EmptyState
                     icon="❤️"
-                    title="No likes yet"
-                    description="When this user likes posts, they'll show up here."
+                    :title="t('profile.emptyState.noLikes.title')"
+                    :description="t('profile.emptyState.noLikes.description')"
                 />
             </div>
         </div>
@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 import EmptyState from './SubComponents/EmptyState.vue'
 import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
@@ -72,12 +73,14 @@ const currentTab = computed(() => {
     return 'posts' // default
 })
 
-const tabsConfig = [
-    { label: 'Posts', value: 'posts', test_id: 'tab-posts' },
-    { label: 'Replies', value: 'replies', test_id: 'tab-replies' },
-    { label: 'Media', value: 'media', test_id: 'tab-media' },
-    { label: 'Likes', value: 'likes', test_id: 'tab-likes' },
-]
+const { t } = useI18n()
+
+const tabsConfig = computed(() => [
+    { label: t('profile.tabs.posts'), value: 'posts', test_id: 'tab-posts' },
+    { label: t('profile.tabs.replies'), value: 'replies', test_id: 'tab-replies' },
+    { label: t('profile.tabs.media'), value: 'media', test_id: 'tab-media' },
+    { label: t('profile.tabs.likes'), value: 'likes', test_id: 'tab-likes' },
+])
 
 const handleTabChange = (tab: string) => {
     // Split current path

@@ -16,7 +16,7 @@
             @click="handleMuteAndUnmute">
             <MegaphoneOff v-if="!isMuted" class="w-4 h-4 mr-3" />
             <Megaphone v-else class="w-4 h-4 mr-3" />
-            {{ isMuted ? 'Unmute' : 'Mute' }}
+            {{ isMuted ? $t('profile.unmuteButton') : $t('profile.muteButton') }}
         </button>
 
         <button
@@ -26,7 +26,7 @@
             hover:bg-hover transition flex items-center cursor-pointer"
             @click="handleRemove">
             <UserRoundX class="w-4 h-4 mr-3" />
-            Remove this follower
+            {{ $t('profile.removeFollowerButton') }}
         </button>
 
         <button
@@ -36,7 +36,7 @@
             @click="handleBlockAndUnblock">
             <Ban v-if="!isBlocked" class="w-4 h-4 mr-3" />
             <CircleCheckBig v-else class="w-4 h-4 mr-3" />
-            {{ isBlocked ? 'Unblock' : 'Block' }}
+            {{ isBlocked ? $t('profile.unblockButton') : $t('profile.blockButton') }}
             <span class="font-normal ml-1">@</span>
             {{ username }}
         </button>
@@ -47,7 +47,7 @@
                 class="w-full cursor-pointer border border-primary text-center font-semibold py-2.5
                 hover:bg-hover rounded-full transition mt-2 mb-3 text-primary sm:hidden"
                 @click="showList = false">
-                Cancel
+                {{ $t('profile.cancelButton') }}
             </button>
         </div>
     </div>

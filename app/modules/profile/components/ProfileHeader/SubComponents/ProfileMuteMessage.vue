@@ -1,12 +1,12 @@
 <template>
     <div v-if="showMuteMessage" class="mt-3">
-        <span class="text-muted text-[15px]"> You have muted posts from this account. </span>
+        <span class="text-muted text-[15px]">{{ $t('profile.muted.message') }}</span>
         <span
             id="unmute-button"
             class="cursor-pointer hover:underline text-blue"
             @click="handleClick"
         >
-            Unmute
+            {{ $t('profile.muted.action') }}
         </span>
     </div>
 </template>

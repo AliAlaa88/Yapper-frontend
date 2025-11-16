@@ -1,8 +1,11 @@
 import { useUserInfo } from './useUserInfo'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 export function useFollow(userId: Ref<string | undefined>) {
     const { isFollower, isFollowing} = useUserInfo(userId)
     const hover = ref(false)
+    const { t } = useI18n()
 
     function handleMouseOver() {
         if (isFollowing.value) hover.value = true
@@ -13,10 +16,10 @@ export function useFollow(userId: Ref<string | undefined>) {
     }
 
     const buttonText = computed(() => {
-        if (isFollower.value && !isFollowing.value) return 'Follow back'
-        else if (!isFollower.value && !isFollowing.value) return 'Follow'
-        else if (isFollowing.value && !hover.value) return 'Following'
-        else if (isFollowing.value && hover.value) return 'Unfollow'
+        if (isFollower.value && !isFollowing.value) return t('profile.followBackButton')
+        else if (!isFollower.value && !isFollowing.value) return t('profile.followButton')
+        else if (isFollowing.value && !hover.value) return t('profile.followingButton')
+        else if (isFollowing.value && hover.value) return t('profile.unfollowButton')
         else return 'undefined'
     })
 

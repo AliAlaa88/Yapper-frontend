@@ -5,12 +5,13 @@
                 for="edit-profile-name-input"
                 class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
-                Name
+                {{ $t('profile.name') }}
             </label>
             <input
                 id="edit-profile-name-input"
                 :value="modelValue.name"
                 type="text"
+                :placeholder="$t('profile.editProfileModal.namePlaceholder')"
                 class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
@@ -26,12 +27,13 @@
                 for="edit-profile-bio-input"
                 class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
-                Bio
+                {{ $t('profile.bio') }}
             </label>
             <textarea
                 id="edit-profile-bio-input"
                 :value="modelValue.bio"
                 rows="3"
+                :placeholder="$t('profile.editProfileModal.bioPlaceholder')"
                 class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
@@ -47,12 +49,13 @@
                 for="edit-profile-location-input"
                 class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
-                Location
+                {{ $t('profile.location') }}
             </label>
             <input
                 id="edit-profile-location-input"
                 :value="modelValue.country"
                 type="text"
+                :placeholder="$t('profile.editProfileModal.locationPlaceholder')"
                 class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
@@ -68,7 +71,7 @@
                 for="edit-profile-birthdate-input"
                 class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
-                Birth date
+                {{ $t('profile.birthDate') }}
             </label>
             <input
                 id="edit-profile-birthdate-input"

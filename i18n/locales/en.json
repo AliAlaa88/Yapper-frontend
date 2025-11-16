@@ -44,6 +44,112 @@
         "profile": "Profile",
         "settings": "Settings",
         "logout": "Logout"
+    },
+    "profile": {
+        "editProfile": "Edit Profile",
+        "saveChanges": "Save",
+        "name": "Name",
+        "bio": "Bio",
+        "location": "Location",
+        "website": "Website",
+        "birthDate": "Birth date",
+        "joinDate": "Joined",
+        "following": "Following",
+        "followers": "Followers",
+        "tweets": "Posts",
+        "tweetsAndReplies": "Posts & replies",
+        "media": "Media",
+        "likes": "Likes",
+        "followButton": "Follow",
+        "followBackButton": "Follow back",
+        "followingButton": "Following",
+        "unfollowButton": "Unfollow",
+        "messageButton": "Message",
+        "muteButton": "Mute",
+        "unmuteButton": "Unmute",
+        "blockButton": "Block",
+        "unblockButton": "Unblock",
+        "removeFollowerButton": "Remove this follower",
+        "cancelButton": "Cancel",
+        "tabs": {
+            "posts": "Posts",
+            "replies": "Replies",
+            "media": "Media",
+            "likes": "Likes"
+        },
+        "emptyState": {
+            "noPosts": {
+                "title": "No posts yet",
+                "description": "When this user posts, they'll show up here."
+            },
+            "noReplies": {
+                "title": "No replies yet",
+                "description": "When this user replies to posts, they'll show up here."
+            },
+            "noMedia": {
+                "title": "No media yet",
+                "description": "Photos and videos will appear here."
+            },
+            "noLikes": {
+                "title": "No likes yet",
+                "description": "When this user likes posts, they'll show up here."
+            }
+        },
+        "blocked": {
+            "title": "@{username} is blocked",
+            "description": "Are you sure you want to view these posts? Viewing posts won't unblock @{username}."
+        },
+        "muted": {
+            "message": "You have muted posts from this account.",
+            "action": "Unmute"
+        },
+        "actions": {
+            "block": {
+                "title": "Block",
+                "button": "Block",
+                "description": "They will be able to see your public posts, but will no longer be able to engage with them. @{username} will also not be able to follow or message you, and you will not see notifications from them.",
+                "snackbar": "Successfully blocked.",
+                "undoButton": "Unblock"
+            },
+            "unblock": {
+                "title": "Unblock",
+                "button": "Unblock",
+                "description": "They will be able to follow you and engage with your public posts."
+            },
+            "unfollow": {
+                "title": "Unfollow",
+                "button": "Unfollow",
+                "description": "Their posts will no longer show up in your Following timeline. You can still view their profile, unless their posts are protected."
+            },
+            "mute": {
+                "snackbar": "{username} has been muted.",
+                "undoButton": "Undo"
+            },
+            "unmute": {
+                "title": "UnMute",
+                "button": "UnMute",
+                "description": "Posts from this account will now be allowed in your Home timeline.",
+                "snackbar": "{username} has been unmuted."
+            },
+            "removeFollower": {
+                "title": "Remove",
+                "button": "Remove this follower",
+                "description": "@{username} will be removed from your followers and won't be notified by Yappper. They can follow you again in the future.",
+                "snackbar": "{username} is no longer following you."
+            }
+        },
+        "editProfileModal": {
+            "title": "Edit profile",
+            "uploadPhoto": "Upload photo",
+            "removePhoto": "Remove photo",
+            "uploadCover": "Upload cover",
+            "removeCover": "Remove cover",
+            "namePlaceholder": "Name",
+            "bioPlaceholder": "Bio",
+            "locationPlaceholder": "Location",
+            "websitePlaceholder": "Website"
+        }
     }
 }
+
 

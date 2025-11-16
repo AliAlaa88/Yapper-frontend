@@ -3,6 +3,7 @@ import type { useConfirmation } from './useConfirmation'
 import type { useSnackbar } from './useSnackbar'
 import { useUserInfo } from './useUserInfo'
 import { inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export function useUserInteractions(userId: Ref<string | undefined>) {
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
@@ -21,6 +22,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleRemoveFollower,
         handleFollow,
     } = useUserActions(id)
+    const { t } = useI18n()
 
     function handleBlockWithConfirmation(showList?: Ref<boolean>) {
         showConfirmation.value = true
@@ -28,21 +30,23 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         async function handleClick() {
             try {
                 await handleBlock()
-                handleShowSnackbar('Successfully blocked.', '', 'Unblock', handleUnblock)
+                handleShowSnackbar(
+                    t('profile.actions.block.snackbar'),
+                    '',
+                    t('profile.actions.block.undoButton'),
+                    handleUnblock,
+                )
             } catch (error) {
                 console.error('failed to block user: ', error)
             }
         }
         handleShowConfirmation(
-            'Block',
-            'Block',
+            t('profile.actions.block.title'),
+            t('profile.actions.block.button'),
             'bg-red',
             'text-primary',
             'hover:opacity-90',
-            `They will be able to see your public posts,
-            but will no longer be able to engage with them.
-            @${username.value} will also not be able to follow or message you,
-            and you will not see notifications from them. `,
+            t('profile.actions.block.description', { username: username.value }),
             handleClick,
             username.value,
         )
@@ -51,12 +55,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
     function handleUnfollowWithConfirmation() {
         showConfirmation.value = true
         handleShowConfirmation(
-            'Unfollow',
-            'Unfollow',
+            t('profile.actions.unfollow.title'),
+            t('profile.actions.unfollow.button'),
             'bg-alternate',
             'text-alternate',
             'hover:opacity-90',
-            'Their posts will no longer show up in your Following timeline. You can still view their profile, unless their posts are protected.',
+            t('profile.actions.unfollow.description'),
             handleUnfollow,
             username.value,
         )
@@ -74,7 +78,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleMute()
             showSnackbar.value = true
-            handleShowSnackbar(' has been muted.', username.value, 'Undo', handleUnmuteWithSnackbar)
+            handleShowSnackbar(
+                t('profile.actions.mute.snackbar', { username: username.value }),
+                '',
+                t('profile.actions.mute.undoButton'),
+                handleUnmuteWithSnackbar,
+            )
         } catch (error) {
             console.error('failed to mute: ', error)
         }
@@ -87,20 +96,20 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         async function handleClick() {
             try {
                 await handleRemoveFollower()
-                handleShowSnackbar(' is no longer following you.', username.value)
+                handleShowSnackbar(
+                    t('profile.actions.removeFollower.snackbar', { username: username.value }),
+                )
             } catch (error) {
                 console.error('failed to remove follower: ', error)
             }
         }
         handleShowConfirmation(
-            'Remove',
-            'Remove this follower',
+            t('profile.actions.removeFollower.title'),
+            t('profile.actions.removeFollower.button'),
             'bg-red',
             'text-primary',
             'hover:opacity-90',
-            `@${username.value} will be removed from
-            your followers and won’t be notified by Yappper.
-            They can follow you again in the future. `,
+            t('profile.actions.removeFollower.description', { username: username.value }),
             handleClick,
         )
     }
@@ -109,12 +118,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         showConfirmation.value = true
         if (showList) showList.value = false
         handleShowConfirmation(
-            'Unblock',
-            'Unblock',
+            t('profile.actions.unblock.title'),
+            t('profile.actions.unblock.button'),
             'bg-alternate',
             'text-alternate',
             'hover:opacity-90',
-            'They will be able to follow you and engage with your public posts.',
+            t('profile.actions.unblock.description'),
             handleUnblock,
             username.value,
         )
@@ -123,12 +132,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
     function handleUnmuteWithConfirmation() {
         showConfirmation.value = true
         handleShowConfirmation(
-            'UnMute',
-            'UnMute',
+            t('profile.actions.unmute.title'),
+            t('profile.actions.unmute.button'),
             'bg-alternate',
             'text-alternate',
             'hover:opacity-90',
-            'Posts from this account will now be allowed in your Home timeline. ',
+            t('profile.actions.unmute.description'),
             handleUnmuteWithSnackbar,
             username.value,
         )
@@ -138,7 +147,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleUnmute()
             showSnackbar.value = true
-            handleShowSnackbar(' has been unmuted.', username.value)
+            handleShowSnackbar(t('profile.actions.unmute.snackbar', { username: username.value }))
         } catch (error) {
             console.error('failed to unmute: ', error)
         }
