@@ -22,7 +22,7 @@
                         <MediaUpload @select="handleSelectMedia" />
                     </li>
                     <li class="relative inline-flex">
-                        <Tooltip text="GIFs" position="bottom">
+                        <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
                                     @click="toggleGifPicker"
@@ -32,7 +32,10 @@
                                     <ImagePlay class="w-5 h-5 text-blue" />
                                 </button>
                             </template>
-                        </Tooltip>
+                            <template #content>
+                                <div :class="contentClass">GIFs</div>
+                            </template>
+                        </CustomToolTip>
 
                         <!-- GifPicker positioned relative to button -->
                         <GifPicker
@@ -42,7 +45,7 @@
                         />
                     </li>
                     <li class="relative inline-flex">
-                        <Tooltip text="Emoji" position="bottom">
+                        <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
                                     @click="toggleEmojiPicker"
@@ -52,7 +55,10 @@
                                     <Smile class="w-5 h-5 text-blue" />
                                 </button>
                             </template>
-                        </Tooltip>
+                            <template #content>
+                                <div :class="contentClass">Emoji</div>
+                            </template>
+                        </CustomToolTip>
                         <EmojiPicker
                             :is-open="showEmojiPicker"
                             @select="handleEmojiSelect"
@@ -74,12 +80,13 @@
 
 <script setup lang="ts">
 import { Smile, ImagePlay } from 'lucide-vue-next'
-import Tooltip from '~/modules/Common/components/ToolTip'
+import { CustomToolTip } from '~/components/ui/tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 import { getUser } from '~/utils/helpers'
-import type { User as UserType } from '~/modules/auth/types/user'
+import type { User as UserType } from '~/modules/Common/types/user'
+import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 const props = withDefaults(
     defineProps<{
         border: boolean

@@ -102,12 +102,11 @@ import { formatCount } from '../../../../utils/lib'
 import { toRefs } from 'vue'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share } from 'lucide-vue-next'
 import { CustomToolTip } from '~/components/ui/tooltip'
+import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 
 const props = defineProps<{
     stats: StatsType
 }>()
-
-const contentClass = 'text-primary bg-tooltip text-[12px] font-medium p-1 rounded-md'
 
 const { likes, replies, retweets, views } = toRefs(props.stats)
 </script>
