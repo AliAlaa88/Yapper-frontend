@@ -148,12 +148,15 @@
     }
 
     .bg-tooltip {
-        background-color: var(--color-x-tooltip-bg);
+        background-color: var(--color-x-gray-light);
     }
 
     /* Border colors */
     .border-primary {
         border-color: var(--color-x-border);
+    }
+    .border-tooltip {
+        border-color: var(--color-x-gray-light);
     }
 
     .border-dark {

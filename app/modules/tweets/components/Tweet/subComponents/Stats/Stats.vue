@@ -1,106 +1,98 @@
 <template>
     <div class="flex items-center justify-between max-w-[425px] mt-3">
         <!-- Reply -->
-        <div class="group/tooltip relative">
-            <button
-                id="tweet-reply-button"
-                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-x-blue/10ors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-reply-button"
+                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
+                    @click.stop
                 >
-                    <MessageCircle :size="18" />
-                </div>
-                <span class="text-[13px] min-w-5">{{ formatCount(replies) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Reply
-            </span>
-        </div>
+                    <div class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors">
+                        <MessageCircle :size="18" />
+                    </div>
+                    <span class="text-[13px] min-w-5">{{ formatCount(replies) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">Reply</div>
+            </template>
+        </CustomToolTip>
+
         <!-- Retweet -->
-        <div class="group/tooltip relative">
-            <button
-                id="tweet-retweet-button"
-                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-green transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-x-green/10 transition-colors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-retweet-button"
+                    class="group flex cursor-pointer items-center text-x-gray-dark hover:text-x-green transition-colors"
+                    @click.stop
                 >
-                    <Repeat2 :size="18" />
-                </div>
-                <span class="text-[13px] min-w-5">{{ formatCount(retweets) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Retweet
-            </span>
-        </div>
+                    <div class="p-1 rounded-full group-hover:bg-x-green/10 transition-colors">
+                        <Repeat2 :size="18" />
+                    </div>
+                    <span class="text-[13px] min-w-5">{{ formatCount(retweets) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">Retweet</div>
+            </template>
+        </CustomToolTip>
 
         <!-- Like -->
-        <div class="group/tooltip relative">
-            <button
-                id="tweet-like-button"
-                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-red transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-x-red/10 transition-colors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-like-button"
+                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-red transition-colors"
+                    @click.stop
                 >
-                    <Heart :size="18" />
-                </div>
-                <span class="text-[13px] min-w-5">{{ formatCount(likes) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Like
-            </span>
-        </div>
+                    <div class="p-2 rounded-full group-hover:bg-x-red/10 transition-colors">
+                        <Heart :size="18" />
+                    </div>
+                    <span class="text-[13px] min-w-5">{{ formatCount(likes) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">Like</div>
+            </template>
+        </CustomToolTip>
 
         <!-- Views -->
-        <div v-if="views" class="group/tooltip relative">
-            <button
-                id="tweet-views-button"
-                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors"
+        <CustomToolTip v-if="views" side="bottom" align="start">
+            <template #trigger>
+                <button
+                    id="tweet-views-button"
+                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
+                    @click.stop
                 >
-                    <BarChart3 :size="18" />
-                </div>
-                <span class="text-[13px] min-w-5">{{ formatCount(views || 0) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Views
-            </span>
-        </div>
+                    <div class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors">
+                        <BarChart3 :size="18" />
+                    </div>
+                    <span class="text-[13px] min-w-5">{{ formatCount(views || 0) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">Views</div>
+            </template>
+        </CustomToolTip>
+
         <!-- Share -->
-        <div class="group/tooltip relative">
-            <button
-                id="tweet-share-button"
-                class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-share-button"
+                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
+                    @click.stop
                 >
-                    <Share :size="18" />
-                </div>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-x-gray-dark text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Share
-            </span>
-        </div>
+                    <div class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors">
+                        <Share :size="18" />
+                    </div>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">Share</div>
+            </template>
+        </CustomToolTip>
     </div>
 </template>
 
@@ -109,10 +101,13 @@ import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
 import { toRefs } from 'vue'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share } from 'lucide-vue-next'
+import { CustomToolTip } from '~/components/ui/tooltip'
 
 const props = defineProps<{
     stats: StatsType
 }>()
+
+const contentClass = 'text-primary bg-tooltip text-[12px] font-medium p-1 rounded-md'
 
 const { likes, replies, retweets, views } = toRefs(props.stats)
 </script>
