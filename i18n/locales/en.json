@@ -96,8 +96,8 @@
             }
         },
         "blocked": {
-            "title": "@{username} is blocked",
-            "description": "Are you sure you want to view these posts? Viewing posts won't unblock @{username}."
+            "title": "{username} is blocked",
+            "description": "Are you sure you want to view these posts? Viewing posts won't unblock {username}."
         },
         "muted": {
             "message": "You have muted posts from this account.",
@@ -107,7 +107,7 @@
             "block": {
                 "title": "Block",
                 "button": "Block",
-                "description": "They will be able to see your public posts, but will no longer be able to engage with them. @{username} will also not be able to follow or message you, and you will not see notifications from them.",
+                "description": "They will be able to see your public posts, but will no longer be able to engage with them. {username} will also not be able to follow or message you, and you will not see notifications from them.",
                 "snackbar": "Successfully blocked.",
                 "undoButton": "Unblock"
             },
@@ -134,7 +134,7 @@
             "removeFollower": {
                 "title": "Remove",
                 "button": "Remove this follower",
-                "description": "@{username} will be removed from your followers and won't be notified by Yappper. They can follow you again in the future.",
+                "description": "{username} will be removed from your followers and won't be notified by Yappper. They can follow you again in the future.",
                 "snackbar": "{username} is no longer following you."
             }
         },

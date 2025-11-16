@@ -106,7 +106,7 @@ const isFormValid = computed(() => {
 })
 
 const closeModal = () => {
-    router.push(`/profile/${route.params.username}`)
+    router.back()
 }
 
 const handleKeydown = (event: KeyboardEvent) => {

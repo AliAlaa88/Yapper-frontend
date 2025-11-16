@@ -41,7 +41,7 @@ const photoStore = useProfilePhotoStore()
 const { photoUrl } = storeToRefs(photoStore)
 
 const closeModal = () => {
-    router.push(`/profile/${route.params.username}`)
+    router.back()
 }
 
 // Handle ESC key to close modal
