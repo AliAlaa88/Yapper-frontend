@@ -26,7 +26,7 @@
 
 <script setup>
 import { Image } from 'lucide-vue-next'
-import { CustomToolTip } from '~/components/ui/tooltip'
+import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { ref } from 'vue'
 

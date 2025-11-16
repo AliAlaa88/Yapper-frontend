@@ -101,7 +101,7 @@ import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
 import { toRefs } from 'vue'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share } from 'lucide-vue-next'
-import { CustomToolTip } from '~/components/ui/tooltip'
+import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 
 const props = defineProps<{
