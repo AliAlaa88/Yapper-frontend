@@ -1,45 +1,71 @@
 <template>
   <forgetPasswordStep1
     v-if="showStep1"
+    v-model:identifier="forgotPasswordData.identifier"
     @next="onNextS1"
     @close="onClose"
   />
   <forgetPasswordStep2
     v-if="showStep2"
-    :identifier="identifier"
+    v-model:otp="forgotPasswordData.otp"
+    :identifier="forgotPasswordData.identifier"
     @next="onNextS2"
+    @back="onBackToS1"
     @close="onClose"
   />
   <forgetPasswordStep3
     v-if="showStep3"
-    :identifier="identifier"
-    :reset_token="resetToken"
+    v-model:password="forgotPasswordData.password"
+    v-model:confirmPassword="forgotPasswordData.confirmPassword"
+    :identifier="forgotPasswordData.identifier"
+    :reset_token="forgotPasswordData.resetToken"
+    @back="onBackToS2"
     @close="onClose"
     @finish="$emit('finish')"
   />
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import forgetPasswordStep1 from "./subComponents/forgetPasswordComponents/forgetPasswordStep1.vue";
 import forgetPasswordStep2 from "./subComponents/forgetPasswordComponents/forgetPasswordStep2.vue";
 import forgetPasswordStep3 from "./subComponents/forgetPasswordComponents/forgetPasswordStep3.vue";
+
 const showStep1 = ref(true);
 const showStep2 = ref(false);
 const showStep3 = ref(false);
-const identifier = ref('');
-const resetToken = ref('');
+
+// Centralized forgot password state
+const forgotPasswordData = reactive({
+  identifier: '',
+  otp: '',
+  resetToken: '',
+  password: '',
+  confirmPassword: ''
+});
+
 const onNextS1 = (Identifier: string) => {
   showStep1.value = false;
   showStep2.value = true;
-  identifier.value = Identifier;
+  forgotPasswordData.identifier = Identifier;
 };
 
 const onNextS2 = (reset_token: string) => {
   showStep2.value = false;
   showStep3.value = true;
-  resetToken.value = reset_token;
+  forgotPasswordData.resetToken = reset_token;
   console.log("Reset token received:", reset_token);
+};
+
+const onBackToS1 = () => {
+  showStep2.value = false;
+  showStep1.value = true;
+  console.log("Going back to Step 1");
+};
+
+const onBackToS2 = () => {
+  showStep3.value = false;
+  showStep2.value = true;
 };
 
 const onClose = () => {

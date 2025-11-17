@@ -55,7 +55,9 @@ import Logo from '~/modules/Common/components/Logo'
 import { useForgotPasswordQuery } from '../../../queries/useForgetPasswordQuery'
 import closeButton from '../closeButton.vue'
 
-const identifier = ref('')
+// Use v-model for identifier
+const identifier = defineModel<string>('identifier', { default: '' })
+
 const errorMessage = ref('')
 
 const emit = defineEmits<{
