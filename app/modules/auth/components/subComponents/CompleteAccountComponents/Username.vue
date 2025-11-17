@@ -37,14 +37,14 @@
                         {{ errorMessage }}
                     </p>
                     <p
-                        v-else-if="username.length > 0"
+                        v-else-if="username && username.length > 0"
                         id="success-message-username"
                         class="text-green text-sm"
                     >
                         Available!
                     </p>
                     <p v-else class="text-transparent text-sm">.</p>
-                    <p class="text-muted text-sm">{{ username.length }}/15</p>
+                    <p class="text-muted text-sm">{{ username?.length || 0 }}/15</p>
                 </div>
             </div>
 
@@ -95,12 +95,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 
-const username = ref('')
+// Use v-model for username
+const username = defineModel<string | null>('username', { default: null })
+
 const errorMessage = ref('')
 
 const emit = defineEmits<{
@@ -117,7 +119,7 @@ const props = defineProps<{
 const validateUsername = () => {
     const value = username.value
 
-    if (value.length === 0) {
+    if (!value || value.length === 0) {
         errorMessage.value = ''
         return
     }
@@ -144,11 +146,11 @@ const validateUsername = () => {
 }
 
 const isValid = computed(() => {
-    return username.value.length >= 3 && !errorMessage.value
+    return username.value && username.value.length >= 3 && !errorMessage.value
 })
 
 const onNext = () => {
-    if (isValid.value) {
+    if (isValid.value && username.value) {
         emit('next', username.value)
     }
 }

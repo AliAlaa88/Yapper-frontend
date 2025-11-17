@@ -74,9 +74,11 @@ import { ref } from 'vue'
 import { useRegisterS2Query, useResendOTPQuery } from '../../../queries/useRegisterQuery'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
-const otp = ref('')
-const errorMessage = ref('')
 
+// Use v-model for otp
+const otp = defineModel<string>('otp', { default: '' })
+
+const errorMessage = ref('')
 const resendCodeSuccess = ref('')
 const resendCodeFailure = ref('')
 

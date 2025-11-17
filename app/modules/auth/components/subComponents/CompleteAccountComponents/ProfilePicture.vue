@@ -84,14 +84,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 
-const previewImage = ref<string | null>(null)
+// Use v-model for profile picture
+const profilePicture = defineModel<string | null>('profilePicture', { default: null })
+
+const previewImage = ref<string | null>(profilePicture.value)
 const selectedFile = ref<File | null>(null)
 const errorMessage = ref('')
+
+// Sync preview with model
+watch(profilePicture, (newVal) => {
+    if (newVal && !previewImage.value) {
+        previewImage.value = newVal
+    }
+})
 
 const emit = defineEmits<{
     (e: 'next', imageUrl: string): void
@@ -122,7 +132,9 @@ const onFileChange = (event: Event) => {
         // Create preview
         const reader = new FileReader()
         reader.onload = (e) => {
-            previewImage.value = e.target?.result as string
+            const imageUrl = e.target?.result as string
+            previewImage.value = imageUrl
+            profilePicture.value = imageUrl
         }
         reader.readAsDataURL(file)
     }

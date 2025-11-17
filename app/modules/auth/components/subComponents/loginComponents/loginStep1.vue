@@ -74,7 +74,9 @@ import OAuth from '../OAuth.vue'
 import { useCheckIdentifierAvailabilityQuery } from '~/modules/auth/queries/useLoginQuery'
 import closeButton from '../closeButton.vue'
 
-const identifier = ref('')
+// Use v-model for identifier
+const identifier = defineModel<string>('identifier', { default: '' })
+
 const errorMessage = ref('')
 
 const emit = defineEmits<{
