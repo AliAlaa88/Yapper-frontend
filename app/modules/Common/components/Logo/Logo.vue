@@ -1,22 +1,38 @@
 <template>
     <div :class="divClass">
-        <img v-if="themecomputed" src="../../../../assets/images/logo-white.png" alt="X Logo" :class="imgClass" />
-        <img v-else src="../../../../assets/images/logo.png" alt="X Logo" :class="imgClass" />
+        <component :is="isDark ? LogoWhite : LogoBlack" :imgClass="imgClass" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import LogoBlack from './LogoBlack.vue'
+import LogoWhite from './LogoWhite.vue'
+
+const isDark = ref(false)
+let observer: MutationObserver | null = null
 
 defineProps<{
     imgClass?: string
     divClass?: string
 }>()
 
-const themecomputed = computed(() => {
-    if (typeof window !== 'undefined' && window.matchMedia) {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches
-    }
-    return false
+const updateTheme = () => {
+    if (typeof document === 'undefined') return
+    isDark.value = document.documentElement.classList.contains('dark')
+}
+
+onMounted(() => {
+    updateTheme()
+
+    observer = new MutationObserver(updateTheme)
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+    })
+})
+
+onUnmounted(() => {
+    observer?.disconnect()
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-svh grid grid-cols-1 md:grid-cols-2 bg-black text-white">
+    <div class="min-h-svh grid grid-cols-1 md:grid-cols-2 bg-primary text-primary">
         <!-- Left section (hidden on mobile) -->
         <div class="hidden md:flex items-center justify-center relative bg-cover bg-center">
             <Logo imgClass="relative z-10 w-32 lg:w-40" />
@@ -20,9 +20,9 @@
                     <OAuth />
 
                     <div class="flex items-center gap-2 text-primary text-sm my-2">
-                        <div class="flex-1 h-px bg-gray-700" />
+                        <div class="flex-1 h-px bg-primary" />
                         <span class="whitespace-nowrap">OR</span>
-                        <div class="flex-1 h-px bg-gray-700" />
+                        <div class="flex-1 h-px bg-primary" />
                     </div>
 
                     <button

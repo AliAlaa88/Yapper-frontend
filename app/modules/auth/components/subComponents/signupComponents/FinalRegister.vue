@@ -49,9 +49,12 @@ import { useRegisterS3Query } from '../../../queries/useRegisterQuery'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 
-const password = ref('')
-const language = ref('en')
+// Use v-model for password and language
+const password = defineModel<string>('password', { default: '' })
+const language = defineModel<string>('language', { default: 'en' })
+
 const errorMessage = ref('')
+
 const props = defineProps<{
     Email: string
     username: string
