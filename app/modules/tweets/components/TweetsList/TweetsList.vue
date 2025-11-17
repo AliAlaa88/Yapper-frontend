@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRef } from 'vue'
+import { toRef, computed } from 'vue'
 import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw, Twitter } from 'lucide-vue-next'
