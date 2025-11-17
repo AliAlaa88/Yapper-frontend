@@ -22,5 +22,10 @@ interface Tweet {
     updated_at?: string
     user: User
 }
+type TweetsPage = {
+    data: Tweet[]
+    nextCursor?: string
+    hasMore?: boolean
+}
 
-export type { Tweet }
+export type { Tweet, TweetsPage }

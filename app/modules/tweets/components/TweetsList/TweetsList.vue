@@ -33,8 +33,18 @@
         </div>
         
         <!-- Tweets list -->
-        <div v-else-if="tweets && tweets.length > 0" class="divide-y divide-x-border">
-            <Tweet v-for="tweet in tweets" :key="tweet.tweet_id" :tweet="tweet" />
+        <div v-else-if="!isPending" class="divide-y divide-x-border flex flex-col items-center">
+            <div class="w-full">
+                <Tweet v-for="tweet in tweets" :key="tweet.tweet_id" :tweet="tweet" />
+            </div>
+           
+            <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
+                <div class="animate-spin rounded-full h-5 w-5 border-2 border-x-blue border-t-transparent"></div>
+            </div>
+
+            <!-- Intersection observer target -->
+            <div ref="loadMoreTrigger" class="h-1 w-full"></div>
+
         </div>
         
         <!-- Empty state -->
@@ -66,10 +76,45 @@ const props = defineProps<{
 const fetchingSourceRef = toRef(props, 'fetchingSource')
 
 // Use the query with the reactive fetchingSource (provide default empty string)
-const { data: tweets, isLoading, error, refetch } = useTweetsQuery(computed(() => fetchingSourceRef.value ?? ''))
-
+const { data, isFetching, error, refetch, fetchNextPage, hasNextPage , isFetchingNextPage,isPending,isError } = useTweetsQuery(computed(() => fetchingSourceRef.value ?? ''))
 // Function to retry loading tweets
 const loadTweets = () => {
     refetch()
 }
+
+const loadMoreTrigger = ref<HTMLElement | null>(null)
+
+watch(
+  () => loadMoreTrigger.value,
+  (el) => {
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
+          fetchNextPage()
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1,
+      }
+    )
+
+    observer.observe(el)
+
+    onUnmounted(() => observer.disconnect())
+  },
+  { immediate: true }
+)
+
+const tweets = computed(() => {
+  const pages = data.value?.pages
+  if (!pages) return []
+
+  return pages.flatMap(p => p.data)
+})
+
 </script>
