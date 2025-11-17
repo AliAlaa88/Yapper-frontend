@@ -19,7 +19,7 @@ import { MapPin, Calendar } from 'lucide-vue-next'
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { inject } from 'vue'
 
-const props = defineProps<{
+defineProps<{
     location?: string | null
     createdAt?: string
 }>()

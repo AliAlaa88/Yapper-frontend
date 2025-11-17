@@ -72,6 +72,11 @@
         "unblockButton": "إلغاء الحظر",
         "removeFollowerButton": "إزالة هذا المتابع",
         "cancelButton": "إلغاء",
+        "mutualFollowers": {
+            "followedBy": "يتابعه {name}",
+            "followedByTwo": "يتابعه {name1} و {name2}",
+            "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم"
+        },
         "tabs": {
             "posts": "المنشورات",
             "replies": "الردود",

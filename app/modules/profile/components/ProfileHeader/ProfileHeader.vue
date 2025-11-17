@@ -39,6 +39,11 @@
                     :following-count="user?.following_count ?? 0"
                     :followers-count="user?.followers_count ?? 0"
                 />
+                <ProfileMutualFollowers
+                    v-if="!isMee"
+                    :mutual-followers-count="Number((user as OtherUser)?.mutual_followers_count) ?? 0"
+                    :mutual-followers="(user as OtherUser)?.top_mutual_followers ?? []"
+                />
                 <ProfileMuteMessage />
             </div>
         </div>
@@ -57,21 +62,24 @@ import ProfileStats from './SubComponents/ProfileStats.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
 import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
+import ProfileMutualFollowers from './SubComponents/ProfileMutualFollowers.vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
 import { useMe } from '../../composables/useMe'
+import type { OtherUser } from '../../types/user'
 
 const route = useRoute()
 const username = route.params.username as string
 const { userQuery, myQuery } = useUserInfoQuery(username)
 const { isMe: isMeComputed } = useMe(username)
 const isMee = computed(() => isMeComputed.value)
-
 const user = computed(() => {
     if (isMee.value) {
+        console.log('isMee:', myQuery.data.value)
         return myQuery.data.value
     }
+    console.log('isMee:', userQuery.data.value)
     return userQuery.data.value
 })
 </script>

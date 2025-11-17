@@ -72,6 +72,11 @@
         "unblockButton": "Unblock",
         "removeFollowerButton": "Remove this follower",
         "cancelButton": "Cancel",
+        "mutualFollowers": {
+            "followedBy": "Followed by {name}",
+            "followedByTwo": "Followed by {name1} and {name2}",
+            "followedByMultiple": "Followed by {name} and {count} others you follow"
+        },
         "tabs": {
             "posts": "Posts",
             "replies": "Replies",

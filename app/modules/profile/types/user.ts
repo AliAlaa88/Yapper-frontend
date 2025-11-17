@@ -26,8 +26,8 @@ export interface OtherUser {
     following_count?: number
     country?: string | null
     created_at?: string
-    top_mutual_followers?: OtherUser[]
-    mutual_followers_count?: string
+    top_mutual_followers: OtherUser[]
+    mutual_followers_count: string
 }
 
 export interface MeApiResponse {
