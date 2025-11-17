@@ -8,7 +8,7 @@
         </div> -->
         
         <!-- Loading state -->
-        <div v-if="isLoading" class="p-6 text-center">
+        <div v-if="isPending" class="p-6 text-center">
             <div class="inline-flex items-center space-x-2 text-x-secondary">
                 <div class="animate-spin rounded-full h-5 w-5 border-2 border-x-blue border-t-transparent"></div>
                 <span class="text-sm font-medium text-primary">Loading tweets...</span>
