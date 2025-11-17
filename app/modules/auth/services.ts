@@ -101,6 +101,10 @@ export const createAuthService = () => {
             const response = await $yapperApi.post(`${API_URL}/auth/logout`, {}, {withCredentials: true});
             return response.data;
         },
+        GetAccessToken: async () => {
+            const response = await $yapperApi.get(`${API_URL}/auth/refresh`, {withCredentials: true});
+            return response.data;
+        },
         updateProfilePicture: async (profilePicture: File) => {
             const formData = new FormData();
             formData.append('profile_picture', profilePicture);

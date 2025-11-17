@@ -40,14 +40,14 @@ export default defineNuxtConfig({
                 file: 'ar.json',
             },
         ],
-        defaultLocale: 'en',
+        defaultLocale: 'ar',
         langDir: 'locales/',
         strategy: 'no_prefix',
         detectBrowserLanguage: {
             useCookie: true,
             cookieKey: 'i18n_redirected',
             redirectOn: 'root',
-            fallbackLocale: 'en',
+            fallbackLocale: 'ar',
         },
     },
 })

@@ -12,19 +12,26 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">
-                We sent you a code to reset your password
-            </h2>
-            <p class="text-muted mb-6">Please enter the 6-digit code sent to your email address.</p>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.forgotPassword.step2Title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step2Info') }}</p>
 
             <!-- OTP Input -->
-            <input
-                id="input-otp-forgot-password-s2"
-                type="text"
-                placeholder="Enter OTP"
-                v-model="otp"
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
-            />
+            <div class="mb-4">
+                <input
+                    id="input-otp-forgot-password-s2"
+                    type="text"
+                    :placeholder="$t('auth.verifyOtp.otpPlaceholder')"
+                    v-model="otp"
+                    maxlength="6"
+                    @input="handleOtpInput"
+                    @blur="validateOtpField"
+                    :class="[
+                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors text-center text-2xl tracking-widest',
+                        otpError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                    ]"
+                />
+                <p v-if="otpError" class="text-red text-xs mt-1 text-center">{{ otpError }}</p>
+            </div>
 
             <!-- Error Message -->
             <p
@@ -41,7 +48,7 @@
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
         </div>
     </div>
@@ -52,9 +59,11 @@ import { ref } from 'vue'
 import { useVerifyForgotPasswordOTPQuery } from '../../../queries/useForgetPasswordQuery'
 import closeButton from '../closeButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { validateOtp } from '../../../utils/validators'
 
 const otp = ref('')
 const errorMessage = ref('')
+const otpError = ref('')
 
 const props = defineProps<{
     identifier: string
@@ -79,7 +88,23 @@ const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
     },
 )
 
+const handleOtpInput = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    otp.value = target.value.replace(/\D/g, '').slice(0, 6)
+    otpError.value = ''
+    errorMessage.value = ''
+}
+
+const validateOtpField = () => {
+    const result = validateOtp(otp.value)
+    otpError.value = result.valid ? '' : result.message || ''
+    return result.valid
+}
+
 const onNext = () => {
+    if (!validateOtpField()) {
+        return
+    }
     errorMessage.value = '' // Clear previous errors
     verifyOTPMutation.mutate({ identifier: props.identifier, token: otp.value })
 }

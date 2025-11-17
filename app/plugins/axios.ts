@@ -1,11 +1,13 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
-
+// import {createAuthService} from "../modules/auth/services"
+import { useNuxtApp } from '#app'
 export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig()
     const isMockApi = config.public.mockApi.toString() === 'true'
     const apiBase = isMockApi ? 'http://localhost:3001' : (config.public.apiUrl as string)
+    const {$authService} = useNuxtApp();
 
     const yapperApi: AxiosInstance = axios.create({
         baseURL: apiBase,
@@ -37,9 +39,11 @@ export default defineNuxtPlugin(() => {
         (error) => {
             if (error.response?.status === 401) {
                 if (process.client && window.location.pathname !== '/auth/login') {
-                    localStorage.removeItem('access_token')
-                    localStorage.removeItem('user')
-                    window.location.href = '/auth/login'
+                    // localStorage.removeItem('access_token')
+                    // localStorage.removeItem('user')
+                    // window.location.href = '/auth/login'
+                    const response = $authService.GetAccessToken();
+                    console.log("Refresh Token Response:", response);
                 }
             }
             return Promise.reject(error)
