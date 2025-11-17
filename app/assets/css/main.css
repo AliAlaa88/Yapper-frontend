@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ===========================
    🎨 THEME VARIABLES
@@ -22,8 +23,8 @@
     --color-x-border: #eff3f4;
     --color-x-background: #f7f9f9;
     --color-x-white: #ffffff;
-    --color-x-alternate: #0f1419; /* Light mode alternate (black) */
-    --color-x-text-alternate: #ffffff; /* Light mode = white */
+    --color-x-alternate: #0f1419;
+    --color-x-text-alternate: #ffffff;
     --color-x-hover-alternate: #ebebeb;
 
     /* Status Colors */
@@ -67,6 +68,43 @@
 }
 
 /* ===========================
+   🌓 DARK/LIGHT MODE OVERRIDES
+   =========================== */
+@layer base {
+    :root {
+        color-scheme: light;
+        --color-x-black: #0f1419;
+        --color-x-gray-dark: #536471;
+        --color-x-background: #f7f9f9;
+        --color-x-white: #ffffff;
+        --color-x-border: #eff3f4;
+        --color-x-hover-dark: #ebebeb;
+        --color-x-alternate: #0f1419;
+        --color-x-text-alternate: #ffffff;
+        --color-x-hover-alternate: #ebebeb;
+        --color-x-tooltip-bg: #cfd9de;
+    }
+
+    :root.dark {
+        color-scheme: dark;
+        --color-x-black: #e7e9ea;
+        --color-x-dark: #e7e9ea;
+        --color-x-gray-dark: #71767b;
+        --color-x-gray: #8b98a5;
+        --color-x-gray-light: #cfd9de;
+        --color-x-gray-extra-light: #e7e9ea;
+        --color-x-tooltip-bg: #2f3336;
+        --color-x-border: #2f3336;
+        --color-x-background: #000000;
+        --color-x-white: #16181c;
+        --color-x-alternate: #ffffff;
+        --color-x-text-alternate: #0f1419;
+        --color-x-hover-alternate: #2f3336;
+        --color-x-hover-dark: #16181c;
+    }
+}
+
+/* ===========================
    ⚙️ CUSTOM UTILITIES
    =========================== */
 @layer utilities {
@@ -90,6 +128,7 @@
     .text-white {
         color: var(--color-x-white);
     }
+
     .text-alternate {
         color: var(--color-x-text-alternate);
     }
@@ -235,68 +274,52 @@
     .hover\:bg-hover:hover {
         background-color: var(--color-x-hover-dark);
     }
+
     .hover\:text-primary:hover {
         color: var(--color-x-primary);
     }
+
     .hover\:text-muted:hover {
         color: var(--color-x-muted);
     }
+
     .hover\:text-light:hover {
         color: var(--color-x-light);
     }
+
     .hover\:text-white:hover {
         color: var(--color-x-white);
     }
+
     .hover\:text-alternate:hover {
         color: var(--color-x-alternate);
     }
+
     .hover\:text-blue:hover {
         color: var(--color-x-blue);
     }
+
     .hover\:text-green:hover {
         color: var(--color-x-green);
     }
+
     .hover\:text-red:hover {
         color: var(--color-x-red);
     }
+
     .hover\:text-yellow:hover {
         color: var(--color-x-yellow);
     }
+
     .hover\:text-gray:hover {
         color: var(--color-x-gray);
     }
+
     .hover\:text-tooltip:hover {
         color: var(--color-x-tooltip);
     }
+
     .hover\:text-border:hover {
         color: var(--color-x-border);
-    }
-}
-
-/* ===========================
-   🌙 DARK MODE (auto via prefers-color-scheme)
-   =========================== */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-x-black: var(--color-x-text-dark);
-        --color-x-gray-dark: var(--color-x-text-dark-secondary);
-        --color-x-background: var(--color-x-bg-dark);
-        --color-x-white: var(--color-x-bg-dark-secondary);
-        --color-x-border: var(--color-x-border-dark);
-        --color-x-hover-dark: var(--color-x-bg-dark-secondary);
-
-        /* Invert alternate color in dark mode */
-        --color-x-alternate: #ffffff;
-        --color-x-text-alternate: #0f1419; /* text becomes black */
-        --color-x-hover-alternate: var(--color-x-hover-alternate);
-    }
-}
-@media (prefers-color-scheme: light) {
-    :root {
-        --color-x-alternate: #0f1419;
-        --color-x-text-alternate: #ffffff;
-        --color-x-hover-dark: #ebebeb;
-        --color-x-bg-dark: #0f1419;
-        --color-x-bg-dark-secondary: #ffffff;
     }
 }
