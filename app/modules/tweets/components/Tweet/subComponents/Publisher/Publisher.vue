@@ -6,7 +6,7 @@
                 <Tooltip>
                     <TooltipTrigger as-child>
                         <NuxtLink :id="`publisher-avatar-link-${id}`" :to="linkComputed">
-                            <img :id="`publisher-avatar-${id}`" :src="avatar" :alt="name" class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity" />
+                            <img :id="`publisher-avatar-${id}`" :src="avatar_url" :alt="name" class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity" />
                         </NuxtLink>
                     </TooltipTrigger>
                     <TooltipContent class="p-0">
@@ -14,10 +14,10 @@
                             :id="id"
                             :name="name"
                             :username="username"
-                            :avatar="avatar"
+                            :avatar="avatar_url"
                             :bio="publisher.bio"
-                            :followers-count="publisher.followers_count"
-                            :following-count="publisher.following_count"
+                            :followers-count="publisher.followers"
+                            :following-count="publisher.following"
                         />
                     </TooltipContent>
                 </Tooltip>
@@ -33,10 +33,10 @@
                                 :id="id"
                                 :name="name"
                                 :username="username"
-                                :avatar="avatar"
+                                :avatar="avatar_url"
                                 :bio="publisher.bio"
-                                :followers-count="publisher.followers_count"
-                                :following-count="publisher.following_count"
+                                :followers-count="publisher.followers"
+                                :following-count="publisher.following"
                             />
                         </TooltipContent>
                     </Tooltip>
@@ -58,10 +58,10 @@
                         :id="id"
                         :name="name"
                         :username="username"
-                        :avatar="avatar"
+                        :avatar="avatar_url"
                         :bio="publisher.bio"
-                        :followers-count="publisher.followers_count"
-                        :following-count="publisher.following_count"
+                        :followers-count="publisher.followers"
+                        :following-count="publisher.following"
                     />
                 </TooltipContent>
             </Tooltip>
@@ -88,7 +88,7 @@ const props = defineProps<{
     isDetail?: boolean
 }>()
 
-const { id, name, username, avatar, link } = toRefs(props.publisher)
+const { id, name, username, avatar_url, link } = toRefs(props.publisher)
 
 // Use the utility function for consistent profile URLs
 const linkComputed = computed(() => getProfileUrl(props.publisher))

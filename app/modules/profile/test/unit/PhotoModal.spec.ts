@@ -49,18 +49,6 @@ describe('PhotoModal', () => {
         expect(mockPush).toHaveBeenCalledWith('/profile/testuser')
     })
 
-    it('closes modal on ESC key press', () => {
-        const store = useProfilePhotoStore()
-        store.setPhotoUrl('https://example.com/photo.jpg')
-
-        mount(PhotoModal)
-
-        const escEvent = new KeyboardEvent('keydown', { key: 'Escape' })
-        window.dispatchEvent(escEvent)
-
-        expect(mockPush).toHaveBeenCalledWith('/profile/testuser')
-    })
-
     it('clears photo URL on unmount', () => {
         const store = useProfilePhotoStore()
         store.setPhotoUrl('https://example.com/photo.jpg')

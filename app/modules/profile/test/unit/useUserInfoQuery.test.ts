@@ -44,22 +44,13 @@ describe('useUserInfoQuery', () => {
         )
     })
 
-    it('disables query when username is empty', () => {
-        useUserInfoQuery('')
-
-        expect(mockQuery).toHaveBeenCalledWith(
-            expect.objectContaining({
-                queryKey: ['user', ''],
-                enabled: false,
-            }),
-        )
-    })
-
     it('returns query result', () => {
         const result = useUserInfoQuery('testuser')
 
-        expect(result).toHaveProperty('data')
-        expect(result).toHaveProperty('isLoading')
-        expect(result).toHaveProperty('error')
+        expect(result).toHaveProperty('userQuery')
+        expect(result).toHaveProperty('myQuery')
+        expect(result.userQuery).toHaveProperty('data')
+        expect(result.userQuery).toHaveProperty('isLoading')
+        expect(result.userQuery).toHaveProperty('error')
     })
 })

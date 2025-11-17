@@ -54,37 +54,30 @@ export const userInfoServiceReal = {
         }
     },
 
-    // async getUserByID(userId: string): Promise<OtherUser> {
-    //     const { $axios } = useNuxtApp()
-    //     try {
-    //         const response = await $axios.get<OtherUserApiResponse>(`/users/${userId}`)
-    //         if (
-    //             !response.data ||
-    //             !response.data.data ||
-    //             response.data.data.length === 0
-    //         ) {
-    //             throw new Error(`User not found: ${userId}`)
-    //         }
+    async getUserByID(userId: string): Promise<OtherUser> {
+        const { $axios } = useNuxtApp()
+        if (!userId) {
+            throw new Error('User ID is required')
+        }
+        try {
+            const response = await $axios.get<OtherUserApiResponse>(`/users/${userId}`)
+            if (!response.data || !response.data.data) {
+                throw new Error(`User not found: ${userId}`)
+            }
 
-    //         const firstUser = response.data.data[0]
-
-    //         if (!firstUser || !firstUser.success || !firstUser.user) {
-    //             throw new Error(`User not found: ${userId}`)
-    //         }
-
-    //         console.log('by id', firstUser.user)
-    //         return firstUser.user
-    //     } catch (error: unknown) {
-    //         if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
-    //             if (error.response?.status === 404) {
-    //                 throw new Error('User not found')
-    //             } else if (error.response?.status === 401) {
-    //                 throw new Error('Invalid or expired token')
-    //             }
-    //         }
-    //         throw new Error('Something went wrong')
-    //     }
-    // },
+            console.log('by id', response.data.data)
+            return response.data.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
 
     async followUser(userId: string): Promise<void> {
         const { $axios } = useNuxtApp()

@@ -5,7 +5,7 @@
             <button
                 id="cover-upload-button"
                 aria-label="Upload cover photo"
-                class="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors duration-200"
+                class="bg-black/60 hover:bg-black/80 text-primary p-2 rounded-full transition-colors duration-200"
                 @click="$emit('upload')"
             >
                 <Camera :size="20" />
@@ -14,7 +14,7 @@
                 v-if="coverUrl"
                 id="cover-remove-button"
                 aria-label="Remove cover photo"
-                class="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors duration-200"
+                class="bg-black/60 hover:bg-black/80 text-primary p-2 rounded-full transition-colors duration-200"
                 @click="$emit('remove')"
             >
                 <X :size="20" />

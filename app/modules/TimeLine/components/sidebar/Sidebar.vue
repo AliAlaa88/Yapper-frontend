@@ -57,7 +57,8 @@ import PostTweet from '../postTweet/PostTweet.vue'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import UserActions from './subCompoents/UserActions/index'
-
+import { getUser } from '#imports'
+const user = getUser();
 const navLinks = [
     {
         label_en: 'Home',
@@ -87,7 +88,7 @@ const navLinks = [
         label_en: 'Profile',
         label_ar: 'الملف الشخصي',
         icon: User,
-        href: '/profile',
+        href: user ? `/profile/${user.username}` : '/profile',
     },
     {
         label_en: 'Settings',

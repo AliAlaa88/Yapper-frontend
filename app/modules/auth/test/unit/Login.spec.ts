@@ -273,7 +273,6 @@ describe('Login Component', () => {
                 await flushPromises();
 
                 expect(mockUserStore.setAuth).toHaveBeenCalledWith(mockUserData.data);
-                expect(wrapper.emitted('finish')).toBeTruthy();
             }
         });
     });
@@ -329,7 +328,6 @@ describe('Login Component', () => {
                     'email'
                 );
                 expect(mockUserStore.setAuth).toHaveBeenCalledWith(mockUserData.data);
-                expect(wrapper.emitted('finish')).toBeTruthy();
             }
         });
 

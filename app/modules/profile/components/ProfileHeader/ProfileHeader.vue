@@ -1,11 +1,11 @@
 <template>
-    <div class="border-b border-[#2f3336] bg-black">
+    <div class="border-b border-primary bg-primary">
         <!-- Cover Image -->
         <CoverImage :cover-url="user?.cover_url ?? ''" />
 
         <!-- Profile Info -->
         <div class="px-4">
-            <div class="-mt-[70px] mb-3 flex items-end justify-between">
+            <div class="-mt-[70px] mb-3 flex items-end justify-between flex-wrap gap-2">
                 <!-- Avatar -->
                 <ProfileAvatar
                     :avatar-url="user?.avatar_url ?? ''"
@@ -15,7 +15,7 @@
                     <ProfileEditButton />
                 </div>
                 <!-- Actions -->
-                <div v-else class="flex gap-3">
+                <div v-else class="flex flex-wrap gap-3">
                     <ProfileActions v-if="user?.user_id" />
                     <!-- TODO: Add the chat icon here later -->
 

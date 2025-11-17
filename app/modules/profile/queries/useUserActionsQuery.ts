@@ -1,14 +1,15 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
-import type { Me } from '../types/user'
+import type { OtherUser } from '../types/user'
+import { computed } from 'vue'
 
 export function useUserActionsQuery(userId: Ref<string | undefined>) {
     const { $userInfoService, $queryClient } = useNuxtApp()
 
-    const userQuery = useQuery<Me>({
+    const userQuery = useQuery<OtherUser>({
         queryKey: computed(() => ['user', userId.value]),
         queryFn: () => $userInfoService.getUserByID(userId.value!),
-        enabled: !!userId,
+        enabled: computed(() => !!userId.value),
     })
 
     const followMutation = useMutation({
@@ -17,7 +18,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('success follow')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Already following')) {
+                console.log('Already following')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to follow:', error)
         },
     })
@@ -28,7 +34,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('unfollow successfully')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Not following') || error.message.includes('Already')) {
+                console.log('Already unfollowed')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to unfollow:', error)
         },
     })
@@ -39,7 +50,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('block successfully')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Already blocked')) {
+                console.log('Already blocked')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to block:', error)
         },
     })
@@ -50,7 +66,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('unblock successfully')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Already') || error.message.includes('Not blocked')) {
+                console.log('Already unblocked')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to unblock:', error)
         },
     })
@@ -61,7 +82,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('mute successfully')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Already muted')) {
+                console.log('Already muted')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to mute:', error)
         },
     })
@@ -72,7 +98,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('unmute successfully')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Already') || error.message.includes('Not muted')) {
+                console.log('Already unmuted')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to unmute:', error)
         },
     })
@@ -83,7 +114,12 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
             console.log('remove this follower correctly')
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
-        onError: (error) => {
+        onError: (error: Error) => {
+            if (error.message.includes('Already') || error.message.includes('Not following')) {
+                console.log('Follower already removed')
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+                return
+            }
             console.error('Failed to remove this follower:', error)
         },
     })

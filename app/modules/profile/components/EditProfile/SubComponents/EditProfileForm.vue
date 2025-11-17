@@ -3,7 +3,7 @@
         <div class="relative">
             <label
                 for="edit-profile-name-input"
-                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
                 Name
             </label>
@@ -11,11 +11,11 @@
                 id="edit-profile-name-input"
                 :value="modelValue.name"
                 type="text"
-                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
             />
-            <span class="absolute right-3 top-2 text-gray-500 text-[13px]">
+            <span class="absolute right-3 top-2 text-muted text-[13px]">
                 {{ modelValue.name.length }}/50
             </span>
         </div>
@@ -24,7 +24,7 @@
         <div class="relative">
             <label
                 for="edit-profile-bio-input"
-                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
                 Bio
             </label>
@@ -32,11 +32,11 @@
                 id="edit-profile-bio-input"
                 :value="modelValue.bio"
                 rows="3"
-                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
+                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
             />
-            <span class="absolute right-3 top-2 text-gray-500 text-[13px]">
+            <span class="absolute right-3 top-2 text-muted text-[13px]">
                 {{ modelValue.bio.length }}/160
             </span>
         </div>
@@ -45,7 +45,7 @@
         <div class="relative">
             <label
                 for="edit-profile-location-input"
-                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
                 Location
             </label>
@@ -53,11 +53,11 @@
                 id="edit-profile-location-input"
                 :value="modelValue.country"
                 type="text"
-                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
             />
-            <span class="absolute right-3 top-2 text-gray-500 text-[13px]">
+            <span class="absolute right-3 top-2 text-muted text-[13px]">
                 {{ modelValue.country.length }}/30
             </span>
         </div>
@@ -66,7 +66,7 @@
         <div class="relative">
             <label
                 for="edit-profile-birthdate-input"
-                class="absolute left-3 top-2 text-gray-500 text-[13px] pointer-events-none"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
             >
                 Birth date
             </label>
@@ -74,7 +74,7 @@
                 id="edit-profile-birthdate-input"
                 :value="modelValue.created_at"
                 type="date"
-                class="w-full bg-transparent border border-white/20 rounded-md px-3 pt-6 pb-2 text-white text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"
+                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"
                 @input="updateField('created_at', ($event.target as HTMLInputElement).value)"
             />
         </div>

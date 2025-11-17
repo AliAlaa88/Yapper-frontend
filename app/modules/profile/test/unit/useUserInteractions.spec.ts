@@ -1,10 +1,30 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { useUserInteractions } from '../../composables/useUserInteractions'
+import { ref, computed } from 'vue'
 import { useUserInfo } from '../../composables/useUserInfo'
 import { useUserActions } from '../../composables/useUserActions'
-import { ref, computed } from 'vue'
+import { useUserInteractions } from '../../composables/useUserInteractions'
 
-vi.mock('nuxt/app', () => ({}))
+const mockSnackbar = {
+    showSnackbar: ref(false),
+    handleShowSnackbar: vi.fn(),
+}
+
+const mockConfirmation = {
+    showConfirmation: ref(false),
+    handleShowConfirmation: vi.fn(),
+}
+
+vi.mock('vue', async () => {
+    const actual = await vi.importActual<typeof import('vue')>('vue')
+    return {
+        ...actual,
+        inject: vi.fn((key: string) => {
+            if (key === 'snackbar') return mockSnackbar
+            if (key === 'confirmation') return mockConfirmation
+            return undefined
+        }),
+    }
+})
 
 vi.mock('../../composables/useUserInfo', () => ({
     useUserInfo: vi.fn(),
@@ -14,27 +34,8 @@ vi.mock('../../composables/useUserActions', () => ({
     useUserActions: vi.fn(),
 }))
 
-vi.mock('../../queries/useUserActionsQuery', () => ({
-    useUserActionsQuery: vi.fn(() => ({
-        unfollowMutation: { mutate: vi.fn() },
-        blockMutation: { mutate: vi.fn() },
-        unblockMutation: { mutate: vi.fn() },
-        muteMutation: { mutate: vi.fn() },
-        unmuteMutation: { mutate: vi.fn() },
-        removeFollowerMutation: { mutate: vi.fn() },
-        followMutation: { mutate: vi.fn() },
-    })),
-}))
 
 describe('useUserInteractions', () => {
-    let mockSnackbar: {
-        showSnackbar: ReturnType<typeof ref<boolean>>
-        handleShowSnackbar: ReturnType<typeof vi.fn>
-    }
-    let mockConfirmation: {
-        showConfirmation: ReturnType<typeof ref<boolean>>
-        handleShowConfirmation: ReturnType<typeof vi.fn>
-    }
     let mockUserInfo: {
         id: ReturnType<typeof computed<string>>
         username: ReturnType<typeof computed<string>>
@@ -58,18 +59,9 @@ describe('useUserInteractions', () => {
         handleRemoveFollower: ReturnType<typeof vi.fn>
         handleFollow: ReturnType<typeof vi.fn>
     }
-    let mockInject: unknown
+
+
     beforeEach(() => {
-        mockSnackbar = {
-            showSnackbar: ref(false),
-            handleShowSnackbar: vi.fn(),
-        }
-
-        mockConfirmation = {
-            showConfirmation: ref(false),
-            handleShowConfirmation: vi.fn(),
-        }
-
         mockUserActions = {
             handleUnfollow: vi.fn(),
             handleUnmute: vi.fn(),
@@ -94,58 +86,59 @@ describe('useUserInteractions', () => {
             isMuted: computed({ get: () => false, set: () => {} }),
             isBlocked: computed({ get: () => false, set: () => {} }),
         }
-        mockInject = vi.fn((key: string) => {
-            if (key === 'snackbar') return mockSnackbar
-            if (key === 'confirmation') return mockConfirmation
-            return null
-        })
-
-        vi.stubGlobal('inject', mockInject)
 
         vi.mocked(useUserInfo).mockReturnValue(mockUserInfo)
         vi.mocked(useUserActions).mockReturnValue(mockUserActions)
     })
 
     afterEach(() => {
-        vi.unstubAllGlobals()
+        // vi.unstubAllGlobals()
+        vi.clearAllMocks()
     })
 
     describe('handleBlockWithConfirmation', () => {
         it('should calls block confirmation and shows snackbar', () => {
             const userId = ref('12')
             const { handleBlockWithConfirmation } = useUserInteractions(userId)
+
             handleBlockWithConfirmation()
-            const { username } = useUserInfo(userId)
+
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
                 'Block',
                 'Block',
-                'bg-red-500',
-                'text-white',
-                'hover:bg-red-500/85',
+                'bg-red',
+                'text-primary',
+                'hover:opacity-90',
                 expect.stringContaining('They will be able to see your public posts'),
                 expect.any(Function),
-                username.value,
+                'hagar',
             )
             expect(mockUserActions.handleBlock).not.toHaveBeenCalled()
         })
+
         it('should hide list when provided', () => {
             const userId = ref('12')
             const showList = ref(true)
             const { handleBlockWithConfirmation } = useUserInteractions(userId)
+
             handleBlockWithConfirmation(showList)
+
             expect(showList.value).toBe(false)
         })
 
-        it('should execute block function and show snackbar on confirmation', () => {
+        it('should execute block function and show snackbar on confirmation', async () => {
             const userId = ref('12')
             const { handleBlockWithConfirmation } = useUserInteractions(userId)
+
             handleBlockWithConfirmation()
 
             const callArgs = mockConfirmation.handleShowConfirmation.mock.calls[0]
+            expect(callArgs).toBeDefined()
+
             if (callArgs && callArgs[6]) {
                 const handleClick = callArgs[6]
-                handleClick()
+                await handleClick()
             }
 
             expect(mockUserActions.handleBlock).toHaveBeenCalled()
@@ -157,18 +150,21 @@ describe('useUserInteractions', () => {
             )
         })
     })
+
     describe('handleUnfollowWithConfirmation', () => {
         it('should calls unfollow confirmation', () => {
             const userId = ref('12')
             const { handleUnfollowWithConfirmation } = useUserInteractions(userId)
+
             handleUnfollowWithConfirmation()
+
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
                 'Unfollow',
                 'Unfollow',
-                'bg-[#ebf1f1]',
-                'text-black',
-                'hover:bg-gray-200/90',
+                'bg-alternate',
+                'text-alternate',
+                'hover:opacity-90',
                 expect.stringContaining(
                     'Their posts will no longer show up in your Following timeline.',
                 ),
@@ -179,21 +175,21 @@ describe('useUserInteractions', () => {
         })
     })
 
-    it('should call handleFollow', () => {
+    it('should call handleFollow', async () => {
         const userId = ref('12')
         const { handleFollowAction } = useUserInteractions(userId)
 
-        handleFollowAction()
+        await handleFollowAction()
 
         expect(mockUserActions.handleFollow).toHaveBeenCalled()
     })
 
     describe('handleMuteWithSnackbar', () => {
-        it('should mute user and show snackbar', () => {
+        it('should mute user and show snackbar', async () => {
             const userId = ref('12')
             const { handleMuteWithSnackbar } = useUserInteractions(userId)
 
-            handleMuteWithSnackbar()
+            await handleMuteWithSnackbar()
 
             expect(mockUserActions.handleMute).toHaveBeenCalled()
             expect(mockSnackbar.showSnackbar.value).toBe(true)
@@ -204,11 +200,13 @@ describe('useUserInteractions', () => {
                 expect.any(Function),
             )
         })
-        it('should hide list when provided', () => {
+
+        it('should hide list when provided', async () => {
             const userId = ref('12')
             const showList = ref(true)
             const { handleMuteWithSnackbar } = useUserInteractions(userId)
-            handleMuteWithSnackbar(showList)
+
+            await handleMuteWithSnackbar(showList)
 
             expect(showList.value).toBe(false)
         })
@@ -225,25 +223,29 @@ describe('useUserInteractions', () => {
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
                 'Remove',
                 'Remove this follower',
-                'bg-red-500',
-                'text-white',
-                'hover:bg-red-500/85',
+                'bg-red',
+                'text-primary',
+                'hover:opacity-90',
                 expect.stringContaining('They can follow you again in the future.'),
                 expect.any(Function),
             )
             expect(mockUserActions.handleRemoveFollower).not.toHaveBeenCalled()
         })
-        it('should remove follower and show snackbar on confirmation', () => {
+
+        it('should remove follower and show snackbar on confirmation', async () => {
             const userId = ref('12')
             const { handleRemoveFollowerWithConfirmation } = useUserInteractions(userId)
 
             handleRemoveFollowerWithConfirmation()
 
             const callArgs = mockConfirmation.handleShowConfirmation.mock.calls[0]
+            expect(callArgs).toBeDefined()
+
             if (callArgs && callArgs[6]) {
                 const handleClick = callArgs[6]
-                handleClick()
+                await handleClick()
             }
+
             expect(mockUserActions.handleRemoveFollower).toHaveBeenCalled()
             expect(mockSnackbar.handleShowSnackbar).toHaveBeenCalledWith(
                 ' is no longer following you.',
@@ -251,18 +253,21 @@ describe('useUserInteractions', () => {
             )
         })
     })
+
     describe('handleUnblockWithConfirmation', () => {
         it('should call unblock confirmation', () => {
             const userId = ref('12')
             const { handleUnblockWithConfirmation } = useUserInteractions(userId)
+
             handleUnblockWithConfirmation()
+
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
                 'Unblock',
                 'Unblock',
-                'bg-[#ebf1f1]',
-                'text-black',
-                'hover:bg-gray-200/90',
+                'bg-alternate',
+                'text-alternate',
+                'hover:opacity-90',
                 'They will be able to follow you and engage with your public posts.',
                 mockUserActions.handleUnblock,
                 'hagar',
@@ -279,30 +284,33 @@ describe('useUserInteractions', () => {
             expect(showList.value).toBe(false)
         })
     })
+
     it('should calls unmute confirmaiton', () => {
         const userId = ref('12')
         const { handleUnmuteWithConfirmation } = useUserInteractions(userId)
 
         handleUnmuteWithConfirmation()
+
         expect(mockConfirmation.showConfirmation.value).toBe(true)
         expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
             'UnMute',
             'UnMute',
-            'bg-[#ebf1f1]',
-            'text-black',
-            'hover:bg-gray-200/90',
+            'bg-alternate',
+            'text-alternate',
+            'hover:opacity-90',
             'Posts from this account will now be allowed in your Home timeline. ',
             expect.any(Function),
             'hagar',
         )
         expect(mockUserActions.handleUnmute).not.toHaveBeenCalled()
     })
+
     describe('handleUnmuteWithSnackbar', () => {
-        it('should unmute user and show snackbar', () => {
+        it('should unmute user and show snackbar', async () => {
             const userId = ref('12')
             const { handleUnmuteWithSnackbar } = useUserInteractions(userId)
 
-            handleUnmuteWithSnackbar()
+            await handleUnmuteWithSnackbar()
 
             expect(mockUserActions.handleUnmute).toHaveBeenCalled()
             expect(mockSnackbar.handleShowSnackbar).toHaveBeenCalledWith(
@@ -311,11 +319,13 @@ describe('useUserInteractions', () => {
             )
         })
 
-        it('should hide list when provided', () => {
+        it('should hide list when provided', async () => {
             const userId = ref('12')
-            const { handleUnmuteWithSnackbar } = useUserInteractions(userId)
             const showList = ref(true)
-            handleUnmuteWithSnackbar(showList)
+            const { handleUnmuteWithSnackbar } = useUserInteractions(userId)
+
+            await handleUnmuteWithSnackbar(showList)
+
             expect(showList.value).toBe(false)
         })
     })

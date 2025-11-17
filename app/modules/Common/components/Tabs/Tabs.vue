@@ -11,7 +11,7 @@
                 <button
                     class="relative w-full px-4 py-4 text-base font-medium transition-colors duration-200"
                     :class="
-                        activeTab === tab.value ? 'text-primary' : 'text-muted hover:text-primary'
+                        activeTab === tab.value ? 'text-primary' : 'text-muted'
                     "
                 >
                     {{ tab.label }}
