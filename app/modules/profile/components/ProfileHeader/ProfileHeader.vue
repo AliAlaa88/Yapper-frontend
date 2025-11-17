@@ -5,23 +5,22 @@
 
         <!-- Profile Info -->
         <div class="px-4">
-            <div class="-mt-[70px] mb-3 flex items-end justify-between flex-wrap gap-2">
+            <div class="-mt-[42px] sm:-mt-[67px] mb-3 flex items-end justify-between">
                 <!-- Avatar -->
                 <ProfileAvatar
                     :avatar-url="user?.avatar_url ?? ''"
                     :display-name="user?.name ?? ''"
                 />
-                <div v-if="isMee" class="flex gap-3">
-                    <ProfileEditButton />
-                </div>
                 <!-- Actions -->
-                <div v-else class="flex flex-wrap gap-3">
-                    <ProfileActions v-if="user?.user_id" />
-                    <!-- TODO: Add the chat icon here later -->
-
-                    <ProfileFollowAction v-if="user?.user_id" />
-
-                    <ProfileBlockedAction />
+                <div class="mt-3 flex gap-2">
+                    <div v-if="isMee" class="flex gap-2">
+                        <ProfileEditButton />
+                    </div>
+                    <div v-else class="flex flex-wrap gap-2">
+                        <ProfileActions v-if="user?.user_id" />
+                        <ProfileFollowAction v-if="user?.user_id" />
+                        <ProfileBlockedAction />
+                    </div>
                 </div>
             </div>
 
@@ -32,7 +31,10 @@
                     :username="user?.username ?? ''"
                 />
                 <ProfileBio :bio="user?.bio ?? ''" />
-                <ProfileCreatedAt :created-at="user?.created_at ?? ''" />
+                <ProfileMetadata
+                    :location="user?.country ?? null"
+                    :created-at="user?.created_at ?? ''"
+                />
                 <ProfileStats
                     :following-count="user?.following_count ?? 0"
                     :followers-count="user?.followers_count ?? 0"
@@ -50,7 +52,7 @@ import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
 import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
 import ProfileBio from './SubComponents/ProfileBio.vue'
-import ProfileCreatedAt from './SubComponents/ProfileCreatedAt.vue'
+import ProfileMetadata from './SubComponents/ProfileMetadata.vue'
 import ProfileStats from './SubComponents/ProfileStats.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'

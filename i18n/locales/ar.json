@@ -68,6 +68,7 @@
         "muteButton": "كتم",
         "unmuteButton": "إلغاء الكتم",
         "blockButton": "حظر",
+        "blockedButton": "محظور",
         "unblockButton": "إلغاء الحظر",
         "removeFollowerButton": "إزالة هذا المتابع",
         "cancelButton": "إلغاء",

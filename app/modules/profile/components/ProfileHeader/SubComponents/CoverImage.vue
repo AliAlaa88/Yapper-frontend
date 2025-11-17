@@ -1,14 +1,14 @@
 <template>
-    <div class="h-[200px] overflow-hidden">
+    <div class="h-[133px] sm:h-[200px] overflow-hidden bg-[#333639]">
         <NuxtLink
             v-if="coverUrl"
             :to="`/profile/${username}/cover`"
-            class="group relative block h-full w-full hover:brightness-75 transition-all duration-200"
+            class="group relative block h-full w-full hover:brightness-90 transition-all duration-200"
             @click="handleCoverClick"
         >
             <img :src="coverUrl" alt="Cover" class="h-full w-full object-cover" />
         </NuxtLink>
-        <div v-else class="h-full w-full bg-gradient-to-br from-[#1d9bf0] to-[#0c7abf]" />
+        <div v-else class="h-full w-full bg-[#333639]" />
     </div>
 </template>
 

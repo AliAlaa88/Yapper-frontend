@@ -2,8 +2,7 @@
     <div v-if="!isBlocked" class="pb-3">
         <button
             id="follow-button"
-            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
-            justify-center whitespace-nowrap rounded-full transition-colors duration-200"
+            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-all duration-200"
             :class="buttonClass"
             :disabled="isFollowCooldown"
             @click="handleClick"

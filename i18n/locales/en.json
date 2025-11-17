@@ -68,6 +68,7 @@
         "muteButton": "Mute",
         "unmuteButton": "Unmute",
         "blockButton": "Block",
+        "blockedButton": "Blocked",
         "unblockButton": "Unblock",
         "removeFollowerButton": "Remove this follower",
         "cancelButton": "Cancel",
