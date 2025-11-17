@@ -1,17 +1,5 @@
 <template>
     <div v-if="!isBlocked" class="pb-3">
-        <!-- <button
-            id="follow-button"
-            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
-            justify-center whitespace-nowrap rounded-full transition-colors duration-200"
-            :class="buttonClass"
-            :disabled=""
-            @click="handleClick"
-            @mouseover="handleMouseOver"
-            @mouseout="handleMouseOut"
-        >
-            {{ buttonText }}
-        </button> -->
         <Button
             id="follow-button"
             class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
@@ -42,23 +30,6 @@ const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(u
 
 const userInteractions = useUserInteractions(userId)
 const { handleFollowAction, handleUnfollowWithConfirmation, isFollowLoading } = userInteractions
-// const isFollowCooldown = ref(false)
-// const COOLDOWN_TIME = 2000
-
-// async function handleClick() {
-//     if (isFollowCooldown.value) return
-
-//     if (!isFollowing.value) {
-//         await handleFollowAction()
-
-//         isFollowCooldown.value = true
-//         setTimeout(() => {
-//             isFollowCooldown.value = false
-//         }, COOLDOWN_TIME)
-//     } else {
-//         handleUnfollowWithConfirmation()
-//     }
-// }
 
 async function handleClick() {
     if (isFollowLoading.value) return

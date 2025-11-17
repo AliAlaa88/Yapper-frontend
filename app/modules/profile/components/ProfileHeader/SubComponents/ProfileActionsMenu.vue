@@ -7,21 +7,11 @@
         sm:w-56 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
         sm:translate-x-0 w-full sm:rounded-xl rounded-t-2xl sm:max-h-none max-h-[50vh]
         overflow-y-auto">
-        <!-- <button
-            v-if="!isBlocked"
-            id="mute-button"
-            class="cursor-pointer w-full text-primary font-semibold text-left
-            px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
-            @click="handleMuteAndUnmute">
-            <MegaphoneOff v-if="!isMuted" class="w-4 h-4 mr-3" />
-            <Megaphone v-else class="w-4 h-4 mr-3" />
-            {{ isMuted ? 'Unmute' : 'Mute' }}
-        </button> -->
         <Button
             v-if="!isBlocked"
             id="mute-button"
-            button-class="w-full text-primary font-semibold text-left px-4 py-3
-                    hover:bg-hover transition first:rounded-t-xl"
+            button-class="cursor-pointer w-full text-primary font-semibold text-left
+            px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
             :is-loading="isMuteLoading"
             @click="handleMuteAndUnmute"
         >
@@ -35,8 +25,8 @@
         <Button
             v-if="isFollower && !isBlocked"
             id="remove-follower-button"
-            class="w-full text-primary text-left font-semibold px-4 py-3
-            hover:bg-hover transition flex items-center cursor-pointer"
+            button-class="cursor-pointer w-full text-primary font-semibold text-left px-4
+            py-3 hover:bg-hover transition flex items-center first:rounded-t-xl last:rounded-b-xl"
             @click="handleRemove"
         >
             <template #icon-left>
@@ -44,11 +34,6 @@
             </template>
             Remove this follower
         </Button>
-        <!-- <button v-if="isFollower && !isBlocked" id="remove-follower-button" class="w-full text-primary text-left font-semibold px-4 py-3
-            hover:bg-hover transition flex items-center cursor-pointer" @click="handleRemove">
-            <UserRoundX class="w-4 h-4 mr-3" />
-            Remove this follower
-        </button> -->
 
         <Button
             id="block-button"

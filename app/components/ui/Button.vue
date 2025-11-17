@@ -1,6 +1,9 @@
 <template>
     <button
-        :class="[buttonClass, { 'cursor-not-allowed': isLoading || disabled }]"
+        :class="[buttonClass, {
+            'cursor-not-allowed': isLoading || disabled,
+            'cursor-pointer': !isLoading && !disabled
+        }]"
         :disabled="isLoading || disabled"
         @click="handleClick"
         @mouseover="handleMouseOver"
@@ -8,7 +11,7 @@
     >
         <slot name="icon-left" />
 
-        <span v-if="isLoading">{{ loadingText }}</span>
+        <span v-if="isLoading && loadingText">{{ loadingText }}</span>
         <slot v-else>{{ buttonText }}</slot>
 
         <slot name="icon-right" />
