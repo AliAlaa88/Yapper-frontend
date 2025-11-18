@@ -9,7 +9,6 @@ export const useProfileStore = defineStore('profile', () => {
     const setProfile = (user: Me | OtherUser, isCurrentUser: boolean) => {
         profile.value = user
         isMyProfile.value = isCurrentUser
-        console.log('Profile set in store:', profile.value, 'Is my profile:', isMyProfile.value)
     }
 
     const clearProfile = () => {

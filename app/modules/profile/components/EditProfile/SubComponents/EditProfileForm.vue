@@ -75,10 +75,10 @@
             </label>
             <input
                 id="edit-profile-birthdate-input"
-                :value="modelValue.created_at"
+                :value="modelValue.birth_date"
                 type="date"
                 class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"
-                @input="updateField('created_at', ($event.target as HTMLInputElement).value)"
+                @input="updateField('birth_date', ($event.target as HTMLInputElement).value)"
             />
         </div>
     </div>
@@ -89,7 +89,7 @@ interface FormData {
     name: string
     bio: string
     country: string
-    created_at: string
+    birth_date: string
 }
 
 const props = defineProps<{

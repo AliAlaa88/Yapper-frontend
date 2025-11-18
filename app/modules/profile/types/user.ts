@@ -65,6 +65,17 @@ export interface ApiResponse<T> {
     statusCode: number
 }
 
+export interface ImageUploadResponse {
+    image_url: string
+    image_name: string
+}
+
+export interface ImageUploadApiResponse {
+    data: ImageUploadResponse
+    count: number
+    message: string
+}
+
 export interface Follower {
     user_id: string
     name: string

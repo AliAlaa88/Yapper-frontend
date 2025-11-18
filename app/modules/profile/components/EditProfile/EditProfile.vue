@@ -62,30 +62,35 @@ import EditProfileAvatar from './SubComponents/EditProfileAvatar.vue'
 import EditProfileForm from './SubComponents/EditProfileForm.vue'
 
 const router = useRouter()
-
-// Get user from profile store
 const profileStore = useProfileStore()
 const { profile: user } = storeToRefs(profileStore)
+const userId = computed(() => user.value?.user_id || '')
+const {
+    editProfileMutation,
+    uploadCoverPhotoMutation,
+    uploadAvatarMutation,
+} = useEditProfileMutation(userId.value)
 
-// Local state for editing
-const avatarUrl = ref<string | null>(null)
-const coverUrl = ref<string | null>(null)
+const isSaving = computed(
+    () =>
+        editProfileMutation.isPending.value ||
+        uploadCoverPhotoMutation.isPending.value ||
+        uploadAvatarMutation.isPending.value,
+)
+
 
 const formData = ref({
     name: '',
     bio: '',
     country: '',
-    created_at: '',
+    birth_date: '',
 })
 
+const avatarUrl = ref<string | null>(null)
+const coverUrl = ref<string | null>(null)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
 
-// Edit profile mutation - will be initialized when user is available
-const userId = computed(() => user.value?.user_id || '')
-const { editProfileMutation } = useEditProfileMutation(userId.value)
-
-const isSaving = computed(() => editProfileMutation.isPending.value)
 
 onMounted(() => {
     if (user.value) {
@@ -93,7 +98,7 @@ onMounted(() => {
             name: user.value.name || '',
             bio: user.value.bio || '',
             country: user.value.country || '',
-            created_at: user.value.created_at || '',
+            birth_date: user.value.birth_date || '',
         }
         avatarUrl.value = user.value.avatar_url || ''
         coverUrl.value = user.value.cover_url || ''
@@ -130,29 +135,29 @@ const handleAvatarUpload = () => {
     avatarFileInput.value?.click()
 }
 
-const handleCoverFileChange = (event: Event) => {
+const handleCoverFileChange = async (event: Event) => {
     const target = event.target as HTMLInputElement
     const file = target.files?.[0]
     if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const result = e.target?.result as string
-            coverUrl.value = result
+        try {
+            const imageUrl = await uploadCoverPhotoMutation.mutateAsync(file)
+            coverUrl.value = imageUrl
+        } catch (error) {
+            console.error('Failed to upload cover photo:', error)
         }
-        reader.readAsDataURL(file)
     }
 }
 
-const handleAvatarFileChange = (event: Event) => {
+const handleAvatarFileChange = async (event: Event) => {
     const target = event.target as HTMLInputElement
     const file = target.files?.[0]
     if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const result = e.target?.result as string
-            avatarUrl.value = result
+        try {
+            const imageUrl = await uploadAvatarMutation.mutateAsync(file)
+            avatarUrl.value = imageUrl
+        } catch (error) {
+            console.error('Failed to upload avatar:', error)
         }
-        reader.readAsDataURL(file)
     }
 }
 
@@ -177,7 +182,7 @@ const handleSave = async () => {
         name: formData.value.name,
         bio: formData.value.bio,
         country: formData.value.country,
-        created_at: formData.value.created_at,
+        birth_date: formData.value.birth_date,
         avatar_url: avatarUrl.value || null,
         cover_url: coverUrl.value || null,
     }

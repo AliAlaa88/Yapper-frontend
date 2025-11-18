@@ -1,8 +1,6 @@
 import type { UserAction } from '../types/user'
 import { useNuxtApp } from 'nuxt/app'
 
-// move useNuxtApp outside the functions. here?
-
 export const userInfoServiceMock = {
     async getUserInfoByUsername(username: string): Promise<UserAction> {
         const { $axios } = useNuxtApp()

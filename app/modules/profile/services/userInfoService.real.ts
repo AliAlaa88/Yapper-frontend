@@ -5,6 +5,7 @@ import type {
     OtherUser,
     OtherUserApiResponse,
     ActionApiResponse,
+    ImageUploadApiResponse,
 } from '../types/user'
 import { useNuxtApp } from 'nuxt/app'
 
@@ -16,9 +17,7 @@ export const userInfoServiceReal = {
             if (!response.data || !response.data.data) {
                 throw new Error('User not found')
             }
-            const myData = response.data.data
-            console.log('my data', myData)
-            return myData
+            return response.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {
@@ -37,9 +36,8 @@ export const userInfoServiceReal = {
             const response = await $axios.get<OtherUserApiResponse>(
                 `/users/by/username/${username}`,
             )
-            console.log(response.data.data)
             if (!response.data || !response.data.data) {
-                throw new Error(`User not found: ${username}`)
+                throw new Error('User not found')
             }
             return response.data.data
         } catch (error: unknown) {
@@ -62,10 +60,9 @@ export const userInfoServiceReal = {
         try {
             const response = await $axios.get<OtherUserApiResponse>(`/users/${userId}`)
             if (!response.data || !response.data.data) {
-                throw new Error(`User not found: ${userId}`)
+                throw new Error('User not found')
             }
 
-            console.log('by id', response.data.data)
             return response.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
@@ -215,11 +212,9 @@ export const userInfoServiceReal = {
         try {
             const response = await $axios.patch<MeApiResponse>('/users/me', updates)
             if (!response.data || !response.data.data) {
-                throw new Error('Failed to update user profile')
+                throw new Error('Failed to update profile')
             }
-            const userData = response.data.data
-            console.log('updated profile', userData)
-            return userData
+            return response.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -236,21 +231,25 @@ export const userInfoServiceReal = {
         }
     },
 
-    async uploadAvatar(userId: string, file: File): Promise<Me> {
+    async uploadAvatar(userId: string, file: File): Promise<string> {
         const { $axios } = useNuxtApp()
         const formData = new FormData()
-        formData.append('avatar', file)
+        formData.append('file', file)
 
         try {
-            const response = await $axios.post<MeApiResponse>('/users/me/upload-avatar', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            const response = await $axios.post<ImageUploadApiResponse>(
+                '/users/me/upload-avatar',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            })
+            )
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to upload avatar')
             }
-            return response.data.data
+            return response.data.data.image_url
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -265,21 +264,25 @@ export const userInfoServiceReal = {
         }
     },
 
-    async uploadCoverPhoto(userId: string, file: File): Promise<Me> {
+    async uploadCoverPhoto(userId: string, file: File): Promise<string> {
         const { $axios } = useNuxtApp()
         const formData = new FormData()
-        formData.append('cover_photo', file)
+        formData.append('file', file)
 
         try {
-            const response = await $axios.post<MeApiResponse>('/users/me/upload-cover', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            const response = await $axios.post<ImageUploadApiResponse>(
+                '/users/me/upload-cover',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            })
+            )
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to upload cover photo')
             }
-            return response.data.data
+            return response.data.data.image_url
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {

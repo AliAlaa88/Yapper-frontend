@@ -27,7 +27,6 @@ watch(
     () => isMuted.value,
     (newVal) => {
         if (newVal) {
-            console.log('muted new value from message', newVal)
             showMuteMessage.value = true
         } else showMuteMessage.value = false
     },

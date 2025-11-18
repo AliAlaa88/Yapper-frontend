@@ -24,7 +24,6 @@ export const useProfile = (username: string) => {
             () => meQuery.data.value,
             (newData) => {
                 if (newData) {
-                    console.log('Current User from useProfile:', newData)
                     profileStore.setProfile(newData, true)
                 }
             },

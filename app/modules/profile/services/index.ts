@@ -6,7 +6,5 @@ export const createUserInfoService = () => {
     const config = useRuntimeConfig()
     const isMock = config.public.mockApi.toString() === 'true'
 
-    console.log('[createUserInfoService] mock mode:', isMock)
-
     return isMock ? userInfoServiceMock : userInfoServiceReal
 }
