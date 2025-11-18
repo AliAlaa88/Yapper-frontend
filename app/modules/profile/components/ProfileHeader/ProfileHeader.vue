@@ -27,12 +27,13 @@
 
 <script setup lang="ts">
 import CoverImage from './SubComponents/CoverImage.vue'
+import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
+import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
-import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileInfo from './SubComponents/ProfileInfo.vue'
-import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
+
 import { useProfileStore } from '../../stores/profileStore'
 
 const profileStore = useProfileStore()

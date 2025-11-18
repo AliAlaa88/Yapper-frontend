@@ -52,20 +52,20 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'nuxt/app'
-import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
+import { useRouter } from 'nuxt/app'
+import { useProfileStore } from '../../stores/profileStore'
+import { storeToRefs } from 'pinia'
 import { useEditProfileMutation } from '../../queries/useEditProfileQuery'
 import EditProfileHeader from './SubComponents/EditProfileHeader.vue'
 import EditProfileCover from './SubComponents/EditProfileCover.vue'
 import EditProfileAvatar from './SubComponents/EditProfileAvatar.vue'
 import EditProfileForm from './SubComponents/EditProfileForm.vue'
 
-const route = useRoute()
 const router = useRouter()
 
-const username = route.params.username as string
-const { userQuery } = useUserInfoQuery(username)
-const user = computed(() => userQuery.data.value)
+// Get user from profile store
+const profileStore = useProfileStore()
+const { profile: user } = storeToRefs(profileStore)
 
 // Local state for editing
 const avatarUrl = ref<string | null>(null)

@@ -21,15 +21,11 @@ export const useProfile = (username: string) => {
         const meQuery = useMeQuery()
 
         const meWatcher = watch(
-            () => meQuery.isLoading.value,
-            (loading) => {
-                if (!loading && meQuery.data.value) {
-                    console.log(
-                        'Current User from useProfile:',
-                        meQuery.isLoading.value,
-                        meQuery.data.value,
-                    )
-                    profileStore.setProfile(meQuery.data.value, true)
+            () => meQuery.data.value,
+            (newData) => {
+                if (newData) {
+                    console.log('Current User from useProfile:', newData)
+                    profileStore.setProfile(newData, true)
                 }
             },
             { immediate: true },
