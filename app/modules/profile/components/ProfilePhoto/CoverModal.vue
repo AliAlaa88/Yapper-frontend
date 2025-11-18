@@ -14,14 +14,14 @@
 
             <!-- Image container -->
             <div
-                class="w-full h-full flex items-center justify-center p-8"
+                class="w-full h-full flex items-center justify-center"
                 @click.self="closeModal"
             >
                 <img
                     v-if="coverUrl"
                     :src="coverUrl"
                     :alt="`${route.params.username}'s cover photo`"
-                    class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg"
+                    class="max-h-180 w-full object-cover"
                 />
             </div>
         </div>

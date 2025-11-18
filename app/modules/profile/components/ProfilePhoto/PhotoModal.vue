@@ -14,14 +14,14 @@
 
             <!-- Image container -->
             <div
-                class="w-full h-full flex items-center justify-center p-8"
+                class="w-full h-full flex items-center justify-center p-[15px]"
                 @click.self="closeModal"
             >
                 <img
                     v-if="photoUrl"
                     :src="photoUrl"
                     :alt="`${route.params.username}'s profile photo`"
-                    class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg"
+                    class="h-100 w-100 object-contain rounded-full"
                 />
             </div>
         </div>
