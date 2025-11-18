@@ -53,8 +53,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app'
-import { storeToRefs } from 'pinia'
-import { useProfilePhotoStore } from '../../stores/photo'
 import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
 import { useEditProfileMutation } from '../../queries/useEditProfileQuery'
 import EditProfileHeader from './SubComponents/EditProfileHeader.vue'
@@ -69,8 +67,9 @@ const username = route.params.username as string
 const { userQuery } = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
 
-const photoStore = useProfilePhotoStore()
-const { photoUrl: avatarUrl, coverUrl } = storeToRefs(photoStore)
+// Local state for editing
+const avatarUrl = ref<string | null>(null)
+const coverUrl = ref<string | null>(null)
 
 const formData = ref({
     name: '',
@@ -96,8 +95,8 @@ onMounted(() => {
             country: user.value.country || '',
             created_at: user.value.created_at || '',
         }
-        photoStore.setPhotoUrl(user.value.avatar_url || '')
-        photoStore.setCoverUrl(user.value.cover_url || '')
+        avatarUrl.value = user.value.avatar_url || ''
+        coverUrl.value = user.value.cover_url || ''
     }
 })
 
@@ -121,8 +120,6 @@ onMounted(() => {
 
 onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown)
-    photoStore.clearPhotoUrl()
-    photoStore.clearCoverUrl()
 })
 
 const handleCoverUpload = () => {
@@ -140,7 +137,7 @@ const handleCoverFileChange = (event: Event) => {
         const reader = new FileReader()
         reader.onload = (e) => {
             const result = e.target?.result as string
-            photoStore.setCoverUrl(result)
+            coverUrl.value = result
         }
         reader.readAsDataURL(file)
     }
@@ -153,21 +150,21 @@ const handleAvatarFileChange = (event: Event) => {
         const reader = new FileReader()
         reader.onload = (e) => {
             const result = e.target?.result as string
-            photoStore.setPhotoUrl(result)
+            avatarUrl.value = result
         }
         reader.readAsDataURL(file)
     }
 }
 
 const handleCoverRemove = () => {
-    photoStore.clearCoverUrl()
+    coverUrl.value = null
     if (coverFileInput.value) {
         coverFileInput.value.value = ''
     }
 }
 
 const handleAvatarRemove = () => {
-    photoStore.clearPhotoUrl()
+    avatarUrl.value = null
     if (avatarFileInput.value) {
         avatarFileInput.value.value = ''
     }

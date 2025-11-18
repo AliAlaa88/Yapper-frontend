@@ -31,14 +31,16 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
-import { useProfilePhotoStore } from '../../stores/photo'
+import { useProfileStore } from '../../stores/profileStore'
 import { X } from 'lucide-vue-next'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, computed } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
-const photoStore = useProfilePhotoStore()
-const { coverUrl } = storeToRefs(photoStore)
+const profileStore = useProfileStore()
+const { profile } = storeToRefs(profileStore)
+
+const coverUrl = computed(() => profile.value?.cover_url)
 
 const closeModal = () => {
     router.back()
@@ -56,6 +58,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    photoStore.clearCoverUrl()
+    window.removeEventListener('keydown', handleKeydown)
 })
 </script>
