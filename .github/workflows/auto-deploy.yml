@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - development
+            - chore/fix-dependencies
 
 jobs:
     build-and-deploy:
@@ -115,7 +116,7 @@ jobs:
                       while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
                         # Use Docker's built-in health check status
                         HEALTH_STATUS=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose ps -q frontend) 2>/dev/null || echo "none")
-                        
+
                         if [ "$HEALTH_STATUS" = "healthy" ]; then
                           echo "✅ Health check passed (Docker health status: $HEALTH_STATUS)"
                           HEALTH_CHECK_PASSED=true
