@@ -21,6 +21,13 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleUnblock,
         handleRemoveFollower,
         handleFollow,
+        isUnfollowLoading,
+        isBlockLoading,
+        isUnblockLoading,
+        isMuteLoading,
+        isUnmuteLoading,
+        isRemoveFollowerLoading,
+        isFollowLoading,
     } = useUserActions(id)
     const { t } = useI18n()
 
@@ -163,5 +170,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleUnmuteWithSnackbar,
         handleUnfollowWithConfirmation,
         handleFollowAction,
+        isUnfollowLoading,
+        isBlockLoading,
+        isUnblockLoading,
+        isMuteLoading,
+        isUnmuteLoading,
+        isRemoveFollowerLoading,
+        isFollowLoading,
     }
 }

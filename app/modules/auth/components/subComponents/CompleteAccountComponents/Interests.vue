@@ -108,7 +108,8 @@ const interests: Interest[] = [
     { id: 'comedy', name: 'Comedy', icon: '😂' },
 ]
 
-const selectedInterests = ref<string[]>([])
+// Use v-model for selected interests
+const selectedInterests = defineModel<string[]>('selectedInterests', { default: [] })
 
 const emit = defineEmits<{
     (e: 'next', interests: string[]): void

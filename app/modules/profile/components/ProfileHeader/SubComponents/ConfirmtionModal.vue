@@ -25,22 +25,22 @@
             </div>
 
             <div class="space-y-3 mt-6">
-                <button
+                <Button
                     id="confirm-button"
                     class="cursor-pointer w-full font-bold py-2.5 rounded-full transition"
                     :class="[confirmData.bgColor, confirmData.hover, confirmData.text]"
                     @click="handleConfirmAction"
                 >
                     {{ confirmData.action }}
-                </button>
-                <button
+                </Button>
+                <Button
                     id="cancel-confirm-button"
-                    class="cursor-pointer w-full border border-primary
+                    button-class="cursor-pointer w-full border border-primary
                     font-bold py-2.5 rounded-full hover:bg-hover transition"
                     @click="handleCancel"
                 >
                     Cancel
-                </button>
+                </Button>
             </div>
         </div>
     </div>
@@ -48,6 +48,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
+import Button from '~/components/ui/Button.vue'
 
 interface ConfirmationState {
     username?: string

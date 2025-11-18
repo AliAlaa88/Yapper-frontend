@@ -117,13 +117,17 @@ import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from '../recaptcha.vue'
 import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
 import closeButton from '../closeButton.vue'
-const name = ref('')
-const email = ref('')
-const month = ref('')
-const day = ref('')
-const year = ref('')
+
+// Define props for v-model bindings
+const name = defineModel<string>('name', { default: '' })
+const email = defineModel<string>('email', { default: '' })
+const month = defineModel<string>('month', { default: '' })
+const day = defineModel<string>('day', { default: '' })
+const year = defineModel<string>('year', { default: '' })
+
 const error = ref('')
 const success = ref('')
+
 // Month options
 const months = [
     { value: '1', label: 'January' },

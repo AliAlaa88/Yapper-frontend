@@ -1,5 +1,5 @@
 <template>
-    <Tooltip text="Media" position="bottom">
+    <CustomToolTip side="bottom">
         <template #trigger>
             <button
                 @click="openMediaDrawer"
@@ -9,7 +9,10 @@
                 <Image class="w-5 h-5 text-blue" />
             </button>
         </template>
-    </Tooltip>
+        <template #content>
+            <div :class="contentClass">Media</div>
+        </template>
+    </CustomToolTip>
 
     <input
         ref="fileInput"
@@ -23,7 +26,8 @@
 
 <script setup>
 import { Image } from 'lucide-vue-next'
-import Tooltip from '~/modules/Common/components/ToolTip'
+import { CustomToolTip } from '~/modules/Common/components/Tooltip'
+import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { ref } from 'vue'
 
 const emit = defineEmits(['select'])

@@ -90,7 +90,8 @@ const languages: Language[] = [
     { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
 ]
 
-const selectedLanguage = ref<string>('')
+// Use v-model for selected language
+const selectedLanguage = defineModel<string | null>('selectedLanguage', { default: null })
 
 const emit = defineEmits<{
     (e: 'next', language: string): void

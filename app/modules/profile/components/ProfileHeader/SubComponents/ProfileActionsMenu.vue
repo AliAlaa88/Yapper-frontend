@@ -6,49 +6,59 @@
         sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-allduration-200
         sm:w-56 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
         sm:translate-x-0 w-full sm:rounded-xl rounded-t-2xl sm:max-h-none max-h-[50vh]
-        overflow-y-auto"
-    >
-        <button
+        overflow-y-auto">
+        <Button
             v-if="!isBlocked"
             id="mute-button"
-            class="cursor-pointer w-full text-primary font-semibold text-left
+            button-class="cursor-pointer w-full text-primary font-semibold text-left
             px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
-            @click="handleMuteAndUnmute">
-            <MegaphoneOff v-if="!isMuted" class="w-4 h-4 mr-3" />
-            <Megaphone v-else class="w-4 h-4 mr-3" />
+            :is-loading="isMuteLoading"
+            @click="handleMuteAndUnmute"
+        >
+            <template #icon-left>
+                <MegaphoneOff v-if="!isMuted" class="w-4 h-4 mr-3" />
+                <Megaphone v-else class="w-4 h-4 mr-3" />
+            </template>
             {{ isMuted ? $t('profile.unmuteButton') : $t('profile.muteButton') }}
-        </button>
+        </Button>
 
-        <button
+        <Button
             v-if="isFollower && !isBlocked"
             id="remove-follower-button"
-            class="w-full text-primary text-left font-semibold px-4 py-3
-            hover:bg-hover transition flex items-center cursor-pointer"
-            @click="handleRemove">
-            <UserRoundX class="w-4 h-4 mr-3" />
+            button-class="cursor-pointer w-full text-primary font-semibold text-left px-4
+            py-3 hover:bg-hover transition flex items-center first:rounded-t-xl last:rounded-b-xl"
+            @click="handleRemove"
+        >
+            <template #icon-left>
+                <UserRoundX class="w-4 h-4 mr-3" />
+            </template>
             {{ $t('profile.removeFollowerButton') }}
-        </button>
+        </Button>
 
-        <button
+        <Button
             id="block-button"
-            class="w-full text-primary text-left px-4 py-3 font-semibold hover:bg-hover
+            button-class="w-full text-primary text-left px-4 py-3 font-semibold hover:bg-hover
             transition flex items-center last:rounded-b-xl cursor-pointer"
             @click="handleBlockAndUnblock">
-            <Ban v-if="!isBlocked" class="w-4 h-4 mr-3" />
-            <CircleCheckBig v-else class="w-4 h-4 mr-3" />
+            <template #icon-left>
+                <Ban v-if="!isBlocked" class="w-4 h-4 mr-3" />
+                <CircleCheckBig v-else class="w-4 h-4 mr-3" />
+            </template>
             {{ isBlocked ? $t('profile.unblockButton') : $t('profile.blockButton') }}
             <span class="font-normal ml-1">@</span>
             {{ username }}
-        </button>
+        </Button>
 
         <div class="px-4">
-            <button
+            <Button
                 id="cancel-menu-button"
-                class="w-full cursor-pointer border border-primary text-center font-semibold py-2.5
-                hover:bg-hover rounded-full transition mt-2 mb-3 text-primary sm:hidden"
-                @click="showList = false">
+                button-class="w-full cursor-pointer border border-primary text-center
+                font-semibold py-2.5 hover:bg-hover rounded-full transition mt-2 mb-3
+                text-primary sm:hidden"
+                @click="showList = false"
+            >
                 {{ $t('profile.cancelButton') }}
-            </button>
+            </Button>
         </div>
     </div>
 </template>
@@ -59,6 +69,7 @@ import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
 import type { Ref } from 'vue'
+import Button from '~/components/ui/Button.vue'
 const showList = inject<Ref<boolean>>('show-list')!
 
 const userId = inject<Ref<string>>('user-id')!
@@ -75,6 +86,7 @@ const {
     handleRemoveFollowerWithConfirmation,
     handleUnmuteWithSnackbar,
     handleUnblockWithConfirmation,
+    isMuteLoading,
 } = userInteractions
 
 function handleMuteAndUnmute() {

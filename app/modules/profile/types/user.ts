@@ -1,16 +1,6 @@
-export interface Me {
-    user_id: string
-    name: string
-    username: string
-    bio: string | null
-    avatar_url: string | null
-    cover_url: string | null
-    followers_count: number
-    following_count: number
-    country: string | null
-    created_at: string
-}
+import type { User } from '~/modules/Common/types/user'
 
+export type Me = User;
 export interface OtherUser {
     user_id: string
     name: string
