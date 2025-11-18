@@ -15,8 +15,8 @@
             <backButton @close="$emit('back')" class="absolute top-6 left-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">Select your language</h2>
-            <p class="text-muted mb-6">This will help us personalize your Yapper experience.</p>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.language.title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.language.info') }}</p>
 
             <!-- Language List -->
             <div class="mb-6">
@@ -58,7 +58,7 @@
                 ]"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
 
             <!-- Skip Button -->
@@ -67,7 +67,7 @@
                 class="w-full text-muted hover:text-primary transition duration-200"
                 @click="onSkip"
             >
-                Skip for now
+                {{ $t('auth.common.skip') }}
             </button>
         </div>
     </div>

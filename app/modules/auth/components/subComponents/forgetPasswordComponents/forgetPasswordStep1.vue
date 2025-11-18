@@ -12,18 +12,15 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">Find your X account</h2>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.forgotPassword.step1Title') }}</h2>
             <!-- Description -->
-            <p class="text-muted mb-6">
-                Enter the email, phone number, or username associated with your account to change
-                your password.
-            </p>
+            <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step1Info') }}</p>
 
             <!-- Input -->
             <input
                 id="input-identifier-forgot-password-s1"
                 type="text"
-                placeholder="Phone, email, or username"
+                :placeholder="$t('auth.forgotPassword.identifierPlaceholder')"
                 v-model="identifier"
                 class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
             />
@@ -43,7 +40,7 @@
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
         </div>
     </div>

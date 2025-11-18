@@ -15,8 +15,8 @@
             <backButton @close="$emit('back')" class="absolute top-6 left-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">What are you interested in?</h2>
-            <p class="text-muted mb-6">Select at least 3 interests to help us tailor your feed.</p>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.interests.title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.interests.info') }}</p>
 
             <!-- Interests Grid -->
             <div class="max-h-64 overflow-y-auto mb-6 custom-scrollbar">
@@ -40,9 +40,9 @@
 
             <!-- Selection Counter -->
             <p class="text-center text-muted text-sm mb-6">
-                {{ selectedInterests.length }} selected
+                {{ selectedInterests.length }} {{ $t('auth.common.selectedSuffix') }}
                 <span v-if="selectedInterests.length < 3" class="text-red-400">
-                    ({{ 3 - selectedInterests.length }} more needed)
+                    ({{ 3 - selectedInterests.length }} {{ $t('auth.common.neededMoreSuffix') }})
                 </span>
             </p>
 
@@ -58,7 +58,7 @@
                 ]"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
 
             <!-- Skip Button -->
@@ -67,7 +67,7 @@
                 class="w-full text-muted hover:text-alternate transition duration-200"
                 @click="onSkip"
             >
-                Skip for now
+                {{ $t('auth.common.skip') }}
             </button>
         </div>
     </div>

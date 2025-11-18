@@ -15,28 +15,42 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">Reset Your Password</h2>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.forgotPassword.step3Title') }}</h2>
             <!-- Description -->
-            <p class="text-muted mb-6">
-                Enter your new password below to reset your account password.
-            </p>
+            <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step3Info') }}</p>
 
             <!-- Input -->
-            <input
-                id="input-password-forgot-password-s3"
-                type="password"
-                placeholder="enter your new password"
-                v-model="password"
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
-            />
+            <div class="mb-4">
+                <input
+                    id="input-password-forgot-password-s3"
+                    type="password"
+                    :placeholder="$t('auth.forgotPassword.passwordPlaceholder')"
+                    v-model="password"
+                    @blur="validatePasswordField"
+                    @input="clearPasswordError"
+                    :class="[
+                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                    ]"
+                />
+                <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
+            </div>
 
-            <input
-                id="input-verify-password-forgot-password-s3"
-                type="password"
-                placeholder="verify your new password"
-                v-model="verifyPassword"
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
-            />
+            <div class="mb-4">
+                <input
+                    id="input-verify-password-forgot-password-s3"
+                    type="password"
+                    :placeholder="$t('auth.forgotPassword.verifyPasswordPlaceholder')"
+                    v-model="verifyPassword"
+                    @input="clearMatchError"
+                    :class="[
+                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        matchError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                    ]"
+                />
+                <p v-if="matchError" class="text-red text-xs mt-1">{{ matchError }}</p>
+                <p v-if="!matchError && verifyPassword && password === verifyPassword" class="text-green text-xs mt-1">✓ Passwords match</p>
+            </div>
 
             <!-- Error Message -->
             <p
@@ -53,7 +67,7 @@
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onFinish"
             >
-                Reset Password
+                {{ $t('auth.forgotPassword.resetButton') }}
             </button>
         </div>
     </div>
@@ -65,12 +79,15 @@ import { useResetPasswordQuery } from '../../../queries/useForgetPasswordQuery'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { validatePassword } from '../../../utils/validators'
 
 // Use v-model for password fields
 const password = defineModel<string>('password', { default: '' })
 const verifyPassword = defineModel<string>('confirmPassword', { default: '' })
 
 const errorMessage = ref('')
+const passwordError = ref('')
+const matchError = ref('')
 
 const props = defineProps<{
     reset_token: string
@@ -97,11 +114,32 @@ const resetPasswordMutation = useResetPasswordQuery(
     },
 )
 
+const validatePasswordField = () => {
+    const result = validatePassword(password.value)
+    passwordError.value = result.valid ? '' : result.message || ''
+    return result.valid
+}
+
+const clearPasswordError = () => {
+    passwordError.value = ''
+    errorMessage.value = ''
+}
+
+const clearMatchError = () => {
+    matchError.value = ''
+}
+
 const onFinish = () => {
     errorMessage.value = '' // Clear previous errors
 
+    // Validate password strength
+    if (!validatePasswordField()) {
+        return
+    }
+
+    // Check password match
     if (password.value !== verifyPassword.value) {
-        errorMessage.value = 'Passwords do not match.'
+        matchError.value = 'Passwords do not match.'
         return
     }
 
