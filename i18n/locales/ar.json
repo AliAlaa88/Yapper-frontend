@@ -73,6 +73,7 @@
         "removeFollowerButton": "إزالة هذا المتابع",
         "cancelButton": "إلغاء",
         "mutualFollowers": {
+            "noMutuals": "لا يتابعه أحد ممن تتابعهم",
             "followedBy": "يتابعه {name}",
             "followedByTwo": "يتابعه {name1} و {name2}",
             "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم"

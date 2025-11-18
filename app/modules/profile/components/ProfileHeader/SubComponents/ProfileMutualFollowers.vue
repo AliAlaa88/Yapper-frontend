@@ -1,5 +1,5 @@
 <template>
-    <div v-if="mutualFollowersCount > 0" class="mt-3 text-[15px] text-muted">
+    <div class="mt-3 text-[15px] text-muted">
         <div class="flex items-center gap-1.5">
             <div class="flex -space-x-1">
                 <img
@@ -23,7 +23,7 @@ import { useI18n } from 'vue-i18n'
 import type { OtherUser } from '../../../types/user'
 
 const props = defineProps<{
-    mutualFollowersCount: number
+    mutualFollowersC: number
     mutualFollowers: OtherUser[]
 }>()
 
@@ -34,10 +34,10 @@ const displayedFollowers = computed(() => {
 })
 
 const formattedText = computed(() => {
-    const count = props.mutualFollowersCount
+    const count = props.mutualFollowersC
     const followers = props.mutualFollowers
 
-    if (count === 0 || followers.length === 0) return ''
+    if (count === 0 || followers.length === 0) return t('profile.mutualFollowers.noMutuals')
 
     if (count === 1 && followers[0]) {
         return t('profile.mutualFollowers.followedBy', { name: followers[0].name })

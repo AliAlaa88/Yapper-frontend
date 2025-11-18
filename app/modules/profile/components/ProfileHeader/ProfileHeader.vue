@@ -41,7 +41,7 @@
                 />
                 <ProfileMutualFollowers
                     v-if="!isMee"
-                    :mutual-followers-count="Number((user as OtherUser)?.mutual_followers_count) ?? 0"
+                    :mutual-followers-c="Number((user as OtherUser)?.mutual_followers_count) ?? 0"
                     :mutual-followers="(user as OtherUser)?.top_mutual_followers ?? []"
                 />
                 <ProfileMuteMessage />
