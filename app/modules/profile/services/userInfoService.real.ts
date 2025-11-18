@@ -235,4 +235,62 @@ export const userInfoServiceReal = {
             throw new Error('Something went wrong')
         }
     },
+
+    async uploadAvatar(userId: string, file: File): Promise<Me> {
+        const { $axios } = useNuxtApp()
+        const formData = new FormData()
+        formData.append('avatar', file)
+
+        try {
+            const response = await $axios.post<MeApiResponse>('/users/me/upload-avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            if (!response.data || !response.data.data) {
+                throw new Error('Failed to upload avatar')
+            }
+            return response.data.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 400) {
+                    throw new Error('Invalid file upload')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
+
+    async uploadCoverPhoto(userId: string, file: File): Promise<Me> {
+        const { $axios } = useNuxtApp()
+        const formData = new FormData()
+        formData.append('cover_photo', file)
+
+        try {
+            const response = await $axios.post<MeApiResponse>('/users/me/upload-cover', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            if (!response.data || !response.data.data) {
+                throw new Error('Failed to upload cover photo')
+            }
+            return response.data.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 400) {
+                    throw new Error('Invalid file upload')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
 }

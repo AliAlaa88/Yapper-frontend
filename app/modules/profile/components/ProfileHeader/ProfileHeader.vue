@@ -1,17 +1,13 @@
 <template>
     <div class="border-b border-primary bg-primary">
-        <!-- Cover Image -->
         <CoverImage :cover-url="user?.cover_url ?? ''" />
 
-        <!-- Profile Info -->
         <div class="px-4">
             <div class="-mt-[42px] sm:-mt-[67px] mb-3 flex items-end justify-between">
-                <!-- Avatar -->
                 <ProfileAvatar
                     :avatar-url="user?.avatar_url ?? ''"
                     :display-name="user?.name ?? ''"
                 />
-                <!-- Actions -->
                 <div class="mt-3 flex gap-2">
                     <div v-if="isMee" class="flex gap-2">
                         <ProfileEditButton />
@@ -24,7 +20,6 @@
                 </div>
             </div>
 
-            <!-- User Details -->
             <div class="pb-4">
                 <ProfileUserInfo
                     :display-name="user?.name ?? ''"
@@ -63,23 +58,9 @@ import ProfileActions from './SubComponents/ProfileActions.vue'
 import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
 import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import ProfileMutualFollowers from './SubComponents/ProfileMutualFollowers.vue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
-import { useMe } from '../../composables/useMe'
 import type { OtherUser } from '../../types/user'
+import { useProfileStore } from '../../stores/profileStore'
 
-const route = useRoute()
-const username = route.params.username as string
-const { userQuery, myQuery } = useUserInfoQuery(username)
-const { isMe: isMeComputed } = useMe(username)
-const isMee = computed(() => isMeComputed.value)
-const user = computed(() => {
-    if (isMee.value) {
-        console.log('isMee:', myQuery.data.value)
-        return myQuery.data.value
-    }
-    console.log('isMee:', userQuery.data.value)
-    return userQuery.data.value
-})
+const profileStore = useProfileStore()
+const { profile: user, isMyProfile: isMee } = storeToRefs(profileStore)
 </script>

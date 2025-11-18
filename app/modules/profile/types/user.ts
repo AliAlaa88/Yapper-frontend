@@ -1,6 +1,19 @@
 import type { User } from '~/modules/Common/types/user'
 
-export type Me = User;
+export interface Me {
+    user_id: string
+    name: string
+    username: string
+    bio: string | null
+    avatar_url: string | null
+    cover_url: string | null
+    country: string | null
+    created_at: string
+    birth_date: string
+    followers_count: number
+    following_count: number
+}
+
 export interface OtherUser {
     user_id: string
     name: string
@@ -16,7 +29,8 @@ export interface OtherUser {
     following_count?: number
     country?: string | null
     created_at?: string
-    top_mutual_followers: OtherUser[]
+    birth_date?: string
+    top_mutual_followers: User[]
     mutual_followers_count: string
 }
 

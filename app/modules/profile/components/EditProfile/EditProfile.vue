@@ -84,7 +84,7 @@ const avatarFileInput = ref<HTMLInputElement | null>(null)
 
 // Edit profile mutation - will be initialized when user is available
 const userId = computed(() => user.value?.user_id || '')
-const editProfileMutation = useEditProfileMutation(userId.value)
+const { editProfileMutation } = useEditProfileMutation(userId.value)
 
 const isSaving = computed(() => editProfileMutation.isPending.value)
 
@@ -181,8 +181,8 @@ const handleSave = async () => {
         bio: formData.value.bio,
         country: formData.value.country,
         created_at: formData.value.created_at,
-        avatar_url: avatarUrl.value || undefined,
-        cover_url: coverUrl.value || undefined,
+        avatar_url: avatarUrl.value || null,
+        cover_url: coverUrl.value || null,
     }
 
     try {
