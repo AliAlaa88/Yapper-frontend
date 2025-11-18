@@ -8,6 +8,9 @@
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
 
+            <!-- Back Button -->
+            <backButton @close="$emit('back')" />
+
             <!-- Logo -->
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -76,8 +79,11 @@ import Logo from '~/modules/Common/components/Logo'
 import { useLoginQuery } from '../../../queries/useLoginQuery'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import closeButton from '../closeButton.vue'
+import backButton from '../backButton.vue'
 
-const password = ref('')
+// Use v-model for password
+const password = defineModel<string>('password', { default: '' })
+
 const errorMessage = ref('')
 
 const props = defineProps<{
@@ -87,6 +93,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'finish'): void
+    (e: 'back'): void
     (e: 'close'): void
     (e: 'switch'): void
 }>()

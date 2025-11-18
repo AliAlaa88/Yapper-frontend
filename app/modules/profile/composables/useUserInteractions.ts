@@ -20,6 +20,13 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleUnblock,
         handleRemoveFollower,
         handleFollow,
+        isUnfollowLoading,
+        isBlockLoading,
+        isUnblockLoading,
+        isMuteLoading,
+        isUnmuteLoading,
+        isRemoveFollowerLoading,
+        isFollowLoading,
     } = useUserActions(id)
 
     function handleBlockWithConfirmation(showList?: Ref<boolean>) {
@@ -154,5 +161,12 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleUnmuteWithSnackbar,
         handleUnfollowWithConfirmation,
         handleFollowAction,
+        isUnfollowLoading,
+        isBlockLoading,
+        isUnblockLoading,
+        isMuteLoading,
+        isUnmuteLoading,
+        isRemoveFollowerLoading,
+        isFollowLoading,
     }
 }

@@ -49,9 +49,9 @@ const props = defineProps<{
     name: string
     username: string
     avatar: string
-    bio?: string
-    followersCount?: number
-    followingCount?: number
+    bio: string | null;
+    followersCount: number | null;
+    followingCount: number | null;
 }>()
 
 const profileLink = computed(() => getProfileUrl({ 
@@ -61,7 +61,7 @@ const profileLink = computed(() => getProfileUrl({
     avatar: props.avatar
 }))
 
-const formatNumber = (num?: number): string => {
+const formatNumber = (num?: number | null): string => {
     if (!num && num !== 0) return '0'
     if (num >= 1000000) {
         return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'

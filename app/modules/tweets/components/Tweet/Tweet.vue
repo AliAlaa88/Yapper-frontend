@@ -6,38 +6,39 @@
     >
         <div class="flex gap-3">
             <!-- Avatar column -->
-            <TooltipProvider :delay-duration="300">
-                <div class="h-fit">
-                    <NuxtLink 
-                        :id="`tweet-avatar-link-${id}`"
-                        class="shrink-0" 
-                        @click.stop
-                        :to="profileUrl"
+            <div class="h-fit">
+                <NuxtLink
+                    :id="`tweet-avatar-link-${id}`"
+                    class="shrink-0"
+                    @click.stop
+                    :to="profileUrl"
+                >
+                    <CustomToolTip
+                        :delay-duration="300"
+                        content-class="rounded-2xl shadow-xl border border-x-border"
                     >
-                        <Tooltip>
-                            <TooltipTrigger as-child>
-                                <img 
-                                    :id="`tweet-avatar-${id}`"
-                                    :src="user.avatar" 
-                                    :alt="user.name" 
-                                    class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent class="p-0">
-                                <UserCard
-                                    :id="user.id"
-                                    :name="user.name"
-                                    :username="user.username"
-                                    :avatar="user.avatar"
-                                    :bio="user.bio"
-                                    :followers-count="user.followers"
-                                    :following-count="user.following"
-                                />
-                            </TooltipContent>
-                        </Tooltip>
-                    </NuxtLink> 
-                </div>
-            </TooltipProvider>
+                        <template #trigger>
+                            <img
+                                :id="`tweet-avatar-${id}`"
+                                :src="user.avatar"
+                                :alt="user.name"
+                                class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                            />
+                        </template>
+                        <template #content>
+                            <UserCard
+                                :id="user.id"
+                                :name="user.name"
+                                :username="user.username"
+                                :avatar="user.avatar"
+                                :bio="user.bio"
+                                :followers-count="user.followers"
+                                :following-count="user.following"
+                            />
+                        </template>
+                    </CustomToolTip>
+                </NuxtLink>
+            </div>
 
             <!-- Content column -->
             <div class="flex-1 min-w-0">
@@ -55,7 +56,7 @@ import Publisher from './subComponents/Publisher/Publisher.vue'
 import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip'
+import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
@@ -71,13 +72,14 @@ const id = computed(() => props.tweet.tweet_id)
 const content = computed(() => ({
     text: props.tweet.content,
     images: props.tweet.images || [],
-    videos: props.tweet.videos || []
+    videos: props.tweet.videos || [],
 }))
 
 // Transform user to include avatar property
 const user = computed(() => ({
     ...props.tweet.user,
-    avatar: props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`
+    avatar:
+        props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`,
 }))
 
 // Transform stats to the expected format
@@ -85,7 +87,7 @@ const stats = computed(() => ({
     likes: props.tweet.likes_count,
     replies: props.tweet.replies_count,
     retweets: props.tweet.reposts_count,
-    views: props.tweet.views_count
+    views: props.tweet.views_count,
 }))
 
 const type = computed(() => props.tweet.type)
@@ -101,5 +103,4 @@ const navigateToTweet = () => {
         navigateTo(tweetUrl.value)
     }
 }
-
 </script>
