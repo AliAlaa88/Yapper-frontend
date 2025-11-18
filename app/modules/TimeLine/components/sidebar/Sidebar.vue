@@ -94,7 +94,7 @@ const navLinks = [
         label_en: 'Settings',
         label_ar: 'الإعدادات',
         icon: Settings,
-        href: '/settings',
+        href: '/settings/account',
     },
 ]
 
