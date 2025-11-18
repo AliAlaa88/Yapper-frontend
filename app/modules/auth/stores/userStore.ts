@@ -1,5 +1,5 @@
 import type {User , AuthResponse} from '../types/user';
-
+import Cookies from 'js-cookie';
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
   }),
   
   getters: {
-    isLoggedIn: () => localStorage.getItem('user') !== null && localStorage.getItem('access_token') !== null,
+    isLoggedIn: () => localStorage.getItem('user') !== null && Cookies.get('access_token') !== undefined,
     getUser: (state) => state.user,
     getAccessToken: (state) => state.accessToken,
     getUserId: (state) => state.user?.id,
@@ -28,7 +28,7 @@ export const useUserStore = defineStore('user', {
       this.accessToken = authData.access_token;
       
       if (process.client) {
-        localStorage.setItem('access_token', authData.access_token);
+        Cookies.set('access_token', authData.access_token);
         localStorage.setItem('user', JSON.stringify(authData.user));
       }
     },
@@ -56,14 +56,14 @@ export const useUserStore = defineStore('user', {
       this.accessToken = null;
       
       if (process.client) {
-        localStorage.removeItem('access_token');
+        Cookies.remove('access_token');
         localStorage.removeItem('user');
       }
     },
     
     restoreSession() {
       if (process.client) {
-        const token = localStorage.getItem('access_token');
+        const token = Cookies.get('access_token');
         const userStr = localStorage.getItem('user');
         
         if (token && userStr) {

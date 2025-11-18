@@ -83,6 +83,30 @@
         "1": "January","2": "February","3": "March","4": "April","5": "May","6": "June","7": "July","8": "August","9": "September","10": "October","11": "November","12": "December"
       }
     },
+    "OAuth":{
+      "continueWithGoogle":"Continue with Google",
+      "continueWithGithub":"Continue with Github"
+    },
+    "oauth": {
+      "dobTitle": "What's your birth date?",
+      "dobInfo": "This won't be public.",
+      "month": "Month",
+      "day": "Day",
+      "year": "Year",
+      "termsText": "By signing up, you agree to our Terms, Data Policy and Cookies Policy."
+    },
+    "username": {
+      "title": "What should we call you?",
+      "info": "Your username is unique. You can always change it later.",
+      "placeholder": "username",
+      "available": "Available!",
+      "recommendations": "Recommended usernames:"
+    },
+    "profilePicture": {
+      "title": "Pick a profile picture",
+      "info": "Have a favorite selfie? Upload it now.",
+      "chooseImage": "Choose Image"
+    },
     "verifyOtp": {
       "title": "We sent you a code",
       "info": "Please enter the 6-digit code sent to your email address.",

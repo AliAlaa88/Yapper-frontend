@@ -1,6 +1,6 @@
 <template>
     <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-primary/60 backdrop-blur-sm p-4"
     >
         <div
             class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
@@ -29,8 +29,8 @@
                     @input="handleOtpInput"
                     @blur="validateOtpField"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors text-center text-2xl tracking-widest',
-                        otpError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors text-center text-2xl tracking-widest',
+                        otpError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="otpError" class="text-red text-xs mt-1 text-center">{{ otpError }}</p>

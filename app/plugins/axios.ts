@@ -1,13 +1,13 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
-// import {createAuthService} from "../modules/auth/services"
+import Cookies from 'js-cookie'
 import { useNuxtApp } from '#app'
+
 export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig()
     const isMockApi = config.public.mockApi.toString() === 'true'
     const apiBase = isMockApi ? 'http://localhost:3001' : (config.public.apiUrl as string)
-    const {$authService} = useNuxtApp();
 
     const yapperApi: AxiosInstance = axios.create({
         baseURL: apiBase,
@@ -22,7 +22,7 @@ export default defineNuxtPlugin(() => {
     yapperApi.interceptors.request.use(
         (config) => {
             if (process.client) {
-                const token = localStorage.getItem('access_token')
+                const token = Cookies.get('access_token')
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`
                 }
@@ -36,14 +36,14 @@ export default defineNuxtPlugin(() => {
 
     yapperApi.interceptors.response.use(
         (response) => response,
-        (error) => {
+        async (error) => {
             if (error.response?.status === 401) {
                 if (process.client && window.location.pathname !== '/auth/login') {
-                    // localStorage.removeItem('access_token')
-                    // localStorage.removeItem('user')
-                    // window.location.href = '/auth/login'
-                    const response = $authService.GetAccessToken();
-                    console.log("Refresh Token Response:", response);
+                    const nuxtApp = useNuxtApp()
+                    const authService = nuxtApp.$authService
+                    const response = await authService.GetAccessToken()
+                    const access_token = response.data.access_token;
+                    Cookies.set('access_token', access_token)
                 }
             }
             return Promise.reject(error)

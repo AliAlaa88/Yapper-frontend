@@ -24,7 +24,7 @@
                 :placeholder="props.identifier"
                 :value="props.identifier"
                 readonly
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none mb-4"
+                class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none mb-4 opacity-70 shadow-sm"
             />
 
             <!-- Password -->
@@ -37,8 +37,8 @@
                     @blur="validatePasswordField"
                     @input="clearPasswordError"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
@@ -91,7 +91,7 @@ import { validatePassword } from '../../../utils/validators'
 
 const errorMessage = ref('')
 const passwordError = ref('')
-
+const password = ref('')
 const props = defineProps<{
     identifier: string
     type: string

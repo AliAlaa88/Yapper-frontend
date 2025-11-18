@@ -1,9 +1,9 @@
 <template>
     <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-primary/60 backdrop-blur-sm p-4"
     >
         <div
-            class="bg-black text-white rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
         >
             <!-- Close Button -->
             <closeButton @close="$emit('close')" />
@@ -12,9 +12,9 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">What's your birth date?</h2>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.oauth.dobTitle') }}</h2>
             <!-- Description -->
-            <p class="text-gray-400 mb-6">This won't be public.</p>
+            <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
 
             <!-- Date of Birth Dropdowns -->
             <div class="flex gap-3 mb-4">
@@ -23,15 +23,16 @@
                     <select
                         id="select-month-oauth-s1"
                         v-model="month"
-                        class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
                     >
-                        <option value="" disabled selected>Month</option>
+                        <option value="" disabled selected>{{ $t('auth.oauth.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
                             {{ m.label }}
                         </option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -41,13 +42,14 @@
                     <select
                         id="select-day-oauth-s1"
                         v-model="day"
-                        class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
                     >
-                        <option value="" disabled selected>Day</option>
+                        <option value="" disabled selected>{{ $t('auth.oauth.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -57,45 +59,50 @@
                     <select
                         id="select-year-oauth-s1"
                         v-model="year"
-                        class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 focus:outline-none focus:border-blue-500 appearance-none text-gray-400"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
                     >
-                        <option value="" disabled selected>Year</option>
+                        <option value="" disabled selected>{{ $t('auth.oauth.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
             </div>
 
             <!-- Error Message -->
-            <p v-if="errorMessage" id="error-message-oauth-s1" class="text-red-500 text-sm mb-4">
+            <p v-if="errorMessage" id="error-message-oauth-s1" class="text-red text-sm mb-4">
                 {{ errorMessage }}
             </p>
 
-            <p class="text-gray-400 text-xs mb-4">
-                By signing up, you agree to our Terms, Data Policy and Cookies Policy.
+            <p class="text-muted text-xs mb-4">
+                {{ $t('auth.oauth.termsText') }}
             </p>
 
             <!-- Next Button -->
             <button
                 id="button-signup-oauth-s1"
-                class="w-full bg-white text-black font-semibold rounded-full py-2 hover:bg-gray-200 transition mb-3"
+                class="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
                 @click="onNext"
             >
-                Sign Up
+                {{ $t('auth.common.signUp') }}
             </button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import closeButton from '../closeButton.vue'
 import Logo from '~/modules/Common/components/Logo'
-import { ref } from 'vue'
 import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery'
 import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 const month = ref('')
 const day = ref('')

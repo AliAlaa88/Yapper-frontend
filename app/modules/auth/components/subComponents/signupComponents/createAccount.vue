@@ -23,8 +23,8 @@
                     @blur="validateNameField"
                     @input="clearNameError"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        nameError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        nameError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="nameError" class="text-red text-xs mt-1">{{ nameError }}</p>
@@ -40,8 +40,8 @@
                     @blur="validateEmailField"
                     @input="clearEmailError"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        emailError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        emailError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="emailError" class="text-red text-xs mt-1">{{ emailError }}</p>
@@ -56,7 +56,7 @@
                     <select
                         id="select-month-signup-s1"
                         v-model="month"
-                        class="w-full bg-transparent cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-primary appearance-none text-primary"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
                     >
                         <option value="" disabled selected>{{ $t('auth.signup.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
@@ -64,7 +64,8 @@
                         </option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -74,13 +75,14 @@
                     <select
                         id="select-day-signup-s1"
                         v-model="day"
-                        class="w-full bg-transparent cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-primary appearance-none text-primary"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
                     >
                         <option value="" disabled selected>{{ $t('auth.signup.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -90,13 +92,14 @@
                     <select
                         id="select-year-signup-s1"
                         v-model="year"
-                        class="w-full bg-transparent cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-primary appearance-none text-primary"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
                     >
                         <option value="" disabled selected>{{ $t('auth.signup.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -127,11 +130,15 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from '../recaptcha.vue'
 import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
 import closeButton from '../closeButton.vue'
 import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 const name = ref('')
 const email = ref('')

@@ -25,8 +25,8 @@
                     @input="handleOtpInput"
                     @blur="validateOtpField"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors text-center text-2xl tracking-widest',
-                        otpError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors text-center text-2xl tracking-widest',
+                        otpError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="otpError" class="text-red text-xs mt-1 text-center">{{ otpError }}</p>
@@ -83,8 +83,6 @@ import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validateOtp } from '../../../utils/validators'
 
-const otp = ref('')
-const errorMessage = ref('')
 const otpError = ref('')
 
 // Use v-model for otp

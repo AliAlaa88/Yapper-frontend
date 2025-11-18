@@ -30,8 +30,8 @@
                     @blur="validatePasswordField"
                     @input="clearPasswordError"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>

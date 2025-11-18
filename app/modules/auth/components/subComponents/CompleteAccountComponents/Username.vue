@@ -12,22 +12,26 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Back Button -->
-            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+            <backButton @close="$emit('back')" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">What should we call you?</h2>
-            <p class="text-muted mb-6">Your @username is unique. You can always change it later.</p>
+            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.username.title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.username.info') }}</p>
 
             <!-- Username Input -->
             <div class="mb-6">
                 <div class="relative">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-muted">@</span>
+                    <span 
+                        class="absolute top-1/2 -translate-y-1/2 text-muted"
+                        :class="isArabic ? 'right-4' : 'left-4'"
+                    >@</span>
                     <input
                         id="input-username-complete"
                         v-model="username"
                         type="text"
-                        placeholder="username"
-                        class="w-full bg-primary text-primary border-2 border-primary  rounded-full px-4 pl-8 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        :placeholder="$t('auth.username.placeholder')"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
+                        :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
                         maxlength="15"
                         @input="validateUsername"
                     />
@@ -41,7 +45,7 @@
                         id="success-message-username"
                         class="text-green text-sm"
                     >
-                        Available!
+                        {{ $t('auth.username.available') }}
                     </p>
                     <p v-else class="text-transparent text-sm">.</p>
                     <p class="text-muted text-sm">{{ username?.length || 0 }}/15</p>
@@ -53,13 +57,13 @@
                 v-if="props.Recommendations && props.Recommendations.length"
                 class="my-2 text-sm text-muted"
             >
-                <p>Recommended usernames:</p>
+                <p>{{ $t('auth.username.recommendations') }}</p>
                 <ul class="mt-1 flex flex-wrap gap-2">
                     <li
                         v-for="(suggestion, index) in props.Recommendations"
                         :key="index"
                         :id="`recommendation-${index}-username`"
-                        class="px-2 py-1 border border-muted rounded-md cursor-pointer hover:bg-hover"
+                        class="px-2 py-1 border-2 border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
                         @click="username = suggestion"
                     >
                         {{ suggestion }}
@@ -72,23 +76,23 @@
                 id="button-next-username"
                 :disabled="!isValid"
                 :class="[
-                    'w-full font-semibold rounded-full py-2 transition my-3',
+                    'w-full font-semibold rounded-full py-2 transition my-3 duration-200',
                     isValid
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate  cursor-pointer'
-                        : 'bg-alternate text-alternate cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate cursor-pointer'
+                        : 'bg-alternate text-alternate opacity-50 cursor-not-allowed',
                 ]"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
 
             <!-- Skip Button -->
             <button
                 id="button-skip-username"
-                class="w-full text-muted hover:text-primary transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
-                Skip for now
+                {{ $t('auth.common.skip') }}
             </button>
         </div>
     </div>
@@ -96,8 +100,12 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 import Logo from '~/modules/Common/components/Logo'
 
 // Use v-model for username

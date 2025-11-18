@@ -1,10 +1,11 @@
 import { useNuxtApp } from "#app"
+import Cookies from "js-cookie";
 export default defineNuxtRouteMiddleware((to) => {
     const { $authService } = useNuxtApp()
     // Check authentication status using service
     const response = $authService.getUserData();
     const user = localStorage.getItem('user')
-    const token = localStorage.getItem('access_token')
+    const token = Cookies.get('access_token')
     const isAuthenticated = !!(user && token) || (response && response.user);
 
     // Check if route requires authentication

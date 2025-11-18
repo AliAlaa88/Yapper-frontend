@@ -12,7 +12,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Back Button -->
-            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+            <backButton @close="$emit('back')" />
 
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.interests.title') }}</h2>
@@ -26,10 +26,10 @@
                         :key="interest.id"
                         :id="`button-interest-${interest.id}`"
                         :class="[
-                            'px-4 py-3 rounded-full text-sm font-medium transition border-2',
+                            'px-4 py-3 rounded-full text-sm font-medium transition shadow-sm',
                             selectedInterests.includes(interest.id)
-                                ? 'bg-blue text-primary border-blue-400 text-primary'
-                                : 'border-muted text-muted hover:border-hover',
+                                ? 'bg-alternate text-alternate border-2 border-transparent'
+                                : 'border-2 border-primary text-primary hover:bg-hover',
                         ]"
                         @click="toggleInterest(interest.id)"
                     >
@@ -64,7 +64,7 @@
             <!-- Skip Button -->
             <button
                 id="button-skip-interests"
-                class="w-full text-muted hover:text-alternate transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}

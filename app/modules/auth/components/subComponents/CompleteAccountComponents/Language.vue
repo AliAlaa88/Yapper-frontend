@@ -12,7 +12,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Back Button -->
-            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+            <backButton @close="$emit('back')" />
 
             <!-- Title -->
             <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.language.title') }}</h2>
@@ -25,8 +25,8 @@
                     :key="lang.code"
                     :id="`button-language-${lang.code}`"
                     :class="[
-                        'w-full text-left px-4 py-3 rounded-lg transition flex items-center justify-between',
-                        selectedLanguage === lang.code ? 'bg-blue text-primary' : 'hover:bg-hover',
+                        'w-full text-left px-4 py-3 rounded-lg transition duration-200 flex items-center justify-between',
+                        selectedLanguage === lang.code ? 'bg-alternate text-alternate' : 'text-primary hover:bg-hover',
                     ]"
                     @click="selectLanguage(lang.code)"
                 >
@@ -64,7 +64,7 @@
             <!-- Skip Button -->
             <button
                 id="button-skip-language"
-                class="w-full text-muted hover:text-primary transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}

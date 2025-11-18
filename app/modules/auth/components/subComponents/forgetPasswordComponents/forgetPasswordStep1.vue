@@ -1,6 +1,6 @@
 <template>
     <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-primary/60 backdrop-blur-sm p-4"
     >
         <div
             class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
@@ -22,7 +22,7 @@
                 type="text"
                 :placeholder="$t('auth.forgotPassword.identifierPlaceholder')"
                 v-model="identifier"
-                class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
+                class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue mb-4 shadow-sm"
             />
 
             <!-- Error Message -->

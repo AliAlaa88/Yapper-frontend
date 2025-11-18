@@ -19,9 +19,9 @@
 
             <!-- OR Divider -->
             <div class="flex items-center my-4 w-full">
-                <div class="flex-1 h-px bg-primary"></div>
-                <span class="px-3 text-primary text-sm">{{ $t('auth.common.or') }}</span>
-                <div class="flex-1 h-px bg-primary"></div>
+                <div class="flex-1 h-px border-t border-primary"></div>
+                <span class="px-3 text-muted text-sm">{{ $t('auth.common.or') }}</span>
+                <div class="flex-1 h-px border-t border-primary"></div>
             </div>
 
             <!-- Input -->
@@ -34,8 +34,8 @@
                     @blur="validateIdentifierField"
                     @input="clearValidationError"
                     :class="[
-                        'w-full bg-transparent border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        validationError ? 'border-red focus:border-red' : 'border-primary focus:border-primary'
+                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
+                        validationError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
                     ]"
                 />
                 <p v-if="validationError" class="text-red text-xs mt-1">{{ validationError }}</p>
@@ -55,7 +55,7 @@
             <!-- Forgot password -->
             <button
                 id="button-forgot-password-login"
-                class="w-full border border-primary bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-6"
+                class="w-full border border-primary text-primary hover:bg-hover font-semibold cursor-pointer rounded-full py-2 transition mb-6"
                 @click="onForgotPassword"
             >
                 {{ $t('auth.login.forgotPassword') }}
