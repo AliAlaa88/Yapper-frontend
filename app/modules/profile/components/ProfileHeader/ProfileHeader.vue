@@ -20,27 +20,7 @@
                 </div>
             </div>
 
-            <div class="pb-4">
-                <ProfileUserInfo
-                    :display-name="user?.name ?? ''"
-                    :username="user?.username ?? ''"
-                />
-                <ProfileBio :bio="user?.bio ?? ''" />
-                <ProfileMetadata
-                    :location="user?.country ?? null"
-                    :created-at="user?.created_at ?? ''"
-                />
-                <ProfileStats
-                    :following-count="user?.following_count ?? 0"
-                    :followers-count="user?.followers_count ?? 0"
-                />
-                <ProfileMutualFollowers
-                    v-if="!isMee"
-                    :mutual-followers-c="Number((user as OtherUser)?.mutual_followers_count) ?? 0"
-                    :mutual-followers="(user as OtherUser)?.top_mutual_followers ?? []"
-                />
-                <ProfileMuteMessage />
-            </div>
+            <ProfileInfo />
         </div>
     </div>
 </template>
@@ -50,15 +30,9 @@ import CoverImage from './SubComponents/CoverImage.vue'
 import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
 import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
-import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
-import ProfileBio from './SubComponents/ProfileBio.vue'
-import ProfileMetadata from './SubComponents/ProfileMetadata.vue'
-import ProfileStats from './SubComponents/ProfileStats.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
-import ProfileMuteMessage from './SubComponents/ProfileMuteMessage.vue'
+import ProfileInfo from './SubComponents/ProfileInfo.vue'
 import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
-import ProfileMutualFollowers from './SubComponents/ProfileMutualFollowers.vue'
-import type { OtherUser } from '../../types/user'
 import { useProfileStore } from '../../stores/profileStore'
 
 const profileStore = useProfileStore()
