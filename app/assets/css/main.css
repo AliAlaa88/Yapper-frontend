@@ -285,6 +285,10 @@
         background-color: var(--color-x-hover-dark);
     }
 
+    .hover\:bg-hover-alternate:hover {
+        background-color: var(--color-x-gray-light);
+    }
+
     .hover\:text-primary:hover {
         color: var(--color-x-primary);
     }

@@ -1,5 +1,5 @@
-import { mediaService as mediaServiceInstance } from './mediaService'
+import { createMediaService as mediaServiceInstance } from './mediaService'
 
-export const mediaService = () => {
+export const createMediaService = () => {
     return mediaServiceInstance
 }
