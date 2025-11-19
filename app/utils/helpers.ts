@@ -1,4 +1,4 @@
-import type { User } from '~/modules/auth/types/user'
+import type { User } from '~/modules/Common/types/user'
 
 export function isLoggedIn(): boolean {
     const user = localStorage.getItem('user')
