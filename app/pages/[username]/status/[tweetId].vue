@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-[600px] mx-auto border-x  bg-primary min-h-screen">
         <!-- Header with back button -->
-        <div class="sticky top-0 bg-[#ffffff] dark:bg-x-bg-dark/80 dark:backdrop-blur-md  px-4 py-3">
+        <div class="sticky top-0 z-2 bg-[#ffffff] dark:bg-x-bg-dark/80 dark:backdrop-blur-md  px-4 py-3">
             <div class="flex items-center gap-4">
                 <button 
                     @click="$router.back" 
