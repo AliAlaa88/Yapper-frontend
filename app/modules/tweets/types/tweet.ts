@@ -1,7 +1,5 @@
-import type { Content } from './content'
 import type { User } from '../../Common/types/user'
-import type { Stats } from './stats'
-export type TweetType = 'tweet' | 'retweet' | 'quote' | 'reply'
+export type TweetType = 'tweet' | 'repost' | 'quote' | 'reply'
 
 interface Tweet {
     tweet_id: string

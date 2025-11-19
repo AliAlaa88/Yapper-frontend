@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div class="bg-primary min-h-screen">
     <!-- Main Tweet -->
     <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
       <Publisher 

@@ -4,12 +4,16 @@
         class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
+        <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
+            <Repeat2 :size="16" />
+            <span class="text-sm">Reposted</span>
+        </div>
+        
         <div class="flex gap-3">
             <!-- Avatar column -->
-            <div class="h-fit">
+            <div class="shrink-0">
                 <NuxtLink
                     :id="`tweet-avatar-link-${id}`"
-                    class="shrink-0"
                     @click.stop
                     :to="profileUrl"
                 >
@@ -40,7 +44,7 @@
                     </CustomToolTip>
                 </NuxtLink>
             </div>
-
+            
             <!-- Content column -->
             <div class="flex-1 min-w-0">
                 <Publisher :publisher="user" :created-at="createdAt" />
@@ -61,6 +65,7 @@ import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
+import { Repeat2 } from 'lucide-vue-next'
 
 const props = defineProps<{
     tweet: TweetType
