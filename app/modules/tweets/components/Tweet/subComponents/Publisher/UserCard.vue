@@ -57,11 +57,12 @@ const props = defineProps<{
     followingCount: number | null;
 }>()
 
+const avatarSrc = ref(props.avatar)
+const isLoading = ref(true)
+
 const profileLink = computed(() => getProfileUrl({ 
-    id: props.id, 
     username: props.username,
-    name: props.name,
-    avatar: props.avatar
+    link: null
 }))
 
 const formatNumber = (num?: number | null): string => {
@@ -74,4 +75,23 @@ const formatNumber = (num?: number | null): string => {
     }
     return num.toString()
 }
+
+const handleImageError = (event: Event) => {
+    const target = event.target as HTMLImageElement
+    target.src = `https://ui-avatars.com/api/?name=${props.name}`
+}
+
+// Preload image before mount
+onBeforeMount(() => {
+    const img = new Image()
+    img.onload = () => {
+        avatarSrc.value = props.avatar
+        isLoading.value = false
+    }
+    img.onerror = () => {
+        avatarSrc.value = `https://ui-avatars.com/api/?name=${props.name}`
+        isLoading.value = false
+    }
+    img.src = props.avatar
+})
 </script>
