@@ -21,40 +21,32 @@ async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
         throw new Error(`tweetServiceReal.fetchTweetById not implemented yet: ${tweetId}`)
     },
 
-    async fetchTweetDetails(tweetId: string): Promise<TweetDetails | null> {
+    async fetchTweetDetails(tweetId: string): Promise<Tweet | null> {
         const {$axios} = useNuxtApp()
         try {
-            console.log('🌐 Service: Fetching tweet details from API:', `/tweets/${tweetId}`)
             const response = await $axios.get(`/tweets/${tweetId}`)
-            console.log('📡 Service: Response status:', response.status)
-            console.log('📦 Service: Response data:', response.data)
-            
-            // Handle 304 Not Modified - data should be in cache or response
-            if (response.status === 304) {
-                console.log('304 Not Modified for tweet:', tweetId)
-                // For 304, the data should still be available
-                return response.data?.data || null
-            }
-            
-            // Normal 200 response
+
             if (response.data && response.data.data) {
-                console.log('✅ Service: Returning data.data:', response.data.data)
                 return response.data.data
             }
             
-            console.warn('⚠️ Service: Tweet details response missing data:', response)
             return null
         } catch (error: any) {
-            // Don't log 304 as error
-            if (error.response?.status === 304) {
-                console.log('304 Not Modified for tweet:', tweetId)
-                return error.response.data?.data || null
-            }
-            console.error('💥 Service: Error fetching tweet details:', error.message, error.response?.status)
             return null
         }
     },
-
+    async fetchtweetreplies(tweetId: string): Promise<Tweet[]> {
+       const { $axios } = useNuxtApp()
+         try {
+              const response = await $axios.get(`/tweets/${tweetId}/replies`)
+                if (response.data && response.data.data) {
+                    return response.data.data
+                }
+                return []
+         } catch (error: any) {
+             return []
+         }
+    },
     async fetchUserTweets(userId: string): Promise<Tweet[]> {
         throw new Error(`tweetServiceReal.fetchUserTweets not implemented yet: ${userId}`)
     },
