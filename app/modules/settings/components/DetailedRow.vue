@@ -22,10 +22,12 @@
 import { ChevronRight } from 'lucide-vue-next'
 interface Category {
     label: string,
-    content?: string,
+    content?: string | null,
     href: string
 }
-defineProps<{
+const props = defineProps<{
     category: Category
 }>()
+
+console.log('category', props.category)
 </script>

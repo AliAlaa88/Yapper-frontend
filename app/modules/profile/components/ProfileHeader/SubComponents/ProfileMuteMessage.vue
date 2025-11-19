@@ -3,7 +3,7 @@
         <span class="text-muted text-[15px]"> You have muted posts from this account. </span>
         <span
             id="unmute-button"
-            class="cursor-pointer hover:underline text-blue"
+            class="cursor-pointer hover:underline text-accent"
             @click="handleClick"
         >
             Unmute

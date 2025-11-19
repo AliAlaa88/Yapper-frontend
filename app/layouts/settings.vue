@@ -1,5 +1,5 @@
 <template>
-    <main class="flex flex-row container mx-auto max-w-[1325px]">
+    <main class="flex flex-row container mx-auto max-w-[1325px] bg-primary">
         <aside class="hidden md:block w-[275px] min-w-[270px] flex-shrink-0">
             <Sidebar />
         </aside>

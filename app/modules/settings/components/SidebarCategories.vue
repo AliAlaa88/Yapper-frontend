@@ -22,7 +22,7 @@
                 }">
                 <div
                     v-if="selectedCategory(category.href)"
-                    class="absolute right-0 top-0 h-full w-[3px] bg-blue rounded-l"
+                    class="absolute right-0 top-0 h-full w-[3px] bg-accent rounded-l"
                 />
                 <div class="flex justify-between items-center">
                     <span>

@@ -57,7 +57,7 @@
                 Don't have an account?
                 <button
                     id="button-switch-to-signup"
-                    class="text-blue hover:underline font-semibold cursor-pointer transition duration-200"
+                    class="text-accent hover:underline font-semibold cursor-pointer transition duration-200"
                     @click="$emit('switch')"
                 >
                     Sign up
