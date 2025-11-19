@@ -1,12 +1,14 @@
 <template>
     <ProfilePicture
         v-if="showProfilePicture"
+        v-model:profilePicture="profileData.profilePicture"
         @next="onProfilePictureNext"
         @skip="onProfilePictureSkip"
         @close="onClose"
     />
     <Username
         v-if="showUsername"
+        v-model:username="profileData.username"
         @next="onUsernameNext"
         @skip="onUsernameSkip"
         @back="onUsernameBack"
@@ -15,6 +17,7 @@
     />
     <Language
         v-if="showLanguage"
+        v-model:selectedLanguage="profileData.language"
         @next="onLanguageNext"
         @skip="onLanguageSkip"
         @back="onLanguageBack"
@@ -22,6 +25,7 @@
     />
     <Interests
         v-if="showInterests"
+        v-model:selectedInterests="profileData.interests"
         @finish="onInterestsFinish"
         @skip="onInterestsSkip"
         @back="onInterestsBack"
@@ -30,19 +34,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import ProfilePicture from './subComponents/CompleteAccountComponents/ProfilePicture.vue'
 import Username from './subComponents/CompleteAccountComponents/Username.vue'
 import Language from './subComponents/CompleteAccountComponents/Language.vue'
 import Interests from './subComponents/CompleteAccountComponents/Interests.vue'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 const showProfilePicture = ref(false)
 const showUsername = ref(false)
 const showLanguage = ref(false)
 const showInterests = ref(false)
 
-const profileData = ref({
+// Centralized profile completion state
+const profileData = reactive({
     profilePicture: null as string | null,
     username: null as string | null,
     language: null as string | null,
@@ -62,49 +68,53 @@ if (props.skipImg) {
 
 const emit = defineEmits<{
     (e: 'close'): void
-    (e: 'finish', data: typeof profileData.value): void
+    (e: 'finish', data: typeof profileData): void
 }>()
 
 // Profile Picture handlers
 const onProfilePictureNext = (imageUrl: string) => {
-    profileData.value.profilePicture = imageUrl
+    profileData.profilePicture = imageUrl
     showProfilePicture.value = false
     showUsername.value = true
 }
 
 const onProfilePictureSkip = () => {
-    profileData.value.profilePicture = null
+    profileData.profilePicture = null
     showProfilePicture.value = false
     showUsername.value = true
 }
 
 // Username handlers
 const onUsernameNext = (username: string) => {
-    profileData.value.username = username
+    profileData.username = username
     showUsername.value = false
     showLanguage.value = true
 }
 
 const onUsernameSkip = () => {
-    profileData.value.username = null
+    profileData.username = null
     showUsername.value = false
     showLanguage.value = true
 }
 
 const onUsernameBack = () => {
     showUsername.value = false
-    showProfilePicture.value = true
+    if (props.skipImg) {
+        onClose()
+    } else {
+        showProfilePicture.value = true
+    }
 }
 
 // Language handlers
 const onLanguageNext = (language: string) => {
-    profileData.value.language = language
+    profileData.language = language
     showLanguage.value = false
     showInterests.value = true
 }
 
 const onLanguageSkip = () => {
-    profileData.value.language = null
+    profileData.language = null
     showLanguage.value = false
     showInterests.value = true
 }
@@ -116,14 +126,14 @@ const onLanguageBack = () => {
 
 // Interests handlers
 const onInterestsFinish = (interests: string[]) => {
-    profileData.value.interests = interests
-    emit('finish', profileData.value)
+    profileData.interests = interests
+    emit('finish', profileData)
     router.push('/')
 }
 
 const onInterestsSkip = () => {
-    profileData.value.interests = []
-    emit('finish', profileData.value)
+    profileData.interests = []
+    emit('finish', profileData)
 }
 
 const onInterestsBack = () => {
