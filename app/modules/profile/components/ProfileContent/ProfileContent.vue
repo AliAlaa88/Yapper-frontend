@@ -90,10 +90,10 @@ const handleTabChange = (tab: string) => {
     const segments = route.path.split('/').filter(Boolean)
     let basePath = ''
 
-    if (segments.length > 2) {
-        basePath = `/${segments.slice(0, 2).join('/')}`
+    if (segments.length > 1) {
+        basePath = `/${segments.slice(0, 1).join('/')}`
     } else {
-        basePath = '/' + segments[0] + '/' + segments[1]
+        basePath = '/' + segments[0]
     }
 
     if (tab !== 'posts') {

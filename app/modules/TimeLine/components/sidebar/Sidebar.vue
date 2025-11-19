@@ -88,7 +88,7 @@ const navLinks = [
         label_en: 'Profile',
         label_ar: 'الملف الشخصي',
         icon: User,
-        href: user ? `/profile/${user.username}` : '/profile',
+        href: user ? `/${user.username}` : '/profile',
     },
     {
         label_en: 'Settings',

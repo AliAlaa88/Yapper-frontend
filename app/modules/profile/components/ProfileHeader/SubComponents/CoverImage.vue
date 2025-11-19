@@ -2,7 +2,7 @@
     <div class="h-[133px] sm:h-[200px] overflow-hidden bg-[#333639]">
         <NuxtLink
             v-if="coverUrl"
-            :to="`/profile/${username}/cover`"
+            :to="`${username}/cover`"
             class="group relative block h-full w-full hover:brightness-90 transition-all duration-200"
         >
             <img :src="coverUrl" alt="Cover" class="h-full w-full object-cover">
