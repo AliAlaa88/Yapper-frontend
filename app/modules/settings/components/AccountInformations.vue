@@ -26,16 +26,19 @@
 </template>
 
 <script lang="ts" setup>
+import type { User } from '~/modules/Common/types/user'
 import DetailedPanel from './DetailedPanel.vue'
 import DetailedRow from './DetailedRow.vue'
+import { getUser } from '~/utils/helpers'
+const user = getUser() as User
 
 const categories = [
-    { label: 'Username', content: 'hagar', href: '/settings/screen_name' },
-    { label: 'Email', content:'hagar@gmail.com', href:'/settings/email'},
-    { label: 'Country', content: 'Egypt', href: '/settings/country' },
+    { label: 'Username', content: user.username, href: '/settings/screen_name' },
+    { label: 'Email', content: user.email, href:'/settings/email'},
+    { label: 'Country', content: user.country, href: '/settings/country' },
     { label: 'Languages', content: 'English, Arabic', href: '/settings/languages' },
-    { label: 'Birth date', content: 'Mar 26, 1990', href: '/settings/profile' },
+    { label: 'Birth date', content: 'mar 23', href: '/settings/profile' },
     { label: 'Age', content: '34', href: '/settings/your_twitter_data/age' },
-    { label: 'Account creation', content: 'Mar 26, 1990', href: '/settings/your_twitter_data/account_creation' },
+    { label: 'Account creation', content: user.created_at, href: '/settings/your_twitter_data/account_creation' },
 ]
 </script>
