@@ -66,10 +66,23 @@
       <p class="text-secondary">Loading tweet details...</p>
     </div>
 
+    <!-- Tweet Not Found State (when data is null but no error) -->
+    <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
+      <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
+      <p class="text-primary text-lg font-semibold mb-2">Tweet not found</p>
+      <p class="text-secondary text-sm">This tweet may have been deleted or the link is incorrect.</p>
+      <button 
+        @click="$router.back()" 
+        class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
+      >
+        Go Back
+      </button>
+    </div>
+
     <!-- Error State -->
     <div v-if="error" class="p-8 text-center">
       <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
-      <p class="text-red text-lg">{{ error }}</p>
+      <p class="text-red text-lg">{{ error?.message || 'Failed to load tweet' }}</p>
       <button 
         id="tweet-detail-retry-button"
         @click="fetchTweetDetails()" 
