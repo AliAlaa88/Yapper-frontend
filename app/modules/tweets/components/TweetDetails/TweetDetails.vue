@@ -2,12 +2,12 @@
   <div class="bg-primary min-h-screen">
     <!-- Main Tweet -->
     <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
-      <Publisher 
+      <Publisher
         :publisher="mainTweetUser"
         :created-at="tweetDetails.created_at"
         :is-detail="true"
       />
-      <Content 
+      <Content
         :content="mainTweetContent"
       />
       <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
@@ -15,7 +15,7 @@
           {{ formatDetailDate(tweetDetails.created_at) }}
         </time>
       </div>
-      <Stats 
+      <Stats
         :stats="mainTweetStats"
       />
     </div>
@@ -23,40 +23,19 @@
     <!-- Replies Section -->
     <div v-if="tweetDetails && !isLoading && !error">
       <!-- No Replies State -->
-      <div v-if="transformedReplies.length === 0" class="text-center py-12 text-secondary">
+      <div v-if="replies.length === 0" class="text-center py-12 text-secondary">
         <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
         <p class="text-lg">No replies yet</p>
         <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
       </div>
-      
+
       <!-- Replies List -->
       <div v-else>
-        <div 
-          v-for="reply in transformedReplies" 
-          :key="reply.id"
-          :id="`tweet-reply-${reply.id}`"
-          class="border-b border-primary px-4 py-3 hover:bg-primary transition-colors"
-        >
-          <div class="flex gap-3">
-            <!-- Avatar column -->
-            <div class="shrink-0">
-              <img :id="`reply-avatar-${reply.id}`" :src="reply.user.avatar_url" :alt="reply.user.name" class="w-10 h-10 rounded-full" />
-            </div>
-            <!-- Content column -->
-            <div class="flex-1 min-w-0">
-              <Publisher 
-                :publisher="reply.user"
-                :created-at="reply.createdAt"
-              />
-              <Content 
-                :content="reply.content"
-              />
-              <Stats 
-                :stats="reply.stats"
-              />
-            </div>
-          </div>
-        </div>
+        <Reply
+          v-for="reply in replies"
+          :key="reply.tweet_id"
+          :reply="reply"
+        />
       </div>
     </div>
 
@@ -71,8 +50,8 @@
       <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
       <p class="text-primary text-lg font-semibold mb-2">Tweet not found</p>
       <p class="text-secondary text-sm">This tweet may have been deleted or the link is incorrect.</p>
-      <button 
-        @click="$router.back()" 
+      <button
+        @click="$router.back()"
         class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
       >
         Go Back
@@ -83,9 +62,9 @@
     <div v-if="error" class="p-8 text-center">
       <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
       <p class="text-red text-lg">{{ error?.message || 'Failed to load tweet' }}</p>
-      <button 
+      <button
         id="tweet-detail-retry-button"
-        @click="fetchTweetDetails()" 
+        @click="fetchTweetDetails()"
         class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
       >
         Try Again
@@ -99,11 +78,13 @@ import { onMounted, onUnmounted, watch, computed } from 'vue'
 import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
+import Reply from './Reply/Reply.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 import { useRoute } from '#app'
 import { MessageCircle, AlertTriangle } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
+import { useTweetDetailsQuery } from '../../queries/useTweetQueries'
 
 // Get tweet ID and username from route params
 const route = useRoute()
@@ -125,7 +106,7 @@ const {
 // Transform main tweet data
 const mainTweetUser = computed(() => {
   if (!tweetDetails.value) return null
-  // console.log(tweetDetails.value);
+  //console.log(tweetDetails.value);
   return {
     ...tweetDetails.value.user,
     avatar: tweetDetails.value.user.avatar_url || `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`
@@ -153,31 +134,6 @@ const mainTweetStats = computed(() => {
   }
 })
 
-// Transform replies data
-const transformedReplies = computed(() => {
-  if (!replies.value) return []
-  return replies.value.map(reply => ({
-    id: reply.tweet_id,
-    user: {
-      ...reply.user,
-      avatar: reply.user.avatar_url
-    },
-    content: {
-      text: reply.content,
-      images: reply.imgs || [],
-      videos: reply.videos || []
-    },
-    stats: {
-      likes: reply.likes_count,
-      replies: reply.replies_count,
-      retweets: reply.reposts_count,
-      views: reply.views_count,
-      is_liked: reply.is_liked
-    },
-    createdAt: reply.created_at
-  }))
-})
-
 // Lifecycle hooks
 // Query auto-fetches on mount when enabled
 // With initialData, it shows immediately and refetches for replies
@@ -192,6 +148,12 @@ onUnmounted(() => {
 watch(tweetId, (newTweetId) => {
   if (newTweetId) {
     fetchTweetDetails()
+  }
+})
+
+watch(isLoading, (newIsLoading) => {
+  if (!newIsLoading) {
+    console.log("Tweet details loaded:", tweetDetails);
   }
 })
 </script>
