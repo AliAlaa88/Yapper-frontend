@@ -1,7 +1,8 @@
 import type { Tweet } from './tweet'
 
-interface TweetDetails {
-    tweet: Tweet
+// TweetDetails is just a Tweet - replies are fetched separately
+type TweetDetails = {
+    tweet: Tweet,
     replies: Tweet[]
 }
 
