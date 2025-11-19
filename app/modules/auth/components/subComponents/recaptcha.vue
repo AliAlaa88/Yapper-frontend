@@ -24,10 +24,12 @@ const onWidgetId = (id: number) => {
 }
 
 const onVerify = (token: string) => {
+    console.log('Verified token:', token)
     emit('verified', token)
 }
 
-const onError = () => {
+const onError = (err: any) => {
+    console.log('ERROR', err)
     emit('error', new Error('reCAPTCHA failed to load/execute'))
 }
 
