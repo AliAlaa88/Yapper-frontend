@@ -66,10 +66,13 @@ import { computed } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
 import { Repeat2 } from 'lucide-vue-next'
+import { useTweetTransitionStore } from '../../stores/tweetTransition'
 
 const props = defineProps<{
     tweet: TweetType
 }>()
+
+const tweetTransitionStore = useTweetTransitionStore()
 
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
@@ -108,6 +111,8 @@ const tweetUrl = computed(() => getTweetUrl(props.tweet))
 
 const navigateToTweet = () => {
     if (tweetUrl.value !== '#') {
+        // Store the tweet data before navigation
+        tweetTransitionStore.setTransitionTweet(props.tweet)
         navigateTo(tweetUrl.value)
     }
 }
