@@ -1,12 +1,12 @@
 <template>
-    <div class="w-[300px] p-4 space-y-3 bg-white">
+    <div class="w-[300px] p-4 space-y-3 bg-primary">
         <!-- Header with avatar and follow button -->
         <div class="flex items-start justify-between">
             <NuxtLink :id="`user-card-avatar-link-${id}`" :to="profileLink">
                 <img v-if="!isLoading" :id="`user-card-avatar-${id}`" :src="avatarSrc" :alt="name" class="w-16 h-16 rounded-full hover:opacity-90 transition-opacity"
                     @error="handleImageError"   
                 />
-                <div v-else class="w-16 h-16 rounded-full bg-gray-200 animate-pulse"></div>
+                <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse"></div>
             </NuxtLink>
             <button 
                 :id="`user-card-follow-button-${id}`"
