@@ -5,14 +5,14 @@
             <template #trigger>
                 <button
                     id="tweet-reply-button"
-                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
+                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
                     @click.stop
                    
                 >
-                    <div class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors">
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
-                    <span class="text-[13px] min-w-5">{{ formatCount(replies) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(replies) }}</span>
                 </button>
             </template>
             <template #content>
@@ -25,13 +25,13 @@
             <template #trigger>
                 <button
                     id="tweet-retweet-button"
-                    class="group flex cursor-pointer items-center text-x-gray-dark hover:text-x-green transition-colors"
+                    class="group flex cursor-pointer items-center text-secondary hover:text-green transition-colors"
                     @click.stop
                 >
-                    <div class="p-1 rounded-full group-hover:bg-x-green/10 transition-colors">
+                    <div class="p-1 rounded-full group-hover:bg-green/10 transition-colors">
                         <Repeat2 :size="18" />
                     </div>
-                    <span class="text-[13px] min-w-5">{{ formatCount(retweets) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(retweets) }}</span>
                 </button>
             </template>
             <template #content>
@@ -46,18 +46,18 @@
                     id="tweet-like-button"
                     :class="[
                         'group flex cursor-pointer items-center gap-1 transition-colors',
-                        localIsLiked ? 'text-x-red' : 'text-x-gray-dark hover:text-x-red'
+                        localIsLiked ? 'text-red' : 'text-secondary hover:text-red'
                     ]"
                     @click.stop="handleLikeClick"
                 >
-                    <div class="p-2 rounded-full group-hover:bg-x-red/10 transition-colors relative">
+                    <div class="p-2 rounded-full group-hover:bg-red/10 transition-colors relative">
                         <Heart 
                             :size="18" 
                             :fill="localIsLiked ? 'currentColor' : 'none'" 
                             :class="{ 'animate-like': isAnimating }"
                         />
                     </div>
-                    <span class="text-[13px] min-w-5">{{ formatCount(localLikesCount) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(localLikesCount) }}</span>
                 </button>
             </template>
             <template #content>
@@ -70,13 +70,13 @@
             <template #trigger>
                 <button
                     id="tweet-views-button"
-                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
+                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
                     @click.stop
                 >
-                    <div class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors">
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <BarChart3 :size="18" />
                     </div>
-                    <span class="text-[13px] min-w-5">{{ formatCount(views || 0) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(views || 0) }}</span>
                 </button>
             </template>
             <template #content>
@@ -89,10 +89,10 @@
             <template #trigger>
                 <button
                     id="tweet-share-button"
-                    class="group flex cursor-pointer items-center gap-1 text-x-gray-dark hover:text-x-blue transition-colors"
+                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
                     @click.stop
                 >
-                    <div class="p-2 rounded-full group-hover:bg-x-blue/10 transition-colors">
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <Share :size="18" />
                     </div>
                 </button>

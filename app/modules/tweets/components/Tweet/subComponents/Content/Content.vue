@@ -1,12 +1,12 @@
 <template>
-    <div class="text-[var(--color-x-black)] text-[15px] leading-5">
+    <div class="text-primary text-sm leading-5">
         <!-- Tweet text -->
-        <p class="mb-3 whitespace-pre-wrap break-words">{{ content.text }}</p>
+        <p class="mb-3 whitespace-pre-wrap wrap-break-word">{{ content.text }}</p>
 
         <!-- Images grid -->
         <div
             v-if="content.images && content.images.length > 0"
-            class="mb-3 rounded-2xl overflow-hidden border border-[var(--color-x-border)]"
+            class="mb-3 rounded-2xl overflow-hidden border border-primary"
             :class="{
                 'grid gap-0.5': content.images.length > 1,
                 'grid-cols-2': content.images.length === 2 || content.images.length === 4,
@@ -30,7 +30,7 @@
         <!-- Videos -->
         <!-- <div
             v-if="content.videos && content.videos.length > 0"
-            class="mb-3 rounded-2xl overflow-hidden border border-[var(--color-x-border)]"
+            class="mb-3 rounded-2xl overflow-hidden border border-primary"
         >
             <video
                 v-for="video in content.videos"

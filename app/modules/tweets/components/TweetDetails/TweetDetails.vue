@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-x-white">
+  <div class="bg-white">
     <!-- Main Tweet -->
-    <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-x-border">
+    <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
       <Publisher 
         :publisher="mainTweetUser"
         :created-at="tweetDetails.created_at"
@@ -10,7 +10,7 @@
       <Content 
         :content="mainTweetContent"
       />
-      <div class="text-x-gray-dark text-[15px] mb-4 border-b border-x-border pb-4">
+      <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
         <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
           {{ formatDetailDate(tweetDetails.created_at) }}
         </time>
@@ -23,8 +23,8 @@
     <!-- Replies Section -->
     <div v-if="tweetDetails && !isLoading && !error">
       <!-- No Replies State -->
-      <div v-if="transformedReplies.length === 0" class="text-center py-12 text-x-gray-dark">
-        <MessageCircle class="w-16 h-16 text-x-gray-light mx-auto mb-4" :stroke-width="1" />
+      <div v-if="transformedReplies.length === 0" class="text-center py-12 text-secondary">
+        <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
         <p class="text-lg">No replies yet</p>
         <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
       </div>
@@ -35,7 +35,7 @@
           v-for="reply in transformedReplies" 
           :key="reply.id"
           :id="`tweet-reply-${reply.id}`"
-          class="border-b border-x-border px-4 py-3 hover:bg-x-background transition-colors"
+          class="border-b border-primary px-4 py-3 hover:bg-primary transition-colors"
         >
           <div class="flex gap-3">
             <!-- Avatar column -->
@@ -62,18 +62,18 @@
 
     <!-- Loading State -->
     <div v-if="isLoading" class="p-8 text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-x-blue mx-auto mb-4"></div>
-      <p class="text-x-gray-dark">Loading tweet details...</p>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
+      <p class="text-secondary">Loading tweet details...</p>
     </div>
 
     <!-- Error State -->
     <div v-if="error" class="p-8 text-center">
-      <AlertTriangle class="w-16 h-16 text-red-300 mx-auto mb-4" :stroke-width="1" />
-      <p class="text-red-500 text-lg">{{ error }}</p>
+      <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
+      <p class="text-red text-lg">{{ error }}</p>
       <button 
         id="tweet-detail-retry-button"
         @click="fetchTweetDetails()" 
-        class="mt-4 px-4 py-2 bg-x-blue text-white rounded-lg hover:bg-x-blue/90 transition-colors duration-200"
+        class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
       >
         Try Again
       </button>

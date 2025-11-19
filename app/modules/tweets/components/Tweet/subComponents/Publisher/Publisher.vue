@@ -2,7 +2,7 @@
     <!-- Tweet Details View - Name above username -->
     <div v-if="isDetail" class="mb-4">
         <div class="flex items-center gap-3 mb-4">
-            <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-x-border">
+            <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-primary">
                 <template #trigger>
                     <NuxtLink :id="`publisher-avatar-link-${id}`" :to="linkComputed">
                         <img
@@ -26,12 +26,12 @@
                 </template>
             </CustomToolTip>
             <div class="flex flex-col">
-                <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-x-border">
+                <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-primary">
                     <template #trigger>
                         <NuxtLink
                             :id="`publisher-name-link-${id}`"
                             :to="linkComputed"
-                            class="font-bold text-[var(--color-x-black)] hover:underline text-[20px] leading-6"
+                            class="font-bold text-primary hover:underline text-lg leading-6"
                         >
                             {{ name }}
                         </NuxtLink>
@@ -48,19 +48,19 @@
                         />
                     </template>
                 </CustomToolTip>
-                <span class="text-[var(--color-x-gray-dark)] text-[15px]">@{{ username }}</span>
+                <span class="text-secondary text-sm">@{{ username }}</span>
             </div>
         </div>
     </div>
 
     <!-- Timeline View - Name and username inline -->
     <div v-else class="flex items-center gap-1 mb-0.5">
-        <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-x-border">
+        <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-primary">
             <template #trigger>
                 <NuxtLink
                     :id="`publisher-name-link-timeline-${id}`"
                     :to="linkComputed"
-                    class="font-bold text-[var(--color-x-black)] hover:underline text-[15px]"
+                    class="font-bold text-primary hover:underline text-sm"
                 >
                     {{ name }}
                 </NuxtLink>
@@ -77,9 +77,9 @@
                 />
             </template>
         </CustomToolTip>
-        <span class="text-x-gray-dark text-[15px]">@{{ username }}</span>
-        <span class="text-x-gray-dark text-[15px]">·</span>
-        <span class="text-x-gray-dark text-[15px] hover:underline cursor-pointer">
+        <span class="text-secondary text-sm">@{{ username }}</span>
+        <span class="text-secondary text-sm">·</span>
+        <span class="text-secondary text-sm hover:underline cursor-pointer">
             {{ formatDate(createdAt) }}
         </span>
     </div>
