@@ -2,11 +2,13 @@
 import { createUserInfoService } from '../modules/profile/services'
 import { createTweetService } from '../modules/tweets/services'
 import { createAuthService } from '../modules/auth/services'
+import { settingsService } from '~/modules/settings/services/settingsService.real'
 
 export const serviceFactories = {
     userInfoService: createUserInfoService,
     tweetService: createTweetService,
     authService: createAuthService,
+    settingsService: () => settingsService,
 }
 
 export type Services = {
