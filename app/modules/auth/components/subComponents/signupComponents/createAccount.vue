@@ -119,6 +119,7 @@
                     ref="recaptchaRef"
                     class="w-fit cursor-pointer"
                     @verified="onRecaptchaVerified"
+                    @error="onCaptchaError"
                 />
             </div>
             <h3 id="error-message-signup-s1" class="text-red text-sm mt-2" v-if="error">
@@ -178,6 +179,9 @@ const recaptchaRef = ref<{ run: () => Promise<void> } | null>(null)
 const recaptcha = ref('')
 const onRecaptchaVerified = (token: string) => {
     recaptcha.value = token
+}
+const onCaptchaError = () => {
+    console.log('reCAPTCHA error occurred');
 }
 const registerMutation = useRegisterS1Query(
     (data) => {

@@ -27,7 +27,8 @@ const onVerify = (token: string) => {
     emit('verified', token)
 }
 
-const onError = () => {
+const onError = (err: any) => {
+    console.log('reCAPTCHA error:', err)
     emit('error', new Error('reCAPTCHA failed to load/execute'))
 }
 
