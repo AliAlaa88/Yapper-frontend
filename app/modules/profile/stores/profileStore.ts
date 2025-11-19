@@ -16,10 +16,15 @@ export const useProfileStore = defineStore('profile', () => {
         isMyProfile.value = false
     }
 
+    const getProfileId = () => {
+        return profile.value?.user_id || null
+    }
+
     return {
         profile,
         isMyProfile,
         setProfile,
         clearProfile,
+        getProfileId,
     }
 })

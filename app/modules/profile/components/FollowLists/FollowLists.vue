@@ -24,21 +24,8 @@
 
 
         <div class="min-h-[100vh]">
-            <div v-if="currentTab === 'followers'" class="bg-primary">
-                <EmptyState
-                    icon="👥"
-                    :title="$t('profile.followLists.emptyState.noFollowers.title')"
-                    :description="$t('profile.followLists.emptyState.noFollowers.description')"
-                />
-            </div>
-
-            <div v-else-if="currentTab === 'following'" class="bg-primary">
-                <EmptyState
-                    icon="👤"
-                    :title="$t('profile.followLists.emptyState.noFollowing.title')"
-                    :description="$t('profile.followLists.emptyState.noFollowing.description')"
-                />
-            </div>
+            <FollowersList v-if="currentTab === 'followers'" />
+            <FollowingList v-else-if="currentTab === 'following'" />
         </div>
     </div>
 </template>
@@ -50,14 +37,21 @@ import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft } from 'lucide-vue-next'
 
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
-import EmptyState from '~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vue'
-import { useProfileStore } from '../../stores/profileStore'
+import FollowersList from './SubComponents/FollowersList.vue'
+import FollowingList from './SubComponents/FollowingList.vue'
+import { useProfileStore } from '~/modules/profile/stores/profileStore'
+import { useProfile } from '~/modules/profile/composables/useProfile'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+const username = route.params.username as string
+
 const profileStore = useProfileStore()
 const { profile } = storeToRefs(profileStore)
+if (!profile.value) {
+    useProfile(username)
+}
 
 const currentTab = computed(() => {
     const path = route.path

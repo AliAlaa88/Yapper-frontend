@@ -21,6 +21,7 @@ import { useConfirmation } from '~/modules/profile/composables/useConfirmation'
 import { useProfile } from '~/modules/profile/composables/useProfile'
 import { provide, computed } from 'vue'
 import { useUserInfoQuery } from '~/modules/profile/queries/useUserInfoQuery'
+import { useProfileStore } from '~/modules/profile/stores/profileStore'
 
 const confirmation = useConfirmation()
 provide('confirmation', confirmation)
@@ -38,6 +39,9 @@ provide(
     computed(() => user.value?.user_id),
 )
 //
-
-useProfile(username)
+const profileStore = useProfileStore()
+const { profile } = storeToRefs(profileStore)
+if (!profile.value) {
+    useProfile(username)
+}
 </script>

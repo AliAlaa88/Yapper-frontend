@@ -6,6 +6,8 @@ import type {
     OtherUserApiResponse,
     ActionApiResponse,
     ImageUploadApiResponse,
+    FollowUser,
+    FollowListApiResponse,
 } from '../types/user'
 import { useNuxtApp } from 'nuxt/app'
 
@@ -291,6 +293,50 @@ export const userInfoServiceReal = {
                     throw new Error('Invalid or expired token')
                 } else if (error.response?.status === 400) {
                     throw new Error('Invalid file upload')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
+
+    async getFollowers(userId: string): Promise<FollowUser[]> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get<FollowListApiResponse>(
+                `/users/${userId}/followers`,
+            )
+            if (!response.data || !response.data.data) {
+                throw new Error('Failed to fetch followers')
+            }
+            return response.data.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
+
+    async getFollowing(userId: string): Promise<FollowUser[]> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get<FollowListApiResponse>(
+                `/users/${userId}/following`,
+            )
+            if (!response.data || !response.data.data) {
+                throw new Error('Failed to fetch following list')
+            }
+            return response.data.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
                 }
             }
             throw new Error('Something went wrong')

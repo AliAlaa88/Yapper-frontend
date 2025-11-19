@@ -76,7 +76,7 @@ export interface ImageUploadApiResponse {
     message: string
 }
 
-export interface Follower {
+export interface FollowUser {
     user_id: string
     name: string
     username: string
@@ -86,4 +86,10 @@ export interface Follower {
     is_follower: boolean
     is_muted: boolean
     is_blocked: boolean
+}
+
+export interface FollowListApiResponse {
+    data: FollowUser[]
+    count: number
+    message: string
 }
