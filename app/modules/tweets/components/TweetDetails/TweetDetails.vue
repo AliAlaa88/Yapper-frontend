@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch, computed } from 'vue'
+import { onMounted, onUnmounted, watch, computed } from 'vue'
 import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
@@ -90,24 +90,24 @@ import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 import { useRoute } from '#app'
 import { MessageCircle, AlertTriangle } from 'lucide-vue-next'
+import { useTweetTransitionStore } from '../../stores/tweetTransition'
 
 // Get tweet ID and username from route params
 const route = useRoute()
 const username = computed(() => route.params.username)
 const tweetId = computed(() => route.params.tweetId)
 
-// Emits
-const emit = defineEmits(['close'])
+// Get the transition store
+const tweetTransitionStore = useTweetTransitionStore()
 
-// Use composable with the tweet ID from route
+// Use composable with the tweet ID from route and initial data from store
 const {
   tweetDetails,
   isLoading,
   error,
   replies,
-  fetchTweetDetails,
-  resetState
-} = useTweetDetails(tweetId.value)
+  fetchTweetDetails
+} = useTweetDetails(tweetId.value, tweetTransitionStore.transitionTweet || undefined)
 
 // Transform main tweet data
 const mainTweetUser = computed(() => {
@@ -166,16 +166,18 @@ const transformedReplies = computed(() => {
 })
 
 // Lifecycle hooks
-onMounted(() => {
-  if (tweetId.value) {
-    fetchTweetDetails()
-  }
+// Query auto-fetches on mount when enabled
+// With initialData, it shows immediately and refetches for replies
+// Without initialData, it fetches normally
+
+// Cleanup transition tweet when leaving the page
+onUnmounted(() => {
+  tweetTransitionStore.clearTransitionTweet()
 })
 
 // Watchers - watch for route changes
 watch(tweetId, (newTweetId) => {
   if (newTweetId) {
-    resetState()
     fetchTweetDetails()
   }
 })

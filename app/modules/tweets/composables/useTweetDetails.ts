@@ -1,15 +1,18 @@
 import { computed } from 'vue'
 import { useTweetDetailsQuery } from '../queries/useTweetQueries'
-import type { TweetDetails } from '../types'
+import type { TweetDetails, Tweet } from '../types'
 
-export function useTweetDetails(tweetId: string) {
-    const { data: tweetDetails, isLoading, error, refetch } = useTweetDetailsQuery(tweetId)
+export function useTweetDetails(tweetId: string, initialTweet?: Tweet) {
+    const { data: tweetDetailsData, isLoading, error, refetch } = useTweetDetailsQuery(tweetId, initialTweet)
 
     const replies = computed(() => {
-        return tweetDetails.value?.replies || []
+        return tweetDetailsData.value?.replies || []
     })
 
-
+    // The main tweet from the details response
+    const tweetDetails = computed(() => {
+        return tweetDetailsData.value?.tweet || null
+    })
 
     return {
         tweetDetails,
