@@ -84,7 +84,8 @@
                                     type="button"
                                     @click="toggleGifPicker"
                                     id="post-tweet-gif-picker-btn"
-                                    class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
+                                    :disabled="mediaUrls.length >= 4"
+                                    class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <ImagePlay class="w-5 h-5 text-blue" />
                                 </button>
@@ -233,6 +234,14 @@ const toggleGifPicker = () => {
 
 const handleGifSelect = (gifUrl: string) => {
     showGifPicker.value = false
+    if (mediaUrls.value.length >= 4) {
+        console.warn('Maximum of 4 media items allowed')
+        return
+    }
+    mediaUrls.value.push({
+        url: gifUrl,
+        type: 'image',
+    })
 }
 
 const toggleEmojiPicker = () => {
