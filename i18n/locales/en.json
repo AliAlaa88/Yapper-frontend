@@ -74,9 +74,11 @@
         "cancelButton": "Cancel",
         "mutualFollowers": {
             "noMutuals": "Not followed by anyone you are following",
-            "followedBy": "Followed by {name}",
+            "followedBy": "Followed by",
             "followedByTwo": "Followed by {name1} and {name2}",
-            "followedByMultiple": "Followed by {name} and {count} others you follow"
+            "followedByMultiple": "Followed by {name} and {count} others you follow",
+            "and": "and",
+            "others": "others you follow"
         },
         "tabs": {
             "posts": "Posts",

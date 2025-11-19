@@ -74,9 +74,11 @@
         "cancelButton": "إلغاء",
         "mutualFollowers": {
             "noMutuals": "لا يتابعه أحد ممن تتابعهم",
-            "followedBy": "يتابعه {name}",
+            "followedBy": "يتابعه",
             "followedByTwo": "يتابعه {name1} و {name2}",
-            "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم"
+            "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم",
+            "and": "و",
+            "others": "آخرون ممن تتابعهم"
         },
         "tabs": {
             "posts": "المنشورات",
