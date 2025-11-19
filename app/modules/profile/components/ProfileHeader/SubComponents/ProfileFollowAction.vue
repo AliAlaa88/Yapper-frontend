@@ -17,13 +17,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import Button from '~/components/ui/Button.vue'
-import { inject } from 'vue'
+import { useProfileStore } from '../../../stores/profileStore'
 
-const userId = inject<Ref<string>>('user-id')!
+const profileStore = useProfileStore()
+const userId = computed(() => profileStore.getProfileId() || '')
 const { isBlocked, isFollowing } = useUserInfo(userId)
 
 const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId)

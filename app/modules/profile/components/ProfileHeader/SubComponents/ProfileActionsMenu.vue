@@ -67,15 +67,15 @@
 import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig } from 'lucide-vue-next'
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
-import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
+import { ref, onMounted, onBeforeUnmount, inject, computed } from 'vue'
 import type { Ref } from 'vue'
 import Button from '~/components/ui/Button.vue'
+import { useProfileStore } from '~/modules/profile/stores/profileStore'
+
 const showList = inject<Ref<boolean>>('show-list')!
 
-const userId = inject<Ref<string>>('user-id')!
-if (!userId) {
-    throw new Error('Missing required provide: user-id')
-}
+const profileStore = useProfileStore()
+const userId = computed(() => profileStore.getProfileId() || '')
 const { isBlocked, isMuted, isFollower, username } = useUserInfo(userId)
 const dropdownRef = ref<HTMLElement | null>(null)
 

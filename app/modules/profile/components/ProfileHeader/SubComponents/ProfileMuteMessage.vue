@@ -14,9 +14,11 @@
 <script setup lang="ts">
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
-import { inject, ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useProfileStore } from '../../../stores/profileStore'
 
-const userId = inject<Ref<string>>('user-id')!
+const profileStore = useProfileStore()
+const userId = computed(() => profileStore.getProfileId() || '')
 const { isMuted } = useUserInfo(userId)
 
 const showMuteMessage = ref(false)

@@ -30,10 +30,12 @@
 import Button from '~/components/ui/Button.vue'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
-import { inject, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useProfileStore } from '../../../stores/profileStore'
 
-const userId = inject<Ref<string>>('user-id')!
+const profileStore = useProfileStore()
+const userId = computed(() => profileStore.getProfileId() || '')
 const {
     isBlocked,
 } = useUserInfo(userId)
