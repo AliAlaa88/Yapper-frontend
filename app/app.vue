@@ -1,5 +1,5 @@
 <template>
-    <div :dir="currentDirection" :lang="currentLocale" class="bg-x-bg-dark">
+    <div :dir="currentDirection" :lang="currentLocale" class="bg-primary">
         <LanguageButton />
         <StyleButton />
         <NuxtLayout class="w-full">
