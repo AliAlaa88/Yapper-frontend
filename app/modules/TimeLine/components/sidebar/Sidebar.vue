@@ -69,7 +69,7 @@ const navLinks = [
         label_en: 'Home',
         label_ar: 'الرئيسية',
         icon: House,
-        href: '/en',
+        href: '/',
     },
     {
         label_en: 'Search',
