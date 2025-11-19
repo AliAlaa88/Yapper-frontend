@@ -23,6 +23,7 @@
                                 :src="user.avatar"
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                                @error="handleImageError"
                             />
                         </template>
                         <template #content>
@@ -105,4 +106,10 @@ const navigateToTweet = () => {
         navigateTo(tweetUrl.value)
     }
 }
+
+const handleImageError = (event: Event) => {
+    const target = event.target as HTMLImageElement
+    target.src = `https://ui-avatars.com/api/?name=${user.value.name}`
+}
+
 </script>
