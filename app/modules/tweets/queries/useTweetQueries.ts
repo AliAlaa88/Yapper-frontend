@@ -29,13 +29,68 @@ export function useTweetsQuery(path: MaybeRef<string>) {
 }
 
 // Query for fetching tweet details (tweet + replies)
-export function useTweetDetailsQuery(tweetId: string) {
+export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
     const { $tweetService } = useNuxtApp()
-    return useQuery<TweetDetails | null>({
+    
+    const queryResult = useQuery<TweetDetails | null>({
         queryKey: ['tweetDetails', tweetId],
-        queryFn: () => ($tweetService as any).fetchTweetDetails(tweetId),
+        queryFn: async () => {
+            try {
+                const result = await ($tweetService as any).fetchTweetDetails(tweetId)
+                
+                // Check if result already has the correct structure { tweet, replies }
+                if (result && result.tweet) {
+                    return result
+                }
+                
+                // Check if result is a tweet object directly (has tweet_id)
+                if (result && result.tweet_id) {
+                    return {
+                        tweet: result,
+                        replies: result.replies || []
+                    }
+                }
+                
+                // If result is null or empty but we have initialData, use it
+                if (!result && initialData) {
+                    return {
+                        tweet: initialData,
+                        replies: []
+                    }
+                }
+                
+                // If no valid data and no initialData, return null
+                return null
+            } catch (error: any) {
+                console.error('💥 Error fetching tweet details:', error)
+                
+                // On error, fallback to initialData if available
+                if (initialData) {
+                    console.log('🔄 Using initialData as fallback due to error')
+                    return {
+                        tweet: initialData,
+                        replies: []
+                    }
+                }
+                
+                // If no initialData, return null instead of throwing
+                console.warn('⚠️ Returning null due to error (no initialData)')
+                return null
+            }
+        },
         enabled: !!tweetId,
+        // Use initialData to pre-populate cache if available
+        initialData: initialData ? {
+            tweet: initialData,
+            replies: []
+        } : undefined,
+        // Always consider initialData as stale so it refetches
+        initialDataUpdatedAt: initialData ? 0 : undefined,
+        // Retry once on failure
+        retry: 1,
     })
+    
+    return queryResult
 }
 
 export function mutateTweetLikesQuery(tweetId: string ,isLike: boolean) {
