@@ -43,7 +43,8 @@
         "home": "Home",
         "profile": "Profile",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "back": "Back"
     },
     "profile": {
         "editProfile": "Edit Profile",
@@ -157,6 +158,18 @@
             "bioPlaceholder": "Bio",
             "locationPlaceholder": "Location",
             "websitePlaceholder": "Website"
+        },
+        "followLists": {
+            "emptyState": {
+                "noFollowers": {
+                    "title": "No followers yet",
+                    "description": "When someone follows this account, they'll show up here."
+                },
+                "noFollowing": {
+                    "title": "Not following anyone yet",
+                    "description": "When this account follows people, they'll show up here."
+                }
+            }
         }
     }
 }

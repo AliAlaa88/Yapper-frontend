@@ -32,7 +32,7 @@ export const useProfile = (username: string) => {
 
         onUnmounted(() => {
             meWatcher()
-            profileStore.clearProfile()
+            // profileStore.clearProfile()
         })
 
         return {
@@ -55,7 +55,7 @@ export const useProfile = (username: string) => {
 
         onUnmounted(() => {
             userWatcher()
-            profileStore.clearProfile()
+            // profileStore.clearProfile()
         })
 
         return {

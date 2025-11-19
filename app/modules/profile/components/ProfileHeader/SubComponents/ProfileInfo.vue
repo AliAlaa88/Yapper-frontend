@@ -24,14 +24,14 @@
 
         <div class="mt-3 flex gap-5 text-sm">
             <NuxtLink
-                :to="`/profile/${username}/following`"
+                :to="`/${username}/following`"
                 class="hover:underline"
             >
                 <span class="font-bold text-primary">{{ followingCount }}</span>
                 <span class="text-secondary ml-1">{{ t('profile.following') }}</span>
             </NuxtLink>
             <NuxtLink
-                :to="`/profile/${username}/followers`"
+                :to="`/${username}/followers`"
                 class="hover:underline"
             >
                 <span class="font-bold text-primary">{{ followersCount }}</span>

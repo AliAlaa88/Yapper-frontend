@@ -43,7 +43,8 @@
         "home": "الرئيسية",
         "profile": "الملف الشخصي",
         "settings": "الإعدادات",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "back": "رجوع"
     },
     "profile": {
         "editProfile": "تعديل الملف الشخصي",
@@ -157,6 +158,18 @@
             "bioPlaceholder": "النبذة التعريفية",
             "locationPlaceholder": "الموقع",
             "websitePlaceholder": "الموقع الإلكتروني"
+        },
+        "followLists": {
+            "emptyState": {
+                "noFollowers": {
+                    "title": "لا يوجد متابعون بعد",
+                    "description": "عندما يتابع شخص ما هذا الحساب، سيظهرون هنا."
+                },
+                "noFollowing": {
+                    "title": "لا يتابع أحدًا بعد",
+                    "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
+                }
+            }
         }
     }
 }
