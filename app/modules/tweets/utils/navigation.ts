@@ -7,7 +7,7 @@ export const getProfileUrl = (user: {
   return user.link || (user.username ? `/profile/${user.username}` : '#')
 }
 
-export const getTweetUrl = (tweet: Tweet): string => {
+export const getTweetUrl = (tweet: Tweet | { user:{username: string | null} , tweet_id: string | null }): string => {
   return tweet.user.username && tweet.tweet_id ? `/${tweet.user.username}/status/${tweet.tweet_id}` : '#'
 }
 
