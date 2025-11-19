@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-black">
+    <MainLayout>
         <!-- Profile Header (Fixed) -->
         <ProfileHeader />
 
@@ -9,7 +9,7 @@
         <!-- SnackBar-->
         <SnackBar />
         <ConfirmtionModal />
-    </div>
+    </MainLayout>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +20,7 @@ import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComp
 import { useConfirmation } from '~/modules/profile/composables/useConfirmation'
 import { useUserInfoQuery } from '~/modules/profile/queries/useUserInfoQuery'
 import { provide, computed } from 'vue'
+import MainLayout from './main-layout.vue'
 
 const confirmation = useConfirmation()
 provide('confirmation', confirmation)
@@ -31,6 +32,9 @@ const username = route.params.username as string
 
 const { userQuery } = useUserInfoQuery(username)
 const user = computed(() => userQuery.data.value)
-provide('user-id', computed(() => user.value?.user_id))
 
+provide(
+    'user-id',
+    computed(() => user.value?.user_id),
+)
 </script>
