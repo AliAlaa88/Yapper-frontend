@@ -39,7 +39,7 @@
                         <h3 class="font-semibold mb-3 text-primary">{{ $t('auth.home.alreadyHaveAccount') }}</h3>
                         <button
                             data-testid="button-signIn-authHome"
-                            class="border border-primary hover:bg-hover text-primary font-bold py-2.5 rounded-full w-full"
+                            class="border-2 border-alternate hover:bg-hover text-primary font-bold py-2.5 rounded-full w-full"
                             @click="goToLogin"
                         >
                             {{ $t('auth.common.signIn') }}
