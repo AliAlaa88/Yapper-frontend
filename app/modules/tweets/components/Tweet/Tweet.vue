@@ -44,7 +44,7 @@
             <div class="flex-1 min-w-0">
                 <Publisher :publisher="user" :created-at="createdAt" />
                 <Content :content="content" />
-                <Stats :stats="stats" />
+                <Stats :stats="stats"/>
             </div>
         </div>
     </article>
