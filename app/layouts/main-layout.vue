@@ -2,7 +2,7 @@
     <main class="flex flex-row container mx-auto max-w-[1280px] relative">
         <!-- Left Sidebar -->
         <aside
-            class="hidden md:block w-[275px] min-w-[275px] shrink-0 fixed top-0 h-screen z-10"
+            class="hidden md:block w-[275px] min-w-[275px] shrink-0 fixed top-0 h-screen z-5"
             :style="leftStyle"
         >
             <Sidebar />
@@ -17,7 +17,7 @@
 
         <!-- Right Sidebar -->
         <aside
-            class="hidden lg:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-10"
+            class="hidden lg:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
             :style="rightStyle"
         >
             <Banner />

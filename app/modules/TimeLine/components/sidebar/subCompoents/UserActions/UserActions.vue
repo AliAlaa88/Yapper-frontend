@@ -71,7 +71,7 @@
                     <!-- Logout -->
                     <button
                         class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
-                        @click="handleLogout"
+                        @click="handleLogoutClick"
                     >
                         Log out @{{ user.username || 'username' }}
                     </button>
@@ -81,6 +81,53 @@
 
         <!-- Backdrop to close on click outside -->
         <div v-if="isPopupOpen" class="fixed inset-0 z-40" @click="closePopup"></div>
+
+        <!-- Logout Confirmation Popup -->
+        <Popup
+            :isOpen="isLogoutConfirmOpen"
+            :hasCloseButton="false"
+            x-position="center"
+            y-position="center"
+            contentClass="max-w-[320px] w-full mx-4"
+            headerClass=""
+            slotClass="p-8 flex flex-col items-center justify-center max-h-none overflow-visible"
+            @close="closeLogoutConfirm"
+        >
+            <div class="flex flex-col items-center">
+                <!-- Logo -->
+                <div class="mb-5">
+                    <Logo imgClass="w-8 h-8" />
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-xl font-bold text-primary mb-2">Log out of X?</h2>
+
+                <!-- Description -->
+                <p class="text-secondary text-[15px] text-center mb-6 leading-5">
+                    You can always log back in at any time. If you just want to switch accounts, you
+                    can do that by adding an existing account.
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-3 w-full">
+                    <!-- Log out Button -->
+                    <button
+                        class="w-full py-3 px-6 bg-white text-black text-[15px] font-bold rounded-full hover:bg-gray-200 transition-colors"
+                        @click="confirmLogout"
+                    >
+                        Log out
+                    </button>
+
+                    <!-- Cancel Button -->
+                    <button
+                        class="w-full py-3 px-6 bg-transparent border border-gray-700 text-primary text-[15px] font-bold rounded-full hover:bg-gray-800/50 transition-colors"
+                        @click="closeLogoutConfirm"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </Popup>
     </div>
 </template>
 
@@ -88,12 +135,15 @@
 import { User, MoreVertical } from 'lucide-vue-next'
 
 import { useLogoutQuery } from '~/modules/auth/queries/useLoginQuery'
-import type { User as UserType } from '~/modules/auth/types/user'
+import type { User as UserType } from '~/modules/Common/types/user'
 import { getUser } from '~/utils/helpers'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
+import Logo from '~/modules/Common/components/Logo'
 
 const user = getUser() as UserType
 
 const isPopupOpen = ref(false)
+const isLogoutConfirmOpen = ref(false)
 
 const { mutate: logout } = useLogoutQuery()
 
@@ -111,8 +161,17 @@ const handleAddExistingAccount = () => {
     closePopup()
 }
 
-const handleLogout = () => {
-    logout()
+const handleLogoutClick = () => {
     closePopup()
+    isLogoutConfirmOpen.value = true
+}
+
+const closeLogoutConfirm = () => {
+    isLogoutConfirmOpen.value = false
+}
+
+const confirmLogout = () => {
+    logout()
+    closeLogoutConfirm()
 }
 </script>
