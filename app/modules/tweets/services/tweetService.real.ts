@@ -39,5 +39,13 @@ async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
 
     async fetchUserById(userId: string) {
         throw new Error(`tweetServiceReal.fetchUserById not implemented yet: ${userId}`)
-    }
+    },
+    async likeTweet(tweetId: string): Promise<void> {
+        const { $axios } = useNuxtApp()
+        await $axios.post(`/tweets/${tweetId}/like`)
+    },
+    async unlikeTweet(tweetId: string): Promise<void> {
+        const { $axios } = useNuxtApp()
+        await $axios.delete(`/tweets/${tweetId}/like`)
+    },
 }

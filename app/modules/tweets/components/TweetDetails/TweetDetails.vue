@@ -131,10 +131,12 @@ const mainTweetContent = computed(() => {
 const mainTweetStats = computed(() => {
   if (!tweetDetails.value) return null
   return {
+    tweet_id: tweetDetails.value.tweet_id,
     likes: tweetDetails.value.likes_count,
     replies: tweetDetails.value.replies_count,
     retweets: tweetDetails.value.reposts_count,
-    views: tweetDetails.value.views_count
+    views: tweetDetails.value.views_count,
+    is_liked: tweetDetails.value.is_liked
   }
 })
 
@@ -156,7 +158,8 @@ const transformedReplies = computed(() => {
       likes: reply.likes_count,
       replies: reply.replies_count,
       retweets: reply.reposts_count,
-      views: reply.views_count
+      views: reply.views_count,
+      is_liked: reply.is_liked
     },
     createdAt: reply.created_at
   }))

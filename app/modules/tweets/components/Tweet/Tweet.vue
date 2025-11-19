@@ -84,10 +84,12 @@ const user = computed(() => ({
 
 // Transform stats to the expected format
 const stats = computed(() => ({
+    tweet_id: props.tweet.tweet_id,
     likes: props.tweet.likes_count,
     replies: props.tweet.replies_count,
     retweets: props.tweet.reposts_count,
     views: props.tweet.views_count,
+    is_liked: props.tweet.is_liked,
 }))
 
 const type = computed(() => props.tweet.type)

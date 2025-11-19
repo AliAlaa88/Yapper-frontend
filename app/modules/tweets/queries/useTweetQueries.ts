@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/vue-query'
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
 import { computed, unref, type MaybeRef } from 'vue'
 import type { Tweet, TweetDetails } from '../types'
@@ -35,5 +35,17 @@ export function useTweetDetailsQuery(tweetId: string) {
         queryKey: ['tweetDetails', tweetId],
         queryFn: () => ($tweetService as any).fetchTweetDetails(tweetId),
         enabled: !!tweetId,
+    })
+}
+
+export function mutateTweetLikesQuery(tweetId: string ,isLike: boolean) {
+    return useMutation({
+        mutationKey: ['mutateTweetLikes', tweetId],
+        mutationFn: (isLike: boolean) => {
+            const { $tweetService } = useNuxtApp()
+            return isLike
+                ? ($tweetService as any).likeTweet(tweetId)
+                : ($tweetService as any).unlikeTweet(tweetId)
+        }
     })
 }
