@@ -1,0 +1,150 @@
+name: Build, Tag & Deploy to Dev
+
+on:
+    push:
+        branches:
+            - production
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Get latest tag from Docker Hub
+              id: get_tag
+              run: |
+                  # Fetch tags from Docker Hub (public API, no auth needed for public repos)
+                  REPO="alialaa88/yapper-frontend"
+
+                  echo "🔍 Fetching tags from Docker Hub for $REPO..."
+
+                  # Get all tags from Docker Hub public API (no authentication required for public repos)
+                  TAGS=$(curl -s "https://hub.docker.com/v2/repositories/$REPO/tags/?page_size=100" | \
+                         jq -r '.results[].name' | \
+                         grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | \
+                         sort -V | \
+                         tail -1)
+
+                  # If no tags found, start with v0.0.0
+                  if [ -z "$TAGS" ]; then
+                    LATEST_TAG="v0.0.0"
+                    echo "⚠️ No version tags found on Docker Hub, starting from v0.0.0"
+                  else
+                    LATEST_TAG="$TAGS"
+                    echo "📦 Latest tag found on Docker Hub: $LATEST_TAG"
+                  fi
+
+                  echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+                  # Parse version components
+                  VERSION=${LATEST_TAG#v}
+                  IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+
+                  # Increment patch version
+                  PATCH=$((PATCH + 1))
+                  NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+                  echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+                  echo "🚀 New version: $NEW_TAG"
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: ./docker/Dockerfile
+
+                  push: true
+                  tags: |
+                      alialaa88/yapper-frontend:${{ steps.get_tag.outputs.new_tag }}
+                      alialaa88/yapper-frontend:dev
+
+            - name: Confirm image push
+              run: |
+                  echo "✅ Image pushed: alialaa88/yapper-frontend:${{ steps.get_tag.outputs.new_tag }}"
+                  echo "✅ Image tagged: alialaa88/yapper-frontend:dev"
+
+            - name: SSH into Dev VM and deploy
+              uses: appleboy/ssh-action@v1.0.0
+              env:
+                  FRONT_IMG_TAG: ${{ steps.get_tag.outputs.new_tag }}
+              with:
+                  host: ${{ secrets.DEV_SERVER_HOST }}
+                  username: ${{ secrets.DEV_SERVER_USER }}
+                  key: ${{ secrets.DEV_SERVER_SSH_KEY }}
+                  envs: FRONT_IMG_TAG
+                  script: |
+                      set -e
+                      cd ~/yapper  # path to your app on VM
+
+                      echo "🧭 Getting current running front image tag..."
+                      FRONT_CURRENT_TAG=$(docker compose ps frontend --format json | jq -r '.Image' | cut -d':' -f2 || echo "unknown")
+
+                      echo "🧭 Getting current running api image tag..."
+                      CURRENT_TAG=$(docker compose ps api --format json | jq -r '.Image' | cut -d':' -f2 || echo "unknown")
+
+                      # Export current API tag for docker-compose to use
+                      export IMG_TAG=$CURRENT_TAG
+
+                      echo "📋 Current tags - Frontend: $FRONT_CURRENT_TAG, API: $CURRENT_TAG"
+
+                      echo "🐳 Setting new image tag for deployment..."
+                      echo "Deploying frontend version: $FRONT_IMG_TAG"
+                      echo "Keeping API version: $IMG_TAG"
+
+                      echo "🔄 Pulling new image and restarting app container..."
+                      FRONT_IMG_TAG=$FRONT_IMG_TAG docker compose pull frontend
+                      FRONT_IMG_TAG=$FRONT_IMG_TAG docker compose up -d frontend
+
+                      echo "⏳ Waiting for health check (start period: 10s)..."
+                      sleep 10
+
+                      echo "🔍 Running health check (max 3 retries, 30s interval)..."
+                      RETRY_COUNT=0
+                      MAX_RETRIES=3
+                      HEALTH_CHECK_PASSED=false
+
+                      while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+                        # Use Docker's built-in health check status
+                        HEALTH_STATUS=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose ps -q frontend) 2>/dev/null || echo "none")
+
+                        if [ "$HEALTH_STATUS" = "healthy" ]; then
+                          echo "✅ Health check passed (Docker health status: $HEALTH_STATUS)"
+                          HEALTH_CHECK_PASSED=true
+                          break
+                        else
+                          RETRY_COUNT=$((RETRY_COUNT + 1))
+                          echo "⚠️ Health check attempt $RETRY_COUNT/$MAX_RETRIES - Status: $HEALTH_STATUS"
+                          if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                            echo "⏳ Waiting 30s before retry..."
+                            sleep 30
+                          fi
+                        fi
+                      done
+
+                      if [ "$HEALTH_CHECK_PASSED" = "true" ]; then
+                        echo "✅ Dev deployment successful for version $FRONT_IMG_TAG"
+                      else
+                        echo "❌ Health check failed after $MAX_RETRIES retries! Rolling back frontend container..."
+                        if [ "$FRONT_CURRENT_TAG" != "unknown" ]; then
+                          FRONT_IMG_TAG=$FRONT_CURRENT_TAG IMG_TAG=$CURRENT_TAG docker compose up -d frontend
+                          echo "🔙 Rolled back frontend to $FRONT_CURRENT_TAG"
+                        fi
+                        exit 1
+                      fi
+
+            - name: Deployment summary
+              if: success()
+              run: |
+                  echo "🎉 Deployment Complete!"
+                  echo "Version: ${{ steps.get_tag.outputs.new_tag }}"
+                  echo "Branch: dev"
+                  echo "Commit: ${{ github.sha }}"

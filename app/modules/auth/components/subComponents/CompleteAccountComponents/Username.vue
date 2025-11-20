@@ -1,0 +1,161 @@
+<template>
+    <div
+        class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
+    >
+        <div
+            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
+        >
+            <!-- Close Button -->
+            <closeButton @close="$emit('close')" />
+
+            <!-- Logo -->
+            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+
+            <!-- Back Button -->
+            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+
+            <!-- Title -->
+            <h2 class="text-3xl font-bold text-left mb-6">What should we call you?</h2>
+            <p class="text-muted mb-6">Your @username is unique. You can always change it later.</p>
+
+            <!-- Username Input -->
+            <div class="mb-6">
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-muted">@</span>
+                    <input
+                        id="input-username-complete"
+                        v-model="username"
+                        type="text"
+                        placeholder="username"
+                        class="w-full bg-primary text-primary border-2 border-primary  rounded-full px-4 pl-8 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        maxlength="15"
+                        @input="validateUsername"
+                    />
+                </div>
+                <div class="flex justify-between mt-2 px-4">
+                    <p v-if="errorMessage" id="error-message-username" class="text-red text-sm">
+                        {{ errorMessage }}
+                    </p>
+                    <p
+                        v-else-if="username && username.length > 0"
+                        id="success-message-username"
+                        class="text-green text-sm"
+                    >
+                        Available!
+                    </p>
+                    <p v-else class="text-transparent text-sm">.</p>
+                    <p class="text-muted text-sm">{{ username?.length || 0 }}/15</p>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div
+                v-if="props.Recommendations && props.Recommendations.length"
+                class="my-2 text-sm text-muted"
+            >
+                <p>Recommended usernames:</p>
+                <ul class="mt-1 flex flex-wrap gap-2">
+                    <li
+                        v-for="(suggestion, index) in props.Recommendations"
+                        :key="index"
+                        :id="`recommendation-${index}-username`"
+                        class="px-2 py-1 border border-muted rounded-md cursor-pointer hover:bg-hover"
+                        @click="username = suggestion"
+                    >
+                        {{ suggestion }}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Next Button -->
+            <button
+                id="button-next-username"
+                :disabled="!isValid"
+                :class="[
+                    'w-full font-semibold rounded-full py-2 transition my-3',
+                    isValid
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate  cursor-pointer'
+                        : 'bg-alternate text-alternate cursor-not-allowed',
+                ]"
+                @click="onNext"
+            >
+                Next
+            </button>
+
+            <!-- Skip Button -->
+            <button
+                id="button-skip-username"
+                class="w-full text-muted hover:text-primary transition duration-200"
+                @click="onSkip"
+            >
+                Skip for now
+            </button>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import closeButton from '../closeButton.vue'
+import backButton from '../backButton.vue'
+import Logo from '~/modules/Common/components/Logo'
+
+// Use v-model for username
+const username = defineModel<string | null>('username', { default: null })
+
+const errorMessage = ref('')
+
+const emit = defineEmits<{
+    (e: 'next', username: string): void
+    (e: 'skip'): void
+    (e: 'back'): void
+    (e: 'close'): void
+}>()
+
+const props = defineProps<{
+    Recommendations: string[]
+}>()
+
+const validateUsername = () => {
+    const value = username.value
+
+    if (!value || value.length === 0) {
+        errorMessage.value = ''
+        return
+    }
+
+    // Username validation rules
+    if (value.length < 3) {
+        errorMessage.value = 'Username must be at least 3 characters'
+        return
+    }
+
+    // Only alphanumeric and underscores
+    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        errorMessage.value = 'Only letters, numbers, and underscores allowed'
+        return
+    }
+
+    // Cannot start with a number
+    if (/^[0-9]/.test(value)) {
+        errorMessage.value = 'Username cannot start with a number'
+        return
+    }
+
+    errorMessage.value = ''
+}
+
+const isValid = computed(() => {
+    return username.value && username.value.length >= 3 && !errorMessage.value
+})
+
+const onNext = () => {
+    if (isValid.value && username.value) {
+        emit('next', username.value)
+    }
+}
+
+const onSkip = () => {
+    emit('skip')
+}
+</script>

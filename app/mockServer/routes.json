@@ -1,0 +1,10 @@
+{
+    "/api/users": "/users",
+    "/api/users/:id": "/users/:id",
+    "/api/tweets": "/tweets",
+    "/api/tweets/:post_id": "/tweets?post_id=:post_id",
+    "/api/tweets/:post_id/replies": "/tweets?parent_id=:post_id&type=reply",
+    "/api/follows/:user_id": "/follows?user_id=:user_id",
+    "/api/tweets?username=:username": "/tweets?username=:username",
+    "/api/users?user_id=:user_id": "/users?user_id=:user_id"
+}
