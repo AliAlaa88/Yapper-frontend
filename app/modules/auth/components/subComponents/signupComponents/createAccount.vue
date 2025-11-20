@@ -1,6 +1,6 @@
 <template>
     <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-alternate/10 backdrop-blur-sm p-4"
+        class="fixed inset-0 border-alternate flex items-center justify-center z-50 backdrop-blur-sm p-4"
     >
         <div
             class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
@@ -11,9 +11,10 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6 text-primary">{{ $t('auth.signup.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6 text-primary" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.title') }}</h2>
 
             <!-- Name Input -->
+        <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-name-signup-s1"
@@ -23,8 +24,8 @@
                     @blur="validateNameField"
                     @input="clearNameError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        nameError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        nameError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="nameError" class="text-red text-xs mt-1">{{ nameError }}</p>
@@ -40,13 +41,13 @@
                     @blur="validateEmailField"
                     @input="clearEmailError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        emailError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        emailError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="emailError" class="text-red text-xs mt-1">{{ emailError }}</p>
             </div>
-            <h3 class="text-l font-bold text-left">{{ $t('auth.signup.dobTitle') }}</h3>
+            <h3 class="text-l font-bold" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.dobTitle') }}</h3>
             <p class="text-primary mb-4 text-sm">{{ $t('auth.signup.dobInfo') }}</p>
             <p v-if="dobError" class="text-red text-xs mb-2">{{ dobError }}</p>
             <!-- Date of Birth Dropdowns -->
@@ -56,7 +57,7 @@
                     <select
                         id="select-month-signup-s1"
                         v-model="month"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled selected>{{ $t('auth.signup.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
@@ -75,7 +76,7 @@
                     <select
                         id="select-day-signup-s1"
                         v-model="day"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled selected>{{ $t('auth.signup.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
@@ -92,7 +93,7 @@
                     <select
                         id="select-year-signup-s1"
                         v-model="year"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled selected>{{ $t('auth.signup.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
@@ -104,15 +105,15 @@
                     >
                 </div>
             </div>
-
             <!-- Next Button -->
             <button
                 id="button-next-signup-s1"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
-                @click="onNext"
+                type="submit"
             >
                 {{ $t('auth.common.next') }}
             </button>
+            </form>
             <!-- reCAPTCHA -->
             <div class="flex justify-center mt-4">
                 <Recaptcha
@@ -203,22 +204,24 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
+const { t } = useI18n()
+
 // Validation functions
 const validateNameField = () => {
     const result = validateName(name.value)
-    nameError.value = result.valid ? '' : result.message || ''
+    nameError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 
 const validateEmailField = () => {
     const result = validateEmail(email.value)
-    emailError.value = result.valid ? '' : result.message || ''
+    emailError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 
 const validateDobField = () => {
     const result = validateDateOfBirth(year.value, month.value, day.value)
-    dobError.value = result.valid ? '' : result.message || ''
+    dobError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 

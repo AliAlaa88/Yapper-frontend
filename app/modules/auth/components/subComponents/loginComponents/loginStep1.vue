@@ -12,7 +12,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.login.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.login.title') }}</h2>
 
             <!--OAuth Buttons-->
             <OAuth />
@@ -25,6 +25,7 @@
             </div>
 
             <!-- Input -->
+            <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-identifier-login"
@@ -34,8 +35,8 @@
                     @blur="validateIdentifierField"
                     @input="clearValidationError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        validationError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        validationError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="validationError" class="text-red text-xs mt-1">{{ validationError }}</p>
@@ -47,15 +48,15 @@
             <button
                 id="button-next-login-s1"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
-                @click="onNext"
+                type="submit"
             >
                 {{ $t('auth.common.next') }}
             </button>
-
+            </form>
             <!-- Forgot password -->
             <button
                 id="button-forgot-password-login"
-                class="w-full border border-primary text-primary hover:bg-hover font-semibold cursor-pointer rounded-full py-2 transition mb-6"
+                class="w-full border-2 border-alternate text-primary hover:bg-hover font-semibold cursor-pointer rounded-full py-2 transition mb-6 hover:border-blue"
                 @click="onForgotPassword"
             >
                 {{ $t('auth.login.forgotPassword') }}
@@ -77,11 +78,15 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import logo from '~/modules/Common/components/Logo'
 import OAuth from '../OAuth.vue'
 import { useCheckIdentifierAvailabilityQuery } from '~/modules/auth/queries/useLoginQuery'
 import closeButton from '../closeButton.vue'
 import { validateIdentifier } from '../../../utils/validators'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for identifier
 const identifier = defineModel<string>('identifier', { default: '' })
@@ -114,9 +119,11 @@ const checkMutation = useCheckIdentifierAvailabilityQuery(
     },
 )
 
+const { t } = useI18n()
+
 const validateIdentifierField = () => {
     const result = validateIdentifier(identifier.value)
-    validationError.value = result.valid ? '' : result.message || ''
+    validationError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 

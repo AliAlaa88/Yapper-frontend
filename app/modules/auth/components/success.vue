@@ -8,19 +8,36 @@ import { ref } from 'vue';
 import { useUserStore } from '~/modules/auth/stores/userStore';
 import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery';
 import { useRouter } from 'vue-router';
+import { useExchangeTokenQuery } from '~/modules/auth/queries/useOAuthQuery';
 import Cookies from 'js-cookie';
 const router = useRouter();
 const userStore = useUserStore();
 const urlParams = new URLSearchParams(window.location.search);
-const userToken = ref(urlParams.get('token') || '');
+const exchange_token = ref(urlParams.get('exchange_token') || '');
 const isLoading = ref(true);
-if (userToken.value) {
-    userStore.accessToken = userToken.value;
+const userToken = ref<string>('');
+const exchangeTokenMutation = useExchangeTokenQuery(
+    (data: any) => {
+        console.log("Exchange Token Success:", data);
+        userToken.value = data.access_token;
+    },
+    (error: any) => {
+        console.error("Exchange Token Error:", error);
+        router.push('/auth');
+        userStore.logout();
+    },
+);
+if(exchange_token.value){
+    try {
+    exchangeTokenMutation.mutate({ exchange_token: exchange_token.value });
+        userStore.accessToken = userToken.value;
     if (process.client) {
         console.log("Storing access token in cookies");
-        Cookies.set('access_token', userToken.value);
+        const token = useCookie('access_token')
+        token.value=userToken.value;
+        await nextTick();
     }
-
+    console.log("Fetching user data with access token", useCookie('access_token').value);
     useGetUserQuery(
         true,
         (data) => {
@@ -39,8 +56,13 @@ if (userToken.value) {
             userStore.logout();
         }
     );
-} else {
+    } catch (error) {
+        console.error("Error decoding exchange token:", error);
+    }
+}
+ else {
     router.push('/auth');
     userStore.logout();
 }
+
 </script>

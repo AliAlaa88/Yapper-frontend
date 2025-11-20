@@ -142,6 +142,31 @@
     "interests": {
       "title": "What are you interested in?",
       "info": "Select at least 3 interests to help us tailor your feed."
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "nameMaxLength": "Name must not exceed 50 characters",
+      "nameInvalidChars": "Name can only contain letters and spaces",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordTooLong": "Password is too long",
+      "passwordWeak": "Password must contain uppercase, lowercase, and number",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid phone number",
+      "phoneLength": "Phone number must be 10-15 digits",
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Username must be at least 3 characters",
+      "usernameMaxLength": "Username must not exceed 20 characters",
+      "usernameInvalidChars": "Username can only contain letters, numbers, and underscores",
+      "otpRequired": "OTP is required",
+      "otpInvalid": "OTP must be exactly 6 digits",
+      "dobRequired": "Please select your complete date of birth",
+      "dobTooYoung": "You must be at least 13 years old",
+      "dobInvalid": "Please enter a valid date of birth",
+      "identifierRequired": "Please enter your email, phone, or username"
     }
   }
 }

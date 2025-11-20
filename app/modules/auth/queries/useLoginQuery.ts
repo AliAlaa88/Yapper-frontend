@@ -49,6 +49,7 @@ export function useLogoutQuery(
         onSuccess: (data) => {
             onSuccess?.(data)
             userStore.logout()
+            window.location.reload()
         },
         onError: (error) => onError?.(error),
     })

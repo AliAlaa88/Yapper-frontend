@@ -15,7 +15,7 @@
             <backButton @close="$emit('back')" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.username.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.title') }}</h2>
             <p class="text-muted mb-6">{{ $t('auth.username.info') }}</p>
 
             <!-- Username Input -->

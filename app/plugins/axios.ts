@@ -22,9 +22,10 @@ export default defineNuxtPlugin(() => {
     yapperApi.interceptors.request.use(
         (config) => {
             if (process.client) {
-                const token = Cookies.get('access_token')
+                const token = useCookie('access_token')
+                console.log("Attaching token to request:", token.value);
                 if (token) {
-                    config.headers.Authorization = `Bearer ${token}`
+                    config.headers.Authorization = `Bearer ${token.value}`
                 }
             }
             return config
@@ -37,13 +38,21 @@ export default defineNuxtPlugin(() => {
     yapperApi.interceptors.response.use(
         (response) => response,
         async (error) => {
+            const requestUrl = error.config?.url
+            console.log("Response error URL:", requestUrl);
+            console.log(`${apiBase}/auth/refresh`);
             if (error.response?.status === 401) {
-                if (process.client && window.location.pathname !== '/auth/login') {
+                if (process.client && window.location.pathname !== '/auth/login' && requestUrl !== `${apiBase}/auth/refresh`) {
                     const nuxtApp = useNuxtApp()
                     const authService = nuxtApp.$authService
                     const response = await authService.GetAccessToken()
                     const access_token = response.data.access_token;
-                    Cookies.set('access_token', access_token)
+                    const token = useCookie('access_token')
+                    token.value = access_token;
+                    // Retry the original request with the new token
+                    const originalRequest = error.config;
+                    originalRequest.headers['Authorization'] = `Bearer ${access_token}`;
+                    return yapperApi(originalRequest);
                 }
             }
             return Promise.reject(error)

@@ -12,7 +12,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.profilePicture.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.title') }}</h2>
             <p class="text-muted mb-6">{{ $t('auth.profilePicture.info') }}</p>
 
             <!-- Profile Picture Preview -->
@@ -84,10 +84,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for profile picture
 const profilePicture = defineModel<string | null>('profilePicture', { default: null })

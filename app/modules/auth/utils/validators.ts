@@ -1,16 +1,16 @@
 export interface ValidationResult {
     valid: boolean
-    message?: string
+    messageKey?: string
 }
 
 export function validateEmail(email: string): ValidationResult {
     if (!email) {
-        return { valid: false, message: 'Email is required' }
+        return { valid: false, messageKey: 'auth.validation.emailRequired' }
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-        return { valid: false, message: 'Please enter a valid email address' }
+        return { valid: false, messageKey: 'auth.validation.emailInvalid' }
     }
 
     return { valid: true }
@@ -18,20 +18,20 @@ export function validateEmail(email: string): ValidationResult {
 
 export function validateName(name: string): ValidationResult {
     if (!name) {
-        return { valid: false, message: 'Name is required' }
+        return { valid: false, messageKey: 'auth.validation.nameRequired' }
     }
 
     if (name.trim().length < 2) {
-        return { valid: false, message: 'Name must be at least 2 characters' }
+        return { valid: false, messageKey: 'auth.validation.nameMinLength' }
     }
 
     if (name.length > 50) {
-        return { valid: false, message: 'Name must not exceed 50 characters' }
+        return { valid: false, messageKey: 'auth.validation.nameMaxLength' }
     }
 
     const nameRegex = /^[a-zA-Z\s\u0600-\u06FF]+$/
     if (!nameRegex.test(name)) {
-        return { valid: false, message: 'Name can only contain letters and spaces' }
+        return { valid: false, messageKey: 'auth.validation.nameInvalidChars' }
     }
 
     return { valid: true }
@@ -39,15 +39,15 @@ export function validateName(name: string): ValidationResult {
 
 export function validatePassword(password: string): ValidationResult {
     if (!password) {
-        return { valid: false, message: 'Password is required' }
+        return { valid: false, messageKey: 'auth.validation.passwordRequired' }
     }
 
     if (password.length < 8) {
-        return { valid: false, message: 'Password must be at least 8 characters' }
+        return { valid: false, messageKey: 'auth.validation.passwordMinLength' }
     }
 
     if (password.length > 128) {
-        return { valid: false, message: 'Password is too long' }
+        return { valid: false, messageKey: 'auth.validation.passwordTooLong' }
     }
 
     // Check for at least one uppercase, one lowercase, one number
@@ -58,7 +58,7 @@ export function validatePassword(password: string): ValidationResult {
     if (!hasUpperCase || !hasLowerCase || !hasNumber) {
         return {
             valid: false,
-            message: 'Password must contain uppercase, lowercase, and number',
+            messageKey: 'auth.validation.passwordWeak',
         }
     }
 
@@ -67,17 +67,17 @@ export function validatePassword(password: string): ValidationResult {
 
 export function validatePhone(phone: string): ValidationResult {
     if (!phone) {
-        return { valid: false, message: 'Phone number is required' }
+        return { valid: false, messageKey: 'auth.validation.phoneRequired' }
     }
 
     const phoneRegex = /^[\d\s\-\+\(\)]+$/
     if (!phoneRegex.test(phone)) {
-        return { valid: false, message: 'Please enter a valid phone number' }
+        return { valid: false, messageKey: 'auth.validation.phoneInvalid' }
     }
 
     const digitsOnly = phone.replace(/[\s\-\+\(\)]/g, '')
     if (digitsOnly.length < 10 || digitsOnly.length > 15) {
-        return { valid: false, message: 'Phone number must be 10-15 digits' }
+        return { valid: false, messageKey: 'auth.validation.phoneLength' }
     }
 
     return { valid: true }
@@ -85,20 +85,20 @@ export function validatePhone(phone: string): ValidationResult {
 
 export function validateUsername(username: string): ValidationResult {
     if (!username) {
-        return { valid: false, message: 'Username is required' }
+        return { valid: false, messageKey: 'auth.validation.usernameRequired' }
     }
 
     if (username.length < 3) {
-        return { valid: false, message: 'Username must be at least 3 characters' }
+        return { valid: false, messageKey: 'auth.validation.usernameMinLength' }
     }
 
     if (username.length > 20) {
-        return { valid: false, message: 'Username must not exceed 20 characters' }
+        return { valid: false, messageKey: 'auth.validation.usernameMaxLength' }
     }
 
     const usernameRegex = /^[a-zA-Z0-9_]+$/
     if (!usernameRegex.test(username)) {
-        return { valid: false, message: 'Username can only contain letters, numbers, and underscores' }
+        return { valid: false, messageKey: 'auth.validation.usernameInvalidChars' }
     }
 
     return { valid: true }
@@ -106,12 +106,12 @@ export function validateUsername(username: string): ValidationResult {
 
 export function validateOtp(otp: string): ValidationResult {
     if (!otp) {
-        return { valid: false, message: 'OTP is required' }
+        return { valid: false, messageKey: 'auth.validation.otpRequired' }
     }
     // OTP can be digits or letters
     const otpRegex = /^[A-Za-z0-9]{6}$/;
     if (!otpRegex.test(otp)) {
-        return { valid: false, message: 'OTP must be exactly 6 digits' }
+        return { valid: false, messageKey: 'auth.validation.otpInvalid' }
     }
 
     return { valid: true }
@@ -119,7 +119,7 @@ export function validateOtp(otp: string): ValidationResult {
 
 export function validateDateOfBirth(year: string, month: string, day: string): ValidationResult {
     if (!year || !month || !day) {
-        return { valid: false, message: 'Please select your complete date of birth' }
+        return { valid: false, messageKey: 'auth.validation.dobRequired' }
     }
 
     const birthDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
@@ -131,11 +131,11 @@ export function validateDateOfBirth(year: string, month: string, day: string): V
     const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
     if (actualAge < 13) {
-        return { valid: false, message: 'You must be at least 13 years old' }
+        return { valid: false, messageKey: 'auth.validation.dobTooYoung' }
     }
 
     if (actualAge > 120) {
-        return { valid: false, message: 'Please enter a valid date of birth' }
+        return { valid: false, messageKey: 'auth.validation.dobInvalid' }
     }
 
     return { valid: true }
@@ -143,7 +143,7 @@ export function validateDateOfBirth(year: string, month: string, day: string): V
 
 export function validateIdentifier(identifier: string): ValidationResult {
     if (!identifier) {
-        return { valid: false, message: 'Please enter your email, phone, or username' }
+        return { valid: false, messageKey: 'auth.validation.identifierRequired' }
     }
 
     // Check if it's an email

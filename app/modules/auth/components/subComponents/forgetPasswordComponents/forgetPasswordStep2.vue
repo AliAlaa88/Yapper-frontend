@@ -15,7 +15,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.forgotPassword.step2Title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.forgotPassword.step2Title') }}</h2>
             <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step2Info') }}</p>
 
             <!-- OTP Input -->
@@ -29,8 +29,8 @@
                     @input="handleOtpInput"
                     @blur="validateOtpField"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors text-center text-2xl tracking-widest',
-                        otpError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
+                        otpError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="otpError" class="text-red text-xs mt-1 text-center">{{ otpError }}</p>
@@ -58,12 +58,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useVerifyForgotPasswordOTPQuery } from '../../../queries/useForgetPasswordQuery'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validateOtp } from '../../../utils/validators'
+
+const { locale, t } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for otp
 const otp = defineModel<string>('otp', { default: '' })
@@ -104,7 +108,7 @@ const handleOtpInput = (event: Event) => {
 
 const validateOtpField = () => {
     const result = validateOtp(otp.value)
-    otpError.value = result.valid ? '' : result.message || ''
+    otpError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 

@@ -15,7 +15,7 @@
             <backButton @close="$emit('back')" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.interests.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.title') }}</h2>
             <p class="text-muted mb-6">{{ $t('auth.interests.info') }}</p>
 
             <!-- Interests Grid -->
@@ -74,10 +74,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 interface Interest {
     id: string

@@ -12,7 +12,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.finalRegister.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.title') }}</h2>
             <p class="text-muted mb-6">{{ $t('auth.finalRegister.info') }}</p>
 
             <!-- Error Message -->
@@ -21,6 +21,7 @@
             </p>
 
             <!-- Password Input -->
+            <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-password-signup-s3"
@@ -30,8 +31,8 @@
                     @blur="validatePasswordField"
                     @input="clearPasswordError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        passwordError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
@@ -44,20 +45,25 @@
             <button
                 id="button-signup-s3"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
-                @click="onNext"
+                type="submit"
             >
                 {{ $t('auth.finalRegister.signUpButton') }}
             </button>
+            </form>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRegisterS3Query } from '../../../queries/useRegisterQuery'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for password and language
 const password = defineModel<string>('password', { default: '' })
@@ -92,9 +98,11 @@ const registerMutation = useRegisterS3Query(
     },
 )
 
+const { t } = useI18n()
+
 const validatePasswordField = () => {
     const result = validatePassword(password.value)
-    passwordError.value = result.valid ? '' : result.message || ''
+    passwordError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 

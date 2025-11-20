@@ -1,6 +1,6 @@
 <template>
     <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-alternate/10 backdrop-blur-sm p-4"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-primary/60 backdrop-blur-sm p-4"
     >
         <div
             class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
@@ -12,7 +12,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.oauth.dobTitle') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.oauth.dobTitle') }}</h2>
             <!-- Description -->
             <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
 
@@ -23,7 +23,7 @@
                     <select
                         id="select-month-oauth-s1"
                         v-model="month"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
@@ -42,7 +42,7 @@
                     <select
                         id="select-day-oauth-s1"
                         v-model="day"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
@@ -59,7 +59,7 @@
                     <select
                         id="select-year-oauth-s1"
                         v-model="year"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>

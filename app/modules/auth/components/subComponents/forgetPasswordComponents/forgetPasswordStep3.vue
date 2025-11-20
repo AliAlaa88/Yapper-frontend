@@ -15,7 +15,7 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.forgotPassword.step3Title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.forgotPassword.step3Title') }}</h2>
             <!-- Description -->
             <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step3Info') }}</p>
 
@@ -29,8 +29,8 @@
                     @blur="validatePasswordField"
                     @input="clearPasswordError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        passwordError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
@@ -44,8 +44,8 @@
                     v-model="verifyPassword"
                     @input="clearMatchError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        matchError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        matchError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="matchError" class="text-red text-xs mt-1">{{ matchError }}</p>
@@ -74,12 +74,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useResetPasswordQuery } from '../../../queries/useForgetPasswordQuery'
 import closeButton from '../closeButton.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
+
+const { locale, t } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for password fields
 const password = defineModel<string>('password', { default: '' })
@@ -116,7 +120,7 @@ const resetPasswordMutation = useResetPasswordQuery(
 
 const validatePasswordField = () => {
     const result = validatePassword(password.value)
-    passwordError.value = result.valid ? '' : result.message || ''
+    passwordError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 

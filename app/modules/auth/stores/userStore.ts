@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
   }),
   
   getters: {
-    isLoggedIn: () => localStorage.getItem('user') !== null && Cookies.get('access_token') !== undefined,
+    isLoggedIn: () => localStorage.getItem('user') !== null && useCookie('access_token').value !== undefined,
     getUser: (state) => state.user,
     getAccessToken: (state) => state.accessToken,
     getUserId: (state) => state.user?.id,
@@ -28,7 +28,8 @@ export const useUserStore = defineStore('user', {
       this.accessToken = authData.access_token;
       
       if (process.client) {
-        Cookies.set('access_token', authData.access_token);
+        const token = useCookie('access_token')
+        token.value = authData.access_token;
         localStorage.setItem('user', JSON.stringify(authData.user));
       }
     },
@@ -63,12 +64,12 @@ export const useUserStore = defineStore('user', {
     
     restoreSession() {
       if (process.client) {
-        const token = Cookies.get('access_token');
+        const token = useCookie('access_token')
         const userStr = localStorage.getItem('user');
         
-        if (token && userStr) {
+        if (token.value && userStr) {
           try {
-            this.accessToken = token;
+            this.accessToken = token.value;
             this.user = JSON.parse(userStr);
           } catch (error) {
             console.error('Failed to restore session:', error);

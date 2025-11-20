@@ -194,6 +194,23 @@
     .border-primary {
         border-color: var(--color-x-border);
     }
+
+    .border-alternate {
+        border-color: var(--color-x-alternate);
+    }
+
+    .border-blue {
+        border-color: var(--color-x-blue);
+    }
+
+    .border-green {
+        border-color: var(--color-x-green);
+    }
+
+    .border-red {
+        border-color: var(--color-x-red);
+    }
+
     .border-tooltip {
         border-color: var(--color-x-gray-light);
     }
@@ -255,6 +272,14 @@
 
     .text-2xl {
         font-size: var(--font-size-2xl);
+    }
+    /* Icon utilities */
+    .github-icon {
+      filter: invert(1); 
+    }
+
+    .dark .github-icon {
+      filter: invert(0); 
     }
 
     /* Hover utilities */
@@ -324,5 +349,30 @@
 
     .hover\:text-border:hover {
         color: var(--color-x-border);
+    }
+
+    .hover\:border-blue:hover {
+        border-color: var(--color-x-blue-hover);
+    }
+
+    .hover\:border-red:hover {
+        border-color: var(--color-x-red-hover);
+    }
+
+    /* Hover: github icon */
+    .button-hover-invert:hover .github-icon {
+      filter: invert(0);           
+    }
+    .dark .button-hover-invert:hover .github-icon {
+      filter: invert(1);          
+    }
+    /* Focus utilities */
+
+    .focus\:border-blue:focus {
+        border-color: var(--color-x-blue-hover);
+    }
+
+    .focus\:border-red:focus {
+        border-color: var(--color-x-red-hover);
     }
 }

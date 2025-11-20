@@ -27,3 +27,15 @@ export function useOAuthCompleteStep2Query(
         onError
     });
 }
+export function useExchangeTokenQuery(
+    onSuccess?: (data: any) => void,
+    onError?: (error: unknown) => void
+) {
+    const { $authService } = useNuxtApp();
+    return useMutation({
+        mutationFn: (variables: { exchange_token: string }) =>
+            $authService.ExchangeToken(variables.exchange_token), 
+        onSuccess,
+        onError
+    });
+}

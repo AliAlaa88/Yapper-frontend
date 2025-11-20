@@ -15,16 +15,17 @@
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">{{ $t('auth.login.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.login.title') }}</h2>
 
             <!-- Email -->
+            <form @submit.prevent="onNext">
             <input
                 id="input-identifier-readonly-login-s2"
                 type="text"
                 :placeholder="props.identifier"
                 :value="props.identifier"
                 readonly
-                class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none mb-4 opacity-70 shadow-sm"
+                class="w-full bg-primary text-primary border-2 border-alternate focus:border-blue rounded-md px-4 py-2 focus:outline-none mb-4 opacity-70 shadow-sm"
             />
 
             <!-- Password -->
@@ -37,8 +38,8 @@
                     @blur="validatePasswordField"
                     @input="clearPasswordError"
                     :class="[
-                        'w-full bg-primary text-primary border rounded-md px-4 py-2 focus:outline-none transition-colors',
-                        passwordError ? 'border-red focus:border-red' : 'border-primary focus:border-blue'
+                        'w-full bg-primary text-primary border-2 border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        passwordError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
@@ -62,11 +63,11 @@
             <button
                 id="button-login-s2"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
-                @click="onNext"
+                type="submit"
             >
                 {{ $t('auth.common.signIn') }}
             </button>
-
+            </form>
             <p class="text-center text-primary text-sm">
                 {{ $t('auth.login.switchPrompt') }}
                 <button
@@ -83,11 +84,15 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import { useLoginQuery } from '../../../queries/useLoginQuery'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import closeButton from '../closeButton.vue'
 import { validatePassword } from '../../../utils/validators'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 const errorMessage = ref('')
 const passwordError = ref('')
@@ -125,9 +130,11 @@ const loginMutation = useLoginQuery(
     },
 )
 
+const { t } = useI18n()
+
 const validatePasswordField = () => {
     const result = validatePassword(password.value)
-    passwordError.value = result.valid ? '' : result.message || ''
+    passwordError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 

@@ -1,13 +1,13 @@
 import { useNuxtApp } from "#app"
 import Cookies from "js-cookie";
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
     const { $authService } = useNuxtApp()
-    // Check authentication status using service
-    const response = $authService.getUserData();
+    // Check authentication status using service --> bad practice to have async middleware
+    // const response = await $authService.getUserData();
     const user = localStorage.getItem('user')
-    const token = Cookies.get('access_token')
-    const isAuthenticated = !!(user && token) || (response && response.user);
-
+    const token = useCookie('access_token').value
+    //console.log("Middleware auth check:", { user, token, response });
+    const isAuthenticated = !!(user && token) //|| (response && response.data);
     // Check if route requires authentication
     const requiresAuth = to.meta.requiresAuth !== false
 
