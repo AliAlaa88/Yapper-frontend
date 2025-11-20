@@ -9,9 +9,11 @@ ENV HUSKY=0
 # Copy only dependency files first for better layer caching
 COPY package*.json ./
 
+# Remove package-lock.json and regenerate it to ensure compatibility with package.json
+RUN npm install --package-lock-only --ignore-scripts
+
 # Install ALL dependencies (including dev) for build stage
 RUN npm ci --prefer-offline --no-audit
-
 
 # -------- BUILDER STAGE --------
 FROM node:24-alpine AS builder
