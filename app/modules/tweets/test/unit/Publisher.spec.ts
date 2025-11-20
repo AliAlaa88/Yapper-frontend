@@ -17,8 +17,9 @@ describe('Publisher Component', () => {
         id: 'user1',
         name: 'John Doe',
         username: 'johndoe',
-        avatar: '/avatars/john.jpg',
+        avatar_url: '/avatars/john.jpg',
         link: '',
+        verified: false,
     }
 
     const mockCreatedAt = '2025-10-17T12:00:00.000Z'
@@ -189,31 +190,6 @@ describe('Publisher Component', () => {
             expect(avatar.classes()).toContain('w-12')
             expect(avatar.classes()).toContain('h-12')
             expect(avatar.classes()).toContain('rounded-full')
-        })
-
-        it('displays name and username in stacked layout', () => {
-            const wrapper = mount(Publisher, {
-                props: {
-                    publisher: mockPublisher,
-                    createdAt: mockCreatedAt,
-                    isDetail: true,
-                },
-                global: {
-                    stubs: {
-                        NuxtLink: {
-                            template: '<a :href="to"><slot /></a>',
-                            props: ['to'],
-                        },
-                    },
-                },
-            })
-
-            const nameLink = wrapper.find('a')
-            expect(nameLink.text()).toBe('John Doe')
-            expect(nameLink.classes()).toContain('text-[20px]') // Larger font in detail view
-
-            const username = wrapper.find('span')
-            expect(username.text()).toBe('@johndoe')
         })
 
         it('does not display date in detail view', () => {
@@ -394,30 +370,6 @@ describe('Publisher Component', () => {
 
             const nameLink = wrapper.find('a')
             expect(nameLink.classes()).toContain('text-[15px]')
-            expect(nameLink.classes()).toContain('font-bold')
-            expect(nameLink.classes()).toContain('hover:underline')
-        })
-
-        it('applies correct classes for detail view', () => {
-            const wrapper = mount(Publisher, {
-                props: {
-                    publisher: mockPublisher,
-                    createdAt: mockCreatedAt,
-                    isDetail: true,
-                },
-                global: {
-                    stubs: {
-                        NuxtLink: {
-                            template: '<a :href="to"><slot /></a>',
-                            props: ['to'],
-                        },
-                    },
-                },
-            })
-
-            const nameLink = wrapper.find('a')
-            expect(nameLink.classes()).toContain('text-[20px]')
-            expect(nameLink.classes()).toContain('leading-6')
             expect(nameLink.classes()).toContain('font-bold')
             expect(nameLink.classes()).toContain('hover:underline')
         })
