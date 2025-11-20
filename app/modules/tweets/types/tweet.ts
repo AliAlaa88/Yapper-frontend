@@ -1,7 +1,5 @@
-import type { Content } from './content'
-import type { User } from './user'
-import type { Stats } from './stats'
-export type TweetType = 'tweet' | 'retweet' | 'quote' | 'reply'
+import type { User } from '../../Common/types/user'
+export type TweetType = 'tweet' | 'repost' | 'quote' | 'reply'
 
 interface Tweet {
     tweet_id: string
@@ -18,9 +16,15 @@ interface Tweet {
     replies_count: number
     is_liked: boolean
     is_reposted: boolean
+    is_bookmarked: boolean
     created_at: string
     updated_at?: string
     user: User
 }
+type TweetsPage = {
+    data: Tweet[]
+    nextCursor?: string
+    hasMore?: boolean
+}
 
-export type { Tweet }
+export type { Tweet, TweetsPage }
