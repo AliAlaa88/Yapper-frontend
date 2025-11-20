@@ -7,12 +7,9 @@ export default defineNuxtPlugin(() => {
             USE_SYSTEM: 'yapper-use-system-theme',
         }
 
-        const applyInitialSettings = () => {
+        const applyFontSize = () => {
             const root = document.documentElement
             const fontSize = localStorage.getItem(STORAGE_KEYS.FONT_SIZE) || '3'
-            const color = localStorage.getItem(STORAGE_KEYS.COLOR) || 'blue'
-            const background = localStorage.getItem(STORAGE_KEYS.BACKGROUND) || 'dark'
-            const useSystem = localStorage.getItem(STORAGE_KEYS.USE_SYSTEM) === 'true'
 
             const fontSizeMap: Record<string, string> = {
                 '1': '13px',
@@ -22,26 +19,58 @@ export default defineNuxtPlugin(() => {
                 '5': '20px',
             }
             root.style.fontSize = fontSizeMap[fontSize] || '16px'
-            root.setAttribute('data-color', color)
+        }
 
-            // Apply background
-            // if (useSystem) {
-            //     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-            //     root.classList.toggle('dark', prefersDark)
-            // } else {
-            if (background === 'dark') {
-                root.classList.add('dark')
+        const applyColor = () => {
+            const root = document.documentElement
+            const color = localStorage.getItem(STORAGE_KEYS.COLOR) || 'blue'
+            root.setAttribute('data-color', color)
+        }
+
+
+        const applyBackground = () => {
+            const root = document.documentElement
+            const useSystem = localStorage.getItem(STORAGE_KEYS.USE_SYSTEM) === 'true'
+            const background = localStorage.getItem(STORAGE_KEYS.BACKGROUND) || 'dark'
+
+            if (useSystem) {
+                // Use system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+                root.classList.toggle('dark', prefersDark)
             } else {
-                root.classList.remove('dark')
+                // Use manual selection
+                if (background === 'dark') {
+                    root.classList.add('dark')
+                } else {
+                    root.classList.remove('dark')
+                }
             }
-            // }
+        }
+
+
+        const applyInitialSettings = () => {
+            applyFontSize()
+            applyColor()
+            applyBackground()
         }
 
         applyInitialSettings()
 
         window.addEventListener('storage', (e) => {
-            if (e.key?.startsWith('yapper-')) {
-                applyInitialSettings()
+            if (!e.key) return
+
+            if (e.key === STORAGE_KEYS.FONT_SIZE) applyFontSize()
+            if (e.key === STORAGE_KEYS.COLOR) applyColor()
+            if (e.key === STORAGE_KEYS.BACKGROUND || e.key === STORAGE_KEYS.USE_SYSTEM) {
+                applyBackground()
+            }
+        })
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        mediaQuery.addEventListener('change', () => {
+            const useSystem = localStorage.getItem(STORAGE_KEYS.USE_SYSTEM) === 'true'
+            if (useSystem) {
+                applyBackground()
             }
         })
     }

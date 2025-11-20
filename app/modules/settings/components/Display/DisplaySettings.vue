@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="px-4 py-5 border-b border-primary">
+            <div class="px-4 py-5">
                 <h2 class="text-lg font-bold text-primary mb-5">Background</h2>
                 <div class="flex justify-center gap-15 mb-5">
                     <button
@@ -43,7 +43,7 @@
                             background === bg.value
                                 ? 'border-accent'
                                 : 'border-primary hover:border-secondary',
-                            bg.value === 'default' ? 'bg-white' : '',
+                            bg.value === 'light' ? 'bg-white' : '',
                             bg.value === 'dark' ? 'bg-black' : ''
                         ]"
                         @click="background = bg.value"
@@ -64,13 +64,37 @@
                             :class="[
                                 'text-sm font-semibold',
                                 background === bg.value ?
-                                    bg.value === 'default' ? 'text-black' :
+                                    bg.value === 'light' ? 'text-black' :
                                         bg.value === 'dark' ? 'text-primary' : 'text-primary' : 'text-white'
                             ]">
                             {{ bg.description }}
                         </span>
                     </button>
                 </div>
+            </div>
+
+            <div class="px-8 flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-medium text-primary">Use system setting</h3>
+                    <p v-if="!useSystemTheme" class="text-xs text-secondary mt-1.5">Choose your preferred theme</p>
+                    <p v-else class="text-xs text-secondary mt-1.5">Your theme will automatically switch based on your device settings</p>
+                </div>
+                <button
+                    :class="[
+                        'relative w-10 h-4 rounded-full transition-colors',
+                        useSystemTheme ? 'bg-accent/60' : 'bg-gray'
+                    ]"
+                    role="switch"
+                    :aria-checked="useSystemTheme"
+                    @click="useSystemTheme = !useSystemTheme"
+                >
+                    <span
+                        :class="[
+                            'absolute top-[-2px] w-5 h-5 shadow shadow-gray-400 rounded-full transition-transform',
+                            useSystemTheme ? 'translate-x-1 bg-accent' : 'translate-x-[-23px] bg-white'
+                        ]"
+                    />
+                </button>
             </div>
         </div>
     </DetailedPanel>
@@ -85,7 +109,7 @@ import SlideBar from './SlideBar.vue'
 const {
     color,
     background,
-    // useSystemTheme,
+    useSystemTheme,
     colorOptions,
     backgroundOptions,
 } = useDisplaySettings()

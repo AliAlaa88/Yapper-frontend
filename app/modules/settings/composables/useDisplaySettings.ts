@@ -17,7 +17,7 @@ export const useDisplaySettings = () => {
     ]
 
     const backgroundOptions = [
-        { name: 'Default', value: 'default', description: 'Default' },
+        { name: 'Default', value: 'light', description: 'Default' },
         { name: 'Lights out', value: 'dark', description: 'Lights out' },
     ]
 
@@ -25,13 +25,6 @@ export const useDisplaySettings = () => {
     const color = ref('blue')
     const background = ref('dark')
     const useSystemTheme = ref(false)
-
-    const saveSettings = () => {
-        localStorage.setItem(STORAGE_KEYS.FONT_SIZE, JSON.stringify(fontSize.value))
-        localStorage.setItem(STORAGE_KEYS.COLOR, color.value)
-        localStorage.setItem(STORAGE_KEYS.BACKGROUND, background.value)
-        localStorage.setItem(STORAGE_KEYS.USE_SYSTEM, JSON.stringify(useSystemTheme.value))
-    }
 
     const loadSettings = () => {
         fontSize.value = JSON.parse(localStorage.getItem(STORAGE_KEYS.FONT_SIZE) || '3')
@@ -53,6 +46,47 @@ export const useDisplaySettings = () => {
         }
         document.documentElement.style.fontSize = fontSizeMap[fontSize.value.toString()] || '16px'
         document.documentElement.setAttribute('data-color', color.value)
+
+        if (useSystemTheme.value) {
+            applySystemTheme()
+        } else {
+            if (background.value === 'dark') {
+                document.documentElement.classList.add('dark')
+                console.log('dark mode applied')
+            } else {
+                document.documentElement.classList.remove('dark')
+                console.log('light mode applied')
+            }
+        }
+    }
+
+    const applyFontSize = () => {
+        const fontSizeMap: Record<string, string> = {
+            '1': '13px',
+            '2': '15px',
+            '3': '16px',
+            '4': '18px',
+            '5': '20px',
+        }
+        document.documentElement.style.fontSize = fontSizeMap[fontSize.value.toString()] || '16px'
+    }
+
+    const applyColor = () => {
+        document.documentElement.setAttribute('data-color', color.value)
+    }
+
+    const applyBackground = () => {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const systemBackground = prefersDark ? 'dark' : 'light'
+        console.log('applyBackground system', systemBackground)
+        console.log('applyBackground background', background.value)
+
+        if (useSystemTheme.value && background.value !== systemBackground) {
+            useSystemTheme.value = false
+            localStorage.setItem(STORAGE_KEYS.USE_SYSTEM, JSON.stringify(false))
+            console.log('applyBackground background inside if', background.value)
+        }
+
         if (background.value === 'dark') {
             document.documentElement.classList.add('dark')
         } else {
@@ -60,13 +94,57 @@ export const useDisplaySettings = () => {
         }
     }
 
-    watch([fontSize, color, background, useSystemTheme], () => {
-        saveSettings()
-        applySettings()
+    const applySystemTheme = () => {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const systemBackground = prefersDark ? 'dark' : 'light'
+
+        if (useSystemTheme.value) {
+            if (background.value !== systemBackground) {
+                background.value = systemBackground
+                localStorage.setItem(STORAGE_KEYS.BACKGROUND, systemBackground)
+            }
+            document.documentElement.classList.toggle('dark', prefersDark)
+        }
+    }
+
+    watch(fontSize, () => {
+        localStorage.setItem(STORAGE_KEYS.FONT_SIZE, JSON.stringify(fontSize.value))
+        applyFontSize()
+    })
+
+    watch(color, () => {
+        localStorage.setItem(STORAGE_KEYS.COLOR, color.value)
+        applyColor()
+    })
+
+    watch(background, () => {
+        console.log('back changes', background.value)
+        localStorage.setItem(STORAGE_KEYS.BACKGROUND, background.value)
+        applyBackground()
+    })
+
+    watch(useSystemTheme, (newValue, oldValue) => {
+        console.log('useSystemTheme changes from ', oldValue, 'to', newValue)
+        localStorage.setItem(STORAGE_KEYS.USE_SYSTEM, JSON.stringify(useSystemTheme.value))
+        // only apply system theme if user is turning it on
+        if (newValue === true) {
+            applySystemTheme()
+        } else {
+            console.log('turn off system theme')
+        }
     })
 
     onMounted(() => {
         loadSettings()
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        const handleSystemThemeChange = () => {
+            if (useSystemTheme.value) {
+                console.log('System theme changed, applying...')
+                applySystemTheme()
+            }
+        }
+        mediaQuery.addEventListener('change', handleSystemThemeChange)
     })
 
     return {
