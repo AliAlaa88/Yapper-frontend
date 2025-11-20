@@ -1,18 +1,8 @@
 import { useNuxtApp } from 'nuxt/app'
+import type { UploadMediaResponse } from '~/modules/Common/types/mediaTypes'
 const urls = {
     uploadImage: '/tweets/upload/image',
     uploadVideo: '/tweets/upload/video',
-}
-
-interface UploadMediaResponse {
-    data: {
-        url: string
-        filename: string
-        size: number
-        mime_type: string
-    }
-    count: number
-    message: string
 }
 
 export const createMediaService = {

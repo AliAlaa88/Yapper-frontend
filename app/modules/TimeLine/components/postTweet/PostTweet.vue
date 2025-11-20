@@ -148,6 +148,7 @@ import { getUser } from '~/utils/helpers'
 import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
+import { usePostTweet } from '../../queries/usePostTweet'
 const props = withDefaults(
     defineProps<{
         border: boolean
@@ -158,7 +159,7 @@ const props = withDefaults(
 )
 
 const user = getUser() as UserType
-console.log('user =======>', user)
+// console.log('user =======>', user)
 
 interface MediaItem {
     url: string
@@ -172,6 +173,8 @@ const showEmojiPicker = ref(false)
 const mediaUrls = ref<MediaItem[]>([])
 
 const uploadMedia = useUploadMedia()
+
+const postTweet = usePostTweet()
 
 // Handle processing the uploaded media response
 const processUploadResponse = (response: any, type: 'image' | 'video') => {
@@ -193,12 +196,27 @@ const disablePostButton = computed(() => {
     return content.value.trim().length === 0 && mediaUrls.value.length === 0
 })
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
     console.log(content.value)
     console.log('Media URLs:', mediaUrls.value)
-    // TODO: Implement actual tweet posting with media
-    content.value = ''
-    mediaUrls.value = []
+
+    try {
+        await postTweet.mutateAsync({
+            content: content.value,
+            videos: mediaUrls.value
+                .filter((media) => media.type === 'video')
+                .map((media) => media.url),
+            images: mediaUrls.value
+                .filter((media) => media.type === 'image')
+                .map((media) => media.url),
+        })
+
+        // Clear form on success
+        content.value = ''
+        mediaUrls.value = []
+    } catch (error) {
+        console.error('Failed to post tweet:', error)
+    }
 }
 
 const handleSelectMedia = async (files: File[]) => {
