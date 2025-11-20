@@ -112,3 +112,15 @@ export function mutateTweetRepostsQuery(tweetId: string ,isRetweet: boolean) {
         }
     })
 }
+
+export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean) {
+    return useMutation({
+        mutationKey: ['mutateTweetBookmark', tweetId],
+        mutationFn: (isBookmarked: boolean) => {
+            const { $tweetService } = useNuxtApp()
+            return isBookmarked
+                ? ($tweetService as any).bookmarkTweet(tweetId)
+                : ($tweetService as any).unbookmarkTweet(tweetId)
+        }
+    })
+}

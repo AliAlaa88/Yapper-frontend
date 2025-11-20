@@ -87,6 +87,27 @@
             </template>
         </CustomToolTip>
 
+        <!-- Bookmark -->
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-bookmark-button"
+                    :class="[
+                        'group flex cursor-pointer items-center gap-1 transition-colors',
+                        localIsBookmarked ? 'text-blue' : 'text-secondary hover:text-blue'
+                    ]"
+                    @click.stop="handleBookmarkClick"
+                >
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                        <Bookmark :size="18" :fill="localIsBookmarked ? 'currentColor' : 'none'" />
+                    </div>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">{{ localIsBookmarked ? 'Remove Bookmark' : 'Bookmark' }}</div>
+            </template>
+        </CustomToolTip>
+
         <!-- Share -->
         <CustomToolTip side="bottom" align="start" :delay-duration="300">
             <template #trigger>
@@ -111,27 +132,29 @@
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
 import { toRefs } from 'vue'
-import { MessageCircle, Repeat2, Heart, BarChart3, Share } from 'lucide-vue-next'
+import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useQueryClient } from '@tanstack/vue-query'
-import { mutateTweetLikesQuery, mutateTweetRepostsQuery } from '../../../../queries/useTweetQueries'
+import { mutateTweetLikesQuery, mutateTweetRepostsQuery, mutateTweetBookmarkQuery } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
 
 const props = defineProps<{
     stats: StatsType
 }>()
 
-const { likes, replies, retweets, views, is_liked,tweet_id,is_reposted } = toRefs(props.stats)
+const { likes, replies, retweets, views, is_liked, tweet_id, is_reposted, is_bookmarked } = toRefs(props.stats)
 const localIsLiked = ref(is_liked.value);
 const localLikesCount = ref(likes.value);
 const isAnimating = ref(false);
 const localIsReposted = ref(is_reposted.value);
 const localRepostsCount = ref(retweets.value);
+const localIsBookmarked = ref(is_bookmarked.value);
 const queryClient = useQueryClient()
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
 const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(tweet_id.value, localIsReposted.value)
+const { mutate: mutateBookmark, isPending: isBookmarkPending } = mutateTweetBookmarkQuery(tweet_id.value, localIsBookmarked.value)
 
 const handleLikeClick = () => {
     // Logic to handle like/unlike action can be added here
@@ -333,7 +356,89 @@ const handleRepostClick = () => {
         }
     })
 
-}   
+}
+
+const handleBookmarkClick = () => {
+    if(isBookmarkPending.value) return; // Prevent multiple clicks while mutation is in progress
+    
+    const previousBookmarkedState = localIsBookmarked.value;
+
+    localIsBookmarked.value = !localIsBookmarked.value;
+
+    // Update the transition store if this tweet is stored there
+    if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+        tweetTransitionStore.transitionTweet.is_bookmarked = localIsBookmarked.value
+    }
+
+    // Optimistically update all tweets queries (infinite queries)
+    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData?.pages) return oldData
+        
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => {
+                const updatedData = page.data.map((tweet: any) => {
+                    if (tweet.tweet_id === tweet_id.value) {
+                        return {
+                            ...tweet,
+                            is_bookmarked: localIsBookmarked.value
+                        }
+                    }
+                    return tweet
+                })
+                
+                return {
+                    ...page,
+                    data: updatedData
+                }
+            })
+        }
+    })
+
+    //call mutation to update bookmark status
+    mutateBookmark(localIsBookmarked.value, {
+        onSuccess: () => {
+            // Invalidate relevant queries to refetch data and confirm the optimistic update
+            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+        },
+        onError: (error) => {
+            // Rollback on error
+            console.error('Error bookmarking/unbookmarking tweet:', error)
+            localIsBookmarked.value = previousBookmarkedState
+            
+            // Rollback transition store as well
+            if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+                tweetTransitionStore.transitionTweet.is_bookmarked = previousBookmarkedState
+            }
+
+            // Rollback the cache update
+            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData?.pages) return oldData
+                
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => {
+                        const updatedData = page.data.map((tweet: any) => {
+                            if (tweet.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    is_bookmarked: previousBookmarkedState
+                                }
+                            }
+                            return tweet
+                        })
+                        
+                        return {
+                            ...page,
+                            data: updatedData
+                        }
+                    })
+                }
+            })
+        }
+    })
+}
+
 watch(is_liked, (newVal) => {
     localIsLiked.value = newVal;
 });
@@ -345,5 +450,8 @@ watch(is_reposted, (newVal) => {
 });
 watch(retweets, (newVal) => {
     localRepostsCount.value = newVal;
+});
+watch(is_bookmarked, (newVal) => {
+    localIsBookmarked.value = newVal;
 });
 </script>
