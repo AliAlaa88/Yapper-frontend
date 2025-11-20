@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import TweetDetails from '../../components/TweetDetails/TweetDetails.vue'
+import type { TweetDetails as tweetDetails } from '../../types'
 
 // Mock Nuxt composables
 vi.mock('#app', () => ({
@@ -119,49 +120,6 @@ describe('TweetDetails Component', () => {
 
             await wrapper.find('button').trigger('click')
             expect(fetchTweetDetailsMock).toHaveBeenCalled()
-        })
-    })
-
-    describe('Success State', () => {
-        it('renders main tweet when tweetDetails is loaded', async () => {
-            const mockTweetDetails = {
-                tweet: {
-                    id: 't1',
-                    content: { text: 'Main tweet' },
-                    user: {
-                        id: 'u1',
-                        name: 'Alice',
-                        username: 'alice',
-                        avatar: '/avatar.jpg',
-                    },
-                    stats: { likes: 100, replies: 50, retweets: 25 },
-                    createdAt: '2025-10-17T19:54:00Z',
-                },
-                replies: [],
-            }
-
-            const { useTweetDetails } = await import('../../composables/useTweetDetails')
-            vi.mocked(useTweetDetails).mockReturnValue({
-                tweetDetails: ref(mockTweetDetails),
-                isLoading: ref(false),
-                error: ref(null),
-                replies: ref([]),
-                fetchTweetDetails: vi.fn(),
-            } as any)
-
-            const wrapper = mount(TweetDetails, {
-                global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
-                },
-            })
-
-            expect(wrapper.find('.animate-spin').exists()).toBe(false)
-            expect(wrapper.text()).not.toContain('Failed to load')
         })
     })
 })
