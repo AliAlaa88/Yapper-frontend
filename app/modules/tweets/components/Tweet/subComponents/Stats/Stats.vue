@@ -114,7 +114,7 @@
                 <button
                     id="tweet-share-button"
                     class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
-                    @click.stop
+                    @click.stop="handleShareClick"
                 >
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <Share :size="18" />
@@ -122,7 +122,7 @@
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">Share</div>
+                <div :class="contentClass">{{ shareTooltipText }}</div>
             </template>
         </CustomToolTip>
     </div>
@@ -150,6 +150,7 @@ const isAnimating = ref(false);
 const localIsReposted = ref(is_reposted.value);
 const localRepostsCount = ref(retweets.value);
 const localIsBookmarked = ref(is_bookmarked.value);
+const shareTooltipText = ref('Share');
 const queryClient = useQueryClient()
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
@@ -437,6 +438,34 @@ const handleBookmarkClick = () => {
             })
         }
     })
+}
+
+const handleShareClick = async () => {
+    try {
+        // Construct the tweet URL
+        const tweetUrl = `${window.location.origin}/tweet/${tweet_id.value}`
+        console.log('Share clicked', tweetUrl);
+        
+        // Try to use the Web Share API if available (mobile devices)
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Share Tweet',
+                url: tweetUrl
+            })
+        } else {
+            // Fallback to clipboard API
+            await navigator.clipboard.writeText(tweetUrl)
+            
+            // Update tooltip to show feedback
+            shareTooltipText.value = 'Link copied!'
+            setTimeout(() => {
+                shareTooltipText.value = 'Share'
+            }, 2000)
+        }
+    } catch (error) {
+        // If user cancels share or permission denied, silently fail
+        console.log('Share cancelled or failed:', error)
+    }
 }
 
 watch(is_liked, (newVal) => {
