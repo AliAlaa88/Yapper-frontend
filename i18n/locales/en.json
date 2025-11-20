@@ -46,6 +46,20 @@
         "logout": "Logout",
         "back": "Back"
     },
+    "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+    },
     "profile": {
         "editProfile": "Edit Profile",
         "saveChanges": "Save",
@@ -55,6 +69,8 @@
         "website": "Website",
         "birthDate": "Birth date",
         "joinDate": "Joined",
+        "born": "Born",
+        "joined": "Joined",
         "following": "Following",
         "followers": "Followers",
         "tweets": "Posts",
@@ -157,7 +173,10 @@
             "namePlaceholder": "Name",
             "bioPlaceholder": "Bio",
             "locationPlaceholder": "Location",
-            "websitePlaceholder": "Website"
+            "websitePlaceholder": "Website",
+            "month": "Month",
+            "day": "Day",
+            "year": "Year"
         },
         "followLists": {
             "emptyState": {

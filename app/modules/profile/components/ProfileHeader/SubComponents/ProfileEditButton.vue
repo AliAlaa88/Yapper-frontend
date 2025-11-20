@@ -14,6 +14,6 @@ const route = useRoute()
 const router = useRouter()
 
 const handleEditProfile = () => {
-    router.push(`${route.params.username}/settings/profile`)
+    router.push(`/${route.params.username}/settings/profile`)
 }
 </script>

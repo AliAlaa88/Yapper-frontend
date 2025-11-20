@@ -46,6 +46,20 @@
         "logout": "تسجيل الخروج",
         "back": "رجوع"
     },
+    "months": {
+        "january": "يناير",
+        "february": "فبراير",
+        "march": "مارس",
+        "april": "أبريل",
+        "may": "مايو",
+        "june": "يونيو",
+        "july": "يوليو",
+        "august": "أغسطس",
+        "september": "سبتمبر",
+        "october": "أكتوبر",
+        "november": "نوفمبر",
+        "december": "ديسمبر"
+    },
     "profile": {
         "editProfile": "تعديل الملف الشخصي",
         "saveChanges": "حفظ",
@@ -55,6 +69,8 @@
         "website": "الموقع الإلكتروني",
         "birthDate": "تاريخ الميلاد",
         "joinDate": "تاريخ الانضمام",
+        "born": "تاريخ الميلاد",
+        "joined": "انضم",
         "following": "متابَع",
         "followers": "المتابعون",
         "tweets": "المنشورات",
@@ -157,7 +173,10 @@
             "namePlaceholder": "الاسم",
             "bioPlaceholder": "النبذة التعريفية",
             "locationPlaceholder": "الموقع",
-            "websitePlaceholder": "الموقع الإلكتروني"
+            "websitePlaceholder": "الموقع الإلكتروني",
+            "month": "الشهر",
+            "day": "اليوم",
+            "year": "السنة"
         },
         "followLists": {
             "emptyState": {

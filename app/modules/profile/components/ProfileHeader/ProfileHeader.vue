@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <ProfileInfo />
+            <ProfileInfo :user="user" :is-my-profile="isMee" />
         </div>
     </div>
 </template>
@@ -33,7 +33,6 @@ import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
 import ProfileInfo from './SubComponents/ProfileInfo.vue'
-
 import { useProfileStore } from '../../stores/profileStore'
 
 const profileStore = useProfileStore()

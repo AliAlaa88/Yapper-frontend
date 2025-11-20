@@ -2,40 +2,44 @@
     <div class="pb-4">
         <div class="flex flex-col">
             <h1 class="text-xl font-bold text-primary">
-                {{ displayName }}
+                {{ user?.name }}
             </h1>
-            <p class="text-sm text-secondary">@{{ username }}</p>
+            <p class="text-sm text-secondary">@{{ user?.username }}</p>
         </div>
 
-        <p v-if="bio" class="mt-3 text-[15px] text-primary whitespace-pre-wrap break-words">
-            {{ bio }}
+        <p v-if="user?.bio" class="mt-3 text-[15px] text-primary whitespace-pre-wrap break-words">
+            {{ user.bio }}
         </p>
 
         <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-secondary">
-            <div v-if="location" class="flex items-center gap-1">
+            <div v-if="user?.country" class="flex items-center gap-1">
                 <MapPin :size="18" />
-                <span>{{ location }}</span>
+                <span>{{ user.country }}</span>
+            </div>
+            <div v-if="formattedBirthDate" class="flex items-center gap-1">
+                <Cake :size="18" />
+                <span>{{ t('profile.born') }} {{ formattedBirthDate }}</span>
             </div>
             <div class="flex items-center gap-1">
                 <Calendar :size="18" />
-                <span>{{ formattedDate }}</span>
+                <span>{{ t('profile.joined') }} {{ formattedJoinedDate }}</span>
             </div>
         </div>
 
         <div class="mt-3 flex gap-5 text-sm">
             <NuxtLink
-                :to="`/${username}/following`"
-                class="hover:underline"
+                :to="`/${user?.username}/following`"
+                class="hover:underline flex gap-1 items-center"
             >
-                <span class="font-bold text-primary">{{ followingCount }}</span>
-                <span class="text-secondary ml-1">{{ t('profile.following') }}</span>
+                <span class="font-bold text-primary" dir="ltr">{{ formatNumber(user?.following_count ?? 0) }}</span>
+                <span class="text-secondary">{{ t('profile.following') }}</span>
             </NuxtLink>
             <NuxtLink
-                :to="`/${username}/followers`"
-                class="hover:underline"
+                :to="`/${user?.username}/followers`"
+                class="hover:underline flex gap-1 items-center"
             >
-                <span class="font-bold text-primary">{{ followersCount }}</span>
-                <span class="text-secondary ml-1">{{ t('profile.followers') }}</span>
+                <span class="font-bold text-primary" dir="ltr">{{ formatNumber(user?.followers_count ?? 0) }}</span>
+                <span class="text-secondary">{{ t('profile.followers') }}</span>
             </NuxtLink>
         </div>
 
@@ -43,7 +47,7 @@
             v-if="!isMyProfile && mutualFollowersCount > 0"
             class="mt-3 flex items-center gap-2 text-sm text-secondary"
         >
-            <div class="flex -space-x-2">
+            <div class="flex -space-x-2 rtl:space-x-reverse">
                 <img
                     v-for="follower in topMutualFollowers.slice(0, 3)"
                     :key="follower.avatar_url"
@@ -67,35 +71,60 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { MapPin, Calendar } from 'lucide-vue-next'
-import { useProfileStore } from '../../../stores/profileStore'
-import { storeToRefs } from 'pinia'
-import type { OtherUser } from '../../../types/user'
+import { MapPin, Calendar, Cake } from 'lucide-vue-next'
+import type { Me, OtherUser } from '../../../types/user'
 import ProfileMuteMessage from './ProfileMuteMessage.vue'
 
-const { t } = useI18n()
-const profileStore = useProfileStore()
-const { profile, isMyProfile } = storeToRefs(profileStore)
+const props = defineProps<{
+    user: Me | OtherUser | null
+    isMyProfile: boolean
+}>()
 
-const displayName = computed(() => profile.value?.name ?? '')
-const username = computed(() => profile.value?.username ?? '')
-const bio = computed(() => profile.value?.bio ?? '')
-const location = computed(() => profile.value?.country ?? null)
-const followingCount = computed(() => profile.value?.following_count ?? 0)
-const followersCount = computed(() => profile.value?.followers_count ?? 0)
+const { t, locale } = useI18n()
+
+const formatNumber = (num: number) => {
+    return num.toLocaleString(locale.value === 'ar' ? 'ar-EG' : 'en-US', { useGrouping: false })
+}
+
 const mutualFollowersCount = computed(() => {
-    const count = (profile.value as OtherUser)?.mutual_followers_count
+    const count = (props.user as OtherUser)?.mutual_followers_count
     return count ? Number(count) : 0
 })
 
 const topMutualFollowers = computed(
-    () => (profile.value as OtherUser)?.top_mutual_followers ?? [],
+    () => (props.user as OtherUser)?.top_mutual_followers ?? [],
 )
 
-const formattedDate = computed(() => {
-    if (!profile.value?.created_at) return ''
-    const date = new Date(profile.value.created_at)
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+const monthNames = computed(() => [
+    t('months.january'),
+    t('months.february'),
+    t('months.march'),
+    t('months.april'),
+    t('months.may'),
+    t('months.june'),
+    t('months.july'),
+    t('months.august'),
+    t('months.september'),
+    t('months.october'),
+    t('months.november'),
+    t('months.december'),
+])
+
+const formattedJoinedDate = computed(() => {
+    if (!props.user?.created_at) return ''
+    const date = new Date(props.user.created_at)
+    const month = monthNames.value[date.getMonth()]
+    const year = formatNumber(date.getFullYear())
+    return `${month} ${year}`
+})
+
+const formattedBirthDate = computed(() => {
+    if (!props.user?.birth_date) return ''
+    const date = new Date(props.user.birth_date)
+    const month = monthNames.value[date.getMonth()]
+    const day = formatNumber(date.getDate())
+    const year = formatNumber(date.getFullYear())
+    return `${month} ${day}, ${year}`
 })
 
 const formatMutualFollowers = computed(() => {
