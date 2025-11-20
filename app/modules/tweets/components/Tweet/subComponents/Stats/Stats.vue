@@ -143,7 +143,7 @@ const props = defineProps<{
     stats: StatsType
 }>()
 
-const { likes, replies, retweets, views, is_liked, tweet_id, is_reposted, is_bookmarked } = toRefs(props.stats)
+const { likes, replies, retweets, views, is_liked, tweet_id, is_reposted, is_bookmarked,username } = toRefs(props.stats)
 const localIsLiked = ref(is_liked.value);
 const localLikesCount = ref(likes.value);
 const isAnimating = ref(false);
@@ -443,7 +443,7 @@ const handleBookmarkClick = () => {
 const handleShareClick = async () => {
     try {
         // Construct the tweet URL
-        const tweetUrl = `${window.location.origin}/tweet/${tweet_id.value}`
+        const tweetUrl = `${window.location.origin}/${username.value}/status/${tweet_id.value}`
         console.log('Share clicked', tweetUrl);
         
         // Try to use the Web Share API if available (mobile devices)

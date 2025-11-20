@@ -132,7 +132,8 @@ const mainTweetStats = computed(() => {
     views: tweetDetails.value.views_count,
     is_liked: tweetDetails.value.is_liked,
     is_reposted: tweetDetails.value.is_reposted,
-    is_bookmarked: tweetDetails.value.is_bookmarked
+    is_bookmarked: tweetDetails.value.is_bookmarked,
+    username: tweetDetails.value.user.username
   }
 })
 

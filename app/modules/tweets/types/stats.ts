@@ -7,6 +7,7 @@ interface Stats {
     is_reposted: boolean
     is_bookmarked: boolean
     tweet_id: string
+    username: string
 }
 
 export type { Stats }

@@ -104,6 +104,7 @@ const stats = computed(() => ({
     is_liked: props.tweet.is_liked,
     is_reposted: props.tweet.is_reposted,
     is_bookmarked: props.tweet.is_bookmarked,
+    username: props.tweet.user.username,
 }))
 
 const type = computed(() => props.tweet.type)
