@@ -114,12 +114,12 @@ const mainTweetUser = computed(() => {
 })
 
 const mainTweetContent = computed(() => {
-    if (!tweetDetails.value) return null
-    return {
-        text: tweetDetails.value.content,
-        images: tweetDetails.value.images || [],
-        videos: tweetDetails.value.videos || [],
-    }
+  if (!tweetDetails.value) return null
+  return {
+    text: tweetDetails.value.content,
+    images: tweetDetails.value.images || [],
+    videos: tweetDetails.value.videos || []
+  }
 })
 
 const mainTweetStats = computed(() => {
@@ -130,7 +130,8 @@ const mainTweetStats = computed(() => {
     replies: tweetDetails.value.replies_count,
     retweets: tweetDetails.value.reposts_count,
     views: tweetDetails.value.views_count,
-    is_liked: tweetDetails.value.is_liked
+    is_liked: tweetDetails.value.is_liked,
+    is_reposted: tweetDetails.value.is_reposted
   }
 })
 
