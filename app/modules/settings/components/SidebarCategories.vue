@@ -8,7 +8,7 @@
                 placeholder="Search Settings"
                 class="w-full text-[15px] border border-primary py-2.5 pl-9 pr-3 rounded-full
                 transition text-primary bg-transparent focus:outline-none
-                focus:ring-2 focus:ring-primary" />
+                focus:ring-2 focus:ring-accent" />
         </div>
         <div>
             <NuxtLink

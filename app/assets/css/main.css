@@ -212,6 +212,14 @@
         border-color: var(--accent-color);
     }
 
+    .focus\:border-accent:focus {
+        border-color: var(--accent-color);
+    }
+
+    .peer:focus ~ .peer-focus\:text-accent {
+        color: var(--accent-color);
+    }
+
     /* Ring utilities for accent */
     .ring-accent {
         --tw-ring-color: var(--accent-color);

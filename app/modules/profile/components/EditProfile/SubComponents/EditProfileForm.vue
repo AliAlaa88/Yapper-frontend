@@ -1,82 +1,82 @@
 <template>
     <div class="px-4 pt-6 pb-4 space-y-6">
         <div class="relative">
-            <label
-                for="edit-profile-name-input"
-                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                Name
-            </label>
             <input
                 id="edit-profile-name-input"
                 :value="modelValue.name"
                 type="text"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-accent focus:border-2 transition-colors duration-200"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
             />
-            <span class="absolute right-3 top-2 text-muted text-[13px]">
+            <label
+                for="edit-profile-name-input"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                Name
+            </label>
+            <span class="absolute right-3 top-2 text-muted text-[13px] peer-focus:text-accent">
                 {{ modelValue.name.length }}/50
             </span>
         </div>
 
         <!-- Bio Field -->
         <div class="relative">
-            <label
-                for="edit-profile-bio-input"
-                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                Bio
-            </label>
             <textarea
                 id="edit-profile-bio-input"
                 :value="modelValue.bio"
                 rows="3"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200 resize-none"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
             />
-            <span class="absolute right-3 top-2 text-muted text-[13px]">
+            <label
+                for="edit-profile-bio-input"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                Bio
+            </label>
+            <span class="absolute right-3 top-2 text-muted text-[13px] peer-focus:text-accent">
                 {{ modelValue.bio.length }}/160
             </span>
         </div>
 
         <!-- Location Field -->
         <div class="relative">
-            <label
-                for="edit-profile-location-input"
-                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                Location
-            </label>
             <input
                 id="edit-profile-location-input"
                 :value="modelValue.country"
                 type="text"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
             />
-            <span class="absolute right-3 top-2 text-muted text-[13px]">
+            <label
+                for="edit-profile-location-input"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                Location
+            </label>
+            <span class="absolute right-3 top-2 text-muted text-[13px] peer-focus:text-accent">
                 {{ modelValue.country.length }}/30
             </span>
         </div>
 
         <!-- Birth Date Field -->
         <div class="relative">
-            <label
-                for="edit-profile-birthdate-input"
-                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                Birth date
-            </label>
             <input
                 id="edit-profile-birthdate-input"
                 :value="modelValue.created_at"
                 type="date"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200 [&::-webkit-calendar-picker-indicator]:invert"
                 @input="updateField('created_at', ($event.target as HTMLInputElement).value)"
             />
+            <label
+                for="edit-profile-birthdate-input"
+                class="absolute left-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                Birth date
+            </label>
         </div>
     </div>
 </template>
