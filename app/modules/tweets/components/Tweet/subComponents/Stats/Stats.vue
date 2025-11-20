@@ -133,14 +133,6 @@ const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
 const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(tweet_id.value, localIsReposted.value)
 
-// Expose local state to parent component
-defineExpose({
-    localIsLiked,
-    localLikesCount,
-    localIsReposted,
-    localRepostsCount
-})
-
 const handleLikeClick = () => {
     // Logic to handle like/unlike action can be added here
     if(isPending.value) return; // Prevent multiple clicks while mutation is in progress
