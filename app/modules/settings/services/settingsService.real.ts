@@ -45,4 +45,21 @@ export const settingsService = {
             throw new Error('Something went wrong')
         }
     },
+    async changeLanguage(lang: 'en' | 'ar'): Promise<string> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.patch('/users/me/change-language', {
+                language: lang,
+            })
+
+            return response.data?.message
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
 }
