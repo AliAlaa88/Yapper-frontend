@@ -122,24 +122,24 @@ const navigateToTweet = async () => {
         // This ensures we have the most up-to-date like/repost states
         let latestTweet = props.tweet
         
-        const allTweetsQueries = queryClient.getQueriesData({ queryKey: ['tweets'] })
+        // const allTweetsQueries = queryClient.getQueriesData({ queryKey: ['tweets'] })
         
-        // Search through all tweets queries to find the latest version of this tweet
-        for (const [queryKey, queryData] of allTweetsQueries) {
-            const data = queryData as any
-            if (data?.pages) {
-                for (const page of data.pages) {
-                    if (page?.data) {
-                        const foundTweet = page.data.find((t: any) => t.tweet_id === props.tweet.tweet_id)
-                        if (foundTweet) {
-                            latestTweet = foundTweet
-                            break
-                        }
-                    }
-                }
-                if (latestTweet !== props.tweet) break // Found it, stop searching
-            }
-        }
+        // // Search through all tweets queries to find the latest version of this tweet
+        // for (const [queryKey, queryData] of allTweetsQueries) {
+        //     const data = queryData as any
+        //     if (data?.pages) {
+        //         for (const page of data.pages) {
+        //             if (page?.data) {
+        //                 const foundTweet = page.data.find((t: any) => t.tweet_id === props.tweet.tweet_id)
+        //                 if (foundTweet) {
+        //                     latestTweet = foundTweet
+        //                     break
+        //                 }
+        //             }
+        //         }
+        //         if (latestTweet !== props.tweet) break // Found it, stop searching
+        //     }
+        // }
         
         // Store the latest tweet data before navigation
         tweetTransitionStore.setTransitionTweet(latestTweet)

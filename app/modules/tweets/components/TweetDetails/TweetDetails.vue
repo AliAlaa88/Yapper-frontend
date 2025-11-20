@@ -154,7 +154,7 @@ watch(tweetId, (newTweetId) => {
 
 watch(isLoading, (newIsLoading) => {
   if (!newIsLoading) {
-    console.log("Tweet details loaded:", tweetDetails);
+    tweetTransitionStore.setTransitionTweet(tweetDetails.value)
   }
 })
 </script>

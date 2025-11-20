@@ -71,10 +71,13 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
             }
         },
         enabled: !!tweetId,
-        // Use initialData to pre-populate cache if available
+        // Use initialData for instant UI, but always refetch
         initialData: initialData ? { tweet: initialData, replies: [] } : undefined,
-        // Always consider initialData as stale so it refetches
-        initialDataUpdatedAt: initialData ? 0 : undefined,
+        initialDataUpdatedAt: 0, // Treat as immediately stale
+        staleTime: 0,
+        gcTime: 0,
+        refetchOnMount: 'always',
+        refetchOnWindowFocus: true,
         // Retry once on failure
         retry: 1,
     })
