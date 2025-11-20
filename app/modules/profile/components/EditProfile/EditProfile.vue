@@ -52,41 +52,45 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'nuxt/app'
+import { useRouter } from 'nuxt/app'
+import { useProfileStore } from '../../stores/profileStore'
 import { storeToRefs } from 'pinia'
-import { useProfilePhotoStore } from '../../stores/photo'
-import { useUserInfoQuery } from '../../queries/useUserInfoQuery'
 import { useEditProfileMutation } from '../../queries/useEditProfileQuery'
 import EditProfileHeader from './SubComponents/EditProfileHeader.vue'
 import EditProfileCover from './SubComponents/EditProfileCover.vue'
 import EditProfileAvatar from './SubComponents/EditProfileAvatar.vue'
 import EditProfileForm from './SubComponents/EditProfileForm.vue'
 
-const route = useRoute()
 const router = useRouter()
+const profileStore = useProfileStore()
+const { profile: user } = storeToRefs(profileStore)
+const userId = computed(() => user.value?.user_id || '')
+const {
+    editProfileMutation,
+    uploadCoverPhotoMutation,
+    uploadAvatarMutation,
+} = useEditProfileMutation(userId.value)
 
-const username = route.params.username as string
-const { userQuery } = useUserInfoQuery(username)
-const user = computed(() => userQuery.data.value)
+const isSaving = computed(
+    () =>
+        editProfileMutation.isPending.value ||
+        uploadCoverPhotoMutation.isPending.value ||
+        uploadAvatarMutation.isPending.value,
+)
 
-const photoStore = useProfilePhotoStore()
-const { photoUrl: avatarUrl, coverUrl } = storeToRefs(photoStore)
 
 const formData = ref({
     name: '',
     bio: '',
     country: '',
-    created_at: '',
+    birth_date: '',
 })
 
+const avatarUrl = ref<string | null>(null)
+const coverUrl = ref<string | null>(null)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
 
-// Edit profile mutation - will be initialized when user is available
-const userId = computed(() => user.value?.user_id || '')
-const editProfileMutation = useEditProfileMutation(userId.value)
-
-const isSaving = computed(() => editProfileMutation.isPending.value)
 
 onMounted(() => {
     if (user.value) {
@@ -94,10 +98,10 @@ onMounted(() => {
             name: user.value.name || '',
             bio: user.value.bio || '',
             country: user.value.country || '',
-            created_at: user.value.created_at || '',
+            birth_date: user.value.birth_date || '',
         }
-        photoStore.setPhotoUrl(user.value.avatar_url || '')
-        photoStore.setCoverUrl(user.value.cover_url || '')
+        avatarUrl.value = user.value.avatar_url || ''
+        coverUrl.value = user.value.cover_url || ''
     }
 })
 
@@ -106,7 +110,7 @@ const isFormValid = computed(() => {
 })
 
 const closeModal = () => {
-    router.push(`/profile/${route.params.username}`)
+    router.back()
 }
 
 const handleKeydown = (event: KeyboardEvent) => {
@@ -121,8 +125,6 @@ onMounted(() => {
 
 onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown)
-    photoStore.clearPhotoUrl()
-    photoStore.clearCoverUrl()
 })
 
 const handleCoverUpload = () => {
@@ -133,41 +135,41 @@ const handleAvatarUpload = () => {
     avatarFileInput.value?.click()
 }
 
-const handleCoverFileChange = (event: Event) => {
+const handleCoverFileChange = async (event: Event) => {
     const target = event.target as HTMLInputElement
     const file = target.files?.[0]
     if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const result = e.target?.result as string
-            photoStore.setCoverUrl(result)
+        try {
+            const imageUrl = await uploadCoverPhotoMutation.mutateAsync(file)
+            coverUrl.value = imageUrl
+        } catch (error) {
+            console.error('Failed to upload cover photo:', error)
         }
-        reader.readAsDataURL(file)
     }
 }
 
-const handleAvatarFileChange = (event: Event) => {
+const handleAvatarFileChange = async (event: Event) => {
     const target = event.target as HTMLInputElement
     const file = target.files?.[0]
     if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const result = e.target?.result as string
-            photoStore.setPhotoUrl(result)
+        try {
+            const imageUrl = await uploadAvatarMutation.mutateAsync(file)
+            avatarUrl.value = imageUrl
+        } catch (error) {
+            console.error('Failed to upload avatar:', error)
         }
-        reader.readAsDataURL(file)
     }
 }
 
 const handleCoverRemove = () => {
-    photoStore.clearCoverUrl()
+    coverUrl.value = null
     if (coverFileInput.value) {
         coverFileInput.value.value = ''
     }
 }
 
 const handleAvatarRemove = () => {
-    photoStore.clearPhotoUrl()
+    avatarUrl.value = null
     if (avatarFileInput.value) {
         avatarFileInput.value.value = ''
     }
@@ -180,9 +182,9 @@ const handleSave = async () => {
         name: formData.value.name,
         bio: formData.value.bio,
         country: formData.value.country,
-        created_at: formData.value.created_at,
-        avatar_url: avatarUrl.value || undefined,
-        cover_url: coverUrl.value || undefined,
+        birth_date: formData.value.birth_date,
+        avatar_url: avatarUrl.value || null,
+        cover_url: coverUrl.value || null,
     }
 
     try {

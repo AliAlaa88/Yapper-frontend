@@ -3,9 +3,8 @@ name: Build, Tag & Deploy to Dev
 on:
     push:
         branches:
-            - development
-            - chore/fix-dependencies
-
+            - production
+            - fix/p-lock
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
