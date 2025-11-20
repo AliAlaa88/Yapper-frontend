@@ -26,3 +26,47 @@ export const formatDate = (date: string) => {
 
     return tweetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
+
+/**
+ * Converts text with hashtags (#) and mentions (@) into styled HTML for Vue
+ * @param {string} text - The input text containing hashtags and mentions
+ * @returns {string} HTML string with styled tags using Tailwind classes
+ */
+export function parseTextWithTags(text: string): string {
+    if (!text) return ''
+
+    // 1. Escape HTML to prevent XSS attacks (important before injecting HTML)
+    const escapeHtml = (str: string): string => {
+        const htmlEscapes: Record<string, string> = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;',
+        }
+        return str.replace(/[&<>"']/g, (char) => htmlEscapes[char] || char)
+    }
+
+    let result = escapeHtml(text)
+
+    // 2. Define styling for the tags (Twitter Blue)
+    const tagClasses = 'text-[#1d9bf0] font-normal'
+
+    // 3. Regex replacements
+    // Replace hashtags (#word)
+    // We look for # followed by alphanumeric characters
+    result = result.replace(/(^|\s)(#[\w]+)/g, (match, space, tag) => {
+        return `${space}<span class="${tagClasses}">${tag}</span>`
+    })
+
+    // Replace mentions (@username)
+    result = result.replace(/(^|\s)(@[\w]+)/g, (match, space, tag) => {
+        return `${space}<span class="${tagClasses}">${tag}</span>`
+    })
+
+    // 4. Handle line breaks for display
+    // Note: We don't replace \n with <br> here because the CSS white-space: pre-wrap
+    // handles that better for synchronization with textarea
+
+    return result
+}

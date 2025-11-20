@@ -9,14 +9,12 @@
         </NuxtLink>
 
         <div class="flex-1">
-            <textarea
-                placeholder="What's happening?"
+            <FormattedTextarea
                 v-model="content"
+                placeholder="What's happening?"
                 id="post-tweet-textarea"
-                class="w-full h-24 p-4 border-b border-primary resize-none bg-primary text-primary placeholder:text-muted focus:outline-none focus:border-blue focus:bg-primary"
-            ></textarea>
+            />
 
-            <!-- Media Preview -->
             <div
                 v-if="mediaUrls.length > 0"
                 class="mt-4 rounded-2xl overflow-hidden border border-primary"
@@ -60,7 +58,7 @@
                         <button
                             type="button"
                             @click="removeMedia(index)"
-                            class="absolute top-2 right-2 w-8 h-8 bg-alternate hover:bg-hover-alternate rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
+                            class="absolute top-2 right-2 w-8 h-8 bg-alternate hover:bg-hover-alternate rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                         >
                             <X class="w-5 h-5 text-alternate" />
                         </button>
@@ -68,7 +66,6 @@
                 </div>
             </div>
 
-            <!--  post footer -->
             <div class="flex flex-row justify-between items-center mt-4">
                 <ul class="flex flex-row gap-2 items-center">
                     <li class="relative inline-flex">
@@ -95,7 +92,6 @@
                             </template>
                         </CustomToolTip>
 
-                        <!-- GifPicker positioned relative to button -->
                         <GifPicker
                             :is-open="showGifPicker"
                             @select="handleGifSelect"
@@ -144,11 +140,13 @@ import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
+import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import the new component
 import { getUser } from '~/utils/helpers'
 import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
+
 const props = withDefaults(
     defineProps<{
         border: boolean
@@ -159,7 +157,6 @@ const props = withDefaults(
 )
 
 const user = getUser() as UserType
-// console.log('user =======>', user)
 
 interface MediaItem {
     url: string
@@ -169,25 +166,16 @@ interface MediaItem {
 const content = ref('')
 const showGifPicker = ref(false)
 const showEmojiPicker = ref(false)
-
 const mediaUrls = ref<MediaItem[]>([])
-
 const uploadMedia = useUploadMedia()
-
 const postTweet = usePostTweet()
 
-// Handle processing the uploaded media response
 const processUploadResponse = (response: any, type: 'image' | 'video') => {
     if (response?.data?.url) {
         const url = response.data.url
-        // Check if this URL is already in the list to prevent duplicates
         const exists = mediaUrls.value.some((item) => item.url === url)
-
         if (!exists && mediaUrls.value.length < 4) {
-            mediaUrls.value.push({
-                url: url,
-                type: type,
-            })
+            mediaUrls.value.push({ url: url, type: type })
         }
     }
 }
@@ -197,9 +185,6 @@ const disablePostButton = computed(() => {
 })
 
 const handleSubmit = async () => {
-    console.log(content.value)
-    console.log('Media URLs:', mediaUrls.value)
-
     try {
         await postTweet.mutateAsync({
             content: content.value,
@@ -211,7 +196,6 @@ const handleSubmit = async () => {
                 .map((media) => media.url),
         })
 
-        // Clear form on success
         content.value = ''
         mediaUrls.value = []
     } catch (error) {
@@ -220,18 +204,9 @@ const handleSubmit = async () => {
 }
 
 const handleSelectMedia = async (files: File[]) => {
-    console.log(files)
-
     for (const media of files) {
-        // Check if we've reached the limit
-        if (mediaUrls.value.length >= 4) {
-            console.warn('Maximum of 4 media items allowed')
-            break
-        }
-
+        if (mediaUrls.value.length >= 4) break
         const type = media.type.includes('image') ? 'image' : 'video'
-        console.log('type =======>', type)
-
         try {
             const response = await uploadMedia.mutateAsync({ media, type })
             processUploadResponse(response, type)
@@ -252,14 +227,8 @@ const toggleGifPicker = () => {
 
 const handleGifSelect = (gifUrl: string) => {
     showGifPicker.value = false
-    if (mediaUrls.value.length >= 4) {
-        console.warn('Maximum of 4 media items allowed')
-        return
-    }
-    mediaUrls.value.push({
-        url: gifUrl,
-        type: 'image',
-    })
+    if (mediaUrls.value.length >= 4) return
+    mediaUrls.value.push({ url: gifUrl, type: 'image' })
 }
 
 const toggleEmojiPicker = () => {
@@ -268,6 +237,7 @@ const toggleEmojiPicker = () => {
 }
 
 const handleEmojiSelect = (emoji: any) => {
+    // Simply appending to content will trigger the watch inside RichTextarea
     content.value += emoji.i
 }
 </script>
