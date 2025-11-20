@@ -25,17 +25,20 @@
             <template #trigger>
                 <button
                     id="tweet-retweet-button"
-                    class="group flex cursor-pointer items-center text-secondary hover:text-green transition-colors"
-                    @click.stop
+                    :class="[
+                        'group flex cursor-pointer items-center gap-1 transition-colors',
+                        localIsReposted ? 'text-green' : 'text-secondary hover:text-green'
+                    ]"
+                    @click.stop="handleRepostClick"
                 >
-                    <div class="p-1 rounded-full group-hover:bg-green/10 transition-colors">
-                        <Repeat2 :size="18" />
+                    <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                        <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'"  />
                     </div>
                     <span class="text-xs min-w-5">{{ formatCount(retweets) }}</span>
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">Retweet</div>
+                <div :class="contentClass">{{ localIsReposted ? 'Undo Retweet' : 'Retweet' }}</div>
             </template>
         </CustomToolTip>
 
@@ -112,19 +115,20 @@ import { MessageCircle, Repeat2, Heart, BarChart3, Share } from 'lucide-vue-next
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useQueryClient } from '@tanstack/vue-query'
-import { mutateTweetLikesQuery } from '../../../../queries/useTweetQueries'
+import { mutateTweetLikesQuery, mutateTweetRepostsQuery } from '../../../../queries/useTweetQueries'
 
 const props = defineProps<{
     stats: StatsType
 }>()
 
-const { likes, replies, retweets, views, is_liked,tweet_id } = toRefs(props.stats)
+const { likes, replies, retweets, views, is_liked,tweet_id,is_reposted } = toRefs(props.stats)
 const localIsLiked = ref(is_liked.value);
 const localLikesCount = ref(likes.value);
 const isAnimating = ref(false);
-
+const localIsReposted = ref(is_reposted.value);
 const queryClient = useQueryClient()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
+const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(tweet_id.value, localIsReposted.value)
 
 const handleLikeClick = () => {
     // Logic to handle like/unlike action can be added here
@@ -160,6 +164,27 @@ const handleLikeClick = () => {
         }
     })
 }
+const handleRepostClick = () => {
+    // Logic to handle repost/unrepost action can be added here
+    if(isRepostPending.value) return; // Prevent multiple clicks while mutation is in progress
+    localIsReposted.value = !localIsReposted.value;
+    //call mutation to update repost status
+    mutateRepost(localIsReposted.value, {
+        onSuccess: () => {
+            // Invalidate relevant queries to refetch data
+            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+        },
+        onError: (error) => {
+            // Rollback on error
+            console.error('Error reposting/unreposting tweet:', error)
+            localIsReposted.value = localIsReposted.value ? false : true
+            
+            // Optional: Show error toast/notification
+            // showErrorToast('Failed to update repost status')
+        }
+    })
+
+}   
 watch(is_liked, (newVal) => {
     localIsLiked.value = newVal;
 });

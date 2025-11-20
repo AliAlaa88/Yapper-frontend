@@ -95,3 +95,17 @@ export function mutateTweetLikesQuery(tweetId: string ,isLike: boolean) {
         }
     })
 }
+
+
+
+export function mutateTweetRepostsQuery(tweetId: string ,isRetweet: boolean) {
+    return useMutation({
+        mutationKey: ['mutateTweetRetweets', tweetId],
+        mutationFn: (isRetweet: boolean) => {
+            const { $tweetService } = useNuxtApp()
+            return isRetweet
+                ? ($tweetService as any).repostTweet(tweetId)
+                : ($tweetService as any).unrepostTweet(tweetId)
+        }
+    })
+}

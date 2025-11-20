@@ -70,6 +70,7 @@
         Try Again
       </button>
     </div>
+  </div>
 </template>
 
 <script setup>

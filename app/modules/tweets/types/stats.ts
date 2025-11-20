@@ -4,6 +4,7 @@ interface Stats {
     retweets: number
     views?: number
     is_liked: boolean
+    is_reposted: boolean
     tweet_id: string
 }
 

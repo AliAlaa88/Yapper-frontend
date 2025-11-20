@@ -1,21 +1,21 @@
 import type { Tweet, TweetDetails,TweetsPage } from '../types'
 
 export const tweetServiceReal = {
-async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
-    const { $axios } = useNuxtApp()
+    async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
+        const { $axios } = useNuxtApp()
 
-    const response = await $axios.get(
-        `${path}` + (nextCursor ? `?cursor=${nextCursor}` : '')
-    )
+        const response = await $axios.get(
+            `${path}` + (nextCursor ? `?cursor=${nextCursor}` : '')
+        )
 
-    const page = response.data.data
+        const page = response.data.data
 
-    return {
-        data: page.tweets.filter((t: any) => t.tweet_id),
-        nextCursor: page.next_cursor,
-        hasMore: page.has_more,
-    }
-},
+        return {
+            data: page.tweets.filter((t: any) => t.tweet_id),
+            nextCursor: page.next_cursor,
+            hasMore: page.has_more,
+        }
+    },
 
     async fetchTweetById(tweetId: string): Promise<Tweet | null> {
         throw new Error(`tweetServiceReal.fetchTweetById not implemented yet: ${tweetId}`)
@@ -62,4 +62,12 @@ async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
         const { $axios } = useNuxtApp()
         await $axios.delete(`/tweets/${tweetId}/like`)
     },
+    async repostTweet(tweetId: string): Promise<void> {
+        const { $axios } = useNuxtApp()
+        await $axios.post(`/tweets/${tweetId}/repost`)
+    },
+    async unrepostTweet(tweetId: string): Promise<void> {
+        const { $axios } = useNuxtApp()
+        await $axios.delete(`/tweets/${tweetId}/repost`)
+    }
 }

@@ -99,6 +99,7 @@ const stats = computed(() => ({
     retweets: props.tweet.reposts_count,
     views: props.tweet.views_count,
     is_liked: props.tweet.is_liked,
+    is_reposted: props.tweet.is_reposted,
 }))
 
 const type = computed(() => props.tweet.type)
