@@ -34,7 +34,7 @@
                     <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
                         <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'"  />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(retweets) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(localRepostsCount) }}</span>
                 </button>
             </template>
             <template #content>
@@ -116,6 +116,7 @@ import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useQueryClient } from '@tanstack/vue-query'
 import { mutateTweetLikesQuery, mutateTweetRepostsQuery } from '../../../../queries/useTweetQueries'
+import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
 
 const props = defineProps<{
     stats: StatsType
@@ -126,13 +127,26 @@ const localIsLiked = ref(is_liked.value);
 const localLikesCount = ref(likes.value);
 const isAnimating = ref(false);
 const localIsReposted = ref(is_reposted.value);
+const localRepostsCount = ref(retweets.value);
 const queryClient = useQueryClient()
+const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
 const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(tweet_id.value, localIsReposted.value)
+
+// Expose local state to parent component
+defineExpose({
+    localIsLiked,
+    localLikesCount,
+    localIsReposted,
+    localRepostsCount
+})
 
 const handleLikeClick = () => {
     // Logic to handle like/unlike action can be added here
     if(isPending.value) return; // Prevent multiple clicks while mutation is in progress
+
+    const previousLikedState = localIsLiked.value;
+    const previousLikesCount = localLikesCount.value;
 
     localIsLiked.value = !localIsLiked.value;
     if (localIsLiked.value) {
@@ -146,18 +160,84 @@ const handleLikeClick = () => {
         localLikesCount.value -= 1;
     }
 
+    // Update the transition store if this tweet is stored there
+    if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+        tweetTransitionStore.transitionTweet.is_liked = localIsLiked.value
+        tweetTransitionStore.transitionTweet.likes_count = localLikesCount.value
+    }
+
+    // Optimistically update all tweets queries (infinite queries)
+    // Using setQueriesData to update all matching queries
+    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData?.pages) return oldData
+        
+        // Create completely new objects to ensure Vue reactivity detects changes
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => {
+                const updatedData = page.data.map((tweet: any) => {
+                    if (tweet.tweet_id === tweet_id.value) {
+                        // Create a new object reference
+                        return {
+                            ...tweet,
+                            is_liked: localIsLiked.value,
+                            likes_count: localLikesCount.value
+                        }
+                    }
+                    return tweet
+                })
+                
+                return {
+                    ...page,
+                    data: updatedData
+                }
+            })
+        }
+    })
+
     //call mutation to update like status
     mutateLike(localIsLiked.value, {
         onSuccess: () => {
-            // Invalidate relevant queries to refetch data
+            // Invalidate relevant queries to refetch data and confirm the optimistic update
             queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
         },
         onError: (error) => {
             // Rollback on error
             console.error('Error liking/unliking tweet:', error)
-            localIsLiked.value = localIsLiked.value ? false : true
-            const previousLikesCount = localIsLiked.value ? localLikesCount.value + 1 : localLikesCount.value - 1
+            localIsLiked.value = previousLikedState
             localLikesCount.value = previousLikesCount
+            
+            // Rollback transition store as well
+            if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+                tweetTransitionStore.transitionTweet.is_liked = previousLikedState
+                tweetTransitionStore.transitionTweet.likes_count = previousLikesCount
+            }
+
+            // Rollback the cache update
+            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData?.pages) return oldData
+                
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => {
+                        const updatedData = page.data.map((tweet: any) => {
+                            if (tweet.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    is_liked: previousLikedState,
+                                    likes_count: previousLikesCount
+                                }
+                            }
+                            return tweet
+                        })
+                        
+                        return {
+                            ...page,
+                            data: updatedData
+                        }
+                    })
+                }
+            })
             
             // Optional: Show error toast/notification
             // showErrorToast('Failed to update like status')
@@ -167,17 +247,94 @@ const handleLikeClick = () => {
 const handleRepostClick = () => {
     // Logic to handle repost/unrepost action can be added here
     if(isRepostPending.value) return; // Prevent multiple clicks while mutation is in progress
+    
+    const previousRepostedState = localIsReposted.value;
+    const previousRepostsCount = localRepostsCount.value;
+
     localIsReposted.value = !localIsReposted.value;
+    if(localIsReposted.value){
+        localRepostsCount.value += 1;
+        
+    }else{
+        localRepostsCount.value -= 1;
+    }
+    // Update the transition store if this tweet is stored there
+    if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+        tweetTransitionStore.transitionTweet.is_reposted = localIsReposted.value
+        tweetTransitionStore.transitionTweet.reposts_count = localRepostsCount.value
+    }
+
+    // Optimistically update all tweets queries (infinite queries)
+    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData?.pages) return oldData
+        
+        // Create completely new objects to ensure Vue reactivity detects changes
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => {
+                const updatedData = page.data.map((tweet: any) => {
+                    if (tweet.tweet_id === tweet_id.value) {
+                        // Create a new object reference
+                        return {
+                            ...tweet,
+                            is_reposted: localIsReposted.value,
+                            reposts_count: localRepostsCount.value
+                        }
+                    }
+                    return tweet
+                })
+                
+                return {
+                    ...page,
+                    data: updatedData
+                }
+            })
+        }
+    })
+
     //call mutation to update repost status
     mutateRepost(localIsReposted.value, {
         onSuccess: () => {
-            // Invalidate relevant queries to refetch data
+            // Invalidate relevant queries to refetch data and confirm the optimistic update
             queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
         },
         onError: (error) => {
             // Rollback on error
             console.error('Error reposting/unreposting tweet:', error)
-            localIsReposted.value = localIsReposted.value ? false : true
+            localIsReposted.value = previousRepostedState
+            localRepostsCount.value = previousRepostsCount
+            
+            // Rollback transition store as well
+            if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+                tweetTransitionStore.transitionTweet.is_reposted = previousRepostedState
+                tweetTransitionStore.transitionTweet.reposts_count = previousRepostsCount
+            }
+
+            // Rollback the cache update
+            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData?.pages) return oldData
+                
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => {
+                        const updatedData = page.data.map((tweet: any) => {
+                            if (tweet.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    is_reposted: previousRepostedState,
+                                    reposts_count: previousRepostsCount
+                                }
+                            }
+                            return tweet
+                        })
+                        
+                        return {
+                            ...page,
+                            data: updatedData
+                        }
+                    })
+                }
+            })
             
             // Optional: Show error toast/notification
             // showErrorToast('Failed to update repost status')
@@ -190,5 +347,11 @@ watch(is_liked, (newVal) => {
 });
 watch(likes, (newVal) => {
     localLikesCount.value = newVal;
+});
+watch(is_reposted, (newVal) => {
+    localIsReposted.value = newVal;
+});
+watch(retweets, (newVal) => {
+    localRepostsCount.value = newVal;
 });
 </script>

@@ -62,17 +62,20 @@ import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
 import { Repeat2 } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
+import { useQueryClient } from '@tanstack/vue-query'
+
 
 const props = defineProps<{
     tweet: TweetType
 }>()
 
 const tweetTransitionStore = useTweetTransitionStore()
+const queryClient = useQueryClient()
 
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
@@ -110,10 +113,36 @@ const updatedAt = computed(() => props.tweet.updated_at)
 const profileUrl = computed(() => getProfileUrl(user.value))
 const tweetUrl = computed(() => getTweetUrl(props.tweet))
 
-const navigateToTweet = () => {
+const navigateToTweet = async () => {
     if (tweetUrl.value !== '#') {
-        // Store the tweet data before navigation
-        tweetTransitionStore.setTransitionTweet(props.tweet)
+        // Wait for any pending DOM updates to complete
+        await nextTick()
+        
+        // Get the latest tweet data from the cache
+        // This ensures we have the most up-to-date like/repost states
+        let latestTweet = props.tweet
+        
+        const allTweetsQueries = queryClient.getQueriesData({ queryKey: ['tweets'] })
+        
+        // Search through all tweets queries to find the latest version of this tweet
+        for (const [queryKey, queryData] of allTweetsQueries) {
+            const data = queryData as any
+            if (data?.pages) {
+                for (const page of data.pages) {
+                    if (page?.data) {
+                        const foundTweet = page.data.find((t: any) => t.tweet_id === props.tweet.tweet_id)
+                        if (foundTweet) {
+                            latestTweet = foundTweet
+                            break
+                        }
+                    }
+                }
+                if (latestTweet !== props.tweet) break // Found it, stop searching
+            }
+        }
+        
+        // Store the latest tweet data before navigation
+        tweetTransitionStore.setTransitionTweet(latestTweet)
         navigateTo(tweetUrl.value)
     }
 }
