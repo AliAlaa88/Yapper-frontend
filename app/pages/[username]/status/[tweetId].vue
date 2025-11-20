@@ -22,6 +22,10 @@
 import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
 import { ArrowLeft } from 'lucide-vue-next'
 
+definePageMeta({
+    layout: 'main-layout',
+})
+
 // Set page metadata
 const route = useRoute()
 const username = route.params.username as string
@@ -30,8 +34,6 @@ const tweetId = route.params.tweetId as string
 // Set dynamic head for SEO
 useHead({
     title: `Tweet by @${username}`,
-    meta: [
-        { name: 'description', content: `View tweet by @${username}` }
-    ]
+    meta: [{ name: 'description', content: `View tweet by @${username}` }],
 })
 </script>

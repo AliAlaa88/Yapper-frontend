@@ -70,7 +70,6 @@
         Try Again
       </button>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -114,12 +113,12 @@ const mainTweetUser = computed(() => {
 })
 
 const mainTweetContent = computed(() => {
-  if (!tweetDetails.value) return null
-  return {
-    text: tweetDetails.value.content,
-    images: tweetDetails.value.images || [],
-    videos: tweetDetails.value.videos || []
-  }
+    if (!tweetDetails.value) return null
+    return {
+        text: tweetDetails.value.content,
+        images: tweetDetails.value.images || [],
+        videos: tweetDetails.value.videos || [],
+    }
 })
 
 const mainTweetStats = computed(() => {

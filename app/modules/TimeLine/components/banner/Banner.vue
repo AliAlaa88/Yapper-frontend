@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full min-h-screen bg-primary flex flex-col gap-4 p-4">
+    <div class="w-full min-h-screen z-1 bg-primary flex flex-col gap-4 p-4">
         <!-- Search Bar -->
         <div class="w-full">
             <div class="relative">

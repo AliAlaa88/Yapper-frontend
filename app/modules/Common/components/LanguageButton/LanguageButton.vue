@@ -1,7 +1,6 @@
 <template>
     <button
-        class="bg-alternate text-alternate px-4 py-2 rounded-md absolute top-2 left-2 flex
-        items-center gap-2"
+        class="bg-alternate text-alternate px-4 py-2 rounded-md absolute top-2 left-2 flex items-center gap-2 z-100"
         @click="handleOnClick"
     >
         {{ locale === 'ar' ? 'English' : 'العربية' }}
