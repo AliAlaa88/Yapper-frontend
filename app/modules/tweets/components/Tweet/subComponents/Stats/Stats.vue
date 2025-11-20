@@ -444,7 +444,7 @@ const handleShareClick = async () => {
     try {
         // Construct the tweet URL
         const tweetUrl = `${window.location.origin}/${username.value}/status/${tweet_id.value}`
-        console.log('Share clicked', tweetUrl);
+        // console.log('Share clicked', tweetUrl);
         
         // Try to use the Web Share API if available (mobile devices)
         if (navigator.share) {
