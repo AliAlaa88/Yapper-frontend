@@ -6,40 +6,11 @@
             :active-tab="currentTab"
             :on-change="handleTabChange"
         />
-
-        <div v-if="!isBlocked" class="min-h-[650px]">
-            <div v-if="currentTab === 'posts'" class="bg-primary">
-                <EmptyState
-                    icon="📝"
-                    :title="t('profile.emptyState.noPosts.title')"
-                    :description="t('profile.emptyState.noPosts.description')"
-                />
-            </div>
-
-            <div v-else-if="currentTab === 'replies'" class="bg-primary">
-                <EmptyState
-                    icon="💬"
-                    :title="t('profile.emptyState.noReplies.title')"
-                    :description="t('profile.emptyState.noReplies.description')"
-                />
-            </div>
-
-            <div v-else-if="currentTab === 'media'" class="bg-primary">
-                <EmptyState
-                    icon="📷"
-                    :title="t('profile.emptyState.noMedia.title')"
-                    :description="t('profile.emptyState.noMedia.description')"
-                />
-            </div>
-
-            <div v-else-if="currentTab === 'likes' && isMyProfile" class="bg-primary">
-                <EmptyState
-                    icon="❤️"
-                    :title="t('profile.emptyState.noLikes.title')"
-                    :description="t('profile.emptyState.noLikes.description')"
-                />
-            </div>
-        </div>
+        <TweetsList
+            v-if="!isBlocked && userId"
+            :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/likes`}`"
+            class="min-h-[650px] w-full"
+        />
         <ProfileBlockedContent v-if="isBlocked" :username="username" />
     </div>
 </template>
@@ -53,8 +24,9 @@ import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useProfileStore } from '../../stores/profileStore'
-import EmptyState from './SubComponents/EmptyState.vue'
 import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
+import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
+
 
 const { t } = useI18n()
 const route = useRoute()

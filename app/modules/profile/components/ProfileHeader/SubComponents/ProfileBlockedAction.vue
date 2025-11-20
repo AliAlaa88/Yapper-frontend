@@ -2,16 +2,6 @@
     <div
         v-if="isBlocked"
         class="pb-3">
-        <!-- <button
-            id="profile-block-button"
-            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-all duration-200 px-4 py-1.5 h-9 min-w-[109px]"
-            :class="hover ? 'bg-[#f4212e1a] border border-[#67070f] text-[#f4212e]' : 'bg-transparent border border-[#536471] text-primary hover:bg-[#181818]'"
-            @click="handleUnblockWithConfirmation()"
-            @mouseover="hover = true"
-            @mouseout="hover = false"
-        >
-            {{ buttonText }}
-        </button> -->
         <Button
             id="profile-block-button"
             class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
