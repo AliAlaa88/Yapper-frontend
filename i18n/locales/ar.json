@@ -43,7 +43,154 @@
         "home": "الرئيسية",
         "profile": "الملف الشخصي",
         "settings": "الإعدادات",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "back": "رجوع"
+    },
+    "months": {
+        "january": "يناير",
+        "february": "فبراير",
+        "march": "مارس",
+        "april": "أبريل",
+        "may": "مايو",
+        "june": "يونيو",
+        "july": "يوليو",
+        "august": "أغسطس",
+        "september": "سبتمبر",
+        "october": "أكتوبر",
+        "november": "نوفمبر",
+        "december": "ديسمبر"
+    },
+    "profile": {
+        "editProfile": "تعديل الملف الشخصي",
+        "saveChanges": "حفظ",
+        "name": "الاسم",
+        "bio": "النبذة التعريفية",
+        "location": "الموقع",
+        "website": "الموقع الإلكتروني",
+        "birthDate": "تاريخ الميلاد",
+        "joinDate": "تاريخ الانضمام",
+        "born": "تاريخ الميلاد",
+        "joined": "انضم",
+        "following": "متابَع",
+        "followers": "المتابعون",
+        "tweets": "المنشورات",
+        "tweetsAndReplies": "المنشورات والردود",
+        "media": "الوسائط",
+        "likes": "الإعجابات",
+        "followButton": "متابعة",
+        "followBackButton": "متابعة متبادلة",
+        "followingButton": "يتابع",
+        "unfollowButton": "إلغاء المتابعة",
+        "messageButton": "رسالة",
+        "muteButton": "كتم",
+        "unmuteButton": "إلغاء الكتم",
+        "blockButton": "حظر",
+        "blockedButton": "محظور",
+        "unblockButton": "إلغاء الحظر",
+        "removeFollowerButton": "إزالة هذا المتابع",
+        "cancelButton": "إلغاء",
+        "mutualFollowers": {
+            "noMutuals": "لا يتابعه أحد ممن تتابعهم",
+            "followedBy": "يتابعه",
+            "followedByTwo": "يتابعه {name1} و {name2}",
+            "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم",
+            "and": "و",
+            "others": "آخرون ممن تتابعهم"
+        },
+        "tabs": {
+            "posts": "المنشورات",
+            "replies": "الردود",
+            "media": "الوسائط",
+            "likes": "الإعجابات"
+        },
+        "emptyState": {
+            "noPosts": {
+                "title": "لا توجد منشورات بعد",
+                "description": "عندما ينشر هذا المستخدم، ستظهر هنا."
+            },
+            "noReplies": {
+                "title": "لا توجد ردود بعد",
+                "description": "عندما يرد هذا المستخدم على المنشورات، ستظهر هنا."
+            },
+            "noMedia": {
+                "title": "لا توجد وسائط بعد",
+                "description": "ستظهر الصور ومقاطع الفيديو هنا."
+            },
+            "noLikes": {
+                "title": "لا توجد إعجابات بعد",
+                "description": "عندما يعجب هذا المستخدم بالمنشورات، ستظهر هنا."
+            }
+        },
+        "blocked": {
+            "title": "{username} محظور",
+            "description": "هل أنت متأكد أنك تريد عرض هذه المنشورات؟ عرض المنشورات لن يلغي حظر {username}."
+        },
+        "muted": {
+            "message": "لقد قمت بكتم المنشورات من هذا الحساب.",
+            "action": "إلغاء الكتم"
+        },
+        "actions": {
+            "block": {
+                "title": "حظر",
+                "button": "حظر",
+                "description": "سيتمكنون من رؤية منشوراتك العامة، لكن لن يتمكنوا من التفاعل معها. {username} لن يتمكن أيضًا من متابعتك أو مراسلتك، ولن ترى الإشعارات منهم.",
+                "snackbar": "تم الحظر بنجاح.",
+                "undoButton": "إلغاء الحظر"
+            },
+            "unblock": {
+                "title": "إلغاء الحظر",
+                "button": "إلغاء الحظر",
+                "description": "سيتمكنون من متابعتك والتفاعل مع منشوراتك العامة."
+            },
+            "unfollow": {
+                "title": "إلغاء المتابعة",
+                "button": "إلغاء المتابعة",
+                "description": "لن تظهر منشوراتهم في جدولك الزمني للمتابعة. لا يزال بإمكانك عرض ملفهم الشخصي، ما لم تكن منشوراتهم محمية."
+            },
+            "mute": {
+                "snackbar": "تم كتم {username}.",
+                "undoButton": "تراجع"
+            },
+            "unmute": {
+                "title": "إلغاء الكتم",
+                "button": "إلغاء الكتم",
+                "description": "سيُسمح الآن بالمنشورات من هذا الحساب في جدولك الزمني الرئيسي.",
+                "snackbar": "تم إلغاء كتم {username}."
+            },
+            "removeFollower": {
+                "title": "إزالة",
+                "button": "إزالة هذا المتابع",
+                "description": "سيتم إزالة {username} من متابعيك ولن يتم إخطاره بواسطة يابر. يمكنهم متابعتك مرة أخرى في المستقبل.",
+                "snackbar": "{username} لم يعد يتابعك."
+            }
+        },
+        "editProfileModal": {
+            "title": "تعديل الملف الشخصي",
+            "uploadPhoto": "رفع صورة",
+            "removePhoto": "إزالة الصورة",
+            "uploadCover": "رفع غلاف",
+            "removeCover": "إزالة الغلاف",
+            "namePlaceholder": "الاسم",
+            "bioPlaceholder": "النبذة التعريفية",
+            "locationPlaceholder": "الموقع",
+            "websitePlaceholder": "الموقع الإلكتروني",
+            "month": "الشهر",
+            "day": "اليوم",
+            "year": "السنة"
+        },
+        "followLists": {
+            "emptyState": {
+                "noFollowers": {
+                    "title": "لا يوجد متابعون بعد",
+                    "description": "عندما يتابع شخص ما هذا الحساب، سيظهرون هنا."
+                },
+                "noFollowing": {
+                    "title": "لا يتابع أحدًا بعد",
+                    "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
+                }
+            }
+        }
     }
 }
+
 
