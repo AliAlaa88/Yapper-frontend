@@ -8,8 +8,8 @@ import { MegaphoneOff } from 'lucide-vue-next'
 definePageMeta({ layout: 'settings' })
 
 const panelItems = {
-    title: 'Privacy and Safety', description: 'Manage your privacy and safety settings on Yapper.', categories: [
-        { label: 'Mute and block', description: 'Manage the accounts and notifications that you have muted or blocked.', icon: MegaphoneOff , href: '/settings/mute_and_block' },
+    title: $t('settings.privacyAndSafety'), description: $t('settings.privacyAndSafety_desc'), categories: [
+        { label: $t('settings.muteAndBlock'), description: $t('settings.muteAndBlock'), icon: MegaphoneOff , href: '/settings/mute_and_block' },
     ],
 }
 </script>

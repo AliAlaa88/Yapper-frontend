@@ -1,5 +1,5 @@
 <template>
-    <DetailedPanel title="Account information">
+    <DetailedPanel :title="$t('settings.accountInformation')">
         <DetailedRow :category="categories[0] ?? { label: '', content: '', href: '' }" />
         <DetailedRow :category="categories[1] ?? { label: '', content: '', href: '' }" />
         <div
@@ -7,7 +7,7 @@
             border-t border-b border-primary">
             <div class="flex justify-between items-center">
                 <div>
-                    <span class="block text-[15px] text-primary">Account creation</span>
+                    <span class="block text-[15px] text-primary">{{ $t('settings.accountInfo.accountCreation') }}</span>
                     <p class="text-muted text-[13px]">
                         {{ categories[6]?.content }}
                     </p>
@@ -22,7 +22,7 @@
         <DetailedRow :category="categories[3] ?? { label: '', content: '', href: '' }" />
         <DetailedRow :category="categories[4] ?? { label: '', content: '', href: '' }">
             <p class="text-muted text-[13px]">
-                Change your date of birth on your profile.
+                {{ t('settings.accountInfo.birthDate_desc') }}
             </p>
         </DetailedRow>
         <DetailedRow :category="categories[5] ?? { label: '', content: '', href: '' }" />
@@ -34,16 +34,17 @@ import type { User } from '~/modules/Common/types/user'
 import DetailedPanel from './DetailedPanel.vue'
 import DetailedRow from './DetailedRow.vue'
 import { getUser } from '~/utils/helpers'
+import { useI18n } from 'vue-i18n'
 import { formatFullDateTime, formatDate, calculateAge } from '../utils/calculations'
 const user = getUser() as User
-console.log(user.created_at)
-const categories = [
-    { label: 'Username', content: user.username, href: '/settings/screen_name' },
-    { label: 'Email', content: user.email, href:'/settings/email'},
-    { label: 'Country', content: user.country, href: '' },
-    { label: 'Languages', content: 'English, Arabic', href: '/settings/languages' },
-    { label: 'Birth date', content: formatDate(user.birth_date ?? ''), href: '/settings/profile' },
-    { label: 'Age', content: calculateAge(user.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
-    { label: 'Account creation', content: formatFullDateTime(user.created_at ?? ''), href: '/settings/your_twitter_data/account_creation' },
-]
+const { t } = useI18n()
+const categories = computed(() => [
+    { label: t('settings.accountInfo.username'), content: user.username, href: '/settings/screen_name' },
+    { label: t('settings.accountInfo.email'), content: user.email, href:'/settings/email'},
+    { label: t('settings.accountInfo.country'), content: user.country, href: '' },
+    { label: t('settings.accountInfo.languages'), content: 'English, Arabic', href: '/settings/languages' },
+    { label: t('settings.accountInfo.birthDate'), content: formatDate(user.birth_date ?? ''), href: '/settings/profile' },
+    { label: t('settings.accountInfo.age'), content: calculateAge(user.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
+    { label: t('settings.accountInfo.accountCreation'), content: formatFullDateTime(user.created_at ?? ''), href: '/settings/your_twitter_data/account_creation' },
+])
 </script>

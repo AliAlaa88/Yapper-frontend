@@ -1,8 +1,8 @@
 <template>
-    <DetailedPanel title="Mute and block">
+    <DetailedPanel :title="t('settings.muteAndBlock')">
         <div class="relative w-full px-5 py-2">
             <p class="text-muted text-[13px] mt-0.5">
-                Manage the accounts and notifications that you have muted or blocked.
+                {{ t('settings.muteAndBlock_desc') }}
             </p>
         </div>
         <DetailedRow :category="categories[0] ?? { label: '', content: '', href: '' }" />
@@ -13,9 +13,11 @@
 <script lang="ts" setup>
 import DetailedPanel from './DetailedPanel.vue'
 import DetailedRow from './DetailedRow.vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
-const categories = [
-    { label: 'Blocked accounts', href: '/settings/blocked/all' },
-    { label: 'Muted accounts', href: '/settings/muted/all' },
-]
+const categories = computed(() => [
+    { label: t('settings.blockedAccounts'), href: '/settings/blocked/all' },
+    { label: t('settings.mutedAccounts'), href: '/settings/muted/all' },
+])
 </script>

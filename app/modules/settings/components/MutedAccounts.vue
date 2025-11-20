@@ -1,12 +1,12 @@
 <template>
-    <DetailedPanel title="Muted accounts">
+    <DetailedPanel :title="t('settings.mutedAccounts')">
         <div class="w-full text-primary">
             <!-- <div v-if="myMutedUsersQuery.isLoading.value" class="p-4 text-muted">
                 Loading muted accounts...
             </div> -->
             <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
-                    Here’s everyone you muted. You can add or remove them from this list.
+                    {{  t('settings.mutedAccounts_desc')    }}
                 </p>
             </div>
             <div v-if="myMutedUsersQuery.isSuccess.value">
@@ -36,6 +36,8 @@ import DetailedPanel from './DetailedPanel.vue'
 import { userSettingsQueries } from '../queries/userSettingsQueries'
 import { MegaphoneOff } from 'lucide-vue-next'
 import Button from '~/components/ui/Button.vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const { myMutedUsersQuery } = userSettingsQueries()
 console.log('hahaga', myMutedUsersQuery)

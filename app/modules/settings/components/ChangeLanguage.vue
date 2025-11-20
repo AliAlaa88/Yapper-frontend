@@ -1,9 +1,9 @@
 <template>
-    <DetailedPanel title="Languages">
+    <DetailedPanel :title="$t('settings.accountInfo.languages')">
         <div class="w-full text-primary">
             <div class="relative w-full pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
-                    Manage which languages are used to personalize your Yapper experience.
+                    {{ $t('settings.languages.manage_desc') }}
                 </p>
             </div>
         </div>
@@ -14,7 +14,7 @@
             @click="isOpen = true">
             <div class="flex justify-between items-center">
                 <div class="flex flex-col items-start">
-                    <span class="block text-[15px] text-primary"> App and post languages </span>
+                    <span class="block text-[15px] text-primary">{{ $t('settings.languages.appsAndLanguage') }}</span>
                     <p class="text-muted text-[13px]">
                         English and Arabic
                     </p>

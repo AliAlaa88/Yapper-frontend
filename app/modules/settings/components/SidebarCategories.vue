@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-4">
-        <h1 class="text-xl px-4 pt-4 font-bold">Settings</h1>
+        <h1 class="text-xl px-4 pt-4 font-bold">{{ $t('navigation.settings') }}</h1>
         <div class="relative w-full px-2">
             <Search class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40" />
             <input
@@ -26,7 +26,7 @@
                 />
                 <div class="flex justify-between items-center">
                     <span>
-                        {{ category.label }}
+                        {{ t(category.label) }}
                     </span>
                     <ChevronRight class="opacity-40 group-hover:text-white" />
                 </div>
@@ -38,14 +38,17 @@
 <script setup lang="ts">
 import { ChevronRight, Search } from 'lucide-vue-next'
 import { useRoute } from 'nuxt/app'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 const route = useRoute()
 console.log(route.path)
 const selectedCategory = (path: string) => {
     return route.path === path
 }
-const settingsCategories = [
-    { label: 'Your account', href: '/settings/account' },
-    { label: 'Privacy and safety', href: '/settings/privacy_and_safety' },
-    { label: 'Display and languages', href: '/settings/display_and_languages' },
-]
+const settingsCategories = computed(() => [
+    { label: t('settings.yourAccount'), href: '/settings/account' },
+    { label: t('settings.privacyAndSafety'), href: '/settings/privacy_and_safety' },
+    { label: t('settings.displayAndLanguages'), href: '/settings/display_and_languages' },
+])
 </script>

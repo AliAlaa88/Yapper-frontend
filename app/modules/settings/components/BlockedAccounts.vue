@@ -1,13 +1,12 @@
 <template>
-    <DetailedPanel title="Blocked accounts">
+    <DetailedPanel :title="$t('settings.blockedAccounts')">
         <div class="w-full text-primary">
             <!-- <div v-if="myMutedUsersQuery.isLoading.value" class="p-4 text-muted">
                 Loading muted accounts...
             </div> -->
             <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
-                    When you block someone, that person won’t be able to follow or message you,
-                    and you won’t see notifications from them.
+                    {{ $t('settings.blockedAccounts_desc') }}
                 </p>
             </div>
             <div v-if="myBlockedUsersQuery.isSuccess.value">

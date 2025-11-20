@@ -3,11 +3,10 @@
         :is-open="isOpen"
         @close="handleClose">
         <h2 class="text-4xl font-bold px-12 mb-2 mt-7">
-            Select your app language
+            {{ t('settings.languages.selectAppLanguage') }}
         </h2>
         <p class="text-muted text-sm px-12">
-            This will be your default language in the app. You’ll see content we think you’ll like
-            in the other languages you chose, too.
+            {{ t('settings.languages.selectAppLanguage_desc') }}
         </p>
 
         <div class="mt-8 px-12 space-y-4">
@@ -39,7 +38,7 @@
                 :is-loading="useChangeLanguage.isPending.value"
                 @click="handleConfirm"
             >
-                Next
+                {{ $t('settings.languages.next') }}
             </Button>
         </div>
 
@@ -53,6 +52,8 @@ import Button from '~/components/ui/Button.vue'
 import { userSettingsQueries } from '../queries/userSettingsQueries'
 import type { User } from '~/modules/Common/types/user'
 import { getUser } from '~/utils/helpers'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const user = getUser() as User
 const { useChangeLanguage } = userSettingsQueries()

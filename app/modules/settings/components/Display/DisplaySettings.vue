@@ -1,16 +1,15 @@
 <template>
-    <DetailedPanel title="Display">
+    <DetailedPanel :title="$t('settings.display')">
         <div class="w-full">
             <div class="relative w-full pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
-                    Manage your font size, color, and background. These settings
-                    affect all the Yapper accounts on this browser.
+                    {{ $t('settings.display_desc2') }}
                 </p>
             </div>
             <SlideBar />
 
             <div class="px-4 py-5 border-b border-primary">
-                <h2 class="text-lg font-bold text-primary mb-5">Color</h2>
+                <h2 class="text-lg font-bold text-primary mb-5">{{ $t('settings.color') }}</h2>
                 <div class="flex justify-between px-3 gap-3">
                     <button
                         v-for="y_color in colorOptions"
@@ -33,7 +32,7 @@
             </div>
 
             <div class="px-4 py-5">
-                <h2 class="text-lg font-bold text-primary mb-5">Background</h2>
+                <h2 class="text-lg font-bold text-primary mb-5">{{ $t('settings.background') }}</h2>
                 <div class="flex justify-center gap-15 mb-5">
                     <button
                         v-for="bg in backgroundOptions"
@@ -75,9 +74,9 @@
 
             <div class="px-8 flex items-center justify-between">
                 <div>
-                    <h3 class="text-sm font-medium text-primary">Use system setting</h3>
-                    <p v-if="!useSystemTheme" class="text-xs text-secondary mt-1.5">Choose your preferred theme</p>
-                    <p v-else class="text-xs text-secondary mt-1.5">Your theme will automatically switch based on your device settings</p>
+                    <h3 class="text-sm font-medium text-primary">{{ $t('settings.useSystemSetting') }}</h3>
+                    <p v-if="!useSystemTheme" class="text-xs text-secondary mt-1.5">{{ $t('settings.choosePreferredTheme') }}</p>
+                    <p v-else class="text-xs text-secondary mt-1.5">{{ $t('settings.useSystemSetting_desc') }}</p>
                 </div>
                 <button
                     :class="[
