@@ -12,7 +12,6 @@
             @mouseover="handleMouseOver"
             @mouseout="handleMouseOut"
         />
-
     </div>
 </template>
 
@@ -22,14 +21,15 @@ import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import Button from '~/components/ui/Button.vue'
-import { useProfileStore } from '../../../stores/profileStore'
 
-const profileStore = useProfileStore()
-const userId = computed(() => profileStore.getProfileId() || '')
+const props = defineProps<{
+    userId: string
+}>()
+
+const userId = computed(() => props.userId)
 const { isBlocked, isFollowing } = useUserInfo(userId)
 
 const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId)
-
 const userInteractions = useUserInteractions(userId)
 const { handleFollowAction, handleUnfollowWithConfirmation, isFollowLoading } = userInteractions
 

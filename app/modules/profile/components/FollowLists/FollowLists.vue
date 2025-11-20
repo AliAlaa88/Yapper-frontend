@@ -27,6 +27,9 @@
             <FollowersList v-if="currentTab === 'followers'" />
             <FollowingList v-else-if="currentTab === 'following'" />
         </div>
+
+        <SnackBar />
+        <ConfirmtionModal />
     </div>
 </template>
 
@@ -39,8 +42,13 @@ import { ArrowLeft } from 'lucide-vue-next'
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 import FollowersList from './SubComponents/FollowersList.vue'
 import FollowingList from './SubComponents/FollowingList.vue'
+import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
+import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import { useProfile } from '~/modules/profile/composables/useProfile'
+import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+
+useProfileProviders()
 
 const { t } = useI18n()
 const route = useRoute()

@@ -14,7 +14,7 @@
                     </div>
                     <div v-else class="flex flex-wrap gap-2">
                         <ProfileActions v-if="user?.user_id" />
-                        <ProfileFollowAction v-if="user?.user_id" />
+                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" />
                         <ProfileBlockedAction />
                     </div>
                 </div>

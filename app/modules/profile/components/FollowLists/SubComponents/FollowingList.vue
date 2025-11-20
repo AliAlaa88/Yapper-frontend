@@ -17,13 +17,11 @@
         </div>
 
         <div v-else>
-            <div
+            <FollowListUserCard
                 v-for="user in following"
                 :key="user.user_id"
-                class="p-4 hover:bg-hover transition-colors cursor-pointer"
-            >
-                <FollowListUserCard :user="user" />
-            </div>
+                :user="user"
+            />
         </div>
     </div>
 </template>
@@ -33,7 +31,7 @@ import { computed } from 'vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import { useFollowListsQuery } from '~/modules/profile/queries/useFollowListsQuery'
 import EmptyState from '~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vue'
-import FollowListUserCard from './FollowListUserCard.vue'
+import FollowListUserCard from '../../../../Common/components/UserCard/UserCard.vue'
 
 const profileStore = useProfileStore()
 const userId = computed(() => profileStore.getProfileId() || '')
