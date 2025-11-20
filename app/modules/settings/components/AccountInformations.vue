@@ -9,6 +9,10 @@
                 <div>
                     <span class="block text-[15px] text-primary">Account creation</span>
                     <p class="text-muted text-[13px]">
+                        {{ categories[6]?.content }}
+                    </p>
+                    <p v-if="user.country" class="text-muted text-[13px]">
+                        {{ user.country }}
                     </p>
                 </div>
                 <ChevronRight class="opacity-40 group-hover:text-white absolute right-3" />
@@ -30,15 +34,16 @@ import type { User } from '~/modules/Common/types/user'
 import DetailedPanel from './DetailedPanel.vue'
 import DetailedRow from './DetailedRow.vue'
 import { getUser } from '~/utils/helpers'
+import { formatFullDateTime, formatDate, calculateAge } from '../utils/calculations'
 const user = getUser() as User
-
+console.log(user.created_at)
 const categories = [
     { label: 'Username', content: user.username, href: '/settings/screen_name' },
     { label: 'Email', content: user.email, href:'/settings/email'},
-    { label: 'Country', content: user.country, href: '/settings/country' },
+    { label: 'Country', content: user.country, href: '' },
     { label: 'Languages', content: 'English, Arabic', href: '/settings/languages' },
-    { label: 'Birth date', content: 'mar 23', href: '/settings/profile' },
-    { label: 'Age', content: '34', href: '/settings/your_twitter_data/age' },
-    { label: 'Account creation', content: user.created_at, href: '/settings/your_twitter_data/account_creation' },
+    { label: 'Birth date', content: formatDate(user.birth_date ?? ''), href: '/settings/profile' },
+    { label: 'Age', content: calculateAge(user.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
+    { label: 'Account creation', content: formatFullDateTime(user.created_at ?? ''), href: '/settings/your_twitter_data/account_creation' },
 ]
 </script>
