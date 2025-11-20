@@ -1,12 +1,12 @@
 <template>
-    <div class="bg-black">
+    <MainLayout>
         <ProfileHeader />
 
         <NuxtPage :key="username" />
 
         <SnackBar />
         <ConfirmtionModal />
-    </div>
+    </MainLayout>
 </template>
 
 <script setup lang="ts">

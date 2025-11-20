@@ -4,7 +4,6 @@ import { ref } from 'vue'
 // Mock dependencies BEFORE importing the module under test
 const mockUseQuery = vi.fn()
 const mockUseNuxtApp = vi.fn()
-const mockUseRoute = vi.fn()
 
 vi.mock('@tanstack/vue-query', () => ({
   useQuery: mockUseQuery,
@@ -12,15 +11,11 @@ vi.mock('@tanstack/vue-query', () => ({
 
 vi.mock('#app', () => ({
   useNuxtApp: mockUseNuxtApp,
-  useRoute: mockUseRoute,
 }))
 
 // Import AFTER mocking - use dynamic import to avoid hoisting issues
 let useTweetsQuery: any
-let useTweetQuery: any
 let useTweetDetailsQuery: any
-let useUserTweetsQuery: any
-let useUserQuery: any
 
 describe('useTweetQueries', () => {
   let mockTweetService: any
@@ -37,23 +32,12 @@ describe('useTweetQueries', () => {
     // Setup mock tweet service
     mockTweetService = {
       fetchTweets: vi.fn().mockResolvedValue([]),
-      fetchUserTweets: vi.fn().mockResolvedValue([]),
-      fetchLikedTweets: vi.fn().mockResolvedValue([]),
-      fetchMediaTweets: vi.fn().mockResolvedValue([]),
-      fetchReplies: vi.fn().mockResolvedValue([]),
-      fetchTweetById: vi.fn().mockResolvedValue(null),
       fetchTweetDetails: vi.fn().mockResolvedValue(null),
-      fetchUserById: vi.fn().mockResolvedValue(null),
     }
 
     // Mock useNuxtApp to return our mock service
     mockUseNuxtApp.mockReturnValue({
       $tweetService: mockTweetService,
-    })
-
-    // Mock useRoute with default values
-    mockUseRoute.mockReturnValue({
-      params: {},
     })
 
     // Reset useQuery mock implementation
@@ -71,184 +55,78 @@ describe('useTweetQueries', () => {
   })
 
   describe('useTweetsQuery', () => {
-    it('generates correct query key for "all" when no fetchingSource provided', () => {
-      useTweetsQuery()
+    it('generates correct query key with path', () => {
+      const path = ref('/timeline')
+      useTweetsQuery(path)
 
       expect(mockUseQuery).toHaveBeenCalled()
       const options = mockUseQuery.mock.calls[0]?.[0]
       
       // Query key should be computed, so we need to access its value
-      expect(options.queryKey.value).toEqual(['tweets', 'all'])
+      expect(options.queryKey.value).toEqual(['tweets', '/timeline'])
     })
 
-    it('generates correct query key for "home" fetchingSource', () => {
-      const fetchingSource = ref('home')
-      useTweetsQuery(fetchingSource)
+    it('generates correct query key with string path', () => {
+      useTweetsQuery('/home')
 
       const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey.value).toEqual(['tweets', 'home'])
+      expect(options.queryKey.value).toEqual(['tweets', '/home'])
     })
 
-    it('generates correct query key for "user" fetchingSource with username', () => {
-      mockUseRoute.mockReturnValue({
-        params: { username: 'johndoe' },
-      })
-
-      const fetchingSource = ref('user')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey.value).toEqual(['tweets', 'user', 'johndoe'])
-    })
-
-    it('generates correct query key for "likes" fetchingSource', () => {
-      const fetchingSource = ref('likes')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey.value).toEqual(['tweets', 'likes'])
-    })
-
-    it('generates correct query key for "media" fetchingSource', () => {
-      const fetchingSource = ref('media')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey.value).toEqual(['tweets', 'media'])
-    })
-
-    it('generates correct query key for "replies" fetchingSource', () => {
-      const fetchingSource = ref('replies')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey.value).toEqual(['tweets', 'replies'])
-    })
-
-    it('calls fetchTweets() for "home" fetchingSource', async () => {
-      const fetchingSource = ref('home')
-      useTweetsQuery(fetchingSource)
+    it('calls fetchTweets with correct path', async () => {
+      const path = ref('/timeline')
+      useTweetsQuery(path)
 
       const options = mockUseQuery.mock.calls[0]?.[0]
       await options.queryFn()
 
-      expect(mockTweetService.fetchTweets).toHaveBeenCalled()
+      expect(mockTweetService.fetchTweets).toHaveBeenCalledWith('/timeline')
     })
 
-    it('calls fetchUserTweets() for "user" fetchingSource with username', async () => {
-      mockUseRoute.mockReturnValue({
-        params: { username: 'johndoe' },
-      })
-
-      const fetchingSource = ref('user')
-      useTweetsQuery(fetchingSource)
+    it('calls fetchTweets with string path', async () => {
+      useTweetsQuery('/home')
 
       const options = mockUseQuery.mock.calls[0]?.[0]
       await options.queryFn()
 
-      expect(mockTweetService.fetchUserTweets).toHaveBeenCalledWith('johndoe')
+      expect(mockTweetService.fetchTweets).toHaveBeenCalledWith('/home')
     })
 
-    it('calls fetchLikedTweets() for "likes" fetchingSource', async () => {
-      const fetchingSource = ref('likes')
-      useTweetsQuery(fetchingSource)
+    it('query key is reactive to path changes', () => {
+      const path = ref('/timeline')
+      useTweetsQuery(path)
+
+      const options = mockUseQuery.mock.calls[0]?.[0]
+      expect(options.queryKey.value).toEqual(['tweets', '/timeline'])
+
+      // Change the path
+      path.value = '/user/johndoe'
+      expect(options.queryKey.value).toEqual(['tweets', '/user/johndoe'])
+    })
+
+    it('handles empty path', async () => {
+      const path = ref('')
+      useTweetsQuery(path)
 
       const options = mockUseQuery.mock.calls[0]?.[0]
       await options.queryFn()
 
-      expect(mockTweetService.fetchLikedTweets).toHaveBeenCalled()
+      expect(mockTweetService.fetchTweets).toHaveBeenCalledWith('')
     })
 
-    it('calls fetchMediaTweets() for "media" fetchingSource', async () => {
-      const fetchingSource = ref('media')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(mockTweetService.fetchMediaTweets).toHaveBeenCalled()
-    })
-
-    it('calls fetchReplies() for "replies" fetchingSource', async () => {
-      const fetchingSource = ref('replies')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(mockTweetService.fetchReplies).toHaveBeenCalled()
-    })
-
-    it('calls fetchTweets() when fetchingSource is null', async () => {
-      const fetchingSource = ref(null)
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(mockTweetService.fetchTweets).toHaveBeenCalled()
-    })
-
-    it('falls back to fetchTweets() when service method does not exist', async () => {
-      // Create a service without fetchUserTweets
-      const fallbackService = {
-        fetchTweets: vi.fn().mockResolvedValue([]),
-      }
+    it('handles different path values', async () => {
+      const testPaths = ['/timeline', '/user/alice', '/tweets/trending', '/search']
       
-      mockUseNuxtApp.mockReturnValue({
-        $tweetService: fallbackService,
-      })
+      for (const testPath of testPaths) {
+        vi.clearAllMocks()
+        useTweetsQuery(testPath)
 
-      const fetchingSource = ref('user')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(fallbackService.fetchTweets).toHaveBeenCalled()
-    })
-
-    it('query key is reactive to fetchingSource changes', () => {
-      const fetchingSource = ref('home')
-      useTweetsQuery(fetchingSource)
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey.value).toEqual(['tweets', 'home'])
-
-      // Change the source
-      fetchingSource.value = 'likes'
-      expect(options.queryKey.value).toEqual(['tweets', 'likes'])
-    })
-  })
-
-  describe('useTweetQuery', () => {
-    it('generates correct query key with tweetId', () => {
-      useTweetQuery('tweet123')
-
-      expect(mockUseQuery).toHaveBeenCalled()
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      expect(options.queryKey).toEqual(['tweet', 'tweet123'])
-    })
-
-    it('calls fetchTweetById with correct tweetId', async () => {
-      useTweetQuery('tweet123')
-
-      const options = mockUseQuery.mock.calls[0]?.[0]
-      await options.queryFn()
-
-      expect(mockTweetService.fetchTweetById).toHaveBeenCalledWith('tweet123')
-    })
-
-    it('is enabled only when tweetId is provided', () => {
-      useTweetQuery('tweet123')
-      const enabledOptions = mockUseQuery.mock.calls[0]?.[0]
-      expect(enabledOptions.enabled).toBe(true)
-
-      vi.clearAllMocks()
-
-      useTweetQuery('')
-      const disabledOptions = mockUseQuery.mock.calls[0]?.[0]
-      expect(disabledOptions.enabled).toBe(false)
+        const options = mockUseQuery.mock.calls[0]?.[0]
+        expect(options.queryKey.value).toEqual(['tweets', testPath])
+        
+        await options.queryFn()
+        expect(mockTweetService.fetchTweets).toHaveBeenCalledWith(testPath)
+      }
     })
   })
 
@@ -280,6 +158,21 @@ describe('useTweetQueries', () => {
       useTweetDetailsQuery('')
       const disabledOptions = mockUseQuery.mock.calls[0]?.[0]
       expect(disabledOptions.enabled).toBe(false)
+    })
+
+    it('handles different tweetId values', async () => {
+      const testIds = ['tweet1', 'tweet2', 'abc123', 'xyz789']
+      
+      for (const testId of testIds) {
+        vi.clearAllMocks()
+        useTweetDetailsQuery(testId)
+
+        const options = mockUseQuery.mock.calls[0]?.[0]
+        expect(options.queryKey).toEqual(['tweetDetails', testId])
+        
+        await options.queryFn()
+        expect(mockTweetService.fetchTweetDetails).toHaveBeenCalledWith(testId)
+      }
     })
   })
 })

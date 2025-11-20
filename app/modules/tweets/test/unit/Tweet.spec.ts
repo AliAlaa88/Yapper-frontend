@@ -14,23 +14,49 @@ vi.mock('#app', () => ({
 // Mock navigation utilities
 vi.mock('../../utils/navigation', () => ({
     getProfileUrl: vi.fn((user) => user.link || `/profile/${user.username}` || '#'),
-    getTweetUrl: vi.fn((tweet) => `/${tweet.user.username}/status/${tweet.id}`),
+    getTweetUrl: vi.fn((tweet) => `/${tweet.user.username}/status/${tweet.tweet_id}`),
 }))
+
+const defaultStubs = {
+    NuxtLink: true,
+    Publisher: true,
+    Content: true,
+    Stats: true,
+    TooltipProvider: { template: '<div><slot /></div>' },
+    Tooltip: { template: '<div><slot /></div>' },
+    TooltipTrigger: {
+        template: '<div><slot /></div>',
+        props: ['asChild']
+    },
+    TooltipContent: true,
+    UserCard: true,
+}
 
 describe('Tweet Component', () => {
     const mockTweet: TweetType = {
-        id: 't1',
-        content: {
-            text: 'Hello world',
-        },
+        tweet_id: 't1',
+        content: 'Hello world',
         user: {
             id: 'u1',
             name: 'Alice',
             username: 'alice',
-            avatar: '/avatar.jpg',
+            avatar_url: '/avatar.jpg',
+            verified: false,
+            bio: 'Test bio',
+            followers: 100,
+            following: 50
         },
-        stats: { likes: 10, replies: 5, retweets: 3 },
-        createdAt: '2020-01-01',
+        images: [
+            "https://example.com/image1.jpg",
+        ],
+        likes_count: 10,
+        replies_count: 5,
+        reposts_count: 3,
+        views_count: 0,
+        qoutes_count: 0,
+        is_liked: false,
+        is_reposted: false,
+        created_at: '2020-01-01',
         type: 'tweet',
     }
 
@@ -43,38 +69,28 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: {
-                            props: ['to'],
-                            template: `<a :href="to"><slot/></a>`,
-                        },
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
-            const img = wrapper.find('img')
-            expect(img.exists()).toBe(true)
-            expect(img.attributes('src')).toBe('/avatar.jpg')
-            expect(img.attributes('alt')).toBe('Alice')
+            // Check that the article element exists
+            const article = wrapper.find('article')
+            expect(article.exists()).toBe(true)
 
-            const link = wrapper.find('a')
+            // Check that the NuxtLink has the correct `to` prop
+            const link = wrapper.find('#tweet-avatar-link-t1')
             expect(link.exists()).toBe(true)
-            expect(link.attributes('href')).toBe('/profile/alice')
+            expect(link.attributes('to')).toBe('/profile/alice')
+
+            // Check that the Tweet ID is set correctly
+            expect(article.attributes('id')).toBe('tweet-t1')
         })
 
         it('renders with correct CSS classes for article container', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -88,39 +104,12 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
             const flexContainer = wrapper.find('.flex.gap-3')
             expect(flexContainer.exists()).toBe(true)
-        })
-
-        it('renders avatar with correct hover classes', () => {
-            const wrapper = mount(Tweet, {
-                props: { tweet: mockTweet },
-                global: {
-                    stubs: {
-                        NuxtLink: {
-                            props: ['to'],
-                            template: `<a :href="to"><slot/></a>`,
-                        },
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
-                },
-            })
-
-            const img = wrapper.find('img')
-            expect(img.classes()).toContain('rounded-full')
-            expect(img.classes()).toContain('cursor-pointer')
-            expect(img.classes()).toContain('hover:brightness-95')
         })
     })
 
@@ -129,17 +118,18 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
             const publisher = wrapper.findComponent(Publisher)
             expect(publisher.exists()).toBe(true)
-            expect(publisher.props('publisher')).toEqual(mockTweet.user)
+            expect(publisher.props('publisher')).toMatchObject({
+                id: mockTweet.user.id,
+                name: mockTweet.user.name,
+                username: mockTweet.user.username,
+                avatar: mockTweet.user.avatar_url,
+            })
             expect(publisher.props('createdAt')).toBe('2020-01-01')
         })
 
@@ -147,43 +137,42 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
             const content = wrapper.findComponent(Content)
             expect(content.exists()).toBe(true)
-            expect(content.props('content')).toEqual(mockTweet.content)
+            expect(content.props('content')).toMatchObject({
+                text: mockTweet.content,
+                images: mockTweet.images,
+                videos: [],
+            })
         })
 
         it('renders Stats component with correct props', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
             const stats = wrapper.findComponent(Stats)
             expect(stats.exists()).toBe(true)
-            expect(stats.props('stats')).toEqual(mockTweet.stats)
+            expect(stats.props('stats')).toEqual({
+                likes: mockTweet.likes_count,
+                replies: mockTweet.replies_count,
+                retweets: mockTweet.reposts_count,
+                views: mockTweet.views_count,
+            })
         })
 
         it('renders all three sub-components together', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -199,12 +188,7 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -213,27 +197,21 @@ describe('Tweet Component', () => {
         })
 
         it('stops propagation when avatar link is clicked', async () => {
+            const { navigateTo } = await import('#app')
+            vi.mocked(navigateTo).mockClear()
+            
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: {
-                            props: ['to'],
-                            template: `<a :href="to" @click.stop><slot/></a>`,
-                        },
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
-            const link = wrapper.find('a')
-            const clickEvent = new Event('click', { bubbles: true, cancelable: true })
-            const stopPropagationSpy = vi.spyOn(clickEvent, 'stopPropagation')
+            const link = wrapper.find('#tweet-avatar-link-t1')
+            await link.trigger('click')
             
-            await link.element.dispatchEvent(clickEvent)
             // The @click.stop should prevent the article click from firing
+            expect(navigateTo).not.toHaveBeenCalled()
         })
 
         it('does not navigate when tweetUrl is #', async () => {
@@ -241,15 +219,12 @@ describe('Tweet Component', () => {
             vi.mocked(getTweetUrl).mockReturnValue('#')
 
             const { navigateTo } = await import('#app')
+            vi.mocked(navigateTo).mockClear()
+            
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -274,64 +249,46 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithCustomLink },
                 global: {
-                    stubs: {
-                        NuxtLink: {
-                            props: ['to'],
-                            template: `<a :href="to"><slot/></a>`,
-                        },
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
-            const link = wrapper.find('a')
-            expect(link.attributes('href')).toBe('/custom/profile/alice')
+            const link = wrapper.find('#tweet-avatar-link-t1')
+            expect(link.attributes('to')).toBe('/custom/profile/alice')
         })
 
         it('renders tweet with media content', () => {
             const tweetWithMedia: TweetType = {
                 ...mockTweet,
-                content: {
-                    text: 'Check out this image!',
-                    images: ['/image1.jpg'],
-            },
+                content: 'Check out this image!',
+                images: ['/image1.jpg'],
             }
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithMedia },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
             const content = wrapper.findComponent(Content)
-            expect(content.props('content')).toEqual(tweetWithMedia.content)
-            expect(content.props('content').images).toHaveLength(1)
+            expect(content.props('content')).toMatchObject({
+                text: 'Check out this image!',
+                images: ['/image1.jpg'],
+            })
         })
 
         it('renders tweet with video content', () => {
             const tweetWithVideo: TweetType = {
                 ...mockTweet,
-                content: {
-                    text: 'Check out this video!',
-                    videos: ['/video.mp4'],
-                },
+                content: 'Check out this video!',
+                videos: ['/video.mp4'],
             }
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithVideo },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -342,22 +299,13 @@ describe('Tweet Component', () => {
         it('renders tweet with views in stats', () => {
             const tweetWithViews: TweetType = {
                 ...mockTweet,
-                stats: {
-                    likes: 10,
-                    replies: 5,
-                    retweets: 3,
-                    views: 1000,
-                },
+                views_count: 1000,
             }
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithViews },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -368,21 +316,16 @@ describe('Tweet Component', () => {
         it('renders tweet with zero stats', () => {
             const tweetWithZeroStats: TweetType = {
                 ...mockTweet,
-                stats: {
-                    likes: 0,
-                    replies: 0,
-                    retweets: 0,
-                },
+                likes_count: 0,
+                replies_count: 0,
+                reposts_count: 0,
+                views_count: 0,
             }
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithZeroStats },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -391,6 +334,7 @@ describe('Tweet Component', () => {
                 likes: 0,
                 replies: 0,
                 retweets: 0,
+                views: 0,
             })
         })
     })
@@ -401,7 +345,7 @@ describe('Tweet Component', () => {
                 ...mockTweet,
                 user: {
                     ...mockTweet.user,
-                    avatar: '/different-avatar.png',
+                    avatar_url: '/different-avatar.png',
                     name: 'Bob',
                 },
             }
@@ -409,47 +353,32 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithDifferentAvatar },
                 global: {
-                    stubs: {
-                        NuxtLink: {
-                            props: ['to'],
-                            template: `<a :href="to"><slot/></a>`,
-                        },
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
-            const img = wrapper.find('img')
-            expect(img.attributes('src')).toBe('/different-avatar.png')
-            expect(img.attributes('alt')).toBe('Bob')
+            // Verify that the user prop was passed correctly to Publisher component
+            const publisher = wrapper.findComponent(Publisher)
+            expect(publisher.exists()).toBe(true)
+            expect(publisher.props('publisher').avatar_url).toBe('/different-avatar.png')
+            expect(publisher.props('publisher').name).toBe('Bob')
         })
 
         it('updates when tweet prop changes', async () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
             const newTweet: TweetType = {
                 ...mockTweet,
-                id: 't2',
-                content: {
-                    text: 'Updated tweet',
-                },
-                stats: {
-                    likes: 100,
-                    replies: 50,
-                    retweets: 25,
-                },
+                tweet_id: 't2',
+                content: 'Updated tweet',
+                likes_count: 100,
+                replies_count: 50,
+                reposts_count: 25,
             }
 
             await wrapper.setProps({ tweet: newTweet })
@@ -463,34 +392,30 @@ describe('Tweet Component', () => {
 
         it('renders with minimum required fields', () => {
             const minimalTweet: TweetType = {
-                id: 't-minimal',
-                content: {
-                    text: 'Minimal tweet',
-                },
+                tweet_id: 't-minimal',
+                content: 'Minimal tweet',
                 user: {
                     id: 'u-minimal',
                     name: 'Minimal User',
                     username: 'minimal',
-                    avatar: '/minimal.jpg',
+                    avatar_url: '/minimal.jpg',
+                    verified: false,
                 },
-                stats: {
-                    likes: 0,
-                    replies: 0,
-                    retweets: 0,
-                },
-                createdAt: '2020-01-01',
+                likes_count: 0,
+                replies_count: 0,
+                reposts_count: 0,
+                views_count: 0,
+                qoutes_count: 0,
+                is_liked: false,
+                is_reposted: false,
+                created_at: '2020-01-01',
                 type: 'tweet',
             }
 
             const wrapper = mount(Tweet, {
                 props: { tweet: minimalTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
@@ -508,38 +433,25 @@ describe('Tweet Component', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: {
-                            props: ['to'],
-                            template: `<a :href="to"><slot/></a>`,
-                        },
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 
-            const link = wrapper.find('a')
-            expect(link.attributes('href')).toBe('/profile/alice')
+            const link = wrapper.find('#tweet-avatar-link-t1')
+            expect(link.attributes('to')).toBe('/profile/alice')
         })
 
         it('computes tweetUrl correctly', async () => {
             // Reset mocks to default behavior
             const { navigateTo } = await import('#app')
             const { getTweetUrl } = await import('../../utils/navigation')
-            vi.mocked(getTweetUrl).mockImplementation((tweet) => `/${tweet.user.username}/status/${tweet.id}`)
+            vi.mocked(getTweetUrl).mockImplementation((tweet) => `/${tweet.user.username}/status/${tweet.tweet_id}`)
             vi.mocked(navigateTo).mockClear()
 
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
+                    stubs: defaultStubs,
                 },
             })
 

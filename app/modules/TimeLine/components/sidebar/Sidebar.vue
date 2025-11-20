@@ -1,38 +1,39 @@
 <template>
     <aside class="min-w-[275px] min-h-screen px-3 bg-primary flex flex-col">
-        <nav class="flex flex-col gap-2 text-primary flex-1">
-            <NuxtLink to="/" class="flex items-center gap-5 p-3 rounded-full">
+        <nav class="flex flex-col flex-1 py-1">
+            <!-- Logo -->
+            <NuxtLink to="/" class="inline-flex items-center justify-start mb-1">
                 <div
-                    class="w-[64px] h-[64px] hover:bg-hover rounded-full flex items-center justify-center p-3"
+                    class="w-[65px] h-[65px] hover:bg-hover rounded-full flex items-center justify-center transition-colors duration-200"
                 >
-                    <!-- <img
-                        src="../../../../assets/logo-white.png"
-                        alt="logo"
-                        class="w-full h-full object-contain"
-                    /> -->
-                    <Logo imgClass="w-full h-full object-contain" />
+                    <Logo imgClass="w-[40px] h-[40px] object-contain" />
                 </div>
             </NuxtLink>
-            <div v-for="link in navLinks" :key="link.href">
-                <div class="flex items-center gap-5 p-3 rounded-full">
-                    <NuxtLink
-                        :to="link.href"
-                        :id="`sidebar-link-${link.href}`"
-                        class="flex items-center text-primary font-medium w-full"
+
+            <!-- Navigation Links -->
+            <div class="flex flex-col gap-4">
+                <NuxtLink
+                    v-for="link in navLinks"
+                    :key="link.href"
+                    :to="link.href"
+                    :id="`sidebar-link-${link.href}`"
+                    class="inline-flex items-center justify-start group"
+                >
+                    <div
+                        class="flex items-center gap-4 p-3 rounded-full hover:bg-hover transition-colors duration-200"
                     >
-                        <div
-                            class="text-xl hover:bg-hover w-fit flex items-center gap-2 flex-row hover:bg-hover p-3 rounded-full"
-                        >
-                            <component :is="link.icon" class="w-[26px] h-[26px] text-primary" />
-                            <span class="text-primary">{{ link.label_en }}</span>
-                        </div>
-                    </NuxtLink>
-                </div>
+                        <component :is="link.icon" class="w-[26px] h-[26px] text-primary" />
+                        <span class="text-[20px] text-primary font-normal">{{
+                            link.label_en
+                        }}</span>
+                    </div>
+                </NuxtLink>
             </div>
 
-            <div>
+            <!-- Post Button -->
+            <div class="mt-10 pr-6">
                 <button
-                    class="py-3 px-4 bg-alternate rounded-full text-lg text-alternate font-medium transition-colors duration-200 hover:opacity-90 w-[90%]"
+                    class="w-full py-3 px-6 bg-alternate rounded-full text-[17px] text-alternate font-bold transition-all duration-200 hover:opacity-90"
                     @click="handleOpen"
                     id="sidebar-post-btn"
                 >
@@ -41,10 +42,12 @@
             </div>
         </nav>
 
-        <div class="mt-10   mb-4">
+        <!-- User Actions at Bottom -->
+        <div class="pb-4">
             <UserActions />
         </div>
 
+        <!-- Popup -->
         <Popup :isOpen="isOpen" title="Post a tweet" @close="handleClose">
             <PostTweet :border="false" />
         </Popup>
@@ -52,19 +55,21 @@
 </template>
 
 <script setup lang="ts">
-import { House, Search, Bell, Mail, User, Settings } from 'lucide-vue-next'
+import { House, Search, Bell, Mail, User, Settings, Bookmark } from 'lucide-vue-next'
 import PostTweet from '../postTweet/PostTweet.vue'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import UserActions from './subCompoents/UserActions/index'
 import { getUser } from '#imports'
-const user = getUser();
+
+const user = getUser()
+
 const navLinks = [
     {
         label_en: 'Home',
         label_ar: 'الرئيسية',
         icon: House,
-        href: '/en',
+        href: '/',
     },
     {
         label_en: 'Search',
@@ -89,6 +94,12 @@ const navLinks = [
         label_ar: 'الملف الشخصي',
         icon: User,
         href: user ? `/${user.username}` : '/profile',
+    },
+    {
+        label_en: 'Bookmarks',
+        label_ar: 'المفضلة',
+        icon: Bookmark,
+        href: '/bookmarks',
     },
     {
         label_en: 'Settings',

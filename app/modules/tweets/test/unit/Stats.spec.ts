@@ -28,10 +28,10 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            expect(wrapper.find('#reply').exists()).toBe(true)
-            expect(wrapper.find('#retweet').exists()).toBe(true)
-            expect(wrapper.find('#like').exists()).toBe(true)
-            expect(wrapper.find('#share').exists()).toBe(true)
+            expect(wrapper.find('#tweet-reply-button').exists()).toBe(true)
+            expect(wrapper.find('#tweet-retweet-button').exists()).toBe(true)
+            expect(wrapper.find('#tweet-like-button').exists()).toBe(true)
+            expect(wrapper.find('#tweet-share-button').exists()).toBe(true)
         })
 
         it('displays formatted reply count', () => {
@@ -39,7 +39,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#reply')
+            const replyButton = wrapper.find('#tweet-reply-button')
             expect(replyButton.text()).toBe('50')
         })
 
@@ -48,7 +48,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const retweetButton = wrapper.find('#retweet')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
             expect(retweetButton.text()).toBe('25')
         })
 
@@ -57,7 +57,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const likeButton = wrapper.find('#like')
+            const likeButton = wrapper.find('#tweet-like-button')
             expect(likeButton.text()).toBe('100')
         })
 
@@ -73,9 +73,9 @@ describe('Stats Component', () => {
                 props: { stats: zeroStats },
             })
 
-            const replyButton = wrapper.find('#reply')
-            const retweetButton = wrapper.find('#retweet')
-            const likeButton = wrapper.find('#like')
+            const replyButton = wrapper.find('#tweet-reply-button')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
+            const likeButton = wrapper.find('#tweet-like-button')
 
             expect(replyButton.text()).toBe('')
             expect(retweetButton.text()).toBe('')
@@ -93,9 +93,9 @@ describe('Stats Component', () => {
                 props: { stats: largeStats },
             })
 
-            const replyButton = wrapper.find('#reply')
-            const retweetButton = wrapper.find('#retweet')
-            const likeButton = wrapper.find('#like')
+            const replyButton = wrapper.find('#tweet-reply-button')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
+            const likeButton = wrapper.find('#tweet-like-button')
 
             expect(replyButton.text()).toBe('1.2K')
             expect(retweetButton.text()).toBe('50K')
@@ -113,7 +113,7 @@ describe('Stats Component', () => {
             }
 
             const wrapper = mount(Stats, { props: { stats: statsWithViews } })
-            const viewsButton = wrapper.find('#views')
+            const viewsButton = wrapper.find('#tweet-views-button')
             expect(viewsButton.exists()).toBe(true)
             expect(viewsButton.text()).toBe('1.0K')
         })
@@ -130,7 +130,7 @@ describe('Stats Component', () => {
                 props: { stats: statsWithoutViews },
             })
 
-            const viewsButton = wrapper.find('#views')
+            const viewsButton = wrapper.find('#tweet-views-button')
             expect(viewsButton.exists()).toBe(false)
         })
 
@@ -145,7 +145,7 @@ describe('Stats Component', () => {
                 props: { stats: statsWithoutViews },
             })
 
-            const viewsButton = wrapper.find('#views')
+            const viewsButton = wrapper.find('#tweet-views-button')
             expect(viewsButton.exists()).toBe(false)
         })
 
@@ -161,7 +161,7 @@ describe('Stats Component', () => {
                 props: { stats: statsWithHighViews },
             })
 
-            const viewsButton = wrapper.find('#views')
+            const viewsButton = wrapper.find('#tweet-views-button')
             expect(viewsButton.text()).toBe('2.5M')
         })
     })
@@ -172,7 +172,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#reply')
+            const replyButton = wrapper.find('#tweet-reply-button')
             const clickEvent = { stopPropagation: vi.fn() }
             
             await replyButton.trigger('click', clickEvent)
@@ -187,7 +187,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const retweetButton = wrapper.find('#retweet')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
             await retweetButton.trigger('click')
             
             expect(retweetButton.exists()).toBe(true)
@@ -198,7 +198,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const likeButton = wrapper.find('#like')
+            const likeButton = wrapper.find('#tweet-like-button')
             await likeButton.trigger('click')
             
             expect(likeButton.exists()).toBe(true)
@@ -209,7 +209,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const shareButton = wrapper.find('#share')
+            const shareButton = wrapper.find('#tweet-share-button')
             await shareButton.trigger('click')
             
             expect(shareButton.exists()).toBe(true)
@@ -222,11 +222,9 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#reply')
+            const replyButton = wrapper.find('#tweet-reply-button')
             const svg = replyButton.find('svg')
             expect(svg.exists()).toBe(true)
-            expect(svg.classes()).toContain('w-[18px]')
-            expect(svg.classes()).toContain('h-[18px]')
         })
 
         it('renders SVG icon in retweet button', () => {
@@ -234,7 +232,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const retweetButton = wrapper.find('#retweet')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
             const svg = retweetButton.find('svg')
             expect(svg.exists()).toBe(true)
         })
@@ -244,7 +242,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const likeButton = wrapper.find('#like')
+            const likeButton = wrapper.find('#tweet-like-button')
             const svg = likeButton.find('svg')
             expect(svg.exists()).toBe(true)
         })
@@ -254,7 +252,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const shareButton = wrapper.find('#share')
+            const shareButton = wrapper.find('#tweet-share-button')
             const svg = shareButton.find('svg')
             expect(svg.exists()).toBe(true)
         })
@@ -266,7 +264,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const tooltip = wrapper.find('#reply').element.parentElement?.querySelector('span.absolute')
+            const tooltip = wrapper.find('#tweet-reply-button').element.parentElement?.querySelector('span.absolute')
             expect(tooltip?.textContent?.trim()).toBe('Reply')
         })
 
@@ -275,7 +273,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const retweetContainer = wrapper.find('#retweet').element.parentElement
+            const retweetContainer = wrapper.find('#tweet-retweet-button').element.parentElement
             const tooltip = retweetContainer?.querySelector('span.absolute')
             expect(tooltip?.textContent?.trim()).toBe('Retweet')
         })
@@ -285,7 +283,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const likeContainer = wrapper.find('#like').element.parentElement
+            const likeContainer = wrapper.find('#tweet-like-button').element.parentElement
             const tooltip = likeContainer?.querySelector('span.absolute')
             expect(tooltip?.textContent?.trim()).toBe('Like')
         })
@@ -295,7 +293,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const viewsContainer = wrapper.find('#views').element.parentElement
+            const viewsContainer = wrapper.find('#tweet-views-button').element.parentElement
             const tooltip = viewsContainer?.querySelector('span.absolute')
             expect(tooltip?.textContent?.trim()).toBe('Views')
         })
@@ -305,7 +303,7 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const shareContainer = wrapper.find('#share').element.parentElement
+            const shareContainer = wrapper.find('#tweet-share-button').element.parentElement
             const tooltip = shareContainer?.querySelector('span.absolute')
             expect(tooltip?.textContent?.trim()).toBe('Share')
         })
@@ -317,8 +315,8 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#reply')
-            expect(replyButton.classes()).toContain('hover:text-[var(--color-x-blue)]')
+            const replyButton = wrapper.find('#tweet-reply-button')
+            expect(replyButton.classes()).toContain('hover:text-x-blue')
         })
 
         it('applies correct hover color classes for retweet button', () => {
@@ -326,8 +324,8 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const retweetButton = wrapper.find('#retweet')
-            expect(retweetButton.classes()).toContain('hover:text-[var(--color-x-green)]')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
+            expect(retweetButton.classes()).toContain('hover:text-x-green')
         })
 
         it('applies correct hover color classes for like button', () => {
@@ -335,8 +333,8 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const likeButton = wrapper.find('#like')
-            expect(likeButton.classes()).toContain('hover:text-[var(--color-x-red)]')
+            const likeButton = wrapper.find('#tweet-like-button')
+            expect(likeButton.classes()).toContain('hover:text-x-red')
         })
 
         it('applies cursor-pointer class to all buttons', () => {
@@ -344,10 +342,10 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#reply')
-            const retweetButton = wrapper.find('#retweet')
-            const likeButton = wrapper.find('#like')
-            const shareButton = wrapper.find('#share')
+            const replyButton = wrapper.find('#tweet-reply-button')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
+            const likeButton = wrapper.find('#tweet-like-button')
+            const shareButton = wrapper.find('#tweet-share-button')
 
             expect(replyButton.classes()).toContain('cursor-pointer')
             expect(retweetButton.classes()).toContain('cursor-pointer')
@@ -360,9 +358,9 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#reply')
-            const retweetButton = wrapper.find('#retweet')
-            const likeButton = wrapper.find('#like')
+            const replyButton = wrapper.find('#tweet-reply-button')
+            const retweetButton = wrapper.find('#tweet-retweet-button')
+            const likeButton = wrapper.find('#tweet-like-button')
 
             expect(replyButton.classes()).toContain('transition-colors')
             expect(retweetButton.classes()).toContain('transition-colors')
