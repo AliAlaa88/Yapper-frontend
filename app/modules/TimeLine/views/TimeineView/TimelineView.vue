@@ -3,7 +3,7 @@
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
         <PostTweet :border="true" />
         <TweetsList
-            :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/for-you'}`"
+            :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/following'}`"
             class="w-full"
         />
     </div>

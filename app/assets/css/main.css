@@ -43,6 +43,7 @@
     --color-x-text-dark-secondary: #71767b;
     --color-x-hover-dark: #2f3336;
 
+    --color-x-popup-bg: #242d34;
     /* ===========================
        🖋 FONT SETTINGS
        =========================== */
@@ -83,6 +84,7 @@
         --color-x-text-alternate: #ffffff;
         --color-x-hover-alternate: #ebebeb;
         --color-x-tooltip-bg: #cfd9de;
+        --color-x-popup-bg: #999999;
     }
 
     :root.dark {
@@ -101,6 +103,7 @@
         --color-x-text-alternate: #0f1419;
         --color-x-hover-alternate: #2f3336;
         --color-x-hover-dark: #16181c;
+        --color-x-popup-bg: #242d34;
     }
 }
 
@@ -188,6 +191,10 @@
 
     .bg-tooltip {
         background-color: var(--color-x-gray-light);
+    }
+
+    .bg-popup {
+        background-color: var(--color-x-popup-bg);
     }
 
     /* Border colors */
