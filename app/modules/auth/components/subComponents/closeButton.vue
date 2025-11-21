@@ -2,7 +2,7 @@
       <button
         id="button-close"
         :class="[
-          'absolute top-4 text-primary hover:bg-hover rounded-full p-2 transition duration-200',
+          'absolute top-4 bg-white text-primary hover:bg-hover rounded-full p-2 transition duration-200',
           isArabic ? 'left-4' : 'right-4'
         ]"
         @click="$emit('close')"

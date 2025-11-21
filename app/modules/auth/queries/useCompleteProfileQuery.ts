@@ -57,7 +57,7 @@ export const useUpdateInterestsMutation = (
 
   return useMutation({
     mutationKey: ['updateInterests'],
-    mutationFn: ({ interests }: { interests: string[] }) => $authService.updateInterests(interests),
+    mutationFn: ({ categoryIds }: { categoryIds: number[] }) => $authService.updateInterests(categoryIds),
     retry: false,
     onSuccess: (data) => onSuccess?.(data),
     onError: (error) => onError?.(error),

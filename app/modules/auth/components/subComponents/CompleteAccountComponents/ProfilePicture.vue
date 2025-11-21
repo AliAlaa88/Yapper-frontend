@@ -1,12 +1,12 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-alternate/10 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="true"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
 
             <!-- Logo -->
             <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -79,16 +79,16 @@
             >
                 {{ $t('auth.common.skip') }}
             </button>
-        </div>
-    </div>
+    </Popup>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import closeButton from '../closeButton.vue'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { useUpdateProfilePictureMutation } from '../../../queries/useCompleteProfileQuery'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -99,6 +99,7 @@ const profilePicture = defineModel<string | null>('profilePicture', { default: n
 const previewImage = ref<string | null>(profilePicture.value)
 const selectedFile = ref<File | null>(null)
 const errorMessage = ref('')
+const isUploading = ref(false)
 
 // Sync preview with model
 watch(profilePicture, (newVal) => {
@@ -144,10 +145,27 @@ const onFileChange = (event: Event) => {
     }
 }
 
+const uploadMutation = useUpdateProfilePictureMutation(
+    (data) => {
+        console.log('Profile picture uploaded:', data)
+        isUploading.value = false
+        errorMessage.value = ''
+        emit('next', data.avatar_url || previewImage.value)
+    },
+    (error) => {
+        console.error('Profile picture upload error:', error)
+        isUploading.value = false
+        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to upload profile picture'
+        errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
+    }
+)
+
 const onNext = () => {
-    if (previewImage.value) {
-        // In a real app, you would upload the image here and get a URL
-        // For now, we'll just pass the data URL
+    if (selectedFile.value && !isUploading.value) {
+        isUploading.value = true
+        uploadMutation.mutate({ profilePicture: selectedFile.value })
+    } else if (previewImage.value && !selectedFile.value) {
+        // Already uploaded or using existing image
         emit('next', previewImage.value)
     }
 }

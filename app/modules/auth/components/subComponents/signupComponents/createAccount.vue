@@ -1,14 +1,14 @@
 <template>
-    <div
-        class="fixed inset-0 border-alternate flex items-center justify-center z-50 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="true"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6 text-primary" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.title') }}</h2>
@@ -127,8 +127,7 @@
                 {{ error }}
             </h3>
             <h3 class="text-green text-sm mt-2" v-if="success">{{ success }}</h3>
-        </div>
-    </div>
+    </Popup>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
@@ -136,7 +135,7 @@ import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from '../recaptcha.vue'
 import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
-import closeButton from '../closeButton.vue'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
 
 const { locale } = useI18n()

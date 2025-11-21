@@ -49,7 +49,7 @@ export function useLogoutQuery(
         onSuccess: (data) => {
             onSuccess?.(data)
             userStore.logout()
-            window.location.reload()
+            window.location.href ='/auth/login'
         },
         onError: (error) => onError?.(error),
     })

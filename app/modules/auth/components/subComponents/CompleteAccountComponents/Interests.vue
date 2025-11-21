@@ -1,18 +1,17 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-alternate/10 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="false"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        headerClass=""
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
-
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
-
-            <!-- Back Button -->
-            <backButton @close="$emit('back')" />
+        <!-- Back Button -->
+        <backButton @close="$emit('back')" />
+        
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.title') }}</h2>
@@ -69,19 +68,22 @@
             >
                 {{ $t('auth.common.skip') }}
             </button>
-        </div>
-    </div>
+    </Popup>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import closeButton from '../closeButton.vue'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { useUpdateInterestsMutation } from '../../../queries/useCompleteProfileQuery'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
+
+const errorMessage = ref('')
+const isSubmitting = ref(false)
 
 interface Interest {
     id: string
@@ -132,9 +134,29 @@ const toggleInterest = (id: string) => {
     }
 }
 
-const onNext = () => {
-    if (selectedInterests.value.length >= 3) {
+const interestsMutation = useUpdateInterestsMutation(
+    (data) => {
+        console.log('Interests updated:', data)
+        isSubmitting.value = false
+        errorMessage.value = ''
         emit('finish', selectedInterests.value)
+    },
+    (error) => {
+        console.error('Interests update error:', error)
+        isSubmitting.value = false
+        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update interests'
+        errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
+    }
+)
+
+const onNext = () => {
+    if (selectedInterests.value.length >= 3 && !isSubmitting.value) {
+        isSubmitting.value = true
+        // Convert string IDs to numbers (assuming interests have numeric IDs from backend)
+        const categoryIds = interests
+            .filter(interest => selectedInterests.value.includes(interest.id))
+            .map((_, index) => index + 1) // You may need to adjust this based on actual backend IDs
+        interestsMutation.mutate({ categoryIds })
     }
 }
 
