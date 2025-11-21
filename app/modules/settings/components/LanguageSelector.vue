@@ -1,7 +1,5 @@
 <template>
-    <Popup
-        :is-open="isOpen"
-        @close="handleClose">
+    <Popup :is-open="isOpen" @close="handleClose">
         <h2 class="text-4xl font-bold px-12 mb-2 mt-7">
             {{ t('settings.languages.selectAppLanguage') }}
         </h2>
@@ -12,25 +10,20 @@
         <div class="mt-8 px-12 space-y-4">
             <button
                 id="english-button"
-                class="w-full flex justify-between items-center
-                px-1 py-2 text-primary rounded"
-                @click="selected = 'en'">
-                <div class="font-semibold">
-                    English – English
-                </div>
+                class="w-full flex justify-between items-center px-1 py-2 text-primary rounded"
+                @click="selected = 'en'"
+            >
+                <div class="font-semibold">English – English</div>
                 <CheckCircle2 v-if="selected === 'en'" class="text-accent" :size="20" />
                 <Circle v-else class="opacity-40" :size="20" />
             </button>
 
             <button
                 id="arabic-button"
-                class="w-full flex justify-between items-center
-                px-1 py-2 text-primary rounded"
+                class="w-full flex justify-between items-center px-1 py-2 text-primary rounded"
                 @click="selected = 'ar'"
             >
-                <div class="font-semibold">
-                    Arabic – العربية
-                </div>
+                <div class="font-semibold">Arabic – العربية</div>
                 <CheckCircle2 v-if="selected === 'ar'" class="text-accent" :size="20" />
                 <Circle v-else class="opacity-40" :size="20" />
             </button>
@@ -44,7 +37,6 @@
                 {{ $t('settings.languages.next') }}
             </Button>
         </div>
-
     </Popup>
 </template>
 
@@ -56,20 +48,29 @@ import { userSettingsQueries } from '../queries/userSettingsQueries'
 import type { User } from '~/modules/Common/types/user'
 import { getUser } from '~/utils/helpers'
 import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
+const { t, locale } = useI18n()
 
 const user = getUser() as User
 const { useChangeLanguage } = userSettingsQueries()
-const selected = ref<'en' | 'ar'>(user.language as 'en' | 'ar' || 'en')
+const selected = ref<'en' | 'ar'>((locale.value as 'en' | 'ar') || 'en')
 
 const props = defineProps<{
     isOpen: boolean
     handleClose: () => void
 }>()
+function setCookie(name: string, value: string, days = 365) {
+    if (typeof document === 'undefined') return
+    const expires = new Date()
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`
+}
 
 const handleConfirm = () => {
-    console.log('Selected:', selected.value)
     props.handleClose()
     useChangeLanguage.mutate({ language: selected.value })
+
+    setCookie(LOCALE_COOKIE_KEY, selected.value)
+    window.location.reload()
 }
 </script>

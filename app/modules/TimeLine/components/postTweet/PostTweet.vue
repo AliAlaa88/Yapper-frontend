@@ -11,7 +11,7 @@
         <div class="flex-1">
             <FormattedTextarea
                 v-model="content"
-                placeholder="What's happening?"
+                :placeholder="t('timeline.postTweet.placeholder')"
                 id="post-tweet-textarea"
             />
 
@@ -46,7 +46,7 @@
                         <img
                             v-if="media.type === 'image'"
                             :src="media.url"
-                            :alt="`Uploaded media ${index + 1}`"
+                            :alt="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
                             class="w-full h-full object-cover"
                         />
                         <video
@@ -88,7 +88,7 @@
                                 </button>
                             </template>
                             <template #content>
-                                <div :class="contentClass">GIFs</div>
+                                <div :class="contentClass">{{ t('timeline.postTweet.gifs') }}</div>
                             </template>
                         </CustomToolTip>
 
@@ -111,7 +111,7 @@
                                 </button>
                             </template>
                             <template #content>
-                                <div :class="contentClass">Emoji</div>
+                                <div :class="contentClass">{{ t('timeline.postTweet.emoji') }}</div>
                             </template>
                         </CustomToolTip>
                         <EmojiPicker
@@ -127,7 +127,7 @@
                     id="post-tweet-post-btn"
                     class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    Post
+                    {{ t('timeline.postTweet.post') }}
                 </button>
             </div>
         </div>
@@ -146,6 +146,7 @@ import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
+import { useI18n } from 'vue-i18n'
 
 const props = withDefaults(
     defineProps<{
@@ -156,6 +157,7 @@ const props = withDefaults(
     },
 )
 
+const { t } = useI18n()
 const user = getUser() as UserType
 
 interface MediaItem {
