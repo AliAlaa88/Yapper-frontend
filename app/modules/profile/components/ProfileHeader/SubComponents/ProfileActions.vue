@@ -12,13 +12,16 @@
         </button>
         <div v-if="showList">
             <div class="fixed inset-0 bg-gray-700/50 z-40 sm:hidden" />
-            <ProfileActionsMenu />
+            <ProfileActionsMenu :is-tweet="isTweet"/>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import ProfileActionsMenu from './ProfileActionsMenu.vue'
+defineProps<{
+    isTweet: boolean
+}>()
 const showList = ref(false)
 provide('show-list', showList)
 

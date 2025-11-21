@@ -50,6 +50,10 @@
         >
             <Banner />
         </aside>
+
+        <!-- Global Modals -->
+        <SnackBar />
+        <ConfirmationModal />
     </main>
 </template>
 
@@ -60,6 +64,12 @@ import { useI18n } from 'vue-i18n'
 import Sidebar from '~/modules/TimeLine/components/sidebar/Sidebar.vue'
 import MobileSidebar from '~/modules/TimeLine/components/sidebar/MobileSidebar.vue'
 import Banner from '~/modules/TimeLine/components/banner/Banner.vue'
+import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
+import ConfirmationModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
+import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+
+// Provide snackbar and confirmation globally
+useProfileProviders()
 
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
