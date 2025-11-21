@@ -99,7 +99,10 @@ const stats = computed(() => ({
   replies: props.reply.replies_count,
   retweets: props.reply.reposts_count,
   views: props.reply.views_count,
-  is_liked: props.reply.is_liked
+  is_liked: props.reply.is_liked,
+  is_reposted: props.reply.is_reposted,
+  is_bookmarked: props.reply.is_bookmarked,
+  username: props.reply.user.username
 }))
 
 // Computed profile URL
