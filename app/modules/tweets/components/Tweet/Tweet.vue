@@ -6,7 +6,7 @@
     >
         <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
             <Repeat2 :size="16" />
-            <span class="text-sm">Reposted</span>
+            <span class="text-sm">{{ $t('tweets.reposted') }}</span>
         </div>
         
         <div class="flex gap-3">
@@ -58,7 +58,7 @@
                             :id="`tweet-menu-button-${id}`"
                             class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
                             @click.stop="toggleActionsMenu"
-                            :aria-label="$t('profile.moreActions')"
+                            :aria-label="$t('tweets.moreActions')"
                         >
                             <MoreHorizontal :size="16" />
                         </button>

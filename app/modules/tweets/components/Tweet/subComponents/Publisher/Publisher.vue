@@ -81,7 +81,7 @@
         <span class="text-secondary text-sm">@{{ username }}</span>
         <span class="text-secondary text-sm">·</span>
         <span class="text-secondary text-sm hover:underline cursor-pointer">
-            {{ formatDate(createdAt) }}
+            {{ formatDate(createdAt, locale) }}
         </span>
     </div>
 </template>
@@ -101,6 +101,7 @@ const props = defineProps<{
 }>()
 
 const { id, name, username, avatar_url, link } = toRefs(props.publisher)
+const { locale } = useI18n()
 
 // Use the utility function for consistent profile URLs
 const linkComputed = computed(() => getProfileUrl(props.publisher))

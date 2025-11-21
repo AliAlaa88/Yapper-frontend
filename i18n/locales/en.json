@@ -591,5 +591,39 @@
         "useSystemSetting": "Use system setting",
         "useSystemSetting_desc": "Your theme will automatically switch based on your device settings.",
         "choosePreferredTheme": "Choose your preferred theme"
+    },
+    "tweets": {
+        "reposted": "Reposted",
+        "moreActions": "More actions",
+        "actions": {
+            "reply": "Reply",
+            "retweet": "Retweet",
+            "undoRetweet": "Undo Retweet",
+            "like": "Like",
+            "unlike": "Unlike",
+            "views": "Views",
+            "bookmark": "Bookmark",
+            "removeBookmark": "Remove Bookmark",
+            "share": "Share",
+            "linkCopied": "Link copied!"
+        },
+        "loading": {
+            "tweets": "Loading tweets...",
+            "tweetDetails": "Loading tweet details...",
+            "replies": "Loading replies..."
+        },
+        "empty": {
+            "noTweets": "No tweets yet",
+            "noTweetsDescription": "When tweets are posted, they'll show up here. Check back later!",
+            "noReplies": "No replies yet",
+            "noRepliesDescription": "Be the first to reply to this tweet!"
+        },
+        "errors": {
+            "loadFailed": "Failed to load tweets",
+            "tweetNotFound": "Tweet not found",
+            "tweetNotFoundDescription": "This tweet may have been deleted or the link is incorrect.",
+            "tryAgain": "Try again",
+            "goBack": "Go Back"
+        }
     }
 }

@@ -17,7 +17,7 @@
             id="tweet-detail-menu-button"
             class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
             @click.stop="toggleActionsMenu"
-            :aria-label="$t('profile.moreActions')"
+            :aria-label="$t('tweets.moreActions')"
           >
             <MoreHorizontal :size="16" />
           </button>
@@ -35,7 +35,7 @@
       />
       <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
         <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
-          {{ formatDetailDate(tweetDetails.created_at) }}
+          {{ formatDetailDate(tweetDetails.created_at, locale) }}
         </time>
       </div>
       <Stats
@@ -48,14 +48,14 @@
       <!-- Loading Replies State -->
       <div v-if="isFetchingReplies" class="p-8 text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
-        <p class="text-secondary">Loading replies...</p>
+        <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
       </div>
       
       <!-- No Replies State -->
       <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
         <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
-        <p class="text-lg">No replies yet</p>
-        <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
+        <p class="text-lg">{{ $t('tweets.empty.noReplies') }}</p>
+        <p class="text-sm mt-1">{{ $t('tweets.empty.noRepliesDescription') }}</p>
       </div>
 
       <!-- Replies List -->
@@ -71,32 +71,32 @@
     <!-- Loading State -->
     <div v-if="isLoading" class="p-8 text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
-      <p class="text-secondary">Loading tweet details...</p>
+      <p class="text-secondary">{{ $t('tweets.loading.tweetDetails') }}</p>
     </div>
 
     <!-- Tweet Not Found State (when data is null but no error) -->
     <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
       <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
-      <p class="text-primary text-lg font-semibold mb-2">Tweet not found</p>
-      <p class="text-secondary text-sm">This tweet may have been deleted or the link is incorrect.</p>
+      <p class="text-primary text-lg font-semibold mb-2">{{ $t('tweets.errors.tweetNotFound') }}</p>
+      <p class="text-secondary text-sm">{{ $t('tweets.errors.tweetNotFoundDescription') }}</p>
       <button
         @click="$router.back()"
         class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
       >
-        Go Back
+        {{ $t('tweets.errors.goBack') }}
       </button>
     </div>
 
     <!-- Error State -->
     <div v-if="error" class="p-8 text-center">
       <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
-      <p class="text-red text-lg">{{ error?.message || 'Failed to load tweet' }}</p>
+      <p class="text-red text-lg">{{ error?.message || $t('tweets.errors.loadFailed') }}</p>
       <button
         id="tweet-detail-retry-button"
         @click="fetchTweetDetails()"
         class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
       >
-        Try Again
+        {{ $t('tweets.errors.tryAgain') }}
       </button>
     </div>
   </div>
@@ -120,6 +120,7 @@ import { useQueryClient } from '@tanstack/vue-query'
 const route = useRoute()
 const router = useRouter()
 const tweetId = computed(() => route.params.tweetId)
+const { locale } = useI18n()
 
 const showActionsMenu = ref(false)
 provide('show-list', showActionsMenu)

@@ -12,11 +12,11 @@
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(replies) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(replies, locale) }}</span>
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">Reply</div>
+                <div :class="contentClass">{{ $t('tweets.actions.reply') }}</div>
             </template>
         </CustomToolTip>
 
@@ -34,11 +34,11 @@
                     <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
                         <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'"  />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(localRepostsCount) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(localRepostsCount, locale) }}</span>
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">{{ localIsReposted ? 'Undo Retweet' : 'Retweet' }}</div>
+                <div :class="contentClass">{{ localIsReposted ? $t('tweets.actions.undoRetweet') : $t('tweets.actions.retweet') }}</div>
             </template>
         </CustomToolTip>
 
@@ -60,11 +60,11 @@
                             :class="{ 'animate-like': isAnimating }"
                         />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(localLikesCount) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(localLikesCount, locale) }}</span>
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">{{ localIsLiked ? 'Unlike' : 'Like' }}</div>
+                <div :class="contentClass">{{ localIsLiked ? $t('tweets.actions.unlike') : $t('tweets.actions.like') }}</div>
             </template>
         </CustomToolTip>
 
@@ -79,11 +79,11 @@
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <BarChart3 :size="18" />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(views || 0) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(views || 0, locale) }}</span>
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">Views</div>
+                <div :class="contentClass">{{ $t('tweets.actions.views') }}</div>
             </template>
         </CustomToolTip>
 
@@ -104,7 +104,7 @@
                 </button>
             </template>
             <template #content>
-                <div :class="contentClass">{{ localIsBookmarked ? 'Remove Bookmark' : 'Bookmark' }}</div>
+                <div :class="contentClass">{{ localIsBookmarked ? $t('tweets.actions.removeBookmark') : $t('tweets.actions.bookmark') }}</div>
             </template>
         </CustomToolTip>
 
@@ -150,7 +150,14 @@ const isAnimating = ref(false);
 const localIsReposted = ref(is_reposted.value);
 const localRepostsCount = ref(retweets.value);
 const localIsBookmarked = ref(is_bookmarked.value);
-const shareTooltipText = ref('Share');
+const shareTooltipText = ref('');
+const { t, locale } = useI18n()
+
+// Initialize share tooltip text
+onMounted(() => {
+    shareTooltipText.value = t('tweets.actions.share')
+})
+
 const queryClient = useQueryClient()
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
@@ -457,9 +464,9 @@ const handleShareClick = async () => {
             await navigator.clipboard.writeText(tweetUrl)
             
             // Update tooltip to show feedback
-            shareTooltipText.value = 'Link copied!'
+            shareTooltipText.value = t('tweets.actions.linkCopied')
             setTimeout(() => {
-                shareTooltipText.value = 'Share'
+                shareTooltipText.value = t('tweets.actions.share')
             }, 2000)
         }
     } catch (error) {
