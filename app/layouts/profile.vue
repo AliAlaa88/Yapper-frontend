@@ -17,6 +17,7 @@ import { useProfile } from '~/modules/profile/composables/useProfile'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
 import { watch } from 'vue'
+import MainLayout from './main-layout.vue'
 
 useProfileProviders()
 
