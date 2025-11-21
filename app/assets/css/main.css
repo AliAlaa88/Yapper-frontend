@@ -506,9 +506,10 @@
 
     .focus\:border-red:focus {
         border-color: var(--color-x-red-hover);
-    /* Animation classes */
-    .animate-like {
-        animation: like 0.6s ease-in-out;
+        /* Animation classes */
+        .animate-like {
+            animation: like 0.6s ease-in-out;
+        }
     }
 }
 
