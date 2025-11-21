@@ -19,11 +19,13 @@ export interface User extends AbstractUser {
     avatar_url: string
     verified: boolean
     is_following: boolean | null
-    link: string  | null
-    bio: string  | null
-    followers: number  | null
-    following: number  | null
+    link: string | null
+    bio: string | null
+    followers: number | null
+    following: number | null
     cover_url: string | null
     country: string | null
     created_at: string
+    birth_date: string | null
+    language: string | null
 }

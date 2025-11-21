@@ -1,31 +1,27 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="true"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
-
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">Find your X account</h2>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.forgotPassword.step1Title') }}</h2>
             <!-- Description -->
-            <p class="text-muted mb-6">
-                Enter the email, phone number, or username associated with your account to change
-                your password.
-            </p>
+            <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step1Info') }}</p>
 
             <!-- Input -->
             <input
                 id="input-identifier-forgot-password-s1"
                 type="text"
-                placeholder="Phone, email, or username"
+                :placeholder="$t('auth.forgotPassword.identifierPlaceholder')"
                 v-model="identifier"
-                class="w-full bg-transparent border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:border-gray-300 mb-4"
+                class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue mb-4 shadow-sm transition-colors"
             />
 
             <!-- Error Message -->
@@ -43,17 +39,20 @@
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
-        </div>
-    </div>
+    </Popup>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import { useForgotPasswordQuery } from '../../../queries/useForgetPasswordQuery'
-import closeButton from '../closeButton.vue'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for identifier
 const identifier = defineModel<string>('identifier', { default: '' })
@@ -67,7 +66,6 @@ const emit = defineEmits<{
 
 const forgotPasswordMutation = useForgotPasswordQuery(
     (data: any) => {
-        console.log('Forgot Password Step 1 Success:', data)
         errorMessage.value = ''
         emit('next', identifier.value)
     },

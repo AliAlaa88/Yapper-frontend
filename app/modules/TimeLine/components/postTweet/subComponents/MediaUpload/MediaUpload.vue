@@ -8,7 +8,7 @@
                 id="post-tweet-media-upload-btn"
                 class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                <Image class="w-5 h-5 text-blue" />
+                <Image class="w-5 h-5 text-accent" />
             </button>
         </template>
         <template #content>

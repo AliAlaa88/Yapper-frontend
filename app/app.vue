@@ -19,4 +19,6 @@ const currentDirection = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)
     return currentLocaleObj?.dir || 'ltr'
 })
+
+
 </script>

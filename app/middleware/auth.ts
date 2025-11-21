@@ -1,8 +1,11 @@
-export default defineNuxtRouteMiddleware((to) => {
-    const user = localStorage.getItem('user')
-    const token = localStorage.getItem('access_token')
-    const isAuthenticated = !!(user && token)
+import { useNuxtApp } from "#app"
+import Cookies from "js-cookie";
+export default defineNuxtRouteMiddleware(async (to) => {
+    const { $authService } = useNuxtApp()
 
+    const user = localStorage.getItem('user')
+    const token = useCookie('access_token').value
+    const isAuthenticated = !!(user && token)
     // Check if route requires authentication
     const requiresAuth = to.meta.requiresAuth !== false
 

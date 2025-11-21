@@ -1,40 +1,55 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="true"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6 text-primary">Create Your account</h2>
+            <h2 class="text-3xl font-bold mb-6 text-primary" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.title') }}</h2>
 
             <!-- Name Input -->
-            <input
-                id="input-name-signup-s1"
-                type="text"
-                placeholder="name"
-                v-model="name"
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
-            />
+        <form @submit.prevent="onNext">
+            <div class="mb-4">
+                <input
+                    id="input-name-signup-s1"
+                    type="text"
+                    :placeholder="$t('auth.signup.namePlaceholder')"
+                    v-model="name"
+                    @blur="validateNameField"
+                    @input="clearNameError"
+                    :class="[
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        nameError ? 'border-red focus:border-red' : ''
+                    ]"
+                />
+                <p v-if="nameError" class="text-red text-xs mt-1">{{ nameError }}</p>
+            </div>
 
             <!-- Email Input -->
-            <input
-                id="input-email-signup-s1"
-                type="email"
-                placeholder="email"
-                v-model="email"
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
-            />
-            <h3 class="text-l font-bold text-left">Date of Birth</h3>
-            <p class="text-primary mb-4 text-sm">
-                This will not be shown publicly. Confirm your own age, even if this account is for a
-                business, a pet, or something else.
-            </p>
+            <div class="mb-4">
+                <input
+                    id="input-email-signup-s1"
+                    type="email"
+                    :placeholder="$t('auth.signup.emailPlaceholder')"
+                    v-model="email"
+                    @blur="validateEmailField"
+                    @input="clearEmailError"
+                    :class="[
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        emailError ? 'border-red focus:border-red' : ''
+                    ]"
+                />
+                <p v-if="emailError" class="text-red text-xs mt-1">{{ emailError }}</p>
+            </div>
+            <h3 class="text-l font-bold" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.dobTitle') }}</h3>
+            <p class="text-primary mb-4 text-sm">{{ $t('auth.signup.dobInfo') }}</p>
+            <p v-if="dobError" class="text-red text-xs mb-2">{{ dobError }}</p>
             <!-- Date of Birth Dropdowns -->
             <div class="flex gap-3 mb-4">
                 <!-- Month -->
@@ -42,15 +57,16 @@
                     <select
                         id="select-month-signup-s1"
                         v-model="month"
-                        class="w-full bg-transparent cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-primary appearance-none text-primary"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>Month</option>
+                        <option value="" disabled selected>{{ $t('auth.signup.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
                             {{ m.label }}
                         </option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -60,13 +76,14 @@
                     <select
                         id="select-day-signup-s1"
                         v-model="day"
-                        class="w-full bg-transparent cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-primary appearance-none text-primary"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>Day</option>
+                        <option value="" disabled selected>{{ $t('auth.signup.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
@@ -76,58 +93,64 @@
                     <select
                         id="select-year-signup-s1"
                         v-model="year"
-                        class="w-full bg-transparent cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-primary appearance-none text-primary"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>Year</option>
+                        <option value="" disabled selected>{{ $t('auth.signup.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
                     </select>
                     <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                        :class="isArabic ? 'left-3' : 'right-3'"
                         >▼</span
                     >
                 </div>
             </div>
-
             <!-- Next Button -->
             <button
                 id="button-next-signup-s1"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
-                @click="onNext"
+                type="submit"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
+            </form>
             <!-- reCAPTCHA -->
             <div class="flex justify-center mt-4">
                 <Recaptcha
                     ref="recaptchaRef"
                     class="w-fit cursor-pointer"
                     @verified="onRecaptchaVerified"
+                    @error="onCaptchaError"
                 />
             </div>
             <h3 id="error-message-signup-s1" class="text-red text-sm mt-2" v-if="error">
                 {{ error }}
             </h3>
             <h3 class="text-green text-sm mt-2" v-if="success">{{ success }}</h3>
-        </div>
-    </div>
+    </Popup>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from '../recaptcha.vue'
 import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
-import closeButton from '../closeButton.vue'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
+import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
 
-// Define props for v-model bindings
-const name = defineModel<string>('name', { default: '' })
-const email = defineModel<string>('email', { default: '' })
-const month = defineModel<string>('month', { default: '' })
-const day = defineModel<string>('day', { default: '' })
-const year = defineModel<string>('year', { default: '' })
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
+const name = ref('')
+const email = ref('')
+const month = ref('')
+const day = ref('')
+const year = ref('')
 const error = ref('')
 const success = ref('')
-
+const nameError = ref('')
+const emailError = ref('')
+const dobError = ref('')
 // Month options
 const months = [
     { value: '1', label: 'January' },
@@ -157,6 +180,8 @@ const recaptcha = ref('')
 const onRecaptchaVerified = (token: string) => {
     recaptcha.value = token
 }
+const onCaptchaError = () => {
+}
 const registerMutation = useRegisterS1Query(
     (data) => {
         success.value = 'Registration successful! Please verify your email.'
@@ -164,7 +189,6 @@ const registerMutation = useRegisterS1Query(
         emit('next', email.value)
     },
     (err: any) => {
-        console.log(err)
         const errorMsg =
             err?.response?.data?.message || err?.message || 'Registration failed. Please try again.'
         if (Array.isArray(errorMsg)) error.value = errorMsg[0]
@@ -177,7 +201,63 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
+const { t } = useI18n()
+
+// Validation functions
+const validateNameField = () => {
+    const result = validateName(name.value)
+    nameError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    return result.valid
+}
+
+const validateEmailField = () => {
+    const result = validateEmail(email.value)
+    emailError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    return result.valid
+}
+
+const validateDobField = () => {
+    const result = validateDateOfBirth(year.value, month.value, day.value)
+    dobError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    return result.valid
+}
+
+const clearNameError = () => {
+    nameError.value = ''
+}
+
+const clearEmailError = () => {
+    emailError.value = ''
+    error.value = ''
+}
+
+// Watch for DOB changes to clear error
+watch([month, day, year], () => {
+    if (dobError.value) {
+        dobError.value = ''
+    }
+})
+
+watch(recaptcha, (newVal) => {
+    if (newVal && error.value === 'Please complete the reCAPTCHA.') {
+        error.value = ''
+    }
+})
+
+watch(email,()=>{
+ error.value=''   
+})
+
 const onNext = async () => {
+    // Validate all fields
+    const isNameValid = validateNameField()
+    const isEmailValid = validateEmailField()
+    const isDobValid = validateDobField()
+
+    if (!isNameValid || !isEmailValid || !isDobValid) {
+        error.value = 'Please fix the errors above'
+        return
+    }
     // Combine date values if needed
     const dateOfBirth =
         month.value && day.value && year.value
@@ -191,7 +271,6 @@ const onNext = async () => {
         error.value = '' // Clear previous errors
         success.value = ''
 
-        console.log('Next clicked:', name.value, email.value, dateOfBirth, recaptcha.value)
         registerMutation.mutate({
             Name: name.value,
             Email: email.value,

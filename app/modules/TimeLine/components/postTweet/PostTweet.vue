@@ -84,7 +84,7 @@
                                     :disabled="mediaUrls.length >= 4"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <ImagePlay class="w-5 h-5 text-blue" />
+                                    <ImagePlay class="w-5 h-5 text-accent" />
                                 </button>
                             </template>
                             <template #content>
@@ -107,7 +107,7 @@
                                     id="post-tweet-emoji-picker-btn"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
                                 >
-                                    <Smile class="w-5 h-5 text-blue" />
+                                    <Smile class="w-5 h-5 text-accent" />
                                 </button>
                             </template>
                             <template #content>

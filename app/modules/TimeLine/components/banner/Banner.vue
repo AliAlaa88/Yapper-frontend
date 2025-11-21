@@ -32,7 +32,7 @@
                 <p class="text-muted text-sm">8.7K posts</p>
             </div>
             <button
-                class="w-full px-4 py-3 text-left text-sm text-blue hover:bg-hover transition-colors"
+                class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
                 Show more
             </button>
@@ -82,7 +82,7 @@
                 </button>
             </div>
             <button
-                class="w-full px-4 py-3 text-left text-sm text-blue hover:bg-hover transition-colors"
+                class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
                 Show more
             </button>

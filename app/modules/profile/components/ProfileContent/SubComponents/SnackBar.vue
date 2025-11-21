@@ -8,7 +8,7 @@
         leave-to-class="opacity-0 translate-y-10">
         <div
             v-if="showSnackbar"
-            class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-blue
+            class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-accent
             text-primary px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-[100]">
             <span>
                 {{ snackbar.username !== '' ? `@${snackbar.username}` : '' }}{{ snackbar.message }}

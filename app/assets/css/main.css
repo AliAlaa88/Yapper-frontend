@@ -69,6 +69,48 @@
 }
 
 /* ===========================
+   🎨 ACCENT COLOR SYSTEM
+   =========================== */
+@layer base {
+    /* Default accent color (orange) */
+    :root {
+        --accent-color: #ff7a00;
+        --accent-color-hover: #e66d00;
+    }
+
+    /* Dynamic accent colors based on user selection */
+    [data-color="blue"] {
+        --accent-color: #1d9bf0;
+        --accent-color-hover: #1a8cd8;
+    }
+
+    [data-color="yellow"] {
+        --accent-color: #ffd400;
+        --accent-color-hover: #f7c600;
+    }
+
+    [data-color="pink"] {
+        --accent-color: #f91880;
+        --accent-color-hover: #e0156e;
+    }
+
+    [data-color="purple"] {
+        --accent-color: #7856ff;
+        --accent-color-hover: #6643e6;
+    }
+
+    [data-color="orange"] {
+        --accent-color: #ff7a00;
+        --accent-color-hover: #e66d00;
+    }
+
+    [data-color="green"] {
+        --accent-color: #00ba7c;
+        --accent-color-hover: #00a368;
+    }
+}
+
+/* ===========================
    🌓 DARK/LIGHT MODE OVERRIDES
    =========================== */
 @layer base {
@@ -111,6 +153,85 @@
    ⚙️ CUSTOM UTILITIES
    =========================== */
 @layer utilities {
+
+     /* ===========================
+       ACCENT COLOR UTILITIES
+       =========================== */
+    .text-accent {
+        color: var(--accent-color);
+    }
+
+    .bg-accent {
+        background-color: var(--accent-color);
+    }
+
+    .border-accent {
+        border-color: var(--accent-color);
+    }
+
+    .fill-accent {
+        fill: var(--accent-color);
+    }
+
+    /* Accent with opacity */
+    .bg-accent\/5 {
+        background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
+    }
+
+    .bg-accent\/10 {
+        background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    }
+
+    .bg-accent\/20 {
+        background-color: color-mix(in srgb, var(--accent-color) 20%, transparent);
+    }
+
+    .bg-accent\/60 {
+        background-color: color-mix(in srgb, var(--accent-color) 60%, transparent);
+    }
+
+    .bg-accent\/80 {
+        background-color: color-mix(in srgb, var(--accent-color) 80%, transparent);
+    }
+
+    .text-accent\/50 {
+        color: color-mix(in srgb, var(--accent-color) 50%, transparent);
+    }
+
+    /* Hover states for accent */
+    .hover\:text-accent:hover {
+        color: var(--accent-color);
+    }
+
+    .hover\:bg-accent:hover {
+        background-color: var(--accent-color-hover);
+    }
+
+    .hover\:bg-accent\/10:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    }
+
+    .hover\:border-accent:hover {
+        border-color: var(--accent-color);
+    }
+
+    .focus\:border-accent:focus {
+        border-color: var(--accent-color);
+    }
+
+    .peer:focus ~ .peer-focus\:text-accent {
+        color: var(--accent-color);
+    }
+
+    /* Ring utilities for accent */
+    .ring-accent {
+        --tw-ring-color: var(--accent-color);
+    }
+
+    .focus\:ring-accent:focus {
+        --tw-ring-color: var(--accent-color);
+    }
+
     /* Text colors */
     .text-primary {
         color: var(--color-x-black);
@@ -201,6 +322,23 @@
     .border-primary {
         border-color: var(--color-x-border);
     }
+
+    .border-alternate {
+        border-color: var(--color-x-alternate);
+    }
+
+    .border-blue {
+        border-color: var(--color-x-blue);
+    }
+
+    .border-green {
+        border-color: var(--color-x-green);
+    }
+
+    .border-red {
+        border-color: var(--color-x-red);
+    }
+
     .border-tooltip {
         border-color: var(--color-x-gray-light);
     }
@@ -262,6 +400,14 @@
 
     .text-2xl {
         font-size: var(--font-size-2xl);
+    }
+    /* Icon utilities */
+    .github-icon {
+      filter: invert(1); 
+    }
+
+    .dark .github-icon {
+      filter: invert(0); 
     }
 
     /* Hover utilities */
@@ -337,6 +483,29 @@
         color: var(--color-x-border);
     }
 
+    .hover\:border-blue:hover {
+        border-color: var(--color-x-blue-hover);
+    }
+
+    .hover\:border-red:hover {
+        border-color: var(--color-x-red-hover);
+    }
+
+    /* Hover: github icon */
+    .button-hover-invert:hover .github-icon {
+      filter: invert(0);           
+    }
+    .dark .button-hover-invert:hover .github-icon {
+      filter: invert(1);          
+    }
+    /* Focus utilities */
+
+    .focus\:border-blue:focus {
+        border-color: var(--color-x-blue-hover);
+    }
+
+    .focus\:border-red:focus {
+        border-color: var(--color-x-red-hover);
     /* Animation classes */
     .animate-like {
         animation: like 0.6s ease-in-out;

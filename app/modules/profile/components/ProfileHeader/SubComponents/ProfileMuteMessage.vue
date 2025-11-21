@@ -3,7 +3,7 @@
         <span class="text-muted text-[15px]">{{ $t('profile.muted.message') }}</span>
         <span
             id="unmute-button"
-            class="cursor-pointer hover:underline text-blue"
+            class="cursor-pointer hover:underline text-accent"
             @click="handleClick"
         >
             {{ $t('profile.muted.action') }}

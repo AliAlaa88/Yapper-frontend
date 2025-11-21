@@ -1,22 +1,21 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="false"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        headerClass=""
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
-
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
-
-            <!-- Back Button -->
-            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+        <!-- Back Button -->
+        <backButton @close="$emit('back')" />
+        
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">Select your language</h2>
-            <p class="text-muted mb-6">This will help us personalize your Yapper experience.</p>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.language.title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.language.info') }}</p>
 
             <!-- Language List -->
             <div class="mb-6">
@@ -25,8 +24,8 @@
                     :key="lang.code"
                     :id="`button-language-${lang.code}`"
                     :class="[
-                        'w-full text-left px-4 py-3 rounded-lg transition flex items-center justify-between',
-                        selectedLanguage === lang.code ? 'bg-blue text-primary' : 'hover:bg-hover',
+                        'w-full text-left px-4 py-3 rounded-lg transition duration-200 flex items-center justify-between',
+                        selectedLanguage === lang.code ? 'bg-alternate text-alternate' : 'text-primary hover:bg-hover',
                     ]"
                     @click="selectLanguage(lang.code)"
                 >
@@ -58,26 +57,33 @@
                 ]"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
 
             <!-- Skip Button -->
             <button
                 id="button-skip-language"
-                class="w-full text-muted hover:text-primary transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
-                Skip for now
+                {{ $t('auth.common.skip') }}
             </button>
-        </div>
-    </div>
+    </Popup>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import closeButton from '../closeButton.vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { useUpdateLanguageMutation } from '../../../queries/useCompleteProfileQuery'
+
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
+
+const errorMessage = ref('')
+const isSubmitting = ref(false)
 
 interface Language {
     code: string
@@ -104,9 +110,24 @@ const selectLanguage = (code: string) => {
     selectedLanguage.value = code
 }
 
+const languageMutation = useUpdateLanguageMutation(
+    (data) => {
+        isSubmitting.value = false
+        errorMessage.value = ''
+        emit('next', selectedLanguage.value!)
+    },
+    (error) => {
+        console.error('Language update error:', error)
+        isSubmitting.value = false
+        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update language'
+        errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
+    }
+)
+
 const onNext = () => {
-    if (selectedLanguage.value) {
-        emit('next', selectedLanguage.value)
+    if (selectedLanguage.value && !isSubmitting.value) {
+        isSubmitting.value = true
+        languageMutation.mutate({ language: selectedLanguage.value })
     }
 }
 

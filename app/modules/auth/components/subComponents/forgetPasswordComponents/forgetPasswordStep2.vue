@@ -1,33 +1,39 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="false"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        headerClass=""
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
+        <!-- Back Button -->
+        <backButton @close="$emit('back')" />
 
-            <!-- Back Button -->
-            <backButton @close="$emit('back')" />
-
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">
-                We sent you a code to reset your password
-            </h2>
-            <p class="text-muted mb-6">Please enter the 6-digit code sent to your email address.</p>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.forgotPassword.step2Title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step2Info') }}</p>
 
             <!-- OTP Input -->
-            <input
-                id="input-otp-forgot-password-s2"
-                type="text"
-                placeholder="Enter OTP"
-                v-model="otp"
-                class="w-full bg-transparent border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-primary mb-4"
-            />
+            <div class="mb-4">
+                <input
+                    id="input-otp-forgot-password-s2"
+                    type="text"
+                    :placeholder="$t('auth.verifyOtp.otpPlaceholder')"
+                    v-model="otp"
+                    maxlength="6"
+                    @input="handleOtpInput"
+                    @blur="validateOtpField"
+                    :class="[
+                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
+                        otpError ? 'border-red focus:border-red' : ''
+                    ]"
+                />
+                <p v-if="otpError" class="text-red text-xs mt-1 text-center">{{ otpError }}</p>
+            </div>
 
             <!-- Error Message -->
             <p
@@ -44,23 +50,28 @@
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
-        </div>
-    </div>
+    </Popup>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useVerifyForgotPasswordOTPQuery } from '../../../queries/useForgetPasswordQuery'
-import closeButton from '../closeButton.vue'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { validateOtp } from '../../../utils/validators'
+
+const { locale, t } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for otp
 const otp = defineModel<string>('otp', { default: '' })
 
 const errorMessage = ref('')
+const otpError = ref('')
 
 const props = defineProps<{
     identifier: string
@@ -74,9 +85,8 @@ const emit = defineEmits<{
 
 const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
     (data: any) => {
-        console.log('Verify OTP Success:', data)
         errorMessage.value = ''
-        emit('next', data.data.resetToken)
+        emit('next', data.data.reset_token)
     },
     (error: any) => {
         console.error('Verify OTP Error:', error)
@@ -86,7 +96,23 @@ const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
     },
 )
 
+const handleOtpInput = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    otp.value = target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6)
+    otpError.value = ''
+    errorMessage.value = ''
+}
+
+const validateOtpField = () => {
+    const result = validateOtp(otp.value)
+    otpError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    return result.valid
+}
+
 const onNext = () => {
+    if (!validateOtpField()) {
+        return
+    }
     errorMessage.value = '' // Clear previous errors
     verifyOTPMutation.mutate({ identifier: props.identifier, token: otp.value })
 }
