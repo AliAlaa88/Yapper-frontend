@@ -13,8 +13,11 @@
 import Tabs from '~/modules/Common/components/Tabs'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
 import { isLoggedIn } from '~/utils/helpers'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const router = useRouter()
 
 onMounted(() => {
@@ -23,18 +26,18 @@ onMounted(() => {
     }
 })
 
-const tabs = [
+const tabs = computed(() => [
     {
-        label: 'For You',
+        label: t('timeline.timelineView.forYou'),
         value: 'foryou',
         test_id: 'timeline-view-foryou-tab',
     },
     {
-        label: 'Following',
+        label: t('timeline.timelineView.following'),
         value: 'following',
         test_id: 'timeline-view-following-tab',
     },
-]
+])
 
 const activeTab = ref('foryou')
 
