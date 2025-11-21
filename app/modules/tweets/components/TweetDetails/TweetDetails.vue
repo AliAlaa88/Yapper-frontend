@@ -22,8 +22,14 @@
 
     <!-- Replies Section -->
     <div v-if="tweetDetails && !isLoading && !error">
+      <!-- Loading Replies State -->
+      <div v-if="isFetchingReplies" class="p-8 text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
+        <p class="text-secondary">Loading replies...</p>
+      </div>
+      
       <!-- No Replies State -->
-      <div v-if="replies.length === 0" class="text-center py-12 text-secondary">
+      <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
         <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
         <p class="text-lg">No replies yet</p>
         <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
@@ -98,6 +104,7 @@ const {
   isLoading,
   error,
   replies,
+  isFetchingReplies,
   fetchTweetDetails
 } = useTweetDetails(tweetId.value, tweetTransitionStore.transitionTweet || undefined)
 
