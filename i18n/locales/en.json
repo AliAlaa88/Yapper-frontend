@@ -1,50 +1,172 @@
 {
-    "welcome": "Welcome to Yapper",
-    "hello": "Hello",
-    "goodbye": "Goodbye",
-    "language": "Language",
-    "switchLanguage": "Switch Language",
-    "currentLocale": "Current Locale",
-    "demo": {
-        "title": "i18n Demonstration",
-        "subtitle": "Internationalization with English and Arabic",
-        "description": "This page demonstrates the i18n implementation with translation, pluralization, interpolation, and RTL support."
+  "welcome": "Welcome to Yapper",
+  "hello": "Hello",
+  "goodbye": "Goodbye",
+  "language": "Language",
+  "switchLanguage": "Switch Language",
+  "currentLocale": "Current Locale",
+  "demo": {
+    "title": "i18n Demonstration",
+    "subtitle": "Internationalization with English and Arabic",
+    "description": "This page demonstrates the i18n implementation with translation, pluralization, interpolation, and RTL support."
+  },
+  "features": {
+    "title": "Features",
+    "translation": "Text Translation",
+    "pluralization": "Pluralization",
+    "interpolation": "Variable Interpolation",
+    "formatting": "Date & Number Formatting",
+    "rtl": "RTL Support"
+  },
+  "examples": {
+    "greeting": "Hello, {name}!",
+    "userCount": "No users | One user | {count} users",
+    "itemCount": "You have {count} item | You have {count} items"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "messages": {
+    "success": "Operation completed successfully",
+    "error": "An error occurred",
+    "loading": "Loading...",
+    "noData": "No data available"
+  },
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "common": {
+      "next": "Next",
+      "skip": "Skip for now",
+      "signUp": "Sign up",
+      "signIn": "Sign in",
+      "or": "OR",
+      "createAccount": "Create account",
+      "password": "Password",
+      "resendCode": "Resend code",
+      "selectedSuffix": "selected",
+      "neededMoreSuffix": "more needed"
     },
-    "features": {
-        "title": "Features",
-        "translation": "Text Translation",
-        "pluralization": "Pluralization",
-        "interpolation": "Variable Interpolation",
-        "formatting": "Date & Number Formatting",
-        "rtl": "RTL Support"
+    "home": {
+      "happeningNow": "Happening now",
+      "joinToday": "Join today.",
+      "terms": "By signing up, you agree to the Terms of Service and Privacy Policy.",
+      "alreadyHaveAccount": "Already have an account?"
     },
-    "examples": {
-        "greeting": "Hello, {name}!",
-        "userCount": "No users | One user | {count} users",
-        "itemCount": "You have {count} item | You have {count} items"
+    "login": {
+      "title": "Sign in to X",
+      "identifierPlaceholder": "Phone, email, or username",
+      "forgotPassword": "Forgot password?",
+      "switchPrompt": "Don't have an account?"
     },
-    "form": {
-        "name": "Name",
-        "email": "Email",
-        "password": "Password",
-        "submit": "Submit",
-        "cancel": "Cancel",
-        "save": "Save",
-        "delete": "Delete",
-        "edit": "Edit"
+    "signup": {
+      "title": "Create your account",
+      "namePlaceholder": "Name",
+      "emailPlaceholder": "Email",
+      "dobTitle": "Date of Birth",
+      "dobInfo": "This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.",
+      "month": "Month",
+      "day": "Day",
+      "year": "Year",
+      "months": {
+        "1": "January","2": "February","3": "March","4": "April","5": "May","6": "June","7": "July","8": "August","9": "September","10": "October","11": "November","12": "December"
+      }
     },
-    "messages": {
-        "success": "Operation completed successfully",
-        "error": "An error occurred",
-        "loading": "Loading...",
-        "noData": "No data available"
+    "OAuth":{
+      "continueWithGoogle":"Continue with Google",
+      "continueWithGithub":"Continue with Github"
     },
-    "navigation": {
-        "home": "Home",
-        "profile": "Profile",
-        "settings": "Settings",
-        "logout": "Logout",
-        "back": "Back"
+    "oauth": {
+      "dobTitle": "What's your birth date?",
+      "dobInfo": "This won't be public.",
+      "month": "Month",
+      "day": "Day",
+      "year": "Year",
+      "termsText": "By signing up, you agree to our Terms, Data Policy and Cookies Policy."
+    },
+    "username": {
+      "title": "What should we call you?",
+      "info": "Your username is unique. You can always change it later.",
+      "placeholder": "username",
+      "available": "Available!",
+      "recommendations": "Recommended usernames:"
+    },
+    "profilePicture": {
+      "title": "Pick a profile picture",
+      "info": "Have a favorite selfie? Upload it now.",
+      "chooseImage": "Choose Image"
+    },
+    "verifyOtp": {
+      "title": "We sent you a code",
+      "info": "Please enter the 6-digit code sent to your email address.",
+      "otpPlaceholder": "Enter OTP",
+      "resendPrompt": "Didn't receive the code?",
+      "resendSuccess": "OTP has been resent successfully.",
+      "invalidOtp": "Invalid OTP. Please try again."
+    },
+    "finalRegister": {
+      "title": "Enter a password",
+      "info": "Please enter a strong password.",
+      "passwordPlaceholder": "Enter password",
+      "passwordHint": "Make sure your password is strong and secure.",
+      "signUpButton": "Sign Up"
+    },
+    "forgotPassword": {
+      "step1Title": "Find your X account",
+      "step1Info": "Enter the email, phone number, or username associated with your account to change your password.",
+      "identifierPlaceholder": "Phone, email, or username",
+      "step2Title": "We sent you a code to reset your password",
+      "step2Info": "Please enter the 6-digit code sent to your email address.",
+      "step3Title": "Reset Your Password",
+      "step3Info": "Enter your new password below to reset your account password.",
+      "passwordPlaceholder": "Enter your new password",
+      "verifyPasswordPlaceholder": "Verify your new password",
+      "resetButton": "Reset Password",
+      "passwordMismatch": "Passwords do not match."
+    },
+    "language": {
+      "title": "Select your language",
+      "info": "This will help us personalize your Yapper experience."
+    },
+    "interests": {
+      "title": "What are you interested in?",
+      "info": "Select at least 3 interests to help us tailor your feed."
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "nameMaxLength": "Name must not exceed 50 characters",
+      "nameInvalidChars": "Name can only contain letters and spaces",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordTooLong": "Password is too long",
+      "passwordWeak": "Password must contain uppercase, lowercase, and number",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid phone number",
+      "phoneLength": "Phone number must be 10-15 digits",
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Username must be at least 3 characters",
+      "usernameMaxLength": "Username must not exceed 20 characters",
+      "usernameInvalidChars": "Username can only contain letters, numbers, and underscores",
+      "otpRequired": "OTP is required",
+      "otpInvalid": "OTP must be exactly 6 digits",
+      "dobRequired": "Please select your complete date of birth",
+      "dobTooYoung": "You must be at least 13 years old",
+      "dobInvalid": "Please enter a valid date of birth",
+      "identifierRequired": "Please enter your email, phone, or username"
     },
     "months": {
         "january": "January",
@@ -259,4 +381,5 @@
 
         "choosePreferredTheme": "Choose your preferred theme"
     }
+  }
 }

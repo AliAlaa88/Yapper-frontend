@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-3">
         <button
             id="button-google-oauth"
-            class="flex items-center justify-center gap-2 border border-gray-600 text-black bg-white font-semibold py-2.5 rounded-full w-full hover:bg-gray-200 transition"
+            class="cursor-pointer flex items-center justify-center gap-2 bg-alternate border-2 border-alternate text-alternate hover:bg-hover hover:text-primary hover:border-blue font-semibold py-2.5 rounded-full w-full transition duration-200 shadow-sm"
             @click="googleSignUp"
         >
             <img
@@ -10,20 +10,20 @@
                 alt="Google"
                 class="w-5 h-5"
             />
-            Sign up with Google
+            {{ $t('auth.OAuth.continueWithGoogle') }}
         </button>
 
         <button
             id="button-github-oauth"
-            class="flex items-center justify-center gap-2 border border-gray-600 text-black bg-white font-semibold py-2.5 rounded-full w-full hover:bg-gray-200 transition"
+            class="button-hover-invert cursor-pointer flex items-center justify-center gap-2 bg-alternate border-2 border-alternate text-alternate hover:bg-hover hover:text-primary hover:border-blue font-semibold py-2.5 rounded-full w-full transition duration-200 shadow-sm"
             @click="githubSignUp"
         >
             <img
                 src="https://www.svgrepo.com/show/512317/github-142.svg"
                 alt="GitHub"
-                class="w-5 h-5"
+                class="w-5 h-5 github-icon"
             />
-            Sign up with GitHub
+            {{ $t('auth.OAuth.continueWithGithub') }}
         </button>
     </div>
 </template>

@@ -40,7 +40,6 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
             try {
                 const tweetDetails = await ($tweetService as any).fetchTweetDetails(tweetId)
                 const tweetReplies = await ($tweetService as any).fetchtweetreplies(tweetId)
-                
                 // Combine tweet details and replies into a single object
                 const result: TweetDetails | null = tweetDetails 
                     ? { tweet: tweetDetails, replies: tweetReplies || [] } 

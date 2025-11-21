@@ -3,7 +3,7 @@ import { useTweetDetailsQuery } from '../queries/useTweetQueries'
 import type { TweetDetails, Tweet } from '../types'
 
 export function useTweetDetails(tweetId: string, initialTweet?: Tweet) {
-    const { data: tweetDetailsData, isLoading, error, refetch } = useTweetDetailsQuery(tweetId, initialTweet)
+    const { data: tweetDetailsData, isLoading, error, isFetching, refetch } = useTweetDetailsQuery(tweetId, initialTweet)
 
     const replies = computed(() => {
         const rawData = toRaw(tweetDetailsData.value)
@@ -21,12 +21,20 @@ export function useTweetDetails(tweetId: string, initialTweet?: Tweet) {
     const tweetDetails = computed(() => {
         return tweetDetailsData.value?.tweet || null
     })
+    
+    // Separate loading state for replies
+    const isFetchingReplies = computed(() => {
+        const repliesArray = replies.value
+        return isFetching.value && (!Array.isArray(repliesArray) || repliesArray.length === 0)
+    })
+    
     const res = {
         tweetDetails,
         isLoading,
         error,
         replies,
-        fetchTweetDetails: refetch    
+        fetchTweetDetails: refetch,
+        isFetchingReplies
     }
     return res;
 }

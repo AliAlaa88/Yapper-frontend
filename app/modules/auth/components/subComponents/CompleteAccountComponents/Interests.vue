@@ -1,22 +1,21 @@
 <template>
-    <div
-        class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 backdrop-blur-sm p-4"
+    <Popup
+        :isOpen="true"
+        @close="$emit('close')"
+        :hasCloseButton="false"
+        contentClass="max-w-lg sm:max-w-xl w-full"
+        headerClass=""
+        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
-        <div
-            class="bg-primary text-primary rounded-2xl w-full max-w-lg sm:max-w-xl p-8 sm:p-10 md:p-14 lg:p-20 relative flex flex-col justify-center"
-        >
-            <!-- Close Button -->
-            <closeButton @close="$emit('close')" />
-
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
-
-            <!-- Back Button -->
-            <backButton @close="$emit('back')" class="absolute top-6 left-6" />
+        <!-- Back Button -->
+        <backButton @close="$emit('back')" />
+        
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold text-left mb-6">What are you interested in?</h2>
-            <p class="text-muted mb-6">Select at least 3 interests to help us tailor your feed.</p>
+            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.title') }}</h2>
+            <p class="text-muted mb-6">{{ $t('auth.interests.info') }}</p>
 
             <!-- Interests Grid -->
             <div class="max-h-64 overflow-y-auto mb-6 custom-scrollbar">
@@ -26,23 +25,23 @@
                         :key="interest.id"
                         :id="`button-interest-${interest.id}`"
                         :class="[
-                            'px-4 py-3 rounded-full text-sm font-medium transition border-2',
+                            'px-4 py-3 rounded-full text-sm font-medium transition shadow-sm',
                             selectedInterests.includes(interest.id)
-                                ? 'bg-blue text-primary border-blue-400 text-primary'
-                                : 'border-muted text-muted hover:border-hover',
+                                ? 'bg-alternate text-alternate border-2 border-transparent'
+                                : 'border-2 border-primary text-primary hover:bg-hover',
                         ]"
                         @click="toggleInterest(interest.id)"
                     >
-                        {{ interest.icon }} {{ interest.name }}
+                      {{ interest.name }}
                     </button>
                 </div>
             </div>
 
             <!-- Selection Counter -->
             <p class="text-center text-muted text-sm mb-6">
-                {{ selectedInterests.length }} selected
+                {{ selectedInterests.length }} {{ $t('auth.common.selectedSuffix') }}
                 <span v-if="selectedInterests.length < 3" class="text-red-400">
-                    ({{ 3 - selectedInterests.length }} more needed)
+                    ({{ 3 - selectedInterests.length }} {{ $t('auth.common.neededMoreSuffix') }})
                 </span>
             </p>
 
@@ -58,56 +57,55 @@
                 ]"
                 @click="onNext"
             >
-                Next
+                {{ $t('auth.common.next') }}
             </button>
 
             <!-- Skip Button -->
             <button
                 id="button-skip-interests"
-                class="w-full text-muted hover:text-alternate transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
-                Skip for now
+                {{ $t('auth.common.skip') }}
             </button>
-        </div>
-    </div>
+    </Popup>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import closeButton from '../closeButton.vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { useUpdateInterestsMutation } from '../../../queries/useCompleteProfileQuery'
+import { useFetchInterests } from '~/modules/auth/queries/useCompleteProfileQuery'
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
+
+const errorMessage = ref('')
+const isSubmitting = ref(false)
 
 interface Interest {
     id: string
     name: string
-    icon: string
 }
 
-const interests: Interest[] = [
-    { id: 'tech', name: 'Technology', icon: '💻' },
-    { id: 'sports', name: 'Sports', icon: '⚽' },
-    { id: 'music', name: 'Music', icon: '🎵' },
-    { id: 'art', name: 'Art', icon: '🎨' },
-    { id: 'food', name: 'Food', icon: '🍔' },
-    { id: 'travel', name: 'Travel', icon: '✈️' },
-    { id: 'gaming', name: 'Gaming', icon: '🎮' },
-    { id: 'fashion', name: 'Fashion', icon: '👗' },
-    { id: 'fitness', name: 'Fitness', icon: '💪' },
-    { id: 'movies', name: 'Movies', icon: '🎬' },
-    { id: 'books', name: 'Books', icon: '📚' },
-    { id: 'photography', name: 'Photography', icon: '📸' },
-    { id: 'nature', name: 'Nature', icon: '🌿' },
-    { id: 'science', name: 'Science', icon: '🔬' },
-    { id: 'business', name: 'Business', icon: '💼' },
-    { id: 'politics', name: 'Politics', icon: '🏛️' },
-    { id: 'education', name: 'Education', icon: '🎓' },
-    { id: 'health', name: 'Health', icon: '🏥' },
-    { id: 'pets', name: 'Pets', icon: '🐾' },
-    { id: 'comedy', name: 'Comedy', icon: '😂' },
-]
+const interests = ref<Interest[]>([])
 
+const fetchInterests = useFetchInterests((data: any) => {
+    
+    interests.value = data.data.map((item: any, index: number) => ({
+        // id is index + 1
+        id: (index + 1).toString(),
+        name: item,
+    }))
+    //
+}, (error: any) => {
+    console.error('Error fetching interests:', error)
+    errorMessage.value = 'Failed to load interests'
+})
+
+fetchInterests.mutate();
 // Use v-model for selected interests
 const selectedInterests = defineModel<string[]>('selectedInterests', { default: [] })
 
@@ -128,9 +126,26 @@ const toggleInterest = (id: string) => {
     }
 }
 
-const onNext = () => {
-    if (selectedInterests.value.length >= 3) {
+const interestsMutation = useUpdateInterestsMutation(
+    (data) => {
+        isSubmitting.value = false
+        errorMessage.value = ''
         emit('finish', selectedInterests.value)
+    },
+    (error) => {
+        console.error('Interests update error:', error)
+        isSubmitting.value = false
+        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update interests'
+        errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
+    }
+)
+
+const onNext = () => {
+    if (selectedInterests.value.length >= 3 && !isSubmitting.value) {
+        isSubmitting.value = true
+        // categoryIds are the selected interest ids
+        const categoryIds = selectedInterests.value.map(id => parseInt(id))
+        interestsMutation.mutate({ categoryIds })
     }
 }
 
