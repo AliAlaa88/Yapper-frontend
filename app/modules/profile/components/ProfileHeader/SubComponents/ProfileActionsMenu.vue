@@ -98,28 +98,30 @@ const {
     isMuteLoading,
 } = userInteractions
 
-function handleMuteAndUnmute() {
+async function handleMuteAndUnmute() {
     if (isMuted.value) {
-        handleUnmuteWithSnackbar(showList)
-        // Emit after a small delay to ensure the action completes
-        setTimeout(() => emit('user-action', 'unmute'), 100)
+        await handleUnmuteWithSnackbar(showList)
+        // Emit after the action completes
+        emit('user-action', 'unmute')
     }
     else {
-        handleMuteWithSnackbar(showList)
-        // Emit after a small delay to ensure the action completes
-        setTimeout(() => emit('user-action', 'mute'), 100)
+        await handleMuteWithSnackbar(showList)
+        // Emit after the action completes
+        emit('user-action', 'mute')
     }
 }
 
 function handleBlockAndUnblock() {
     if (isBlocked.value) {
-        handleUnblockWithConfirmation(showList)
-        // Emit after a small delay to ensure the action completes
-        setTimeout(() => emit('user-action', 'unblock'), 100)
+        handleUnblockWithConfirmation(showList, () => {
+            // Emit only after confirmation and action completion
+            emit('user-action', 'unblock')
+        })
     } else {
-        handleBlockWithConfirmation(showList)
-        // Emit after a small delay to ensure the action completes
-        setTimeout(() => emit('user-action', 'block'), 100)
+        handleBlockWithConfirmation(showList, () => {
+            // Emit only after confirmation and action completion
+            emit('user-action', 'block')
+        })
     }
 }
 

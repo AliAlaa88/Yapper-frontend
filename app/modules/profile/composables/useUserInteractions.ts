@@ -31,7 +31,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
     } = useUserActions(id)
     const { t } = useI18n()
 
-    function handleBlockWithConfirmation(showList?: Ref<boolean>) {
+    function handleBlockWithConfirmation(showList?: Ref<boolean>, onSuccess?: () => void) {
         showConfirmation.value = true
         if (showList) showList.value = false
         async function handleClick() {
@@ -43,6 +43,8 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
                     t('profile.actions.block.undoButton'),
                     handleUnblock,
                 )
+                // Call the success callback after the action completes
+                if (onSuccess) onSuccess()
             } catch (error) {
                 console.error('failed to block user: ', error)
             }
@@ -121,9 +123,18 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         )
     }
 
-    function handleUnblockWithConfirmation(showList?: Ref<boolean>) {
+    function handleUnblockWithConfirmation(showList?: Ref<boolean>, onSuccess?: () => void) {
         showConfirmation.value = true
         if (showList) showList.value = false
+        async function handleClick() {
+            try {
+                await handleUnblock()
+                // Call the success callback after the action completes
+                if (onSuccess) onSuccess()
+            } catch (error) {
+                console.error('failed to unblock user: ', error)
+            }
+        }
         handleShowConfirmation(
             t('profile.actions.unblock.title'),
             t('profile.actions.unblock.button'),
@@ -131,7 +142,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             'text-alternate',
             'hover:opacity-90',
             t('profile.actions.unblock.description'),
-            handleUnblock,
+            handleClick,
             username.value,
         )
     }
