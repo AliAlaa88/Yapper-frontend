@@ -99,7 +99,6 @@
         {{ $t('tweets.errors.tryAgain') }}
       </button>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -165,62 +164,58 @@ const removeTweetsFromUser = (userId) => {
 const tweetTransitionStore = useTweetTransitionStore()
 
 // Use composable with the tweet ID from route and initial data from store
-const {
-  tweetDetails,
-  isLoading,
-  error,
-  replies,
-  isFetchingReplies,
-  fetchTweetDetails
-} = useTweetDetails(tweetId.value, tweetTransitionStore.transitionTweet || undefined)
+const { tweetDetails, isLoading, error, replies, isFetchingReplies, fetchTweetDetails } =
+    useTweetDetails(tweetId.value, tweetTransitionStore.transitionTweet || undefined)
 
 // Transform main tweet data
 const mainTweetUser = computed(() => {
-  if (!tweetDetails.value) return null
-  //console.log(tweetDetails.value);
-  return {
-    ...tweetDetails.value.user,
-    avatar: tweetDetails.value.user.avatar_url || `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`
-  }
+    if (!tweetDetails.value) return null
+    //console.log(tweetDetails.value);
+    return {
+        ...tweetDetails.value.user,
+        avatar:
+            tweetDetails.value.user.avatar_url ||
+            `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`,
+    }
 })
 
 const mainTweetContent = computed(() => {
-  if (!tweetDetails.value) return null
-  return {
-    text: tweetDetails.value.content,
-    images: tweetDetails.value.images || [],
-    videos: tweetDetails.value.videos || []
-  }
+    if (!tweetDetails.value) return null
+    return {
+        text: tweetDetails.value.content,
+        images: tweetDetails.value.images || [],
+        videos: tweetDetails.value.videos || [],
+    }
 })
 
 const mainTweetStats = computed(() => {
-  if (!tweetDetails.value) return null
-  return {
-    tweet_id: tweetDetails.value.tweet_id,
-    likes: tweetDetails.value.likes_count,
-    replies: tweetDetails.value.replies_count,
-    retweets: tweetDetails.value.reposts_count,
-    views: tweetDetails.value.views_count,
-    is_liked: tweetDetails.value.is_liked,
-    is_reposted: tweetDetails.value.is_reposted,
-    is_bookmarked: tweetDetails.value.is_bookmarked,
-    username: tweetDetails.value.user.username
-  }
+    if (!tweetDetails.value) return null
+    return {
+        tweet_id: tweetDetails.value.tweet_id,
+        likes: tweetDetails.value.likes_count,
+        replies: tweetDetails.value.replies_count,
+        retweets: tweetDetails.value.reposts_count,
+        views: tweetDetails.value.views_count,
+        is_liked: tweetDetails.value.is_liked,
+        is_reposted: tweetDetails.value.is_reposted,
+        is_bookmarked: tweetDetails.value.is_bookmarked,
+        username: tweetDetails.value.user.username,
+    }
 })
 
 onUnmounted(() => {
-  tweetTransitionStore.clearTransitionTweet()
+    tweetTransitionStore.clearTransitionTweet()
 })
 
 watch(tweetId, (newTweetId) => {
-  if (newTweetId) {
-    fetchTweetDetails()
-  }
+    if (newTweetId) {
+        fetchTweetDetails()
+    }
 })
 
 watch(isLoading, (newIsLoading) => {
-  if (!newIsLoading) {
-    tweetTransitionStore.setTransitionTweet(tweetDetails.value)
-  }
+    if (!newIsLoading) {
+        tweetTransitionStore.setTransitionTweet(tweetDetails.value)
+    }
 })
 </script>
