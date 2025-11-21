@@ -19,7 +19,13 @@ interface Tweet {
     is_bookmarked: boolean
     created_at: string
     updated_at?: string
-    user: User
+    user: User,
+    reposted_by?: {
+            repost_id: string
+            id: string
+            name: string
+            reposted_at: string
+    }
 }
 type TweetsPage = {
     data: Tweet[]
