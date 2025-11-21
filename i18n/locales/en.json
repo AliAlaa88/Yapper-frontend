@@ -5,11 +5,6 @@
     "language": "Language",
     "switchLanguage": "Switch Language",
     "currentLocale": "Current Locale",
-    "demo": {
-        "title": "i18n Demonstration",
-        "subtitle": "Internationalization with English and Arabic",
-        "description": "This page demonstrates the i18n implementation with translation, pluralization, interpolation, and RTL support."
-    },
     "features": {
         "title": "Features",
         "translation": "Text Translation",
@@ -17,11 +12,6 @@
         "interpolation": "Variable Interpolation",
         "formatting": "Date & Number Formatting",
         "rtl": "RTL Support"
-    },
-    "examples": {
-        "greeting": "Hello, {name}!",
-        "userCount": "No users | One user | {count} users",
-        "itemCount": "You have {count} item | You have {count} items"
     },
     "form": {
         "name": "Name",
@@ -206,194 +196,6 @@
             "october": "October",
             "november": "November",
             "december": "December"
-        },
-        "profile": {
-            "editProfile": "Edit Profile",
-            "saveChanges": "Save",
-            "name": "Name",
-            "bio": "Bio",
-            "location": "Location",
-            "website": "Website",
-            "birthDate": "Birth date",
-            "joinDate": "Joined",
-            "born": "Born",
-            "joined": "Joined",
-            "following": "Following",
-            "followers": "Followers",
-            "tweets": "Posts",
-            "tweetsAndReplies": "Posts & replies",
-            "media": "Media",
-            "likes": "Likes",
-            "followButton": "Follow",
-            "followBackButton": "Follow back",
-            "followingButton": "Following",
-            "unfollowButton": "Unfollow",
-            "messageButton": "Message",
-            "muteButton": "Mute",
-            "unmuteButton": "Unmute",
-            "blockButton": "Block",
-            "blockedButton": "Blocked",
-            "unblockButton": "Unblock",
-            "removeFollowerButton": "Remove this follower",
-            "cancelButton": "Cancel",
-            "mutualFollowers": {
-                "noMutuals": "Not followed by anyone you are following",
-                "followedBy": "Followed by",
-                "followedByTwo": "Followed by {name1} and {name2}",
-                "followedByMultiple": "Followed by {name} and {count} others you follow",
-                "and": "and",
-                "others": "others you follow"
-            },
-            "tabs": {
-                "posts": "Posts",
-                "replies": "Replies",
-                "media": "Media",
-                "likes": "Likes"
-            },
-            "emptyState": {
-                "noPosts": {
-                    "title": "No posts yet",
-                    "description": "When this user posts, they'll show up here."
-                },
-                "noReplies": {
-                    "title": "No replies yet",
-                    "description": "When this user replies to posts, they'll show up here."
-                },
-                "noMedia": {
-                    "title": "No media yet",
-                    "description": "Photos and videos will appear here."
-                },
-                "noLikes": {
-                    "title": "No likes yet",
-                    "description": "When this user likes posts, they'll show up here."
-                }
-            },
-            "blocked": {
-                "title": "{username} is blocked",
-                "description": "Are you sure you want to view these posts? Viewing posts won't unblock {username}."
-            },
-            "muted": {
-                "message": "You have muted posts from this account.",
-                "action": "Unmute"
-            },
-            "actions": {
-                "block": {
-                    "title": "Block",
-                    "button": "Block",
-                    "description": "They will be able to see your public posts, but will no longer be able to engage with them. {username} will also not be able to follow or message you, and you will not see notifications from them.",
-                    "snackbar": "Successfully blocked.",
-                    "undoButton": "Unblock"
-                },
-                "unblock": {
-                    "title": "Unblock",
-                    "button": "Unblock",
-                    "description": "They will be able to follow you and engage with your public posts."
-                },
-                "unfollow": {
-                    "title": "Unfollow",
-                    "button": "Unfollow",
-                    "snackbar": "You unfollowed {username}",
-                    "description": "Their posts will no longer show up in your Following timeline. You can still view their profile, unless their posts are protected."
-                },
-                "follow": {
-                    "title": "Follow",
-                    "button": "Follow",
-                    "snackbar": "You followed {username}"
-                },
-                "mute": {
-                    "snackbar": "{username} has been muted.",
-                    "undoButton": "Undo"
-                },
-                "unmute": {
-                    "title": "UnMute",
-                    "button": "UnMute",
-                    "description": "Posts from this account will now be allowed in your Home timeline.",
-                    "snackbar": "{username} has been unmuted."
-                },
-                "removeFollower": {
-                    "title": "Remove",
-                    "button": "Remove this follower",
-                    "description": "{username} will be removed from your followers and won't be notified by Yappper. They can follow you again in the future.",
-                    "snackbar": "{username} is no longer following you."
-                }
-            },
-            "editProfileModal": {
-                "title": "Edit profile",
-                "uploadPhoto": "Upload photo",
-                "removePhoto": "Remove photo",
-                "uploadCover": "Upload cover",
-                "removeCover": "Remove cover",
-                "namePlaceholder": "Name",
-                "bioPlaceholder": "Bio",
-                "locationPlaceholder": "Location",
-                "websitePlaceholder": "Website",
-                "month": "Month",
-                "day": "Day",
-                "year": "Year"
-            },
-            "followLists": {
-                "emptyState": {
-                    "noFollowers": {
-                        "title": "No followers yet",
-                        "description": "When someone follows this account, they'll show up here."
-                    },
-                    "noFollowing": {
-                        "title": "Not following anyone yet",
-                        "description": "When this account follows people, they'll show up here."
-                    }
-                }
-            }
-        },
-        "settings": {
-            "yourAccount": "Your Account",
-            "yourAccount_desc": "See information about your account, download an archive of your data, or learn about your account deletion.",
-            "accountInformation": "Account information",
-            "accountInformation_desc": "See your account information like your username and email address.",
-            "changePassword": "Change your password",
-            "changePassword_desc": "Change your password at any time.",
-            "deleteYourAccount": "Delete your account",
-            "deleteYourAccount_desc": "Find out how you can delete your account.",
-            "accountInfo": {
-                "title": "Account information",
-                "username": "Username",
-                "email": "Email",
-                "accountCreation": "Account creation",
-                "country": "Country",
-                "languages": "Languages",
-                "languages_list": "English, Arabic",
-                "birthDate": "Birth date",
-                "birthDate_desc": "Change your date of birth on your profile.",
-                "age": "Age",
-                "age_desc_long": "If you haven’t provided a date of birth, we’ve provided an age range based on your Yapper profile and activity. Age information is used to personalize your experience.",
-                "age_notRight": "Not right? You can add your date of birth to your profile without sharing it publicly."
-            },
-            "languages": {
-                "title": "Languages",
-                "appsAndLanguage": "App and post languages",
-                "manage_desc": "Manage which languages are used to personalize your Yapper experience.",
-                "selectAppLanguage": "Select your app language",
-                "selectAppLanguage_desc": "This will be your default language in the app. You’ll see content we think you’ll like in the other languages you chose, too.",
-                "next": "Next"
-            },
-            "privacyAndSafety": "Privacy and Safety",
-            "privacyAndSafety_desc": "Manage your privacy and safety settings on Yapper.",
-            "muteAndBlock": "Mute and block",
-            "muteAndBlock_desc": "Manage the accounts and notifications that you have muted or blocked.",
-            "blockedAccounts": "Blocked accounts",
-            "blockedAccounts_desc": "When you block someone, that person won’t be able to follow or message you, and you won’t see notifications from them.",
-            "mutedAccounts": "Muted accounts",
-            "mutedAccounts_desc": "Here’s everyone you muted. You can add or remove them from this list.",
-            "displayAndLanguages": "Display and languages",
-            "displayAndLanguages_desc": "Manage how Yapper content is displayed to you.",
-            "display": "Display",
-            "display_desc": "Manage your font color and background. These settings affect all the Yapper accounts on this browser.",
-            "display_desc2": "Manage your font size, color, and background. These settings affect all the Yapper accounts on this browser.",
-            "fontSize": "Font size",
-            "color": "Color",
-            "background": "Background",
-            "useSystemSetting": "Use system setting",
-            "useSystemSetting_desc": "Your theme will automatically switch based on your device settings.",
-            "choosePreferredTheme": "Choose your preferred theme"
         }
     },
     "profile": {
@@ -544,26 +346,34 @@
     "settings": {
         "yourAccount": "Your Account",
         "yourAccount_desc": "See information about your account, download an archive of your data, or learn about your account deletion.",
+
         "accountInformation": "Account information",
         "accountInformation_desc": "See your account information like your username and email address.",
+
         "changePassword": "Change your password",
         "changePassword_desc": "Change your password at any time.",
+
         "deleteYourAccount": "Delete your account",
         "deleteYourAccount_desc": "Find out how you can delete your account.",
+
         "accountInfo": {
             "title": "Account information",
             "username": "Username",
             "email": "Email",
             "accountCreation": "Account creation",
             "country": "Country",
+
             "languages": "Languages",
             "languages_list": "English, Arabic",
+
             "birthDate": "Birth date",
             "birthDate_desc": "Change your date of birth on your profile.",
+
             "age": "Age",
             "age_desc_long": "If you haven’t provided a date of birth, we’ve provided an age range based on your Yapper profile and activity. Age information is used to personalize your experience.",
             "age_notRight": "Not right? You can add your date of birth to your profile without sharing it publicly."
         },
+
         "languages": {
             "title": "Languages",
             "appsAndLanguage": "App and post languages",
@@ -572,24 +382,33 @@
             "selectAppLanguage_desc": "This will be your default language in the app. You’ll see content we think you’ll like in the other languages you chose, too.",
             "next": "Next"
         },
+
         "privacyAndSafety": "Privacy and Safety",
         "privacyAndSafety_desc": "Manage your privacy and safety settings on Yapper.",
+
         "muteAndBlock": "Mute and block",
         "muteAndBlock_desc": "Manage the accounts and notifications that you have muted or blocked.",
+
         "blockedAccounts": "Blocked accounts",
         "blockedAccounts_desc": "When you block someone, that person won’t be able to follow or message you, and you won’t see notifications from them.",
+
         "mutedAccounts": "Muted accounts",
         "mutedAccounts_desc": "Here’s everyone you muted. You can add or remove them from this list.",
+
         "displayAndLanguages": "Display and languages",
         "displayAndLanguages_desc": "Manage how Yapper content is displayed to you.",
+
         "display": "Display",
         "display_desc": "Manage your font color and background. These settings affect all the Yapper accounts on this browser.",
         "display_desc2": "Manage your font size, color, and background. These settings affect all the Yapper accounts on this browser.",
+
         "fontSize": "Font size",
         "color": "Color",
         "background": "Background",
+
         "useSystemSetting": "Use system setting",
         "useSystemSetting_desc": "Your theme will automatically switch based on your device settings.",
+
         "choosePreferredTheme": "Choose your preferred theme"
     },
     "tweets": {
@@ -597,15 +416,13 @@
         "moreActions": "More actions",
         "actions": {
             "reply": "Reply",
-            "retweet": "Retweet",
-            "undoRetweet": "Undo Retweet",
+            "retweet": "Repost",
+            "undoRetweet": "Undo repost",
             "like": "Like",
             "unlike": "Unlike",
             "views": "Views",
             "bookmark": "Bookmark",
-            "removeBookmark": "Remove Bookmark",
-            "share": "Share",
-            "linkCopied": "Link copied!"
+            "removeBookmark": "Remove bookmark"
         },
         "loading": {
             "tweets": "Loading tweets...",
@@ -614,16 +431,51 @@
         },
         "empty": {
             "noTweets": "No tweets yet",
-            "noTweetsDescription": "When tweets are posted, they'll show up here. Check back later!",
+            "noTweetsDescription": "When tweets are posted, they'll show up here.",
             "noReplies": "No replies yet",
-            "noRepliesDescription": "Be the first to reply to this tweet!"
+            "noRepliesDescription": "When people reply to this tweet, they'll show up here."
         },
         "errors": {
             "loadFailed": "Failed to load tweets",
-            "tweetNotFound": "Tweet not found",
-            "tweetNotFoundDescription": "This tweet may have been deleted or the link is incorrect.",
             "tryAgain": "Try again",
-            "goBack": "Go Back"
+            "tweetNotFound": "Tweet not found",
+            "tweetNotFoundDescription": "This tweet may have been deleted or you don't have permission to view it.",
+            "goBack": "Go back"
+        }
+    },
+    "timeline": {
+        "sidebar": {
+            "home": "Home",
+            "search": "Search",
+            "notifications": "Notifications",
+            "messages": "Messages",
+            "profile": "Profile",
+            "bookmarks": "Bookmarks",
+            "settings": "Settings",
+            "post": "Post",
+            "postTweet": "Post a tweet"
+        },
+        "postTweet": {
+            "placeholder": "What's happening?",
+            "gifs": "GIFs",
+            "emoji": "Emoji",
+            "post": "Post",
+            "uploadedMedia": "Uploaded media {index}"
+        },
+        "banner": {
+            "search": "Search",
+            "trending": "Trending",
+            "trendingIn": "Trending in {location}",
+            "posts": "posts",
+            "sportsTrending": "Sports · Trending",
+            "technology": "Technology",
+            "showMore": "Show more",
+            "whoToFollow": "Who to follow",
+            "follow": "Follow"
+        },
+        "timelineView": {
+            "forYou": "For You",
+            "following": "Following"
         }
     }
 }

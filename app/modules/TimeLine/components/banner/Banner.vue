@@ -5,7 +5,7 @@
             <div class="relative">
                 <input
                     type="text"
-                    placeholder="Search"
+                    :placeholder="t('timeline.banner.search')"
                     id="right-banner-search-input"
                     class="w-full px-4 py-3 pl-12 bg-primary border border-primary rounded-full text-primary placeholder:text-muted focus:outline-none focus:border-blue focus:bg-primary"
                 />
@@ -15,32 +15,32 @@
 
         <!-- Trending Section -->
         <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
-            <h2 class="px-4 py-3 text-xl font-bold text-primary">Trending</h2>
+            <h2 class="px-4 py-3 text-xl font-bold text-primary">{{ t('timeline.banner.trending') }}</h2>
             <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">Trending in Egypt</p>
+                <p class="text-muted text-sm">{{ t('timeline.banner.trendingIn', { location: 'Egypt' }) }}</p>
                 <p class="text-primary font-bold mt-1">#YapperTrending</p>
-                <p class="text-muted text-sm">1,234 posts</p>
+                <p class="text-muted text-sm">1,234 {{ t('timeline.banner.posts') }}</p>
             </div>
             <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">Sports · Trending</p>
+                <p class="text-muted text-sm">{{ t('timeline.banner.sportsTrending') }}</p>
                 <p class="text-primary font-bold mt-1">Football News</p>
-                <p class="text-muted text-sm">10.2K posts</p>
+                <p class="text-muted text-sm">10.2K {{ t('timeline.banner.posts') }}</p>
             </div>
             <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">Technology</p>
+                <p class="text-muted text-sm">{{ t('timeline.banner.technology') }}</p>
                 <p class="text-primary font-bold mt-1">AI Updates</p>
-                <p class="text-muted text-sm">8.7K posts</p>
+                <p class="text-muted text-sm">8.7K {{ t('timeline.banner.posts') }}</p>
             </div>
             <button
                 class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
-                Show more
+                {{ t('timeline.banner.showMore') }}
             </button>
         </div>
 
         <!-- Who to Follow Section -->
         <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
-            <h2 class="px-4 py-3 text-xl font-bold text-primary">Who to follow</h2>
+            <h2 class="px-4 py-3 text-xl font-bold text-primary">{{ t('timeline.banner.whoToFollow') }}</h2>
             <div
                 class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
             >
@@ -58,7 +58,7 @@
                 <button
                     class="px-4 py-2 bg-blue text-white rounded-full font-bold hover:bg-blue-dark transition-colors"
                 >
-                    Follow
+                    {{ t('timeline.banner.follow') }}
                 </button>
             </div>
             <div
@@ -78,13 +78,13 @@
                 <button
                     class="px-4 py-2 bg-blue text-white rounded-full font-bold hover:bg-blue-dark transition-colors"
                 >
-                    Follow
+                    {{ t('timeline.banner.follow') }}
                 </button>
             </div>
             <button
                 class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
-                Show more
+                {{ t('timeline.banner.showMore') }}
             </button>
         </div>
     </div>
@@ -92,4 +92,7 @@
 
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
