@@ -1,9 +1,9 @@
 <template>
     <button
-        class="cursor-pointer font-bold text-[15px] leading-[20px] flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200 bg-transparent border-[0.1px] border-primary text-primary px-[53px] py-[10px] w-[88px] h-[36px] hover:bg-hover"
+        class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200 bg-transparent border border-[#536471] text-primary px-4 py-1.5 h-9 hover:bg-[#181818]"
         @click="handleEditProfile"
     >
-        Edit profile
+        {{ $t('profile.editProfile') }}
     </button>
 </template>
 
@@ -14,6 +14,6 @@ const route = useRoute()
 const router = useRouter()
 
 const handleEditProfile = () => {
-    router.push(`/profile/${route.params.username}/settings/profile`)
+    router.push(`/${route.params.username}/settings/profile`)
 }
 </script>

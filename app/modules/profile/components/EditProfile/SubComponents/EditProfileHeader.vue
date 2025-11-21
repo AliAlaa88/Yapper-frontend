@@ -11,7 +11,7 @@
             >
                 <X :size="20" />
             </button>
-            <h2 class="text-primary text-xl font-bold">Edit profile</h2>
+            <h2 class="text-primary text-xl font-bold">{{ $t('profile.editProfileModal.title') }}</h2>
         </div>
         <button
             id="edit-profile-save-button"
@@ -19,7 +19,7 @@
             :disabled="!isValid || isSaving"
             @click="$emit('save')"
         >
-            {{ isSaving ? 'Saving...' : 'Save' }}
+            {{ isSaving ? $t('messages.loading') : $t('profile.saveChanges') }}
         </button>
     </div>
 </template>

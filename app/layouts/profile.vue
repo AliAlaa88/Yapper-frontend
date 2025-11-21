@@ -1,12 +1,9 @@
 <template>
     <MainLayout>
-        <!-- Profile Header (Fixed) -->
         <ProfileHeader />
 
-        <!-- Page Content (NuxtPage for child routes) -->
-        <NuxtPage />
+        <NuxtPage :key="username" />
 
-        <!-- SnackBar-->
         <SnackBar />
         <ConfirmtionModal />
     </MainLayout>
@@ -15,26 +12,27 @@
 <script setup lang="ts">
 import ProfileHeader from '../modules/profile/components/ProfileHeader/ProfileHeader.vue'
 import SnackBar from '../modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
-import { useSnackbar } from '../modules/profile/composables/useSnackbar'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
-import { useConfirmation } from '~/modules/profile/composables/useConfirmation'
-import { useUserInfoQuery } from '~/modules/profile/queries/useUserInfoQuery'
-import { provide, computed } from 'vue'
-import MainLayout from './main-layout.vue'
+import { useProfile } from '~/modules/profile/composables/useProfile'
+import { useProfileStore } from '~/modules/profile/stores/profileStore'
+import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+import { watch } from 'vue'
 
-const confirmation = useConfirmation()
-provide('confirmation', confirmation)
-const snackbar = useSnackbar()
-provide('snackbar', snackbar)
+useProfileProviders()
 
 const route = useRoute()
-const username = route.params.username as string
+const username = computed(() => route.params.username as string)
 
-const { userQuery } = useUserInfoQuery(username)
-const user = computed(() => userQuery.data.value)
+const profileStore = useProfileStore()
 
-provide(
-    'user-id',
-    computed(() => user.value?.user_id),
+watch(
+    username,
+    (newUsername) => {
+        if (newUsername) {
+            profileStore.clearProfile()
+            useProfile(newUsername)
+        }
+    },
+    { immediate: true },
 )
 </script>

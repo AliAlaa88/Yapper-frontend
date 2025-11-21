@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import ProfileContent from '../../../modules/profile/components/ProfileContent/ProfileContent.vue'
+import ProfileContent from '../../modules/profile/components/ProfileContent/ProfileContent.vue'
 
 definePageMeta({ layout: 'profile' })
 </script>

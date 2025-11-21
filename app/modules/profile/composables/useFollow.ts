@@ -1,8 +1,11 @@
 import { useUserInfo } from './useUserInfo'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 export function useFollow(userId: Ref<string | undefined>) {
     const { isFollower, isFollowing} = useUserInfo(userId)
     const hover = ref(false)
+    const { t } = useI18n()
 
     function handleMouseOver() {
         if (isFollowing.value) hover.value = true
@@ -13,23 +16,22 @@ export function useFollow(userId: Ref<string | undefined>) {
     }
 
     const buttonText = computed(() => {
-        if (isFollower.value && !isFollowing.value) return 'Follow back'
-        else if (!isFollower.value && !isFollowing.value) return 'Follow'
-        else if (isFollowing.value && !hover.value) return 'Following'
-        else if (isFollowing.value && hover.value) return 'Unfollow'
+        if (isFollower.value && !isFollowing.value) return t('profile.followBackButton')
+        else if (!isFollower.value && !isFollowing.value) return t('profile.followButton')
+        else if (isFollowing.value && !hover.value) return t('profile.followingButton')
+        else if (isFollowing.value && hover.value) return t('profile.unfollowButton')
         else return 'undefined'
     })
 
     const buttonClass = computed(() => {
         if (!isFollowing.value) {
-            if (!isFollower.value)
-                return 'bg-alternate text-alternate border border-transparent px-[53px] py-[10px] w-[88px] h-[36px] hover:opacity-90'
-            else
-                return 'bg-alternate text-alternate border border-transparent px-[57px] py-[10px] w-[88px] h-[36px] hover:opacity-90'
+            // Follow or Follow Back button
+            return 'bg-[#eff3f4] text-[#0f1419] border border-transparent px-4 py-1.5 h-9 min-w-[36px] hover:bg-[#d7dbdc]'
         } else {
+            // Following/Unfollow button
             return hover.value
-                ? 'bg-red/10 border border-red text-red px-[53px] py-[10px] w-[88px] h-[36px]'
-                : 'bg-transparent border border-primary text-primary px-[53px] py-[10px] w-[88px] h-[36px]'
+                ? 'bg-[#f4212e1a] border border-[#67070f] text-[#f4212e] px-4 py-1.5 h-9 min-w-[109px] hover:bg-[#f4212e1a]'
+                : 'bg-transparent border border-[#536471] text-primary px-4 py-1.5 h-9 min-w-[109px] hover:bg-[#181818]'
         }
     })
 
