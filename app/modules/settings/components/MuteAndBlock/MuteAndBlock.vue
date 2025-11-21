@@ -17,7 +17,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const categories = computed(() => [
-    { label: t('settings.blockedAccounts'), href: '/settings/blocked/all' },
-    { label: t('settings.mutedAccounts'), href: '/settings/muted/all' },
+    { label: t('settings.blockedAccounts'), href: '' },
+    { label: t('settings.mutedAccounts'), href: '' },
 ])
 </script>
