@@ -52,7 +52,7 @@
             <!-- Forgot password -->
             <div
                 id="link-forgot-password-login-s2"
-                class="text-blue hover:underline font-semibold cursor-pointer transition duration-200 mb-6 text-left"
+                class="text-accent hover:underline font-semibold cursor-pointer transition duration-200 mb-6 text-left"
                 @click="onForgotPassword"
             >
                 {{ $t('auth.login.forgotPassword') }}
@@ -71,7 +71,7 @@
                 {{ $t('auth.login.switchPrompt') }}
                 <button
                     id="button-switch-to-signup-login-s2"
-                    class="text-blue hover:underline font-semibold cursor-pointer transition duration-200"
+                    class="text-accent hover:underline font-semibold cursor-pointer transition duration-200"
                     @click="$emit('switch')"
                 >
                     {{ $t('auth.common.signUp') }}

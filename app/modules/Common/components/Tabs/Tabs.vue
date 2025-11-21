@@ -17,7 +17,7 @@
                     {{ tab.label }}
                     <span
                         v-if="activeTab === tab.value"
-                        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-blue rounded-full"
+                        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-accent rounded-full"
                     />
                 </button>
             </li>

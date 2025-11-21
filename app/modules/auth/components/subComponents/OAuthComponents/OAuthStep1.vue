@@ -22,7 +22,7 @@
                     <select
                         id="select-month-oauth-s1"
                         v-model="month"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors cursor-pointer"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
@@ -41,7 +41,7 @@
                     <select
                         id="select-day-oauth-s1"
                         v-model="day"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors cursor-pointer"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
@@ -58,7 +58,7 @@
                     <select
                         id="select-year-oauth-s1"
                         v-model="year"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors cursor-pointer"
+                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>

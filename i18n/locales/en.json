@@ -312,8 +312,74 @@
                 }
             }
         }
+    },
+    "settings": {
+        "yourAccount": "Your Account",
+        "yourAccount_desc": "See information about your account, download an archive of your data, or learn about your account deletion.",
+
+        "accountInformation": "Account information",
+        "accountInformation_desc": "See your account information like your username and email address.",
+
+        "changePassword": "Change your password",
+        "changePassword_desc": "Change your password at any time.",
+
+        "deleteYourAccount": "Delete your account",
+        "deleteYourAccount_desc": "Find out how you can delete your account.",
+
+        "accountInfo": {
+            "title": "Account information",
+            "username": "Username",
+            "email": "Email",
+            "accountCreation": "Account creation",
+            "country": "Country",
+
+            "languages": "Languages",
+            "languages_list": "English, Arabic",
+
+            "birthDate": "Birth date",
+            "birthDate_desc": "Change your date of birth on your profile.",
+
+            "age": "Age",
+            "age_desc_long": "If you haven’t provided a date of birth, we’ve provided an age range based on your Yapper profile and activity. Age information is used to personalize your experience.",
+            "age_notRight": "Not right? You can add your date of birth to your profile without sharing it publicly."
+        },
+
+        "languages": {
+            "title": "Languages",
+            "appsAndLanguage" : "App and post languages",
+            "manage_desc": "Manage which languages are used to personalize your Yapper experience.",
+            "selectAppLanguage": "Select your app language",
+            "selectAppLanguage_desc": "This will be your default language in the app. You’ll see content we think you’ll like in the other languages you chose, too.",
+            "next" : "Next"
+        },
+
+        "privacyAndSafety": "Privacy and Safety",
+        "privacyAndSafety_desc": "Manage your privacy and safety settings on Yapper.",
+
+        "muteAndBlock": "Mute and block",
+        "muteAndBlock_desc": "Manage the accounts and notifications that you have muted or blocked.",
+
+        "blockedAccounts": "Blocked accounts",
+        "blockedAccounts_desc": "When you block someone, that person won’t be able to follow or message you, and you won’t see notifications from them.",
+
+        "mutedAccounts": "Muted accounts",
+        "mutedAccounts_desc": "Here’s everyone you muted. You can add or remove them from this list.",
+
+        "displayAndLanguages": "Display and languages",
+        "displayAndLanguages_desc": "Manage how Yapper content is displayed to you.",
+
+        "display": "Display",
+        "display_desc": "Manage your font color and background. These settings affect all the Yapper accounts on this browser.",
+        "display_desc2": "Manage your font size, color, and background. These settings affect all the Yapper accounts on this browser.",
+
+        "fontSize": "Font size",
+        "color": "Color",
+        "background": "Background",
+
+        "useSystemSetting": "Use system setting",
+        "useSystemSetting_desc": "Your theme will automatically switch based on your device settings.",
+
+        "choosePreferredTheme": "Choose your preferred theme"
     }
   }
 }
-
-
