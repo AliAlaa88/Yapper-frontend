@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch, computed } from 'vue'
+import { onUnmounted, watch, computed } from 'vue'
 import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
@@ -84,11 +84,9 @@ import { formatDetailDate } from '../../utils/lib'
 import { useRoute } from '#app'
 import { MessageCircle, AlertTriangle } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
-import { useTweetDetailsQuery } from '../../queries/useTweetQueries'
 
 // Get tweet ID and username from route params
 const route = useRoute()
-const username = computed(() => route.params.username)
 const tweetId = computed(() => route.params.tweetId)
 
 // Get the transition store
@@ -137,17 +135,10 @@ const mainTweetStats = computed(() => {
   }
 })
 
-// Lifecycle hooks
-// Query auto-fetches on mount when enabled
-// With initialData, it shows immediately and refetches for replies
-// Without initialData, it fetches normally
-
-// Cleanup transition tweet when leaving the page
 onUnmounted(() => {
   tweetTransitionStore.clearTransitionTweet()
 })
 
-// Watchers - watch for route changes
 watch(tweetId, (newTweetId) => {
   if (newTweetId) {
     fetchTweetDetails()

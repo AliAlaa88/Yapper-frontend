@@ -4,7 +4,7 @@
         <div class="sticky top-0 z-2 bg-[#ffffff] dark:bg-x-bg-dark/80 dark:backdrop-blur-md  px-4 py-3">
             <div class="flex items-center gap-4">
                 <button 
-                    @click="$router.back" 
+                    @click="$router.back()" 
                     class="p-2 rounded-full hover:bg-hover transition-colors"
                 >
                     <ArrowLeft :size="20" class="cursor-pointer text-primary"/>

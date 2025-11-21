@@ -7,7 +7,7 @@
             >
                 <div class="flex items-center gap-4">
                     <button
-                        @click="$router.back"
+                        @click="$router.back()"
                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[var(--color-x-gray-light)] transition-colors"
                     >
                         <ArrowLeft :size="20" class="cursor-pointer x-"/>
