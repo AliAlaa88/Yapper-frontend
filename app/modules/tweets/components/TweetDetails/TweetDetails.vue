@@ -25,6 +25,7 @@
           <ProfileActionsMenu 
             :userid="tweetDetails.user.id"
             @user-action="handleUserAction"
+            :is-tweet="true"
           />
         </div>
       </div>
