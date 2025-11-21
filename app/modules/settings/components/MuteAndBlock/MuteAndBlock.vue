@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-import DetailedPanel from './DetailedPanel.vue'
-import DetailedRow from './DetailedRow.vue'
+import DetailedPanel from '../DetailedPanel.vue'
+import DetailedRow from '../DetailedRow.vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 

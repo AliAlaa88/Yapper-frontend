@@ -11,11 +11,17 @@
         <aside class="hidden xl:block border-r border-primary flex-1">
             <slot />
         </aside>
-
+        <SnackBar />
+        <ConfirmtionModal />
     </main>
 </template>
 
 <script setup lang="ts">
 import SidebarCategories from '~/modules/settings/components/SidebarCategories.vue'
 import Sidebar from '~/modules/TimeLine/components/sidebar/Sidebar.vue'
+import SnackBar from '../modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
+import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
+import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+
+useProfileProviders()
 </script>

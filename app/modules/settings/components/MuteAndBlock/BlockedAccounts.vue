@@ -1,9 +1,9 @@
 <template>
     <DetailedPanel :title="$t('settings.blockedAccounts')">
         <div class="w-full text-primary">
-            <!-- <div v-if="myMutedUsersQuery.isLoading.value" class="p-4 text-muted">
+            <div v-if="myBlockedUsersQuery.isLoading.value" class="p-4 text-muted">
                 Loading muted accounts...
-            </div> -->
+            </div>
             <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
                     {{ $t('settings.blockedAccounts_desc') }}
@@ -14,6 +14,7 @@
                     v-for="user in myBlockedUsersQuery.data.value"
                     :key="user.user_id"
                     :account="user">
+                    <ProfileBlockedAction />
                 </UserAccountItem>
             </div>
 
@@ -25,10 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import UserAccountItem from './UserAccountItem.vue'
-import DetailedPanel from './DetailedPanel.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
-// import ProfileBlockedAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileBlockedAction.vue'
+import UserAccountItem from ''./UserAccountItem.vue'
+import DetailedPanel from '../DetailedPanel.vue'
+import { userSettingsQueries } from '../../queries/userSettingsQueries'
+import ProfileBlockedAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileBlockedAction.vue'
 
 const { myBlockedUsersQuery } = userSettingsQueries()
 console.log('hahaga', myBlockedUsersQuery)

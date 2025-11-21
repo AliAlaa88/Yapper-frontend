@@ -1,9 +1,9 @@
 <template>
     <DetailedPanel :title="t('settings.mutedAccounts')">
         <div class="w-full text-primary">
-            <!-- <div v-if="myMutedUsersQuery.isLoading.value" class="p-4 text-muted">
+            <div v-if="myMutedUsersQuery.isLoading.value" class="p-4 text-muted">
                 Loading muted accounts...
-            </div> -->
+            </div>
             <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
                     {{  t('settings.mutedAccounts_desc')    }}
@@ -32,8 +32,8 @@
 
 <script setup lang="ts">
 import UserAccountItem from './UserAccountItem.vue'
-import DetailedPanel from './DetailedPanel.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import DetailedPanel from '../DetailedPanel.vue'
+import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import { MegaphoneOff } from 'lucide-vue-next'
 import Button from '~/components/ui/Button.vue'
 import { useI18n } from 'vue-i18n'
