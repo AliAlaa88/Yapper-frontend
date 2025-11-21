@@ -7,13 +7,12 @@ export const tweetServiceReal = {
         const response = await $axios.get(
             `${path}` + (nextCursor ? `?cursor=${nextCursor}` : '')
         )
-
         const page = response.data.data
 
         return {
-            data: page.tweets.filter((t: any) => t.tweet_id),
-            nextCursor: page.next_cursor,
-            hasMore: page.has_more,
+            data: page.data.filter((t: any) => t.tweet_id),
+            nextCursor: page.pagination.next_cursor,
+            hasMore: page.pagination.has_more,
         }
     },
 
