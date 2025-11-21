@@ -45,6 +45,20 @@
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
+  "months": {
+      "january": "يناير",
+      "february": "فبراير",
+      "march": "مارس",
+      "april": "أبريل",
+      "may": "مايو",
+      "june": "يونيو",
+      "july": "يوليو",
+      "august": "أغسطس",
+      "september": "سبتمبر",
+      "october": "أكتوبر",
+      "november": "نوفمبر",
+      "december": "ديسمبر"
+  },
   "auth": {
     "common": {
       "next": "التالي",
@@ -166,7 +180,7 @@
       "dobRequired": "يرجى اختيار تاريخ ميلادك الكامل",
       "dobTooYoung": "يجب أن يكون عمرك 13 سنة على الأقل",
       "dobInvalid": "يرجى إدخال تاريخ ميلاد صحيح",
-      "identifierRequired": "يرجى إدخال بريدك الإلكتروني أو رقم هاتفك أو اسم المستخدم"   
+      "identifierRequired": "يرجى إدخال بريدك الإلكتروني أو رقم هاتفك أو اسم المستخدم"
     },
     "months": {
         "january": "يناير",
@@ -181,205 +195,205 @@
         "october": "أكتوبر",
         "november": "نوفمبر",
         "december": "ديسمبر"
-    },
-    "profile": {
-        "editProfile": "تعديل الملف الشخصي",
-        "saveChanges": "حفظ",
-        "name": "الاسم",
-        "bio": "النبذة التعريفية",
-        "location": "الموقع",
-        "website": "الموقع الإلكتروني",
-        "birthDate": "تاريخ الميلاد",
-        "joinDate": "تاريخ الانضمام",
-        "born": "تاريخ الميلاد",
-        "joined": "انضم",
-        "following": "متابَع",
-        "followers": "المتابعون",
-        "tweets": "المنشورات",
-        "tweetsAndReplies": "المنشورات والردود",
-        "media": "الوسائط",
-        "likes": "الإعجابات",
-        "followButton": "متابعة",
-        "followBackButton": "متابعة متبادلة",
-        "followingButton": "يتابع",
-        "unfollowButton": "إلغاء المتابعة",
-        "messageButton": "رسالة",
-        "muteButton": "كتم",
-        "unmuteButton": "إلغاء الكتم",
-        "blockButton": "حظر",
-        "blockedButton": "محظور",
-        "unblockButton": "إلغاء الحظر",
-        "removeFollowerButton": "إزالة هذا المتابع",
-        "cancelButton": "إلغاء",
-        "mutualFollowers": {
-            "noMutuals": "لا يتابعه أحد ممن تتابعهم",
-            "followedBy": "يتابعه",
-            "followedByTwo": "يتابعه {name1} و {name2}",
-            "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم",
-            "and": "و",
-            "others": "آخرون ممن تتابعهم"
-        },
-        "tabs": {
-            "posts": "المنشورات",
-            "replies": "الردود",
-            "media": "الوسائط",
-            "likes": "الإعجابات"
-        },
-        "emptyState": {
-            "noPosts": {
-                "title": "لا توجد منشورات بعد",
-                "description": "عندما ينشر هذا المستخدم، ستظهر هنا."
-            },
-            "noReplies": {
-                "title": "لا توجد ردود بعد",
-                "description": "عندما يرد هذا المستخدم على المنشورات، ستظهر هنا."
-            },
-            "noMedia": {
-                "title": "لا توجد وسائط بعد",
-                "description": "ستظهر الصور ومقاطع الفيديو هنا."
-            },
-            "noLikes": {
-                "title": "لا توجد إعجابات بعد",
-                "description": "عندما يعجب هذا المستخدم بالمنشورات، ستظهر هنا."
-            }
-        },
-        "blocked": {
-            "title": "{username} محظور",
-            "description": "هل أنت متأكد أنك تريد عرض هذه المنشورات؟ عرض المنشورات لن يلغي حظر {username}."
-        },
-        "muted": {
-            "message": "لقد قمت بكتم المنشورات من هذا الحساب.",
-            "action": "إلغاء الكتم"
-        },
-        "actions": {
-            "block": {
-                "title": "حظر",
-                "button": "حظر",
-                "description": "سيتمكنون من رؤية منشوراتك العامة، لكن لن يتمكنوا من التفاعل معها. {username} لن يتمكن أيضًا من متابعتك أو مراسلتك، ولن ترى الإشعارات منهم.",
-                "snackbar": "تم الحظر بنجاح.",
-                "undoButton": "إلغاء الحظر"
-            },
-            "unblock": {
-                "title": "إلغاء الحظر",
-                "button": "إلغاء الحظر",
-                "description": "سيتمكنون من متابعتك والتفاعل مع منشوراتك العامة."
-            },
-            "unfollow": {
-                "title": "إلغاء المتابعة",
-                "button": "إلغاء المتابعة",
-                "description": "لن تظهر منشوراتهم في جدولك الزمني للمتابعة. لا يزال بإمكانك عرض ملفهم الشخصي، ما لم تكن منشوراتهم محمية."
-            },
-            "mute": {
-                "snackbar": "تم كتم {username}.",
-                "undoButton": "تراجع"
-            },
-            "unmute": {
-                "title": "إلغاء الكتم",
-                "button": "إلغاء الكتم",
-                "description": "سيُسمح الآن بالمنشورات من هذا الحساب في جدولك الزمني الرئيسي.",
-                "snackbar": "تم إلغاء كتم {username}."
-            },
-            "removeFollower": {
-                "title": "إزالة",
-                "button": "إزالة هذا المتابع",
-                "description": "سيتم إزالة {username} من متابعيك ولن يتم إخطاره بواسطة يابر. يمكنهم متابعتك مرة أخرى في المستقبل.",
-                "snackbar": "{username} لم يعد يتابعك."
-            }
-        },
-        "editProfileModal": {
-            "title": "تعديل الملف الشخصي",
-            "uploadPhoto": "رفع صورة",
-            "removePhoto": "إزالة الصورة",
-            "uploadCover": "رفع غلاف",
-            "removeCover": "إزالة الغلاف",
-            "namePlaceholder": "الاسم",
-            "bioPlaceholder": "النبذة التعريفية",
-            "locationPlaceholder": "الموقع",
-            "websitePlaceholder": "الموقع الإلكتروني",
-            "month": "الشهر",
-            "day": "اليوم",
-            "year": "السنة"
-        },
-        "followLists": {
-            "emptyState": {
-                "noFollowers": {
-                    "title": "لا يوجد متابعون بعد",
-                    "description": "عندما يتابع شخص ما هذا الحساب، سيظهرون هنا."
-                },
-                "noFollowing": {
-                    "title": "لا يتابع أحدًا بعد",
-                    "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
-                }
-            }
-        }
-    },
-    "settings": {
-        "yourAccount": "حسابك",
-        "yourAccount_desc": "اطّلع على معلومات حسابك، وقم بتنزيل أرشيف لبياناتك، أو تعرّف على كيفية حذف حسابك.",
-
-        "accountInformation": "معلومات الحساب",
-        "accountInformation_desc": "اطّلع على معلومات حسابك مثل اسم المستخدم والبريد الإلكتروني.",
-
-        "changePassword": "تغيير كلمة المرور",
-        "changePassword_desc": "يمكنك تغيير كلمة المرور في أي وقت.",
-
-        "deleteYourAccount": "حذف حسابك",
-        "deleteYourAccount_desc": "تعرّف على كيفية حذف حسابك.",
-
-        "accountInfo": {
-            "title": "معلومات الحساب",
-            "username": "اسم المستخدم",
-            "email": "البريد الإلكتروني",
-            "accountCreation": "تاريخ إنشاء الحساب",
-            "country": "الدولة",
-
-            "languages": "اللغات",
-            "languages_list": "الإنجليزية، العربية",
-
-            "birthDate": "تاريخ الميلاد",
-            "birthDate_desc": "قم بتغيير تاريخ ميلادك من خلال ملفك الشخصي.",
-
-            "age": "العمر",
-            "age_desc_long": "إذا لم تُدخل تاريخ ميلادك، سنعرض لك نطاقًا للعمر بناءً على ملفك الشخصي ونشاطك في Yapper. تُستخدم معلومات العمر لتخصيص تجربتك.",
-            "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى ملفك الشخصي دون مشاركته بشكل عام."
-        },
-
-        "languages": {
-            "title": "اللغات",
-            "appsAndLanguage": "التطبيق و لغة النشر",
-            "manage_desc": "إدارة اللغات المستخدمة لتخصيص تجربتك في Yapper.",
-            "selectAppLanguage": "اختر لغة التطبيق",
-            "selectAppLanguage_desc": "ستكون هذه هي اللغة الافتراضية في التطبيق. سترى أيضًا محتوى نقترحه بناءً على اللغات الأخرى التي اخترتها.",
-            "next" : "التالي"
-        },
-
-        "privacyAndSafety": "الخصوصية والأمان",
-        "privacyAndSafety_desc": "إدارة إعدادات الخصوصية والأمان في Yapper.",
-
-        "muteAndBlock": "الكتم والحظر",
-        "muteAndBlock_desc": "إدارة الحسابات والإشعارات التي قمت بكتمها أو حظرها.",
-
-        "blockedAccounts": "الحسابات المحظورة",
-        "blockedAccounts_desc": "عند حظر شخص ما، فلن يتمكن من متابعتك أو مراسلتك، ولن ترى إشعارات منه.",
-
-        "mutedAccounts": "الحسابات المكتومة",
-        "mutedAccounts_desc": "هنا ستجد جميع من قمت بكتمهم. يمكنك إضافة أو إزالة الحسابات من هذه القائمة.",
-
-        "displayAndLanguages": "العرض واللغات",
-        "displayAndLanguages_desc": "إدارة كيفية عرض محتوى Yapper لك.",
-
-        "display": "العرض",
-        "display_desc": "إدارة لون الخط والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
-        "display_desc2": "إدارة حجم الخط، اللون، والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
-
-        "fontSize": "حجم الخط",
-        "color": "اللون",
-        "background": "الخلفية",
-
-        "useSystemSetting": "استخدام إعداد النظام",
-        "useSystemSetting_desc": "سيتم تغيير السمة تلقائيًا بناءً على إعدادات جهازك.",
-
-        "choosePreferredTheme": "اختر السمة المفضّلة لديك"
     }
+  },
+  "profile": {
+      "editProfile": "تعديل الملف الشخصي",
+      "saveChanges": "حفظ",
+      "name": "الاسم",
+      "bio": "النبذة التعريفية",
+      "location": "الموقع",
+      "website": "الموقع الإلكتروني",
+      "birthDate": "تاريخ الميلاد",
+      "joinDate": "تاريخ الانضمام",
+      "born": "تاريخ الميلاد",
+      "joined": "انضم",
+      "following": "متابَع",
+      "followers": "المتابعون",
+      "tweets": "المنشورات",
+      "tweetsAndReplies": "المنشورات والردود",
+      "media": "الوسائط",
+      "likes": "الإعجابات",
+      "followButton": "متابعة",
+      "followBackButton": "متابعة متبادلة",
+      "followingButton": "يتابع",
+      "unfollowButton": "إلغاء المتابعة",
+      "messageButton": "رسالة",
+      "muteButton": "كتم",
+      "unmuteButton": "إلغاء الكتم",
+      "blockButton": "حظر",
+      "blockedButton": "محظور",
+      "unblockButton": "إلغاء الحظر",
+      "removeFollowerButton": "إزالة هذا المتابع",
+      "cancelButton": "إلغاء",
+      "mutualFollowers": {
+          "noMutuals": "لا يتابعه أحد ممن تتابعهم",
+          "followedBy": "يتابعه",
+          "followedByTwo": "يتابعه {name1} و {name2}",
+          "followedByMultiple": "يتابعه {name} و {count} آخرون ممن تتابعهم",
+          "and": "و",
+          "others": "آخرون ممن تتابعهم"
+      },
+      "tabs": {
+          "posts": "المنشورات",
+          "replies": "الردود",
+          "media": "الوسائط",
+          "likes": "الإعجابات"
+      },
+      "emptyState": {
+          "noPosts": {
+              "title": "لا توجد منشورات بعد",
+              "description": "عندما ينشر هذا المستخدم، ستظهر هنا."
+          },
+          "noReplies": {
+              "title": "لا توجد ردود بعد",
+              "description": "عندما يرد هذا المستخدم على المنشورات، ستظهر هنا."
+          },
+          "noMedia": {
+              "title": "لا توجد وسائط بعد",
+              "description": "ستظهر الصور ومقاطع الفيديو هنا."
+          },
+          "noLikes": {
+              "title": "لا توجد إعجابات بعد",
+              "description": "عندما يعجب هذا المستخدم بالمنشورات، ستظهر هنا."
+          }
+      },
+      "blocked": {
+          "title": "{username} محظور",
+          "description": "هل أنت متأكد أنك تريد عرض هذه المنشورات؟ عرض المنشورات لن يلغي حظر {username}."
+      },
+      "muted": {
+          "message": "لقد قمت بكتم المنشورات من هذا الحساب.",
+          "action": "إلغاء الكتم"
+      },
+      "actions": {
+          "block": {
+              "title": "حظر",
+              "button": "حظر",
+              "description": "سيتمكنون من رؤية منشوراتك العامة، لكن لن يتمكنوا من التفاعل معها. {username} لن يتمكن أيضًا من متابعتك أو مراسلتك، ولن ترى الإشعارات منهم.",
+              "snackbar": "تم الحظر بنجاح.",
+              "undoButton": "إلغاء الحظر"
+          },
+          "unblock": {
+              "title": "إلغاء الحظر",
+              "button": "إلغاء الحظر",
+              "description": "سيتمكنون من متابعتك والتفاعل مع منشوراتك العامة."
+          },
+          "unfollow": {
+              "title": "إلغاء المتابعة",
+              "button": "إلغاء المتابعة",
+              "description": "لن تظهر منشوراتهم في جدولك الزمني للمتابعة. لا يزال بإمكانك عرض ملفهم الشخصي، ما لم تكن منشوراتهم محمية."
+          },
+          "mute": {
+              "snackbar": "تم كتم {username}.",
+              "undoButton": "تراجع"
+          },
+          "unmute": {
+              "title": "إلغاء الكتم",
+              "button": "إلغاء الكتم",
+              "description": "سيُسمح الآن بالمنشورات من هذا الحساب في جدولك الزمني الرئيسي.",
+              "snackbar": "تم إلغاء كتم {username}."
+          },
+          "removeFollower": {
+              "title": "إزالة",
+              "button": "إزالة هذا المتابع",
+              "description": "سيتم إزالة {username} من متابعيك ولن يتم إخطاره بواسطة يابر. يمكنهم متابعتك مرة أخرى في المستقبل.",
+              "snackbar": "{username} لم يعد يتابعك."
+          }
+      },
+      "editProfileModal": {
+          "title": "تعديل الملف الشخصي",
+          "uploadPhoto": "رفع صورة",
+          "removePhoto": "إزالة الصورة",
+          "uploadCover": "رفع غلاف",
+          "removeCover": "إزالة الغلاف",
+          "namePlaceholder": "الاسم",
+          "bioPlaceholder": "النبذة التعريفية",
+          "locationPlaceholder": "الموقع",
+          "websitePlaceholder": "الموقع الإلكتروني",
+          "month": "الشهر",
+          "day": "اليوم",
+          "year": "السنة"
+      },
+      "followLists": {
+          "emptyState": {
+              "noFollowers": {
+                  "title": "لا يوجد متابعون بعد",
+                  "description": "عندما يتابع شخص ما هذا الحساب، سيظهرون هنا."
+              },
+              "noFollowing": {
+                  "title": "لا يتابع أحدًا بعد",
+                  "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
+              }
+          }
+      }
+  },
+  "settings": {
+      "yourAccount": "حسابك",
+      "yourAccount_desc": "اطّلع على معلومات حسابك، وقم بتنزيل أرشيف لبياناتك، أو تعرّف على كيفية حذف حسابك.",
+
+      "accountInformation": "معلومات الحساب",
+      "accountInformation_desc": "اطّلع على معلومات حسابك مثل اسم المستخدم والبريد الإلكتروني.",
+
+      "changePassword": "تغيير كلمة المرور",
+      "changePassword_desc": "يمكنك تغيير كلمة المرور في أي وقت.",
+
+      "deleteYourAccount": "حذف حسابك",
+      "deleteYourAccount_desc": "تعرّف على كيفية حذف حسابك.",
+
+      "accountInfo": {
+          "title": "معلومات الحساب",
+          "username": "اسم المستخدم",
+          "email": "البريد الإلكتروني",
+          "accountCreation": "تاريخ إنشاء الحساب",
+          "country": "الدولة",
+
+          "languages": "اللغات",
+          "languages_list": "الإنجليزية، العربية",
+
+          "birthDate": "تاريخ الميلاد",
+          "birthDate_desc": "قم بتغيير تاريخ ميلادك من خلال ملفك الشخصي.",
+
+          "age": "العمر",
+          "age_desc_long": "إذا لم تُدخل تاريخ ميلادك، سنعرض لك نطاقًا للعمر بناءً على ملفك الشخصي ونشاطك في Yapper. تُستخدم معلومات العمر لتخصيص تجربتك.",
+          "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى ملفك الشخصي دون مشاركته بشكل عام."
+      },
+
+      "languages": {
+          "title": "اللغات",
+          "appsAndLanguage": "التطبيق و لغة النشر",
+          "manage_desc": "إدارة اللغات المستخدمة لتخصيص تجربتك في Yapper.",
+          "selectAppLanguage": "اختر لغة التطبيق",
+          "selectAppLanguage_desc": "ستكون هذه هي اللغة الافتراضية في التطبيق. سترى أيضًا محتوى نقترحه بناءً على اللغات الأخرى التي اخترتها.",
+          "next" : "التالي"
+      },
+
+      "privacyAndSafety": "الخصوصية والأمان",
+      "privacyAndSafety_desc": "إدارة إعدادات الخصوصية والأمان في Yapper.",
+
+      "muteAndBlock": "الكتم والحظر",
+      "muteAndBlock_desc": "إدارة الحسابات والإشعارات التي قمت بكتمها أو حظرها.",
+
+      "blockedAccounts": "الحسابات المحظورة",
+      "blockedAccounts_desc": "عند حظر شخص ما، فلن يتمكن من متابعتك أو مراسلتك، ولن ترى إشعارات منه.",
+
+      "mutedAccounts": "الحسابات المكتومة",
+      "mutedAccounts_desc": "هنا ستجد جميع من قمت بكتمهم. يمكنك إضافة أو إزالة الحسابات من هذه القائمة.",
+
+      "displayAndLanguages": "العرض واللغات",
+      "displayAndLanguages_desc": "إدارة كيفية عرض محتوى Yapper لك.",
+
+      "display": "العرض",
+      "display_desc": "إدارة لون الخط والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
+      "display_desc2": "إدارة حجم الخط، اللون، والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
+
+      "fontSize": "حجم الخط",
+      "color": "اللون",
+      "background": "الخلفية",
+
+      "useSystemSetting": "استخدام إعداد النظام",
+      "useSystemSetting_desc": "سيتم تغيير السمة تلقائيًا بناءً على إعدادات جهازك.",
+
+      "choosePreferredTheme": "اختر السمة المفضّلة لديك"
   }
 }
