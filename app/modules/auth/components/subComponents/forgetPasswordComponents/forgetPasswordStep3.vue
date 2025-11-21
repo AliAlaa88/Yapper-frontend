@@ -104,7 +104,6 @@ const emit = defineEmits<{
 
 const resetPasswordMutation = useResetPasswordQuery(
     (data: any) => {
-        console.log('Reset Password Success:', data)
         errorMessage.value = ''
         emit('finish')
     },
@@ -145,7 +144,6 @@ const onFinish = () => {
         return
     }
 
-    console.log('reset token:', props.reset_token)
     resetPasswordMutation.mutate({
         identifier: props.identifier,
         reset_token: props.reset_token,

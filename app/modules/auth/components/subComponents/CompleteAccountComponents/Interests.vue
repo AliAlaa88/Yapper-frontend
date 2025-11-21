@@ -32,7 +32,7 @@
                         ]"
                         @click="toggleInterest(interest.id)"
                     >
-                        {{ interest.icon }} {{ interest.name }}
+                      {{ interest.name }}
                     </button>
                 </div>
             </div>
@@ -78,7 +78,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateInterestsMutation } from '../../../queries/useCompleteProfileQuery'
-
+import { useFetchInterests } from '~/modules/auth/queries/useCompleteProfileQuery'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
@@ -88,32 +88,24 @@ const isSubmitting = ref(false)
 interface Interest {
     id: string
     name: string
-    icon: string
 }
 
-const interests: Interest[] = [
-    { id: 'tech', name: 'Technology', icon: '💻' },
-    { id: 'sports', name: 'Sports', icon: '⚽' },
-    { id: 'music', name: 'Music', icon: '🎵' },
-    { id: 'art', name: 'Art', icon: '🎨' },
-    { id: 'food', name: 'Food', icon: '🍔' },
-    { id: 'travel', name: 'Travel', icon: '✈️' },
-    { id: 'gaming', name: 'Gaming', icon: '🎮' },
-    { id: 'fashion', name: 'Fashion', icon: '👗' },
-    { id: 'fitness', name: 'Fitness', icon: '💪' },
-    { id: 'movies', name: 'Movies', icon: '🎬' },
-    { id: 'books', name: 'Books', icon: '📚' },
-    { id: 'photography', name: 'Photography', icon: '📸' },
-    { id: 'nature', name: 'Nature', icon: '🌿' },
-    { id: 'science', name: 'Science', icon: '🔬' },
-    { id: 'business', name: 'Business', icon: '💼' },
-    { id: 'politics', name: 'Politics', icon: '🏛️' },
-    { id: 'education', name: 'Education', icon: '🎓' },
-    { id: 'health', name: 'Health', icon: '🏥' },
-    { id: 'pets', name: 'Pets', icon: '🐾' },
-    { id: 'comedy', name: 'Comedy', icon: '😂' },
-]
+const interests = ref<Interest[]>([])
 
+const fetchInterests = useFetchInterests((data: any) => {
+    
+    interests.value = data.data.map((item: any, index: number) => ({
+        // id is index + 1
+        id: (index + 1).toString(),
+        name: item,
+    }))
+    //
+}, (error: any) => {
+    console.error('Error fetching interests:', error)
+    errorMessage.value = 'Failed to load interests'
+})
+
+fetchInterests.mutate();
 // Use v-model for selected interests
 const selectedInterests = defineModel<string[]>('selectedInterests', { default: [] })
 
@@ -136,7 +128,6 @@ const toggleInterest = (id: string) => {
 
 const interestsMutation = useUpdateInterestsMutation(
     (data) => {
-        console.log('Interests updated:', data)
         isSubmitting.value = false
         errorMessage.value = ''
         emit('finish', selectedInterests.value)
@@ -152,10 +143,8 @@ const interestsMutation = useUpdateInterestsMutation(
 const onNext = () => {
     if (selectedInterests.value.length >= 3 && !isSubmitting.value) {
         isSubmitting.value = true
-        // Convert string IDs to numbers (assuming interests have numeric IDs from backend)
-        const categoryIds = interests
-            .filter(interest => selectedInterests.value.includes(interest.id))
-            .map((_, index) => index + 1) // You may need to adjust this based on actual backend IDs
+        // categoryIds are the selected interest ids
+        const categoryIds = selectedInterests.value.map(id => parseInt(id))
         interestsMutation.mutate({ categoryIds })
     }
 }

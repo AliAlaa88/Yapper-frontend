@@ -60,7 +60,6 @@ import { isLoggedIn } from '~/utils/helpers'
 const router = useRouter()
 
 const goToLogin = () => {
-    console.log('Navigating to login')
     router.push('/auth/login')
 }
 

@@ -40,13 +40,15 @@ import Username from './subComponents/CompleteAccountComponents/Username.vue'
 import Language from './subComponents/CompleteAccountComponents/Language.vue'
 import Interests from './subComponents/CompleteAccountComponents/Interests.vue'
 import { useRouter } from 'vue-router'
-
+import { useGetUserQuery } from '../queries/useGetuserQuery'
+import { useUserStore } from '~/modules/auth/stores/userStore';
+const userStore = useUserStore()
 const router = useRouter()
 const showProfilePicture = ref(false)
 const showUsername = ref(false)
 const showLanguage = ref(false)
 const showInterests = ref(false)
-
+const enableUserQuery = ref(false)
 // Centralized profile completion state
 const profileData = reactive({
     profilePicture: null as string | null,
@@ -124,16 +126,33 @@ const onLanguageBack = () => {
     showUsername.value = true
 }
 
+const getUserQuery = useGetUserQuery(
+    enableUserQuery,
+    (data) => {
+        userStore.setAuth({
+            access_token: useCookie('access_token').value || '',
+            user: data.data
+        });
+        emit('finish', profileData);
+        router.push('/');
+    },
+    (error) => {
+        console.error("Failed to fetch user data after complete account:", error);
+        // Still navigate even if fetch fails, user data might already be in store
+        emit('finish', profileData);
+        router.push('/');
+    }
+)
+
 // Interests handlers
 const onInterestsFinish = (interests: string[]) => {
     profileData.interests = interests
-    emit('finish', profileData)
-    router.push('/')
+    enableUserQuery.value = true
 }
 
 const onInterestsSkip = () => {
     profileData.interests = []
-    emit('finish', profileData)
+    enableUserQuery.value = true
 }
 
 const onInterestsBack = () => {

@@ -112,7 +112,6 @@ const selectLanguage = (code: string) => {
 
 const languageMutation = useUpdateLanguageMutation(
     (data) => {
-        console.log('Language updated:', data)
         isSubmitting.value = false
         errorMessage.value = ''
         emit('next', selectedLanguage.value!)

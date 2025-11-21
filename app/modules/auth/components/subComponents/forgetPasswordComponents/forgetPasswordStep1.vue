@@ -66,7 +66,6 @@ const emit = defineEmits<{
 
 const forgotPasswordMutation = useForgotPasswordQuery(
     (data: any) => {
-        console.log('Forgot Password Step 1 Success:', data)
         errorMessage.value = ''
         emit('next', identifier.value)
     },

@@ -100,13 +100,11 @@ const emit = defineEmits<{
 
 const checkMutation = useCheckIdentifierAvailabilityQuery(
     (data: any) => {
-        console.log('Identifier exists. Proceeding to next step.')
         const Type = data?.data?.identifier_type
         errorMessage.value = ''
         emit('next', identifier.value, Type)
     },
     (error: any) => {
-        console.log('Identifier does not exist or error occurred:', error)
 
         // Extract error message from response
         const errorMsg =
@@ -140,7 +138,6 @@ const onNext = () => {
 }
 
 const onForgotPassword = () => {
-    console.log('Forgot password clicked')
     window.location.href = '/auth/forgot-password'
 }
 </script>

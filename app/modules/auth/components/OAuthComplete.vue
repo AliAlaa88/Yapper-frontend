@@ -14,7 +14,6 @@ const props = defineProps<{
 const oauth_session_token = ref<string>('');
 const exchangeTokenMutation = useExchangeTokenQuery(
     (data: any) => {
-        console.log("Exchange Token Success:", data);
         oauth_session_token.value = data.session_token;
     },
     (error: any) => {
@@ -38,13 +37,11 @@ const onFinish = (Recommendations: string[]) => {
 };
 
 const onBack = () => {
-    console.log("Navigating back to Step 1");
     showCompleteAccount.value = false;
     showStep1.value = true;
 };
 
 const onClose = () => {
-    console.log("Closing OAuth complete flow");
     navigateTo('/auth'); 
 };
 </script>

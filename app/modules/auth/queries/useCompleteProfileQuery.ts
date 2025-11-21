@@ -48,6 +48,21 @@ export const useUpdateLanguageMutation = (
   });
 };
 
+// get Interests
+export const useFetchInterests = (
+  onSuccess?: (data: any) => void,
+  onError?: (error: any) => void
+) => {
+  const { $authService } = useNuxtApp();
+  return useMutation({
+    mutationKey: ['getInterests'],
+    mutationFn: () => $authService.getInterests(),
+    retry: false,
+    onSuccess: (data) => onSuccess?.(data),
+    onError: (error) => onError?.(error),
+  });
+}
+
 // Update Interests
 export const useUpdateInterestsMutation = (
   onSuccess?: (data: any) => void,

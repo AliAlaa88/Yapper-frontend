@@ -86,7 +86,6 @@ const emit = defineEmits<{
 
 const registerMutation = useRegisterS3Query(
     (data) => {
-        console.log('Registration Step 3 Success:', data)
         errorMessage.value = ''
         emit('finish')
     },
@@ -120,7 +119,6 @@ const onNext = () => {
     }
     errorMessage.value = '' // Clear previous errors
 
-    console.log('Next clicked:', props.username, password.value)
     registerMutation.mutate({
         Email: props.Email,
         Username: props.username,

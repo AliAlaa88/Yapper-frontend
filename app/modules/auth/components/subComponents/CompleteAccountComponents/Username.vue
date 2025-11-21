@@ -91,7 +91,7 @@
                 class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
-                {{ $t('auth.common.next') }}
+                {{ $t('auth.common.skip') }}
             </button>
     </Popup>
 </template>
@@ -159,7 +159,6 @@ const isValid = computed(() => {
 
 const usernameMutation = useUpdateUsernameMutation(
     (data) => {
-        console.log('Username updated:', data)
         isSubmitting.value = false
         errorMessage.value = ''
         emit('next', username.value!)

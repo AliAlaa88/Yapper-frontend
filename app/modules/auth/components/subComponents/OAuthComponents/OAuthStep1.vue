@@ -99,7 +99,8 @@ import Logo from '~/modules/Common/components/Logo'
 import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery'
 import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
-
+import { useUserStore } from '~/modules/auth/stores/userStore';
+const userStore = useUserStore()
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
@@ -142,11 +143,8 @@ const props = defineProps<{
 
 const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
     (data: any) => {
-        console.log('OAuth Step 1 Complete Success:', data)
         errorMessage.value = ''
-        console.log('Recommended usernames:', data?.data?.usernames)
         recommendations.value = data?.data?.usernames || []
-        console.log('Recommendations value:', recommendations.value)
 
         oauthCompleteStep2Mutation.mutate({
             OAuth_session_token: props.OAuth_session_token,
@@ -165,7 +163,7 @@ const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
 
 const oauthCompleteStep2Mutation = useOAuthCompleteStep2Query(
     (data: any) => {
-        console.log('OAuth Step 2 Complete Success:', data)
+        userStore.setAuth(data.data)
         errorMessage.value = ''
         emit('finish', recommendations.value)
     },

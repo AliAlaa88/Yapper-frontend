@@ -85,7 +85,6 @@ const emit = defineEmits<{
 
 const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
     (data: any) => {
-        console.log('Verify OTP Success:', data)
         errorMessage.value = ''
         emit('next', data.data.reset_token)
     },

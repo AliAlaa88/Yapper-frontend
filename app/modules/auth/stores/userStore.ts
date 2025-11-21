@@ -1,5 +1,7 @@
 import type {User , AuthResponse} from '../types/user';
 import Cookies from 'js-cookie';
+import { toRaw } from 'vue';
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
@@ -8,29 +10,18 @@ export const useUserStore = defineStore('user', {
   
   getters: {
     isLoggedIn: () => localStorage.getItem('user') !== null && useCookie('access_token').value !== undefined,
-    getUser: (state) => state.user,
-    getAccessToken: (state) => state.accessToken,
-    getUserId: (state) => state.user?.id,
-    getUserEmail: (state) => state.user?.email,
-    getUserName: (state) => state.user?.name,
-    getUserPhone: (state) => state.user?.phone_number,
-    getUserAvatar: (state) => state.user?.avatar_url,
-    hasOAuthProvider: (state) => !!(
-      state.user?.github_id || 
-      state.user?.facebook_id || 
-      state.user?.google_id
-    ),
   },
   
   actions: {
     setAuth(authData: AuthResponse) {
       this.user = authData.user;
       this.accessToken = authData.access_token;
-      
       if (process.client) {
         const token = useCookie('access_token')
         token.value = authData.access_token;
-        localStorage.setItem('user', JSON.stringify(authData.user));
+        // Unwrap Vue Proxy before stringifying
+        const rawUser = toRaw(authData.user);
+        localStorage.setItem('user', JSON.stringify(rawUser));
       }
     },
     
@@ -38,7 +29,8 @@ export const useUserStore = defineStore('user', {
       this.user = userData;
       
       if (process.client) {
-        localStorage.setItem('user', JSON.stringify(userData));
+        const rawUser = toRaw(userData);
+        localStorage.setItem('user', JSON.stringify(rawUser));
       }
     },
     

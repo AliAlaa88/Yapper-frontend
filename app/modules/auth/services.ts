@@ -134,6 +134,10 @@ export const createAuthService = () => {
             }, {withCredentials: true});
             return response.data;
         },
+        getInterests: async ()=>{
+            const response = await $yapperApi.get(`${API_URL}/category`, {withCredentials: true});
+            return response.data
+        },
         updateInterests: async (categoryIds: number[]) => {
             const response = await $yapperApi.post(`${API_URL}/users/me/interests`, {
                 category_ids: categoryIds

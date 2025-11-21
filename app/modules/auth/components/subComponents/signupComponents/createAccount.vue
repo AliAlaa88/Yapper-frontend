@@ -181,7 +181,6 @@ const onRecaptchaVerified = (token: string) => {
     recaptcha.value = token
 }
 const onCaptchaError = () => {
-    console.log('reCAPTCHA error occurred');
 }
 const registerMutation = useRegisterS1Query(
     (data) => {
@@ -190,7 +189,6 @@ const registerMutation = useRegisterS1Query(
         emit('next', email.value)
     },
     (err: any) => {
-        console.log(err)
         const errorMsg =
             err?.response?.data?.message || err?.message || 'Registration failed. Please try again.'
         if (Array.isArray(errorMsg)) error.value = errorMsg[0]
@@ -273,7 +271,6 @@ const onNext = async () => {
         error.value = '' // Clear previous errors
         success.value = ''
 
-        console.log('Next clicked:', name.value, email.value, dateOfBirth, recaptcha.value)
         registerMutation.mutate({
             Name: name.value,
             Email: email.value,

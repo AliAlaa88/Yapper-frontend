@@ -147,7 +147,6 @@ const onFileChange = (event: Event) => {
 
 const uploadMutation = useUpdateProfilePictureMutation(
     (data) => {
-        console.log('Profile picture uploaded:', data)
         isUploading.value = false
         errorMessage.value = ''
         emit('next', data.avatar_url || previewImage.value)

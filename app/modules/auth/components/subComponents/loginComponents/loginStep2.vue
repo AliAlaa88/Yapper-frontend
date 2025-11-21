@@ -110,7 +110,6 @@ const emit = defineEmits<{
 
 const loginMutation = useLoginQuery(
     (data: any) => {
-        console.log('Login Success:', data.data)
         const userStore = useUserStore()
         userStore.setAuth(data.data)
         errorMessage.value = ''
@@ -158,7 +157,6 @@ const onNext = () => {
 }
 
 const onForgotPassword = () => {
-    console.log('Forgot password clicked')
     window.location.href = '/auth/forgot-password'
 }
 </script>

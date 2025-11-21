@@ -110,7 +110,6 @@ const emit = defineEmits<{
 
 const registerMutation = useRegisterS2Query(
     (Data: any) => {
-        console.log('Registration Step 2 Success:', Data)
         // Safely extract recommendations from various possible shapes
         const rec = Data?.data?.recommendations ?? []
         const recommendations = Array.isArray(rec) ? rec : []
@@ -130,7 +129,6 @@ const registerMutation = useRegisterS2Query(
 
 const resendOTPMutation = useResendOTPQuery(
     (data) => {
-        console.log('Resend OTP Success:', data)
         resendCodeSuccess.value = 'OTP has been resent successfully.'
         resendCodeFailure.value = ''
     },
@@ -165,12 +163,10 @@ const onNext = () => {
         return
     }
     errorMessage.value = '' // Clear previous errors
-    console.log('Next clicked:', otp.value)
     registerMutation.mutate({ token: otp.value, Email: props.Email })
 }
 
 const onResendCode = () => {
-    console.log('Resend code clicked')
     resendOTPMutation.mutate(props.Email)
 }
 </script>
