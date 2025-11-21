@@ -11,7 +11,7 @@
         <div v-if="isPending" class="p-6 text-center">
             <div class="inline-flex items-center space-x-2 text-secondary">
                 <div class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"></div>
-                <span class="text-sm font-medium text-primary">Loading tweets...</span>
+                <span class="text-sm font-medium text-primary">{{ $t('tweets.loading.tweets') }}</span>
             </div>
         </div>
         
@@ -19,7 +19,7 @@
         <div v-else-if="error" class="p-6 text-center">
             <div class="bg-primary rounded-xl p-4 border border-primary">
                 <div class="text-red text-sm font-medium mb-3">
-                    {{ error }}
+                    {{ $t('tweets.errors.loadFailed') }}
                 </div>
                 <button 
                     id="tweets-list-retry-button"
@@ -27,7 +27,7 @@
                     class="inline-flex items-center px-4 py-2 bg-blue text-white text-sm font-bold rounded-full hover:bg-blue transition-colors duration-200"
                 >
                     <RotateCw class="w-4 h-4 mr-2" />
-                    Try again
+                    {{ $t('tweets.errors.tryAgain') }}
                 </button>
             </div>
         </div>
@@ -53,9 +53,9 @@
                 <div class="w-16 h-16 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
                     <Twitter class="w-8 h-8 text-secondary" />
                 </div>
-                <h3 class="text-lg font-bold text-primary mb-2">No tweets yet</h3>
+                <h3 class="text-lg font-bold text-primary mb-2">{{ $t('tweets.empty.noTweets') }}</h3>
                 <p class="text-sm text-secondary leading-relaxed">
-                    When tweets are posted, they'll show up here. Check back later!
+                    {{ $t('tweets.empty.noTweetsDescription') }}
                 </p>
             </div>
         </div>

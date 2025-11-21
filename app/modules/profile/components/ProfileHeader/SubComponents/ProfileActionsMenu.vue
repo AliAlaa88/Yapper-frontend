@@ -2,17 +2,35 @@
     <div
         v-if="showList"
         ref="dropdownRef"
+        @click.stop
         class="sm:absolute right-0 mt-2 bg-primary rounded-xl fixed bottom-0 sm:bottom-auto
         sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-allduration-200
-        sm:w-56 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
+        sm:w-70 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
         sm:translate-x-0 w-full sm:rounded-xl rounded-t-2xl sm:max-h-none max-h-[50vh]
         overflow-y-auto">
+        <Button
+            v-if="isTweet"
+            id="follow-tweeet-button"
+            button-class="cursor-pointer w-full text-primary font-semibold text-left
+            px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
+            :is-loading="isFollowLoading || isUnfollowLoading"
+            @click="handleFollowAndUnfollow"
+        >
+            <template #icon-left>
+                <UserRoundPlus v-if="!isFollowing" class="w-4 h-4 mr-3"/>
+                <UserRoundMinus v-else class="w-4 h-4 mr-3" />
+            </template>
+            {{ isFollowing ? $t('profile.unfollowButton') : $t('profile.followButton') }}
+            <span class="font-normal ml-1">@</span>
+            {{ username }}
+        </Button>
+
         <Button
             v-if="!isBlocked"
             id="mute-button"
             button-class="cursor-pointer w-full text-primary font-semibold text-left
             px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
-            :is-loading="isMuteLoading"
+            :is-loading="isMuteLoading || isUnmuteLoading"
             @click="handleMuteAndUnmute"
         >
             <template #icon-left>
@@ -64,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig } from 'lucide-vue-next'
+import { Ban, MegaphoneOff, UserRoundX, Megaphone, CircleCheckBig, UserRoundPlus, UserRoundMinus } from 'lucide-vue-next'
 import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 import { ref, onMounted, onBeforeUnmount, inject, computed } from 'vue'
@@ -72,11 +90,20 @@ import type { Ref } from 'vue'
 import Button from '~/components/ui/Button.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 
+const props = defineProps<{
+    userid?: string | null,
+    isTweet: boolean
+}>()
+
+const emit = defineEmits<{
+    'user-action': [action: 'mute' | 'block' | 'unmute' | 'unblock']
+}>()
+
 const showList = inject<Ref<boolean>>('show-list')!
 
 const profileStore = useProfileStore()
-const userId = computed(() => profileStore.getProfileId() || '')
-const { isBlocked, isMuted, isFollower, username } = useUserInfo(userId)
+const userId = computed(() => props.userid ? props.userid : profileStore.getProfileId() || '')
+const { isBlocked, isMuted, isFollower, username,isFollowing } = useUserInfo(userId)
 const dropdownRef = ref<HTMLElement | null>(null)
 
 const userInteractions = useUserInteractions(userId)
@@ -86,18 +113,43 @@ const {
     handleRemoveFollowerWithConfirmation,
     handleUnmuteWithSnackbar,
     handleUnblockWithConfirmation,
+    handleFolloweWithSnackbar,
+    handleUnfollowWithSnackbar,
     isMuteLoading,
+    isFollowLoading,
+    isUnfollowLoading,
+    isUnmuteLoading,
 } = userInteractions
 
-function handleMuteAndUnmute() {
-    if (isMuted.value) handleUnmuteWithSnackbar(showList)
-    else handleMuteWithSnackbar(showList)
+async function handleMuteAndUnmute() {
+    if (isMuted.value) {
+        await handleUnmuteWithSnackbar(showList)
+        // Emit after the action completes
+        emit('user-action', 'unmute')
+    }
+    else {
+        await handleMuteWithSnackbar(showList)
+        // Emit after the action completes
+        emit('user-action', 'mute')
+    }
+}
+function handleFollowAndUnfollow() {
+    if (isFollowing.value) handleUnfollowWithSnackbar(showList)
+    else handleFolloweWithSnackbar(showList)
 }
 
 function handleBlockAndUnblock() {
     if (isBlocked.value) {
-        handleUnblockWithConfirmation(showList)
-    } else handleBlockWithConfirmation(showList)
+        handleUnblockWithConfirmation(showList, () => {
+            // Emit only after confirmation and action completion
+            emit('user-action', 'unblock')
+        })
+    } else {
+        handleBlockWithConfirmation(showList, () => {
+            // Emit only after confirmation and action completion
+            emit('user-action', 'block')
+        })
+    }
 }
 
 function handleRemove() {

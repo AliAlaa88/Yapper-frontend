@@ -395,5 +395,39 @@
       "useSystemSetting_desc": "سيتم تغيير السمة تلقائيًا بناءً على إعدادات جهازك.",
 
       "choosePreferredTheme": "اختر السمة المفضّلة لديك"
+  },
+  "tweets": {
+      "reposted": "أعيد نشره",
+      "moreActions": "المزيد من الإجراءات",
+      "actions": {
+          "reply": "رد",
+          "retweet": "إعادة نشر",
+          "undoRetweet": "إلغاء إعادة النشر",
+          "like": "إعجاب",
+          "unlike": "إلغاء الإعجاب",
+          "views": "المشاهدات",
+          "bookmark": "حفظ",
+          "removeBookmark": "إزالة الحفظ",
+          "share": "مشاركة",
+          "linkCopied": "تم نسخ الرابط!"
+      },
+      "loading": {
+          "tweets": "جاري تحميل التغريدات...",
+          "tweetDetails": "جاري تحميل تفاصيل التغريدة...",
+          "replies": "جاري تحميل الردود..."
+      },
+      "empty": {
+          "noTweets": "لا توجد تغريدات بعد",
+          "noTweetsDescription": "عندما يتم نشر التغريدات، ستظهر هنا. تحقق لاحقاً!",
+          "noReplies": "لا توجد ردود بعد",
+          "noRepliesDescription": "كن أول من يرد على هذه التغريدة!"
+      },
+      "errors": {
+          "loadFailed": "فشل تحميل التغريدات",
+          "tweetNotFound": "التغريدة غير موجودة",
+          "tweetNotFoundDescription": "قد تكون هذه التغريدة قد تم حذفها أو الرابط غير صحيح.",
+          "tryAgain": "حاول مرة أخرى",
+          "goBack": "العودة"
+      }
   }
 }
