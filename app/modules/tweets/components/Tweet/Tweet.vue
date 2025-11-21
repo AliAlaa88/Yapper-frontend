@@ -47,7 +47,29 @@
             
             <!-- Content column -->
             <div class="flex-1 min-w-0">
-                <Publisher :publisher="user" :created-at="createdAt" />
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1 min-w-0">
+                        <Publisher :publisher="user" :created-at="createdAt" />
+                    </div>
+                    
+                    <!-- Actions Menu Button -->
+                    <div class="relative">
+                        <button
+                            :id="`tweet-menu-button-${id}`"
+                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                            @click.stop="toggleActionsMenu"
+                            :aria-label="$t('profile.moreActions')"
+                        >
+                            <MoreHorizontal :size="16" />
+                        </button>
+                        
+                        <ProfileActionsMenu 
+                            :userid="user.id"
+                            @user-action="handleUserAction"
+                        />
+                    </div>
+                </div>
+                
                 <Content :content="content" />
                 <Stats :stats="stats"/>
             </div>
@@ -62,21 +84,53 @@ import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
-import { computed, nextTick } from 'vue'
+import { computed, nextTick, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
-import { Repeat2 } from 'lucide-vue-next'
+import { Repeat2,MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useQueryClient } from '@tanstack/vue-query'
-
+import ProfileActionsMenu from "../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue"
 
 const props = defineProps<{
     tweet: TweetType
 }>()
 
-const tweetTransitionStore = useTweetTransitionStore()
+const showActionsMenu = ref(false)
+provide('show-list', showActionsMenu)
+
+const toggleActionsMenu = () => {
+    showActionsMenu.value = !showActionsMenu.value
+}
+
 const queryClient = useQueryClient()
 
+const handleUserAction = (action: 'mute' | 'block' | 'unmute' | 'unblock') => {
+    // Remove tweets from this user when muted or blocked
+    if (action === 'mute' || action === 'block') {
+        removeTweetsFromUser(user.value.id)
+    }
+}
+
+const removeTweetsFromUser = (userId: string) => {
+    // Update all tweet queries in the cache
+    queryClient.setQueriesData(
+        { queryKey: ['tweets'] },
+        (oldData: any) => {
+            if (!oldData) return oldData
+            
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page: any) => ({
+                    ...page,
+                    data: page.data.filter((tweet: TweetType) => tweet.user.id !== userId)
+                }))
+            }
+        }
+    )
+}
+
+const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
 

@@ -2,6 +2,7 @@
     <div
         v-if="showList"
         ref="dropdownRef"
+        @click.stop
         class="sm:absolute right-0 mt-2 bg-primary rounded-xl fixed bottom-0 sm:bottom-auto
         sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-allduration-200
         sm:w-56 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
@@ -72,10 +73,18 @@ import type { Ref } from 'vue'
 import Button from '~/components/ui/Button.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 
+const props = defineProps<{
+    userid?: string | null
+}>()
+
+const emit = defineEmits<{
+    'user-action': [action: 'mute' | 'block' | 'unmute' | 'unblock']
+}>()
+
 const showList = inject<Ref<boolean>>('show-list')!
 
 const profileStore = useProfileStore()
-const userId = computed(() => profileStore.getProfileId() || '')
+const userId = computed(() => props.userid ? props.userid : profileStore.getProfileId() || '')
 const { isBlocked, isMuted, isFollower, username } = useUserInfo(userId)
 const dropdownRef = ref<HTMLElement | null>(null)
 
@@ -90,14 +99,28 @@ const {
 } = userInteractions
 
 function handleMuteAndUnmute() {
-    if (isMuted.value) handleUnmuteWithSnackbar(showList)
-    else handleMuteWithSnackbar(showList)
+    if (isMuted.value) {
+        handleUnmuteWithSnackbar(showList)
+        // Emit after a small delay to ensure the action completes
+        setTimeout(() => emit('user-action', 'unmute'), 100)
+    }
+    else {
+        handleMuteWithSnackbar(showList)
+        // Emit after a small delay to ensure the action completes
+        setTimeout(() => emit('user-action', 'mute'), 100)
+    }
 }
 
 function handleBlockAndUnblock() {
     if (isBlocked.value) {
         handleUnblockWithConfirmation(showList)
-    } else handleBlockWithConfirmation(showList)
+        // Emit after a small delay to ensure the action completes
+        setTimeout(() => emit('user-action', 'unblock'), 100)
+    } else {
+        handleBlockWithConfirmation(showList)
+        // Emit after a small delay to ensure the action completes
+        setTimeout(() => emit('user-action', 'block'), 100)
+    }
 }
 
 function handleRemove() {

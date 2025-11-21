@@ -2,11 +2,33 @@
   <div class="bg-primary min-h-screen">
     <!-- Main Tweet -->
     <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
-      <Publisher
-        :publisher="mainTweetUser"
-        :created-at="tweetDetails.created_at"
-        :is-detail="true"
-      />
+      <div class="flex items-start justify-between gap-2 mb-4">
+        <div class="flex-1">
+          <Publisher
+            :publisher="mainTweetUser"
+            :created-at="tweetDetails.created_at"
+            :is-detail="true"
+          />
+        </div>
+        
+        <!-- Actions Menu Button -->
+        <div class="relative">
+          <button
+            id="tweet-detail-menu-button"
+            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+            @click.stop="toggleActionsMenu"
+            :aria-label="$t('profile.moreActions')"
+          >
+            <MoreHorizontal :size="16" />
+          </button>
+          
+          <ProfileActionsMenu 
+            :userid="tweetDetails.user.id"
+            @user-action="handleUserAction"
+          />
+        </div>
+      </div>
+      
       <Content
         :content="mainTweetContent"
       />
@@ -80,20 +102,62 @@
 </template>
 
 <script setup>
-import { onUnmounted, watch, computed } from 'vue'
+import { onUnmounted, watch, computed, ref, provide } from 'vue'
 import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import Reply from './Reply/Reply.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
-import { useRoute } from '#app'
-import { MessageCircle, AlertTriangle } from 'lucide-vue-next'
+import { useRoute, useRouter, navigateTo } from '#app'
+import { MessageCircle, AlertTriangle, MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
+import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
+import { useQueryClient } from '@tanstack/vue-query'
 
 // Get tweet ID and username from route params
 const route = useRoute()
+const router = useRouter()
 const tweetId = computed(() => route.params.tweetId)
+
+const showActionsMenu = ref(false)
+provide('show-list', showActionsMenu)
+
+const toggleActionsMenu = () => {
+  showActionsMenu.value = !showActionsMenu.value
+}
+
+const queryClient = useQueryClient()
+
+const handleUserAction = (action) => {
+  // When user is muted or blocked, navigate back
+  if (action === 'mute' || action === 'block') {
+    // Remove tweets from this user from all queries
+    if (tweetDetails.value) {
+      removeTweetsFromUser(tweetDetails.value.user.id)
+    }
+    // Navigate back to previous page
+    router.back()
+  }
+}
+
+const removeTweetsFromUser = (userId) => {
+  // Update all tweet queries in the cache
+  queryClient.setQueriesData(
+    { queryKey: ['tweets'] },
+    (oldData) => {
+      if (!oldData) return oldData
+      
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          data: page.data.filter((tweet) => tweet.user.id !== userId)
+        }))
+      }
+    }
+  )
+}
 
 // Get the transition store
 const tweetTransitionStore = useTweetTransitionStore()
