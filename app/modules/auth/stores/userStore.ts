@@ -1,4 +1,6 @@
 import type {User , AuthResponse} from '../types/user';
+import Cookies from 'js-cookie';
+import { toRaw } from 'vue';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -7,29 +9,19 @@ export const useUserStore = defineStore('user', {
   }),
   
   getters: {
-    isLoggedIn: () => localStorage.getItem('user') !== null && localStorage.getItem('access_token') !== null,
-    getUser: (state) => state.user,
-    getAccessToken: (state) => state.accessToken,
-    getUserId: (state) => state.user?.id,
-    getUserEmail: (state) => state.user?.email,
-    getUserName: (state) => state.user?.name,
-    getUserPhone: (state) => state.user?.phone_number,
-    getUserAvatar: (state) => state.user?.avatar_url,
-    hasOAuthProvider: (state) => !!(
-      state.user?.github_id || 
-      state.user?.facebook_id || 
-      state.user?.google_id
-    ),
+    isLoggedIn: () => localStorage.getItem('user') !== null && useCookie('access_token').value !== undefined,
   },
   
   actions: {
     setAuth(authData: AuthResponse) {
       this.user = authData.user;
       this.accessToken = authData.access_token;
-      
       if (process.client) {
-        localStorage.setItem('access_token', authData.access_token);
-        localStorage.setItem('user', JSON.stringify(authData.user));
+        const token = useCookie('access_token')
+        token.value = authData.access_token;
+        // Unwrap Vue Proxy before stringifying
+        const rawUser = toRaw(authData.user);
+        localStorage.setItem('user', JSON.stringify(rawUser));
       }
     },
     
@@ -37,7 +29,8 @@ export const useUserStore = defineStore('user', {
       this.user = userData;
       
       if (process.client) {
-        localStorage.setItem('user', JSON.stringify(userData));
+        const rawUser = toRaw(userData);
+        localStorage.setItem('user', JSON.stringify(rawUser));
       }
     },
     
@@ -56,19 +49,19 @@ export const useUserStore = defineStore('user', {
       this.accessToken = null;
       
       if (process.client) {
-        localStorage.removeItem('access_token');
+        Cookies.remove('access_token');
         localStorage.removeItem('user');
       }
     },
     
     restoreSession() {
       if (process.client) {
-        const token = localStorage.getItem('access_token');
+        const token = useCookie('access_token')
         const userStr = localStorage.getItem('user');
         
-        if (token && userStr) {
+        if (token.value && userStr) {
           try {
-            this.accessToken = token;
+            this.accessToken = token.value;
             this.user = JSON.parse(userStr);
           } catch (error) {
             console.error('Failed to restore session:', error);

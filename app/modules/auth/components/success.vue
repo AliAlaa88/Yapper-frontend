@@ -4,42 +4,60 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useUserStore } from '~/modules/auth/stores/userStore';
 import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery';
 import { useRouter } from 'vue-router';
+import { useExchangeTokenQuery } from '~/modules/auth/queries/useOAuthQuery';
+
 const router = useRouter();
 const userStore = useUserStore();
 const urlParams = new URLSearchParams(window.location.search);
-const userToken = ref(urlParams.get('token') || '');
+const exchange_token = ref(urlParams.get('exchange_token') || '');
 const isLoading = ref(true);
-if (userToken.value) {
-    userStore.accessToken = userToken.value;
-    if (process.client) {
-        console.log("Storing access token in localStorage");
-        localStorage.setItem('access_token', userToken.value);
-    }
+const enableUserQuery = ref(false);
 
-    useGetUserQuery(
-        true,
-        (data) => {
-            console.log("User data fetched successfully:", data);
-            userStore.setAuth({
-                access_token: userToken.value,
-                user: data.data
-            });
-            isLoading.value = false;
-            router.push('/');
-        },
-        (error) => {
-            console.error("Failed to fetch user data:", error);
-            isLoading.value = false;
-            router.push('/auth');
-            userStore.logout();
-        }
-    );
-} else {
-    router.push('/auth');
-    userStore.logout();
-}
+const exchangeTokenMutation = useExchangeTokenQuery(
+    (data: any) => {
+        const token = useCookie('access_token');
+        token.value = data.access_token;
+        userStore.accessToken = data.access_token;
+        enableUserQuery.value = true;
+    },
+    (error: any) => {
+        console.error("Exchange Token Error:", error);
+        isLoading.value = false;
+        router.push('/auth');
+        userStore.logout();
+    }
+);
+
+useGetUserQuery(
+    enableUserQuery,
+    (data) => {
+        userStore.setAuth({
+            access_token: useCookie('access_token').value || '',
+            user: data.data
+        });
+        isLoading.value = false;
+        router.push('/');
+    },
+    (error) => {
+        console.error("Failed to fetch user data:", error);
+        isLoading.value = false;
+        router.push('/auth');
+        userStore.logout();
+    }
+);
+
+onMounted(() => {
+    if (exchange_token.value) {
+        exchangeTokenMutation.mutate({ exchange_token: exchange_token.value });
+    } else {
+        console.error("No exchange token found");
+        isLoading.value = false;
+        router.push('/auth');
+        userStore.logout();
+    }
+});
 </script>

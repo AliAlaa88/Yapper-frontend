@@ -18,7 +18,7 @@
                 >
                     <button
                         v-if="hasCloseButton"
-                        class="cursor-pointer"
+                        class="cursor-pointer hover:bg-hover border-none rounded-full p-1 transition"
                         @click="handleClose"
                         id="close-popup-btn"
                     >

@@ -101,10 +101,20 @@ export const createAuthService = () => {
             const response = await $yapperApi.post(`${API_URL}/auth/logout`, {}, {withCredentials: true});
             return response.data;
         },
+        GetAccessToken: async () => {
+            const response = await $yapperApi.post(`${API_URL}/auth/refresh`, {}, {withCredentials: true});
+            return response.data;
+        },
+        ExchangeToken: async (exchange_token: string) => {
+            const response = await $yapperApi.post(`${API_URL}/auth/exchange-token`, {
+                exchange_token: exchange_token
+            }, {withCredentials: true});
+            return response.data;
+        },
         updateProfilePicture: async (profilePicture: File) => {
             const formData = new FormData();
-            formData.append('profile_picture', profilePicture);
-            const response = await $yapperApi.post(`${API_URL}/users/profile-picture`, formData, {
+            formData.append('file', profilePicture);
+            const response = await $yapperApi.post(`${API_URL}/users/me/upload-avatar`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -113,20 +123,24 @@ export const createAuthService = () => {
             return response.data;
         },
         updateUsername: async (username: string) => {
-            const response = await $yapperApi.patch(`${API_URL}/auth/update-username`, {
+            const response = await $yapperApi.post(`${API_URL}/auth/update-username`, {
                 username: username
             }, {withCredentials: true});
             return response.data;
         },
         updateLanguage: async (language: string) => {
-            const response = await $yapperApi.patch(`${API_URL}/users/language`, {
+            const response = await $yapperApi.patch(`${API_URL}/users/me/change-language`, {
                 language: language
             }, {withCredentials: true});
             return response.data;
         },
-        updateInterests: async (interests: string[]) => {
-            const response = await $yapperApi.post(`${API_URL}/users/interests`, {
-                interests: interests
+        getInterests: async ()=>{
+            const response = await $yapperApi.get(`${API_URL}/category`, {withCredentials: true});
+            return response.data
+        },
+        updateInterests: async (categoryIds: number[]) => {
+            const response = await $yapperApi.post(`${API_URL}/users/me/interests`, {
+                category_ids: categoryIds
             }, {withCredentials: true});
             return response.data;
         }
