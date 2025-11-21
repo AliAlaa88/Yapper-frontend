@@ -1,82 +1,80 @@
 <template>
-  <div class="bg-primary min-h-screen">
-    <!-- Main Tweet -->
-    <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
-      <Publisher
-        :publisher="mainTweetUser"
-        :created-at="tweetDetails.created_at"
-        :is-detail="true"
-      />
-      <Content
-        :content="mainTweetContent"
-      />
-      <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
-        <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
-          {{ formatDetailDate(tweetDetails.created_at) }}
-        </time>
-      </div>
-      <Stats
-        :stats="mainTweetStats"
-      />
-    </div>
+    <div class="bg-primary min-h-screen">
+        <!-- Main Tweet -->
+        <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
+            <Publisher
+                :publisher="mainTweetUser"
+                :created-at="tweetDetails.created_at"
+                :is-detail="true"
+            />
+            <Content :content="mainTweetContent" />
+            <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
+                <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
+                    {{ formatDetailDate(tweetDetails.created_at) }}
+                </time>
+            </div>
+            <Stats :stats="mainTweetStats" />
+        </div>
 
-    <!-- Replies Section -->
-    <div v-if="tweetDetails && !isLoading && !error">
-      <!-- Loading Replies State -->
-      <div v-if="isFetchingReplies" class="p-8 text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
-        <p class="text-secondary">Loading replies...</p>
-      </div>
-      
-      <!-- No Replies State -->
-      <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
-        <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
-        <p class="text-lg">No replies yet</p>
-        <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
-      </div>
+        <!-- Replies Section -->
+        <div v-if="tweetDetails && !isLoading && !error">
+            <!-- Loading Replies State -->
+            <div v-if="isFetchingReplies" class="p-8 text-center">
+                <div
+                    class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"
+                ></div>
+                <p class="text-secondary">Loading replies...</p>
+            </div>
 
-      <!-- Replies List -->
-      <div v-else>
-        <Reply
-          v-for="reply in replies"
-          :key="reply.tweet_id"
-          :reply="reply"
-        />
-      </div>
-    </div>
+            <!-- No Replies State -->
+            <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
+                <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
+                <p class="text-lg">No replies yet</p>
+                <p class="text-sm mt-1">Be the first to reply to this tweet!</p>
+            </div>
 
-    <!-- Loading State -->
-    <div v-if="isLoading" class="p-8 text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
-      <p class="text-secondary">Loading tweet details...</p>
-    </div>
+            <!-- Replies List -->
+            <div v-else>
+                <Reply v-for="reply in replies" :key="reply.tweet_id" :reply="reply" />
+            </div>
+        </div>
 
-    <!-- Tweet Not Found State (when data is null but no error) -->
-    <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
-      <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
-      <p class="text-primary text-lg font-semibold mb-2">Tweet not found</p>
-      <p class="text-secondary text-sm">This tweet may have been deleted or the link is incorrect.</p>
-      <button
-        @click="$router.back()"
-        class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
-      >
-        Go Back
-      </button>
-    </div>
+        <!-- Loading State -->
+        <div v-if="isLoading" class="p-8 text-center">
+            <div
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"
+            ></div>
+            <p class="text-secondary">Loading tweet details...</p>
+        </div>
 
-    <!-- Error State -->
-    <div v-if="error" class="p-8 text-center">
-      <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
-      <p class="text-red text-lg">{{ error?.message || 'Failed to load tweet' }}</p>
-      <button
-        id="tweet-detail-retry-button"
-        @click="fetchTweetDetails()"
-        class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
-      >
-        Try Again
-      </button>
+        <!-- Tweet Not Found State (when data is null but no error) -->
+        <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
+            <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
+            <p class="text-primary text-lg font-semibold mb-2">Tweet not found</p>
+            <p class="text-secondary text-sm">
+                This tweet may have been deleted or the link is incorrect.
+            </p>
+            <button
+                @click="$router.back()"
+                class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
+            >
+                Go Back
+            </button>
+        </div>
+
+        <!-- Error State -->
+        <div v-if="error" class="p-8 text-center">
+            <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
+            <p class="text-red text-lg">{{ error?.message || 'Failed to load tweet' }}</p>
+            <button
+                id="tweet-detail-retry-button"
+                @click="fetchTweetDetails()"
+                class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
+            >
+                Try Again
+            </button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -99,62 +97,58 @@ const tweetId = computed(() => route.params.tweetId)
 const tweetTransitionStore = useTweetTransitionStore()
 
 // Use composable with the tweet ID from route and initial data from store
-const {
-  tweetDetails,
-  isLoading,
-  error,
-  replies,
-  isFetchingReplies,
-  fetchTweetDetails
-} = useTweetDetails(tweetId.value, tweetTransitionStore.transitionTweet || undefined)
+const { tweetDetails, isLoading, error, replies, isFetchingReplies, fetchTweetDetails } =
+    useTweetDetails(tweetId.value, tweetTransitionStore.transitionTweet || undefined)
 
 // Transform main tweet data
 const mainTweetUser = computed(() => {
-  if (!tweetDetails.value) return null
-  //console.log(tweetDetails.value);
-  return {
-    ...tweetDetails.value.user,
-    avatar: tweetDetails.value.user.avatar_url || `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`
-  }
+    if (!tweetDetails.value) return null
+    //console.log(tweetDetails.value);
+    return {
+        ...tweetDetails.value.user,
+        avatar:
+            tweetDetails.value.user.avatar_url ||
+            `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`,
+    }
 })
 
 const mainTweetContent = computed(() => {
-  if (!tweetDetails.value) return null
-  return {
-    text: tweetDetails.value.content,
-    images: tweetDetails.value.images || [],
-    videos: tweetDetails.value.videos || []
-  }
+    if (!tweetDetails.value) return null
+    return {
+        text: tweetDetails.value.content,
+        images: tweetDetails.value.images || [],
+        videos: tweetDetails.value.videos || [],
+    }
 })
 
 const mainTweetStats = computed(() => {
-  if (!tweetDetails.value) return null
-  return {
-    tweet_id: tweetDetails.value.tweet_id,
-    likes: tweetDetails.value.likes_count,
-    replies: tweetDetails.value.replies_count,
-    retweets: tweetDetails.value.reposts_count,
-    views: tweetDetails.value.views_count,
-    is_liked: tweetDetails.value.is_liked,
-    is_reposted: tweetDetails.value.is_reposted,
-    is_bookmarked: tweetDetails.value.is_bookmarked,
-    username: tweetDetails.value.user.username
-  }
+    if (!tweetDetails.value) return null
+    return {
+        tweet_id: tweetDetails.value.tweet_id,
+        likes: tweetDetails.value.likes_count,
+        replies: tweetDetails.value.replies_count,
+        retweets: tweetDetails.value.reposts_count,
+        views: tweetDetails.value.views_count,
+        is_liked: tweetDetails.value.is_liked,
+        is_reposted: tweetDetails.value.is_reposted,
+        is_bookmarked: tweetDetails.value.is_bookmarked,
+        username: tweetDetails.value.user.username,
+    }
 })
 
 onUnmounted(() => {
-  tweetTransitionStore.clearTransitionTweet()
+    tweetTransitionStore.clearTransitionTweet()
 })
 
 watch(tweetId, (newTweetId) => {
-  if (newTweetId) {
-    fetchTweetDetails()
-  }
+    if (newTweetId) {
+        fetchTweetDetails()
+    }
 })
 
 watch(isLoading, (newIsLoading) => {
-  if (!newIsLoading) {
-    tweetTransitionStore.setTransitionTweet(tweetDetails.value)
-  }
+    if (!newIsLoading) {
+        tweetTransitionStore.setTransitionTweet(tweetDetails.value)
+    }
 })
 </script>
