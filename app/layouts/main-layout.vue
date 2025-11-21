@@ -27,6 +27,9 @@
                     : 'md:ml-[275px] lg:mr-[250px] xl:mr-[300px]',
             ]"
         >
+            <div class="md:hidden block">
+                <MobileSidebar />
+            </div>
             <slot />
         </div>
 
@@ -55,6 +58,7 @@ import { computed } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import Sidebar from '~/modules/TimeLine/components/sidebar/Sidebar.vue'
+import MobileSidebar from '~/modules/TimeLine/components/sidebar/MobileSidebar.vue'
 import Banner from '~/modules/TimeLine/components/banner/Banner.vue'
 
 const { width } = useWindowSize()
