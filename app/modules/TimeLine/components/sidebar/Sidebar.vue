@@ -24,7 +24,7 @@
                     >
                         <component :is="link.icon" class="w-[26px] h-[26px] text-primary" />
                         <span class="text-[20px] text-primary font-normal">{{
-                            link.label_en
+                            t(link.labelKey)
                         }}</span>
                     </div>
                 </NuxtLink>
@@ -37,7 +37,7 @@
                     @click="handleOpen"
                     id="sidebar-post-btn"
                 >
-                    Post
+                    {{ t('timeline.sidebar.post') }}
                 </button>
             </div>
         </nav>
@@ -48,7 +48,7 @@
         </div>
 
         <!-- Popup -->
-        <Popup :isOpen="isOpen" title="Post a tweet" @close="handleClose">
+        <Popup :isOpen="isOpen" :title="t('timeline.sidebar.postTweet')" @close="handleClose">
             <PostTweet :border="false" />
         </Popup>
     </aside>
@@ -61,51 +61,46 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import UserActions from './subCompoents/UserActions/index'
 import { getUser } from '#imports'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const user = getUser()
 
 const navLinks = [
     {
-        label_en: 'Home',
-        label_ar: 'الرئيسية',
+        labelKey: 'timeline.sidebar.home',
         icon: House,
         href: '/',
     },
     {
-        label_en: 'Search',
-        label_ar: 'البحث',
+        labelKey: 'timeline.sidebar.search',
         icon: Search,
         href: '/search',
     },
     {
-        label_en: 'Notifications',
-        label_ar: 'الإشعارات',
+        labelKey: 'timeline.sidebar.notifications',
         icon: Bell,
         href: '/notifications',
     },
     {
-        label_en: 'Messages',
-        label_ar: 'الرسائل',
+        labelKey: 'timeline.sidebar.messages',
         icon: Mail,
         href: '/messages',
     },
     {
-        label_en: 'Profile',
-        label_ar: 'الملف الشخصي',
+        labelKey: 'timeline.sidebar.profile',
         icon: User,
         href: user ? `/${user.username}` : '/profile',
     },
     {
-        label_en: 'Bookmarks',
-        label_ar: 'المفضلة',
+        labelKey: 'timeline.sidebar.bookmarks',
         icon: Bookmark,
         href: '/bookmarks',
     },
     {
-        label_en: 'Settings',
-        label_ar: 'الإعدادات',
+        labelKey: 'timeline.sidebar.settings',
         icon: Settings,
-        href: '/settings',
+        href: '/settings/account',
     },
 ]
 

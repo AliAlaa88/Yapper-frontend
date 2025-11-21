@@ -1,64 +1,64 @@
 <template>
     <div class="px-4 pt-6 pb-4 space-y-6">
         <div class="relative">
-            <label
-                for="edit-profile-name-input"
-                class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                {{ $t('profile.name') }}
-            </label>
             <input
                 id="edit-profile-name-input"
                 :value="modelValue.name"
                 type="text"
                 :placeholder="$t('profile.editProfileModal.namePlaceholder')"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
             >
-            <span class="absolute end-3 top-2 text-muted text-[13px]">
+            <label
+                for="edit-profile-name-input"
+                class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                {{ $t('profile.name') }}
+            </label>
+            <span class="absolute end-3 top-2 text-muted text-[13px] peer-focus:text-accent">
                 {{ formatNumber(modelValue.name.length) }}/{{ formatNumber(50) }}
             </span>
         </div>
 
         <div class="relative">
-            <label
-                for="edit-profile-bio-input"
-                class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                {{ $t('profile.bio') }}
-            </label>
             <textarea
                 id="edit-profile-bio-input"
                 :value="modelValue.bio"
                 rows="3"
                 :placeholder="$t('profile.editProfileModal.bioPlaceholder')"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200 resize-none"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
             />
-            <span class="absolute end-3 top-2 text-muted text-[13px]">
+            <label
+                for="edit-profile-bio-input"
+                class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                {{ $t('profile.bio') }}
+            </label>
+            <span class="absolute end-3 top-2 text-muted text-[13px] peer-focus:text-accent">
                 {{ formatNumber(modelValue.bio.length) }}/{{ formatNumber(160) }}
             </span>
         </div>
 
         <div class="relative">
-            <label
-                for="edit-profile-location-input"
-                class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none"
-            >
-                {{ $t('profile.location') }}
-            </label>
             <input
                 id="edit-profile-location-input"
                 :value="modelValue.country"
                 type="text"
                 :placeholder="$t('profile.editProfileModal.locationPlaceholder')"
-                class="w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-blue-500 transition-colors duration-200"
+                class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
             >
-            <span class="absolute end-3 top-2 text-muted text-[13px]">
+            <label
+                for="edit-profile-location-input"
+                class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
+            >
+                {{ $t('profile.location') }}
+            </label>
+            <span class="absolute end-3 top-2 text-muted text-[13px] peer-focus:text-accent">
                 {{ formatNumber(modelValue.country.length) }}/{{ formatNumber(30) }}
             </span>
         </div>
@@ -72,7 +72,7 @@
                     <select
                         id="edit-profile-month-input"
                         v-model="selectedMonth"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled>{{ $t('profile.editProfileModal.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
@@ -86,7 +86,7 @@
                     <select
                         id="edit-profile-day-input"
                         v-model="selectedDay"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled>{{ $t('profile.editProfileModal.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ formatNumber(d) }}</option>
@@ -98,7 +98,7 @@
                     <select
                         id="edit-profile-year-input"
                         v-model="selectedYear"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
+                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled>{{ $t('profile.editProfileModal.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ formatNumber(y) }}</option>

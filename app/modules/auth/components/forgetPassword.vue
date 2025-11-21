@@ -54,13 +54,11 @@ const onNextS2 = (reset_token: string) => {
   showStep2.value = false;
   showStep3.value = true;
   forgotPasswordData.resetToken = reset_token;
-  console.log("Reset token received:", reset_token);
 };
 
 const onBackToS1 = () => {
   showStep2.value = false;
   showStep1.value = true;
-  console.log("Going back to Step 1");
 };
 
 const onBackToS2 = () => {
@@ -69,7 +67,6 @@ const onBackToS2 = () => {
 };
 
 const onClose = () => {
-  console.log("Closing forget password flow");
   navigateTo('/auth'); // Redirect to home or desired page
 };
 

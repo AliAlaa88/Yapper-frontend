@@ -1,7 +1,9 @@
 import { RecaptchaV2, install as RecaptchaInstall } from "vue3-recaptcha-v2";
-import { defineNuxtPlugin } from "nuxt/app";
+import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
+import { useNuxtApp } from '#app'
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
+  const nuxtApp = useNuxtApp();
   // Provide options to the library (required to avoid destructuring undefined)
   const config = useRuntimeConfig();
   nuxtApp.vueApp.use(RecaptchaInstall, { sitekey: config.public.recaptcha });

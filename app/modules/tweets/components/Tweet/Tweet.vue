@@ -1,21 +1,25 @@
 <template>
     <article
         :id="`tweet-${id}`"
-        class="border-b border-x-border px-4 py-3 hover:bg-hover dark:hover:bg-hover bg-primary transition-colors cursor-pointer"
+        class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
+        <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
+            <Repeat2 :size="16" />
+            <span class="text-sm">{{ $t('tweets.reposted') }}</span>
+        </div>
+        
         <div class="flex gap-3">
             <!-- Avatar column -->
-            <div class="h-fit">
+            <div class="shrink-0">
                 <NuxtLink
                     :id="`tweet-avatar-link-${id}`"
-                    class="shrink-0"
                     @click.stop
                     :to="profileUrl"
                 >
                     <CustomToolTip
                         :delay-duration="300"
-                        content-class="rounded-2xl shadow-xl border border-x-border"
+                        content-class="rounded-2xl shadow-xl border border-primary"
                     >
                         <template #trigger>
                             <img
@@ -23,6 +27,7 @@
                                 :src="user.avatar"
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                                @error="handleImageError"
                             />
                         </template>
                         <template #content>
@@ -39,12 +44,35 @@
                     </CustomToolTip>
                 </NuxtLink>
             </div>
-
+            
             <!-- Content column -->
             <div class="flex-1 min-w-0">
-                <Publisher :publisher="user" :created-at="createdAt" />
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1 min-w-0">
+                        <Publisher :publisher="user" :created-at="createdAt" />
+                    </div>
+                    
+                    <!-- Actions Menu Button -->
+                    <div class="relative">
+                        <button
+                            :id="`tweet-menu-button-${id}`"
+                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                            @click.stop="toggleActionsMenu"
+                            :aria-label="$t('tweets.moreActions')"
+                        >
+                            <MoreHorizontal :size="16" />
+                        </button>
+                        
+                        <ProfileActionsMenu 
+                            :userid="user.id"
+                            @user-action="handleUserAction"
+                            :is-tweet="true"
+                        />
+                    </div>
+                </div>
+                
                 <Content :content="content" />
-                <Stats :stats="stats" />
+                <Stats :stats="stats"/>
             </div>
         </div>
     </article>
@@ -57,14 +85,53 @@ import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
-import { computed } from 'vue'
+import { computed, nextTick, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
+import { Repeat2,MoreHorizontal } from 'lucide-vue-next'
+import { useTweetTransitionStore } from '../../stores/tweetTransition'
+import { useQueryClient } from '@tanstack/vue-query'
+import ProfileActionsMenu from "../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue"
 
 const props = defineProps<{
     tweet: TweetType
 }>()
 
+const showActionsMenu = ref(false)
+provide('show-list', showActionsMenu)
+
+const toggleActionsMenu = () => {
+    showActionsMenu.value = !showActionsMenu.value
+}
+
+const queryClient = useQueryClient()
+
+const handleUserAction = (action: 'mute' | 'block' | 'unmute' | 'unblock') => {
+    // Remove tweets from this user when muted or blocked
+    if (action === 'mute' || action === 'block') {
+        removeTweetsFromUser(user.value.id)
+    }
+}
+
+const removeTweetsFromUser = (userId: string) => {
+    // Update all tweet queries in the cache
+    queryClient.setQueriesData(
+        { queryKey: ['tweets'] },
+        (oldData: any) => {
+            if (!oldData) return oldData
+            
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page: any) => ({
+                    ...page,
+                    data: page.data.filter((tweet: TweetType) => tweet.user.id !== userId)
+                }))
+            }
+        }
+    )
+}
+
+const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
 
@@ -84,10 +151,15 @@ const user = computed(() => ({
 
 // Transform stats to the expected format
 const stats = computed(() => ({
+    tweet_id: props.tweet.tweet_id,
     likes: props.tweet.likes_count,
     replies: props.tweet.replies_count,
     retweets: props.tweet.reposts_count,
     views: props.tweet.views_count,
+    is_liked: props.tweet.is_liked,
+    is_reposted: props.tweet.is_reposted,
+    is_bookmarked: props.tweet.is_bookmarked,
+    username: props.tweet.user.username,
 }))
 
 const type = computed(() => props.tweet.type)
@@ -98,9 +170,19 @@ const updatedAt = computed(() => props.tweet.updated_at)
 const profileUrl = computed(() => getProfileUrl(user.value))
 const tweetUrl = computed(() => getTweetUrl(props.tweet))
 
-const navigateToTweet = () => {
+const navigateToTweet = async () => {
     if (tweetUrl.value !== '#') {
+        // Wait for any pending DOM updates to complete
+        await nextTick()
+        // Store the latest tweet data before navigation
+        tweetTransitionStore.setTransitionTweet(props.tweet)
         navigateTo(tweetUrl.value)
     }
 }
+
+const handleImageError = (event: Event) => {
+    const target = event.target as HTMLImageElement
+    target.src = `https://ui-avatars.com/api/?name=${user.value.name}`
+}
+
 </script>

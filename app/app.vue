@@ -1,7 +1,8 @@
 <template>
     <div :dir="currentDirection" :lang="currentLocale" class="bg-primary">
-        <LanguageButton />
-        <StyleButton />
+        <!-- Hany comment those because the reponsive app bar in the mobile view un comment them if you as a test -->
+        <!-- <LanguageButton /> -->
+        <!-- <StyleButton /> -->
         <NuxtLayout class="w-full">
             <NuxtPage />
         </NuxtLayout>

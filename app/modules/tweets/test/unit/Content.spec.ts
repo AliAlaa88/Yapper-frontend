@@ -19,7 +19,7 @@ describe('Content Component', () => {
             const paragraph = wrapper.find('p')
             expect(paragraph.text()).toBe('Hello, this is a tweet!')
             expect(paragraph.classes()).toContain('whitespace-pre-wrap')
-            expect(paragraph.classes()).toContain('break-words')
+            expect(paragraph.classes()).toContain('wrap-break-word')
         })
 
         it('preserves whitespace and line breaks in text', () => {
@@ -38,7 +38,7 @@ describe('Content Component', () => {
             expect(paragraph.classes()).toContain('whitespace-pre-wrap')
         })
 
-        it('handles long text with break-words class', () => {
+        it('handles long text with wrap-break-word class', () => {
             const content: ContentType = {
                 text: 'Verylongtextwithoutspacesinittotestbreakwords',
                 images: [],
@@ -50,7 +50,7 @@ describe('Content Component', () => {
             })
 
             const paragraph = wrapper.find('p')
-            expect(paragraph.classes()).toContain('break-words')
+            expect(paragraph.classes()).toContain('wrap-break-word')
         })
     })
 
@@ -178,7 +178,7 @@ describe('Content Component', () => {
             expect(container.classes()).toContain('rounded-2xl')
             expect(container.classes()).toContain('overflow-hidden')
             expect(container.classes()).toContain('border')
-            expect(container.classes()).toContain('border-[var(--color-x-border)]')
+            expect(container.classes()).toContain('border-primary')
         })
 
         it('applies w-full and object-cover to all images', () => {
@@ -300,8 +300,8 @@ describe('Content Component', () => {
             })
 
             const root = wrapper.find('div')
-            expect(root.classes()).toContain('text-[var(--color-x-black)]')
-            expect(root.classes()).toContain('text-[15px]')
+            expect(root.classes()).toContain('text-primary')
+            expect(root.classes()).toContain('text-sm')
             expect(root.classes()).toContain('leading-5')
         })
     })

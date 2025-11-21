@@ -8,7 +8,7 @@
         />
         <TweetsList
             v-if="!isBlocked && userId"
-            :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/likes`}`"
+            :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
             class="min-h-[650px] w-full"
         />
         <ProfileBlockedContent v-if="isBlocked" :username="username" />

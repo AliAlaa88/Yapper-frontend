@@ -315,8 +315,8 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const replyButton = wrapper.find('#tweet-reply-button')
-            expect(replyButton.classes()).toContain('hover:text-x-blue')
+            const replyButton = wrapper.find('#reply')
+            expect(replyButton.classes()).toContain('hover:text-blue')
         })
 
         it('applies correct hover color classes for retweet button', () => {
@@ -324,8 +324,8 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const retweetButton = wrapper.find('#tweet-retweet-button')
-            expect(retweetButton.classes()).toContain('hover:text-x-green')
+            const retweetButton = wrapper.find('#retweet')
+            expect(retweetButton.classes()).toContain('hover:text-green')
         })
 
         it('applies correct hover color classes for like button', () => {
@@ -333,8 +333,8 @@ describe('Stats Component', () => {
                 props: { stats: mockStats },
             })
 
-            const likeButton = wrapper.find('#tweet-like-button')
-            expect(likeButton.classes()).toContain('hover:text-x-red')
+            const likeButton = wrapper.find('#like')
+            expect(likeButton.classes()).toContain('hover:text-red')
         })
 
         it('applies cursor-pointer class to all buttons', () => {

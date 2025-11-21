@@ -1,6 +1,6 @@
 <template>
     <button
-        class="bg-alternate text-alternate px-4 py-2 rounded-md absolute top-2 left-2 flex items-center gap-2 z-100"
+        class="bg-alternate text-alternate px-4 py-2 z-50 rounded-md absolute top-2 left-2 flex items-center gap-2"
         @click="handleOnClick"
     >
         {{ locale === 'ar' ? 'English' : 'العربية' }}
@@ -9,8 +9,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-
-const LOCALE_COOKIE_KEY = 'i18n_redirected'
+import { LOCALE_COOKIE_KEY } from '../../constants/localStorageConstants'
 const { locale } = useI18n()
 
 function setCookie(name: string, value: string, days = 365) {

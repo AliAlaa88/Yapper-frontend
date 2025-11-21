@@ -1,5 +1,5 @@
 <template>
-    <OAuthComplete :oauth_session_token="Oauth_session_token" />
+    <OAuthComplete :exchange_token="exchange_token" />
 </template>
 
 <script setup lang="ts">
@@ -7,7 +7,7 @@ import OAuthComplete from '~/modules/auth/components/OAuthComplete.vue'
 import { ref } from 'vue'
 
 const urlParams = new URLSearchParams(window.location.search)
-const Oauth_session_token = ref(urlParams.get('session') || '')
+const exchange_token = ref(urlParams.get('exchange_token') || '')
 
 definePageMeta({
     middleware: ['auth'],

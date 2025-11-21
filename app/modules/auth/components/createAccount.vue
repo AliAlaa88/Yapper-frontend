@@ -65,7 +65,6 @@ const onNext = async (email: string) => {
     showSignupStep1.value = false
     showVerifyOtp.value = true
     signupData.email = email
-    console.log('Email for OTP verification:', email)
 }
 
 const onFinal = async (recommendations: string[]) => {
@@ -96,7 +95,6 @@ const onCompleteAccountClose = () => {
 }
 
 const onCompleteAccountFinish = (data: any) => {
-    console.log('Profile completion data:', data)
     showCompleteAccount.value = false
     onFinish()
 }
