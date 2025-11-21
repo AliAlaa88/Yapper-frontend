@@ -411,6 +411,38 @@
 
         "choosePreferredTheme": "Choose your preferred theme"
     },
+    "tweets": {
+        "reposted": "Reposted",
+        "moreActions": "More actions",
+        "actions": {
+            "reply": "Reply",
+            "retweet": "Repost",
+            "undoRetweet": "Undo repost",
+            "like": "Like",
+            "unlike": "Unlike",
+            "views": "Views",
+            "bookmark": "Bookmark",
+            "removeBookmark": "Remove bookmark"
+        },
+        "loading": {
+            "tweets": "Loading tweets...",
+            "tweetDetails": "Loading tweet details...",
+            "replies": "Loading replies..."
+        },
+        "empty": {
+            "noTweets": "No tweets yet",
+            "noTweetsDescription": "When tweets are posted, they'll show up here.",
+            "noReplies": "No replies yet",
+            "noRepliesDescription": "When people reply to this tweet, they'll show up here."
+        },
+        "errors": {
+            "loadFailed": "Failed to load tweets",
+            "tryAgain": "Try again",
+            "tweetNotFound": "Tweet not found",
+            "tweetNotFoundDescription": "This tweet may have been deleted or you don't have permission to view it.",
+            "goBack": "Go back"
+        }
+    },
     "timeline": {
         "sidebar": {
             "home": "Home",
