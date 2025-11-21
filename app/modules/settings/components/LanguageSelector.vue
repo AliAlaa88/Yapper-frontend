@@ -11,6 +11,7 @@
 
         <div class="mt-8 px-12 space-y-4">
             <button
+                id="english-button"
                 class="w-full flex justify-between items-center
                 px-1 py-2 text-primary rounded"
                 @click="selected = 'en'">
@@ -22,6 +23,7 @@
             </button>
 
             <button
+                id="arabic-button"
                 class="w-full flex justify-between items-center
                 px-1 py-2 text-primary rounded"
                 @click="selected = 'ar'"
@@ -33,6 +35,7 @@
                 <Circle v-else class="opacity-40" :size="20" />
             </button>
             <Button
+                id="next-button"
                 button-class="w-full cursor-pointer bg-alternate text-alternate
                 font-semibold mt-60 mb-4 py-3 rounded-full"
                 :is-loading="useChangeLanguage.isPending.value"

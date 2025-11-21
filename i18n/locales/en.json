@@ -267,7 +267,13 @@
             "unfollow": {
                 "title": "Unfollow",
                 "button": "Unfollow",
+                "snackbar": "You unfollowed {username}",
                 "description": "Their posts will no longer show up in your Following timeline. You can still view their profile, unless their posts are protected."
+            },
+            "follow": {
+                "title": "Follow",
+                "button": "Follow",
+                "snackbar": "You followed {username}"
             },
             "mute": {
                 "snackbar": "{username} has been muted.",

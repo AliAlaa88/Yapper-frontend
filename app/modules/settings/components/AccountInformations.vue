@@ -39,8 +39,8 @@ import { formatFullDateTime, formatDate, calculateAge } from '../utils/calculati
 const user = getUser() as User
 const { t } = useI18n()
 const categories = computed(() => [
-    { label: t('settings.accountInfo.username'), content: user.username, href: '/settings/screen_name' },
-    { label: t('settings.accountInfo.email'), content: user.email, href:'/settings/email'},
+    { label: t('settings.accountInfo.username'), content: user.username, href: '' },
+    { label: t('settings.accountInfo.email'), content: user.email, href:''},
     { label: t('settings.accountInfo.country'), content: user.country, href: '' },
     { label: t('settings.accountInfo.languages'), content: 'English, Arabic', href: '/settings/languages' },
     { label: t('settings.accountInfo.birthDate'), content: formatDate(user.birth_date ?? ''), href: '/settings/profile' },

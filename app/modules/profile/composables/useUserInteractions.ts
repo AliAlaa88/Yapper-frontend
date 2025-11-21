@@ -172,6 +172,28 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         if (showList) showList.value = false
     }
 
+    async function handleFolloweWithSnackbar(showList?: Ref<boolean>) {
+        try {
+            await handleFollow()
+            showSnackbar.value = true
+            handleShowSnackbar(t('profile.actions.follow.snackbar', { username: username.value }))
+        } catch (error) {
+            console.error('failed to follow: ', error)
+        }
+        if (showList) showList.value = false
+    }
+
+    async function handleUnfollowWithSnackbar(showList?: Ref<boolean>) {
+        try {
+            await handleUnfollow()
+            showSnackbar.value = true
+            handleShowSnackbar(t('profile.actions.unfollow.snackbar', { username: username.value }))
+        } catch (error) {
+            console.error('failed to unfollow: ', error)
+        }
+        if (showList) showList.value = false
+    }
+
     return {
         handleBlockWithConfirmation,
         handleMuteWithSnackbar,
@@ -181,6 +203,8 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleUnmuteWithSnackbar,
         handleUnfollowWithConfirmation,
         handleFollowAction,
+        handleFolloweWithSnackbar,
+        handleUnfollowWithSnackbar,
         isUnfollowLoading,
         isBlockLoading,
         isUnblockLoading,
