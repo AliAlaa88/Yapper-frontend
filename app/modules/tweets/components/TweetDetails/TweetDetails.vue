@@ -10,7 +10,7 @@
             :is-detail="true"
           />
         </div>
-        
+
         <!-- Actions Menu Button -->
         <div class="relative">
           <button
@@ -21,15 +21,15 @@
           >
             <MoreHorizontal :size="16" />
           </button>
-          
-          <ProfileActionsMenu 
+
+          <ProfileActionsMenu
             :userid="tweetDetails.user.id"
             @user-action="handleUserAction"
             :is-tweet="true"
           />
         </div>
       </div>
-      
+
       <Content
         :content="mainTweetContent"
       />
@@ -50,7 +50,7 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
         <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
       </div>
-      
+
       <!-- No Replies State -->
       <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
         <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
@@ -99,6 +99,7 @@
         {{ $t('tweets.errors.tryAgain') }}
       </button>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -148,7 +149,7 @@ const removeTweetsFromUser = (userId) => {
     { queryKey: ['tweets'] },
     (oldData) => {
       if (!oldData) return oldData
-      
+
       return {
         ...oldData,
         pages: oldData.pages.map((page) => ({
