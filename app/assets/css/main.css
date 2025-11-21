@@ -79,32 +79,32 @@
     }
 
     /* Dynamic accent colors based on user selection */
-    [data-color="blue"] {
+    [data-color='blue'] {
         --accent-color: #1d9bf0;
         --accent-color-hover: #1a8cd8;
     }
 
-    [data-color="yellow"] {
+    [data-color='yellow'] {
         --accent-color: #ffd400;
         --accent-color-hover: #f7c600;
     }
 
-    [data-color="pink"] {
+    [data-color='pink'] {
         --accent-color: #f91880;
         --accent-color-hover: #e0156e;
     }
 
-    [data-color="purple"] {
+    [data-color='purple'] {
         --accent-color: #7856ff;
         --accent-color-hover: #6643e6;
     }
 
-    [data-color="orange"] {
+    [data-color='orange'] {
         --accent-color: #ff7a00;
         --accent-color-hover: #e66d00;
     }
 
-    [data-color="green"] {
+    [data-color='green'] {
         --accent-color: #00ba7c;
         --accent-color-hover: #00a368;
     }
@@ -153,8 +153,7 @@
    ⚙️ CUSTOM UTILITIES
    =========================== */
 @layer utilities {
-
-     /* ===========================
+    /* ===========================
        ACCENT COLOR UTILITIES
        =========================== */
     .text-accent {
@@ -403,11 +402,11 @@
     }
     /* Icon utilities */
     .github-icon {
-      filter: invert(1); 
+        filter: invert(1);
     }
 
     .dark .github-icon {
-      filter: invert(0); 
+        filter: invert(0);
     }
 
     /* Hover utilities */
@@ -493,10 +492,10 @@
 
     /* Hover: github icon */
     .button-hover-invert:hover .github-icon {
-      filter: invert(0);           
+        filter: invert(0);
     }
     .dark .button-hover-invert:hover .github-icon {
-      filter: invert(1);          
+        filter: invert(1);
     }
     /* Focus utilities */
 
@@ -506,9 +505,10 @@
 
     .focus\:border-red:focus {
         border-color: var(--color-x-red-hover);
-    /* Animation classes */
-    .animate-like {
-        animation: like 0.6s ease-in-out;
+        /* Animation classes */
+        .animate-like {
+            animation: like 0.6s ease-in-out;
+        }
     }
 }
 
