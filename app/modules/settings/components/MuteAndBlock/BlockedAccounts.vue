@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import UserAccountItem from ''./UserAccountItem.vue'
+import UserAccountItem from './UserAccountItem.vue'
 import DetailedPanel from '../DetailedPanel.vue'
 import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import ProfileBlockedAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileBlockedAction.vue'
