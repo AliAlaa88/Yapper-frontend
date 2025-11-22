@@ -4,9 +4,9 @@
         class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
-        <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
+        <div v-if="tweet.type === 'repost' || (tweet.type === 'quote' && tweet.reposted_by === undefined)" class="flex items-center gap-2 mb-2 text-secondary">
             <Repeat2 :size="16" />
-            <span class="text-sm">{{ $t('tweets.reposted') }}</span>
+            <span class="text-sm"> {{ repostedUsername }} {{ $t('tweets.reposted') }} </span>
         </div>
         
         <div class="flex gap-3">
@@ -37,8 +37,8 @@
                                 :username="user.username"
                                 :avatar="user.avatar"
                                 :bio="user.bio"
-                                :followers-count="user.followers"
-                                :following-count="user.following"
+                                :followers-count="user.followers_count"
+                                :following-count="user.following_count"
                             />
                         </template>
                     </CustomToolTip>
@@ -134,7 +134,7 @@ const removeTweetsFromUser = (userId: string) => {
 const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
-
+const repostedUsername = computed(() => props.tweet.reposted_by?.name || '')
 // Transform content string to Content object
 const content = computed(() => ({
     text: props.tweet.content,

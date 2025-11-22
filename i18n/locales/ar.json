@@ -397,6 +397,38 @@
 
         "choosePreferredTheme": "اختر السمة المفضّلة لديك"
     },
+    "tweets": {
+        "reposted": "أعاد النشر",
+        "moreActions": "المزيد من الإجراءات",
+        "actions": {
+            "reply": "رد",
+            "retweet": "إعادة نشر",
+            "undoRetweet": "التراجع عن إعادة النشر",
+            "like": "إعجاب",
+            "unlike": "إلغاء الإعجاب",
+            "views": "المشاهدات",
+            "bookmark": "إضافة إلى المفضلة",
+            "removeBookmark": "إزالة من المفضلة"
+        },
+        "loading": {
+            "tweets": "جاري تحميل المنشورات...",
+            "tweetDetails": "جاري تحميل تفاصيل المنشور...",
+            "replies": "جاري تحميل الردود..."
+        },
+        "empty": {
+            "noTweets": "لا توجد منشورات بعد",
+            "noTweetsDescription": "عندما يتم نشر منشورات، ستظهر هنا.",
+            "noReplies": "لا توجد ردود بعد",
+            "noRepliesDescription": "عندما يرد الأشخاص على هذا المنشور، ستظهر هنا."
+        },
+        "errors": {
+            "loadFailed": "فشل تحميل المنشورات",
+            "tryAgain": "حاول مرة أخرى",
+            "tweetNotFound": "المنشور غير موجود",
+            "tweetNotFoundDescription": "ربما تم حذف هذا المنشور أو ليس لديك إذن لعرضه.",
+            "goBack": "العودة"
+        }
+    },
     "timeline": {
         "sidebar": {
             "home": "الرئيسية",

@@ -99,7 +99,7 @@
         {{ $t('tweets.errors.tryAgain') }}
       </button>
     </div>
-</div>
+  </div>
 </template>
 
 <script setup>
