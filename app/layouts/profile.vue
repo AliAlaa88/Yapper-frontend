@@ -30,21 +30,22 @@ const showNotFound = ref(false)
 
 const profileStore = useProfileStore()
 
+const { error } = useProfile(username)
+
 watch(
     username,
     (newUsername) => {
         if (newUsername) {
             profileStore.clearProfile()
             showNotFound.value = false
-            const { error } = useProfile(newUsername)
-
-            watch(error, (newError) => {
-                if (newError && newError.message === 'User not found') {
-                    showNotFound.value = true
-                }
-            }, { immediate: true })
         }
     },
     { immediate: true },
 )
+
+watch(error, (newError) => {
+    if (newError && (newError as Error).message === 'User not found') {
+        showNotFound.value = true
+    }
+}, { immediate: true })
 </script>
