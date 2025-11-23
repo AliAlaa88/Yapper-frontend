@@ -67,9 +67,9 @@ const gifs = ref<Gif[]>([])
 const query = ref('')
 
 // Your Giphy API Key
-const API_KEY = config.public.giphyApiKey
+const API_KEY = config.public.gifApiKey
 
-console.log('GIF_API_KEY', config.public.giphyApiKey)
+console.log('GIF_API_KEY', config.public.gifApiKey)
 
 // Fetch Trending GIFs
 const fetchTrending = async () => {
