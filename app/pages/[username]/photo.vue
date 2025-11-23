@@ -12,5 +12,8 @@
 import PhotoModal from '~/modules/profile/components/ProfilePhoto/PhotoModal.vue'
 import ProfileContent from '~/modules/profile/components/ProfileContent/ProfileContent.vue'
 
-definePageMeta({ layout: 'profile' })
+definePageMeta({
+    layout: 'profile',
+    middleware: ['auth'],
+})
 </script>
