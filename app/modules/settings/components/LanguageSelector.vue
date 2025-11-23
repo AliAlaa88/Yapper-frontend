@@ -45,13 +45,11 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { Circle, CheckCircle2 } from 'lucide-vue-next'
 import Button from '~/components/ui/Button.vue'
 import { userSettingsQueries } from '../queries/userSettingsQueries'
-import type { User } from '~/modules/Common/types/user'
-import { getUser } from '~/utils/helpers'
 import { useI18n } from 'vue-i18n'
 import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
 const { t, locale } = useI18n()
 
-const user = getUser() as User
+
 const { useChangeLanguage } = userSettingsQueries()
 const selected = ref<'en' | 'ar'>((locale.value as 'en' | 'ar') || 'en')
 
@@ -59,6 +57,7 @@ const props = defineProps<{
     isOpen: boolean
     handleClose: () => void
 }>()
+
 function setCookie(name: string, value: string, days = 365) {
     if (typeof document === 'undefined') return
     const expires = new Date()

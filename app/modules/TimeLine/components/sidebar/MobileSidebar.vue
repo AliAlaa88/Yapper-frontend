@@ -152,7 +152,7 @@ const navLinks = [
     {
         labelKey: 'timeline.sidebar.settings',
         icon: Settings,
-        href: '/settings/account',
+        href: '/settings/',
     },
 ]
 </script>

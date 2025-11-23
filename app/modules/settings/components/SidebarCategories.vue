@@ -1,6 +1,9 @@
 <template>
     <div class="space-y-4">
-        <h1 class="text-xl px-4 pt-4 font-bold">{{ $t('navigation.settings') }}</h1>
+        <div class="md:hidden w-full sticky top-0 z-20">
+            <DetailedHeader :title="$t('navigation.settings')" />
+        </div>
+        <h1 class="hidden md:block text-xl px-4 pt-4 font-bold">{{ $t('navigation.settings') }}</h1>
         <div class="relative w-full px-2">
             <Search class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40" />
             <input
@@ -36,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import DetailedHeader from './DetailedHeader.vue'
 import { ChevronRight, Search } from 'lucide-vue-next'
 import { useRoute } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
