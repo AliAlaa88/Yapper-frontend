@@ -267,6 +267,11 @@
             "message": "You have muted posts from this account.",
             "action": "Unmute"
         },
+        "notFound": {
+            "title": "This account doesn't exist",
+            "description": "Try searching for another.",
+            "goHome": "Go to Home"
+        },
         "actions": {
             "block": {
                 "title": "Block",
