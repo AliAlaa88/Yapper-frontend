@@ -84,6 +84,7 @@ const searchGifs = () => {
     }
     searchTimeout = setTimeout(async () => {
         if (!query.value.trim()) return fetchTrending()
+        console.log('GIF_API_KEY', API_KEY)
         const res = await fetch(
             `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${encodeURIComponent(query.value)}&limit=30`,
         )
