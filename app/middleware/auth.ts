@@ -11,6 +11,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     if (requiresAuth && !isAuthenticated) {
         // Redirect to auth if trying to access protected route without authentication
+        window.document.title = "login"
         return navigateTo('/auth')
     }
 
