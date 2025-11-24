@@ -1,0 +1,8 @@
+node_modules
+.nuxt
+.output
+dist
+.git
+*.lock
+package-lock.json
+eslint.config.mjs
