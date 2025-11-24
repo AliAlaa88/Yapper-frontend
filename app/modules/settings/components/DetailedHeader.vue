@@ -1,5 +1,5 @@
 <template>
-    <div class="sticky top-0 px-4 py-3 flex items-center gap-4 bg-primary">
+    <div class="sticky top-0 z-20 px-4 py-3 mb-1 flex items-center gap-4 bg-primary">
         <button
             id="back-button"
             class="p-2 flex items-center justify-center cursor-pointer rounded-full

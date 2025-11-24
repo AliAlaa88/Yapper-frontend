@@ -1,6 +1,6 @@
 <template>
     <div class="font-size-slider px-4 py-5 border-b border-primary">
-        <h2 class="text-lg font-bold text-primary mb-5">{{ $t('settings.fontSize') }}</h2>
+        <h2 class="text-lg font-bold text-primary mb-5">{{ t('settings.fontSize') }}</h2>
 
         <div class="flex items-center gap-4">
             <span class="text-xs text-secondary font-normal">Aa</span>
@@ -62,6 +62,8 @@
 
 <script setup lang="ts">
 import { useDisplaySettings } from '../../composables/useDisplaySettings'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const { fontSize } = useDisplaySettings()
 
 const fontSizes = [

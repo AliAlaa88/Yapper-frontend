@@ -55,7 +55,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             'bg-red',
             'text-primary',
             'hover:opacity-90',
-            t('profile.actions.block.description', { username: username.value }),
+            t('profile.actions.block.description', { username: '@' + username.value }),
             handleClick,
             username.value,
         )
@@ -88,7 +88,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             await handleMute()
             showSnackbar.value = true
             handleShowSnackbar(
-                t('profile.actions.mute.snackbar', { username: username.value }),
+                t('profile.actions.mute.snackbar', { username: '@' + username.value }),
                 '',
                 t('profile.actions.mute.undoButton'),
                 handleUnmuteWithSnackbar,
@@ -106,7 +106,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             try {
                 await handleRemoveFollower()
                 handleShowSnackbar(
-                    t('profile.actions.removeFollower.snackbar', { username: username.value }),
+                    t('profile.actions.removeFollower.snackbar', { username: '@' + username.value }),
                 )
             } catch (error) {
                 console.error('failed to remove follower: ', error)
@@ -118,7 +118,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             'bg-red',
             'text-primary',
             'hover:opacity-90',
-            t('profile.actions.removeFollower.description', { username: username.value }),
+            t('profile.actions.removeFollower.description', { username: '@' + username.value }),
             handleClick,
         )
     }
@@ -165,7 +165,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleUnmute()
             showSnackbar.value = true
-            handleShowSnackbar(t('profile.actions.unmute.snackbar', { username: username.value }))
+            handleShowSnackbar(t('profile.actions.unmute.snackbar', { username: '@' + username.value }))
         } catch (error) {
             console.error('failed to unmute: ', error)
         }
@@ -176,7 +176,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleFollow()
             showSnackbar.value = true
-            handleShowSnackbar(t('profile.actions.follow.snackbar', { username: username.value }))
+            handleShowSnackbar(t('profile.actions.follow.snackbar', { username: '@' + username.value }))
         } catch (error) {
             console.error('failed to follow: ', error)
         }
@@ -187,7 +187,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleUnfollow()
             showSnackbar.value = true
-            handleShowSnackbar(t('profile.actions.unfollow.snackbar', { username: username.value }))
+            handleShowSnackbar(t('profile.actions.unfollow.snackbar', { username: '@' + username.value }))
         } catch (error) {
             console.error('failed to unfollow: ', error)
         }
