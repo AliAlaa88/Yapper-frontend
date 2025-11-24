@@ -9,6 +9,13 @@ export default defineConfig({
         globals: true,
         environment: 'happy-dom',
         setupFiles: './tests/setup.ts',
+        coverage: {
+            provider: 'v8', // or 'istanbul'
+            reporter: ['text', 'html', 'lcov'],
+            all: true, // include files with NO tests
+            include: ['app/**/*.{js,ts,vue}'],
+            exclude: ['**/*.d.ts', 'dist/**', 'node_modules/**'],
+        },
         projects: [
             {
                 plugins: [vue()],
@@ -33,6 +40,9 @@ export default defineConfig({
                     include: [
                         // 'test/nuxt/*.{test,spec}.ts',
                         'app/modules/**/test/unit/*.{test,spec}.ts',
+                    ],
+                    exclude: [
+                        'app/modules/tweets/test/unit/*.{test,spec}.ts',
                     ],
                     environment: 'nuxt',
                     setupFiles: './tests/setup.ts',

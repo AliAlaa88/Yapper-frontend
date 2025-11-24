@@ -36,20 +36,25 @@ vi.mock('#app', () => ({
 
 // Mock the login queries - return success immediately for valid inputs
 vi.mock('~/modules/auth/queries/useLoginQuery', () => ({
-    useCheckIdentifierAvailabilityQuery: vi.fn((onSuccess) => ({
-        mutate: vi.fn((payload) => {
-            // Validate and call onSuccess immediately
-            const identifier = payload.identifier
-            if (identifier && identifier.length > 0) {
-                onSuccess?.({ Type: identifier.includes('@') ? 'email' : 'username' })
+    useCheckIdentifierAvailabilityQuery: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (identifier) => {
+            try {
+                const result = await mockAuthService.checkIdentifierAvailability(identifier)
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
             }
         }),
     })),
-    useLoginQuery: vi.fn((onSuccess) => ({
-        mutate: vi.fn((payload) => {
-            // Just call onSuccess immediately - validation already done
-            if (payload.Password) {
-                onSuccess?.({ access_token: 'test-token' })
+    useLoginQuery: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (payload) => {
+            try {
+                const result = await mockAuthService.login(payload.identifier, payload.password)
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
             }
         }),
     })),
@@ -90,13 +95,16 @@ function mountLogin() {
             stubs: {
                 closeButton: true,
                 logo: true,
+                Logo: true,
                 OAuth: true,
+                Teleport: true,
                 Popup: {
                     template: '<div class="popup-mock"><slot /></div>',
                 },
                 NuxtLink: { template: '<a><slot /></a>' },
             },
         },
+        attachTo: document.body,
     })
 }
 
@@ -130,8 +138,7 @@ describe('Login Component', () => {
 
         it('has Next button', () => {
             const wrapper = mountLogin()
-            const buttons = wrapper.findAll('button')
-            const nextButton = buttons.find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
             expect(nextButton?.exists()).toBe(true)
         })
 
@@ -160,20 +167,20 @@ describe('Login Component', () => {
             mockAuthService.checkIdentifierAvailability.mockRejectedValue({
                 response: {
                     data: {
-                        message: 'Sa3fan test is not finding the identifier',
+                        message: 'Safan test is not finding the identifier',
                     },
                 },
             })
 
             const wrapper = mountLogin()
-            const input = wrapper.find('input[type="text"]')
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const input = wrapper.find('#input-identifier-login')
 
             await input.setValue('nonexistent@example.com')
-            await nextButton?.trigger('click')
+            const nextButton = wrapper.find('#button-next-login-s1')
+            await nextButton.trigger('click')
             await flushPromises()
 
-            expect(wrapper.text()).toContain('Sa3fan test is not finding the identifier')
+            expect(wrapper.text()).toContain('Safan test is not finding the identifier')
         })
 
         it('proceeds to step 2 when identifier check succeeds', async () => {
@@ -184,11 +191,11 @@ describe('Login Component', () => {
             })
 
             const wrapper = mountLogin()
-            const input = wrapper.find('input[type="text"]')
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const input = wrapper.find('#input-identifier-login')
 
             await input.setValue('valid@example.com')
-            await nextButton?.trigger('click')
+            const nextButton = wrapper.find('#button-next-login-s1')
+            await nextButton.trigger('click')
             await flushPromises()
 
             expect(wrapper.findComponent(loginStep1).exists()).toBe(false)
@@ -205,9 +212,12 @@ describe('Login Component', () => {
 
         it('emits close event when close button is clicked', async () => {
             const wrapper = mountLogin()
-            const closeButton = wrapper.findComponent({ name: 'closeButton' })
-
-            await closeButton.vm.$emit('close')
+            
+            // The Login component receives close event from loginStep1 and re-emits it
+            // Simulate the close event from the step component
+            const step1 = wrapper.findComponent(loginStep1)
+            await step1.vm.$emit('close')
+            
             expect(wrapper.emitted('close')).toBeTruthy()
         })
     })
@@ -235,16 +245,16 @@ describe('Login Component', () => {
 
         it('allows typing in password input', async () => {
             const wrapper = mountLogin()
-            const input = wrapper.find('input[type="text"]')
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const input = wrapper.find('#input-identifier-login')
 
             await input.setValue('user@example.com')
-            await nextButton?.trigger('click')
+            const nextButton = wrapper.find('#button-next-login-s1')
+            await nextButton.trigger('click')
             await flushPromises()
 
             const passwordInput = wrapper.find('input[type="password"]')
 
-            if (passwordInput) {
+            if (passwordInput.exists()) {
                 await passwordInput.setValue('password123')
                 expect((passwordInput.element as HTMLInputElement).value).toBe('password123')
             }
@@ -254,7 +264,7 @@ describe('Login Component', () => {
             mockAuthService.login.mockRejectedValue({
                 response: {
                     data: {
-                        message: 'Backend Error Message, Sa3fan in Testing',
+                        message: 'Backend Error Message, Safan in Testing',
                     },
                 },
             })
@@ -273,7 +283,7 @@ describe('Login Component', () => {
                 await passwordInput.setValue('wrongpassword')
                 await loginButton.trigger('click')
                 await flushPromises()
-                expect(wrapper.text()).toContain('Backend Error Message, Sa3fan in Testing')
+                expect(wrapper.text()).toContain('Backend Error Message, Safan in Testing')
             }
         })
 

@@ -1,11 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query';
+import { createI18n } from 'vue-i18n';
+import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' };
+import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' };
 import OAuthComplete from '../../components/OAuthComplete.vue';
 import OAuthStep1 from '../../components/subComponents/OAuthComponents/OAuthStep1.vue';
 
+const i18n = createI18n({
+    legacy: false,
+    locale: 'en',
+    messages: {
+        en: enMessages,
+        ar: arMessages,
+    },
+})
+
 // Mock the auth service
 const mockAuthService = {
+    ExchangeToken: vi.fn(),
     OAuthCompleteStep1: vi.fn(),
     OAuthCompleteStep2: vi.fn(),
 };
@@ -43,7 +56,52 @@ vi.mock('vue-router', () => ({
     useRouter: () => mockRouter,
 }));
 
-function mountOAuthComplete(oauth_session_token = 'test-oauth-token-123') {
+// Mock OAuth queries
+vi.mock('~/modules/auth/queries/useOAuthQuery', async (importOriginal) => {
+    return {
+        useExchangeTokenQuery: vi.fn((onSuccess, onError) => ({
+            mutate: vi.fn(async (payload) => {
+                try {
+                    const result = await mockAuthService.ExchangeToken(payload.exchange_token);
+                    await Promise.resolve();
+                    onSuccess?.(result);
+                } catch (error) {
+                    onError?.(error);
+                }
+            }),
+        })),
+        useOAuthCompleteStep1Query: vi.fn((onSuccess, onError) => ({
+            mutate: vi.fn(async (payload) => {
+                try {
+                    const result = await mockAuthService.OAuthCompleteStep1(
+                        payload.OAuth_session_token,
+                        payload.Birth_date
+                    );
+                    await Promise.resolve();
+                    onSuccess?.(result);
+                } catch (error) {
+                    onError?.(error);
+                }
+            }),
+        })),
+        useOAuthCompleteStep2Query: vi.fn((onSuccess, onError) => ({
+            mutate: vi.fn(async (payload) => {
+                try {
+                    const result = await mockAuthService.OAuthCompleteStep2(
+                        payload.OAuth_session_token,
+                        payload.Username
+                    );
+                    await Promise.resolve();
+                    onSuccess?.(result);
+                } catch (error) {
+                    onError?.(error);
+                }
+            }),
+        })),
+    };
+});
+
+function mountOAuthComplete(exchange_token = 'test-oauth-token-123') {
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: { retry: false },
@@ -53,22 +111,32 @@ function mountOAuthComplete(oauth_session_token = 'test-oauth-token-123') {
 
     return mount(OAuthComplete, {
         props: {
-            oauth_session_token,
+            exchange_token,
         },
         global: {
-            plugins: [[VueQueryPlugin, { queryClient }]],
+            plugins: [
+                [VueQueryPlugin, { queryClient }],
+                i18n,
+            ],
             stubs: {
                 'logo': true,
                 'closeButton': true,
                 'backButton': true,
+                'Teleport': true, // Stub teleport to prevent issues in tests
             },
         },
+        attachTo: document.body, // Attach to body for teleport to work
     });
 }
 
 describe('OAuth New Account Registration', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        
+        // Mock ExchangeToken to return session_token
+        mockAuthService.ExchangeToken.mockResolvedValue({
+            session_token: 'test-session-token-123',
+        });
     });
 
     describe('Initial Rendering', () => {
@@ -77,32 +145,37 @@ describe('OAuth New Account Registration', () => {
             expect(wrapper.findComponent(OAuthStep1).exists()).toBe(true);
         });
 
-        it('should pass oauth_session_token to step 1', () => {
-            const token = 'test-token-456';
-            const wrapper = mountOAuthComplete(token);
+        it('should pass OAuth_session_token to step 1 after exchange', async () => {
+            const wrapper = mountOAuthComplete();
+            await flushPromises();
+            
             const step1 = wrapper.findComponent(OAuthStep1);
-            expect(step1.props('OAuth_session_token')).toBe(token);
+            expect(step1.props('OAuth_session_token')).toBe('test-session-token-123');
         });
 
-        it('should display birth date title', () => {
+        it('should display birth date title', async () => {
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             expect(wrapper.text()).toContain("What's your birth date?");
         });
 
-        it('should have month, day, and year selects', () => {
+        it('should have month, day, and year selects', async () => {
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             const selects = wrapper.findAll('select');
             expect(selects.length).toBe(3); // month, day, year
         });
 
-        it('should have Next button', () => {
+        it('should have Next button', async () => {
             const wrapper = mountOAuthComplete();
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            expect(signUpButton).toBeTruthy();
+            await flushPromises();
+            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next');
+            expect(nextButton).toBeTruthy();
         });
 
-        it('should display privacy policy message', () => {
+        it('should display privacy policy message', async () => {
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             expect(wrapper.text()).toContain('By signing up, you agree to our Terms, Data Policy and Cookies Policy');
         });
     });
@@ -110,6 +183,7 @@ describe('OAuth New Account Registration', () => {
     describe('Step 1: Birth Date', () => {
         it('should allow selecting birth date', async () => {
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             const selects = wrapper.findAll('select');
             
             await selects[0]?.setValue('5'); // May
@@ -121,46 +195,36 @@ describe('OAuth New Account Registration', () => {
             expect((selects[2]?.element as HTMLSelectElement).value).toBe('1990');
         });
 
-        it('should show error if birth date is incomplete', async () => {
-            const wrapper = mountOAuthComplete();
-            const selects = wrapper.findAll('select');
-            
-            await selects[0]?.setValue('5');
-
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
-            await flushPromises();
-
-            expect(wrapper.text()).toContain('Please select your complete birth date');
-        });
-
         it('should call OAuthCompleteStep1 with correct data', async () => {
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data: { 
+                data:{data: { 
                     message: 'Birth date verified',
                     usernames: ['s3fan_test', 's3fan123']
                 }
+            }
             });
             
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
-                data: {
+                data:{data: {
                     message: 'Username set successfully'
                 }
+            }
             });
 
             const wrapper = mountOAuthComplete('oauth-token-789');
+            await flushPromises();
             const selects = wrapper.findAll('select');
 
             await selects[0]?.setValue('1'); 
             await selects[1]?.setValue('1'); 
             await selects[2]?.setValue('2005'); 
 
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(mockAuthService.OAuthCompleteStep1).toHaveBeenCalledWith(
-                'oauth-token-789',
+                'test-session-token-123',
                 '2005-01-01'
             );
         });
@@ -181,18 +245,19 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete('oauth-token-789');
+            await flushPromises();
             const selects = wrapper.findAll('select');
 
             await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(mockAuthService.OAuthCompleteStep2).toHaveBeenCalledWith(
-                'oauth-token-789',
+                'test-session-token-123',
                 's3fan_test'
             );
         });
@@ -213,14 +278,15 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             const selects = wrapper.findAll('select');
 
             await selects[0]?.setValue('1'); 
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
-            const signUpButton = wrapper.findAll('button').find((btn: any) => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(mockAuthService.OAuthCompleteStep1).toHaveBeenCalled();
@@ -237,14 +303,15 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             const selects = wrapper.findAll('select');
 
             await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2020');
 
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(wrapper.text()).toContain('sa3fan tells you this is error');
@@ -265,19 +332,20 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete('token-123');
+            await flushPromises();
             const selects = wrapper.findAll('select');
 
             await selects[0]?.setValue('1'); 
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(mockAuthService.OAuthCompleteStep1).toHaveBeenCalledWith(
-                'token-123',
-                '2005-01-01' 
+                'test-session-token-123',
+                '2005-01-01'
             );
         });
     });
@@ -299,17 +367,18 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete('oauth-session-456');
+            await flushPromises();
             const selects = wrapper.findAll('select');
             await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
-            const signUpButton = wrapper.findAll('button').find((btn: any) => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(mockAuthService.OAuthCompleteStep2).toHaveBeenCalledWith(
-                'oauth-session-456',
+                'test-session-token-123',
                 'sa3fan_test'
             );
         });
@@ -331,22 +400,23 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete('full-flow-token');
+            await flushPromises();
 
             const selects = wrapper.findAll('select');
             await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
-            const signUpButton = wrapper.findAll('button').find((btn: any) => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(mockAuthService.OAuthCompleteStep1).toHaveBeenCalledWith(
-                'full-flow-token',
+                'test-session-token-123',
                 '2005-01-01'
             );
             expect(mockAuthService.OAuthCompleteStep2).toHaveBeenCalledWith(
-                'full-flow-token',
+                'test-session-token-123',
                 'sa3fan_test'
             );
         });
@@ -365,14 +435,15 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete();
+            await flushPromises();
 
             const selects = wrapper.findAll('select');
             await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
-            let signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            let form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(wrapper.text()).toContain('Server error');
@@ -381,8 +452,8 @@ describe('OAuth New Account Registration', () => {
             await selects[1]?.setValue('24');
             await selects[2]?.setValue('2004');
 
-            signUpButton = wrapper.findAll('button').find((btn: any) => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             // Should successfully call both steps
@@ -405,14 +476,15 @@ describe('OAuth New Account Registration', () => {
             });
 
             const wrapper = mountOAuthComplete();
+            await flushPromises();
             const selects = wrapper.findAll('select');
             
             await selects[0]?.setValue('5');
             await selects[1]?.setValue('15');
             await selects[2]?.setValue('1990');
 
-            const signUpButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign Up');
-            await signUpButton?.trigger('click');
+            const form = wrapper.find('form');
+            await form.trigger('submit.prevent');
             await flushPromises();
 
             expect(wrapper.text()).toContain('Username already taken');

@@ -7,7 +7,9 @@
             border-t border-b border-primary">
             <div class="flex justify-between items-center">
                 <div>
-                    <span class="block text-[15px] text-primary">{{ $t('settings.accountInfo.accountCreation') }}</span>
+                    <span class="block text-[15px] text-primary">
+                        {{ $t('settings.accountInfo.accountCreation') }}
+                    </span>
                     <p class="text-muted text-[13px]">
                         {{ categories[6]?.content }}
                     </p>
@@ -43,7 +45,7 @@ const categories = computed(() => [
     { label: t('settings.accountInfo.email'), content: user.email, href:''},
     { label: t('settings.accountInfo.country'), content: user.country, href: '' },
     { label: t('settings.accountInfo.languages'), content: 'English, Arabic', href: '/settings/languages' },
-    { label: t('settings.accountInfo.birthDate'), content: formatDate(user.birth_date ?? ''), href: '/settings/profile' },
+    { label: t('settings.accountInfo.birthDate'), content: formatDate(user.birth_date ?? ''), href: `/${user.username}/settings/profile` },
     { label: t('settings.accountInfo.age'), content: calculateAge(user.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
     { label: t('settings.accountInfo.accountCreation'), content: formatFullDateTime(user.created_at ?? ''), href: '/settings/your_twitter_data/account_creation' },
 ])

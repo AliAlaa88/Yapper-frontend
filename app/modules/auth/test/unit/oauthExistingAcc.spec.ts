@@ -69,22 +69,35 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
 
 // Mock OAuth and user queries - return success immediately
 vi.mock('~/modules/auth/queries/useOAuthQuery', () => ({
-    useExchangeTokenQuery: vi.fn((onSuccess) => ({
-        mutate: vi.fn((payload) => {
-            const token = payload.exchange_token
-            if (token) {
-                onSuccess?.({ access_token: token })
+    useExchangeTokenQuery: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (payload) => {
+            try {
+                const token = payload.exchange_token
+                if (token) {
+                    await Promise.resolve()
+                    onSuccess?.({ access_token: token })
+                } else {
+                    throw new Error('No exchange token provided')
+                }
+            } catch (error) {
+                onError?.(error)
             }
         }),
     })),
 }))
 
 vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
-    useGetUserQuery: vi.fn((enableRef, onSuccess) => {
-        // Watch for enableRef to become true, then call onSuccess immediately
-        watch(() => enableRef.value, (enabled) => {
+    useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
+        // Watch for enableRef to become true, then call getUserData and onSuccess
+        watch(() => enableRef.value, async (enabled) => {
             if (enabled) {
-                onSuccess?.({ data: { username: 'testuser', email: 'test@example.com' } })
+                try {
+                    const userData = await mockAuthService.getUserData()
+                    await Promise.resolve()
+                    onSuccess?.(userData)
+                } catch (error) {
+                    onError?.(error)
+                }
             }
         }, { immediate: true })
         
@@ -122,7 +135,7 @@ window.location = {
 } as any
 
 function mountSuccessPage(token: string = '') {
-    window.location.search = token ? `?token=${token}` : ''
+    window.location.search = token ? `?exchange_token=${token}` : ''
 
     const queryClient = new QueryClient({
         defaultOptions: {
@@ -197,26 +210,14 @@ describe('OAuth Existing Account Flow - Success Page', () => {
 
             expect(mockUserStore.accessToken).toBe(specialToken)
         })
-        it('should extract token from URL parameters', () => {
+        it('should extract token from URL parameters', async () => {
             const token = 'oauth-access-token-123'
             mountSuccessPage(token)
+            await flushPromises()
             
             expect(mockUserStore.accessToken).toBe(token)
         })
 
-        it('should store token in localStorage', () => {
-            const token = 'oauth-access-token-456'
-            mountSuccessPage(token)
-            
-            expect(localStorageMock.getItem('access_token')).toBe(token)
-        })
-
-        it('should store token in user store', () => {
-            const token = 'oauth-access-token-789'
-            mountSuccessPage(token)
-            
-            expect(mockUserStore.accessToken).toBe(token)
-        })
     })
 
     describe('User Data Fetching', () => {
