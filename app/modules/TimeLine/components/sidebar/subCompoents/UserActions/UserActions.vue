@@ -30,7 +30,7 @@
                 </div>
             </div>
             <!-- Three Dots Menu -->
-            <button class="ml-2 p-1 rounded-full hover:bg-primary/10">
+            <button id="user-actions-menu-button" class="ml-2 p-1 rounded-full hover:bg-primary/10">
                 <MoreVertical class="w-5 h-5 text-primary" />
             </button>
         </div>
