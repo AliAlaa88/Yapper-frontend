@@ -6,5 +6,7 @@
 <script setup lang="ts">
 import ProfileContent from '../../modules/profile/components/ProfileContent/ProfileContent.vue'
 
-definePageMeta({ layout: 'profile' })
+definePageMeta({ layout: 'profile',
+    middleware: ['auth'],
+})
 </script>
