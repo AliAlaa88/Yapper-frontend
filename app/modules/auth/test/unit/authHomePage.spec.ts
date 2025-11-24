@@ -1,9 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
+import { createI18n } from 'vue-i18n'
 import AuthHomePage from '../../views/index.vue'
 import OAuth from '../../components/subComponents/OAuth.vue'
 import Logo from '../../../Common/components/Logo'
+import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
+import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
 
 // Mock Nuxt composables
 const mockPush = vi.fn()
@@ -26,6 +29,16 @@ vi.mock('#app', () => ({
     }),
 }))
 
+// Create i18n instance with actual translations
+const i18n = createI18n({
+    legacy: false,
+    locale: 'en',
+    messages: {
+        en: enMessages,
+        ar: arMessages,
+    },
+})
+
 function mountAuthHomePage() {
     const queryClient = new QueryClient({
         defaultOptions: {
@@ -36,8 +49,14 @@ function mountAuthHomePage() {
 
     return mount(AuthHomePage, {
         global: {
-            plugins: [[VueQueryPlugin, { queryClient }]],
+            plugins: [
+                [VueQueryPlugin, { queryClient }],
+                i18n,
+            ],
             stubs: {
+                NuxtLink: {
+                    template: '<a><slot /></a>',
+                },
             },
         },
     })
@@ -51,7 +70,6 @@ describe('Auth Home Page', () => {
     describe('Initial Rendering', () => {
         it('should render the auth home page', () => {
             const wrapper = mountAuthHomePage()
-            console.log(wrapper.html());
             expect(wrapper.exists()).toBe(true)
         })
 
@@ -267,13 +285,13 @@ describe('Auth Home Page', () => {
         it('should have background color black', () => {
             const wrapper = mountAuthHomePage()
             const mainDiv = wrapper.find('.min-h-svh')
-            expect(mainDiv.classes()).toContain('bg-black')
+            expect(mainDiv.classes()).toContain('bg-primary')
         })
 
         it('should have text color white', () => {
             const wrapper = mountAuthHomePage()
             const mainDiv = wrapper.find('.min-h-svh')
-            expect(mainDiv.classes()).toContain('text-white')
+            expect(mainDiv.classes()).toContain('text-primary')
         })
 
         it('should have minimum full screen height', () => {
