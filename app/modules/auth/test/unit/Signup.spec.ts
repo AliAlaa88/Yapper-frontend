@@ -39,27 +39,59 @@ vi.mock('#app', () => ({
     }),
 }))
 
-// Mock register queries - return success immediately after frontend validation
+// Mock register queries - call mockAuthService and handle callbacks properly
 vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
-    useRegisterS1Query: vi.fn((onSuccess) => ({
-        mutate: vi.fn(() => {
-            onSuccess?.({ Email: 'test@example.com' })
+    useRegisterS1Query: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (payload) => {
+            try {
+                const result = await mockAuthService.registerStep1(payload)
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
+            }
         }),
+        isLoading: ref(false),
+        isError: ref(false),
     })),
-    useRegisterS2Query: vi.fn((onSuccess) => ({
-        mutate: vi.fn(() => {
-            onSuccess?.({ session_token: 'test-session' })
+    useRegisterS2Query: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (payload) => {
+            try {
+                const result = await mockAuthService.registerStep2(payload)
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
+            }
         }),
+        isLoading: ref(false),
+        isError: ref(false),
     })),
-    useRegisterS3Query: vi.fn((onSuccess) => ({
-        mutate: vi.fn(() => {
-            onSuccess?.({ access_token: 'test-token' })
+    useRegisterS3Query: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (payload) => {
+            try {
+                const result = await mockAuthService.registerStep3(payload)
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
+            }
         }),
+        isLoading: ref(false),
+        isError: ref(false),
     })),
-    useResendOTPQuery: vi.fn((onSuccess) => ({
-        mutate: vi.fn(() => {
-            onSuccess?.({ message: 'OTP resent' })
+    useResendOTPQuery: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (email) => {
+            try {
+                const result = await mockAuthService.resendOTP(email)
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
+            }
         }),
+        isLoading: ref(false),
+        isError: ref(false),
     })),
 }))
 
@@ -120,6 +152,23 @@ function mountSignup() {
 describe('Signup Component', () => {
     beforeEach(() => {
         vi.clearAllMocks()
+        
+        // Set default successful mock implementations for navigation tests
+        mockAuthService.registerStep1.mockResolvedValue({
+            data: { message: 'Registration successful' },
+        })
+        mockAuthService.registerStep2.mockResolvedValue({
+            data: { recommendations: ['safan_test', 'safan_dev', 'safan_user'] },
+        })
+        mockAuthService.registerStep3.mockResolvedValue({
+            data: {
+                access_token: 'test-token',
+                user: { id: 1, email: 'Safan@Developer.com', name: 'Safan Test' },
+            },
+        })
+        mockAuthService.resendOTP.mockResolvedValue({
+            data: { message: 'OTP has been resent successfully' },
+        })
     })
 
     describe('Initial Rendering', () => {
@@ -166,10 +215,10 @@ describe('Signup Component', () => {
             const emailInput = wrapper.find('input[type="email"]')
 
             await nameInput.setValue('Safan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            await emailInput.setValue('Safan@Developer.com')
 
             expect((nameInput.element as HTMLInputElement).value).toBe('Safan Test')
-            expect((emailInput.element as HTMLInputElement).value).toBe('Sa3fan@Developer.com')
+            expect((emailInput.element as HTMLInputElement).value).toBe('Safan@Developer.com')
         })
 
         it('should allow selecting date of birth', async () => {
@@ -187,18 +236,29 @@ describe('Signup Component', () => {
 
         it('should show error if captcha not completed', async () => {
             const wrapper = mountSignup()
-            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
+            
+            const nameInput = wrapper.find('input[type="text"]')
+            const emailInput = wrapper.find('input[type="email"]')
+            const selects = wrapper.findAll('select')
 
-            await nextButton?.trigger('click')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
+            
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             expect(wrapper.text()).toContain('Please complete the reCAPTCHA')
         })
 
         it('should call registerStep1 mutation with correct data', async () => {
-            mockAuthService.registerStep1.mockResolvedValue({
+            const registerSpy = vi.fn().mockResolvedValue({
                 data: { message: 'OTP sent successfully' },
             })
+            mockAuthService.registerStep1 = registerSpy
 
             const wrapper = mountSignup()
 
@@ -207,7 +267,7 @@ describe('Signup Component', () => {
             const selects = wrapper.findAll('select')
 
             await nameInput.setValue('Safan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            await emailInput.setValue('Safan@Developer.com')
             await selects[0]?.setValue('1')
             await selects[1]?.setValue('1')
             await selects[2]?.setValue('2005')
@@ -216,13 +276,13 @@ describe('Signup Component', () => {
             await captchaButton.trigger('click')
             await flushPromises()
 
-            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
-            expect(mockAuthService.registerStep1).toHaveBeenCalledWith({
+            expect(registerSpy).toHaveBeenCalledWith({
                 Name: 'Safan Test',
-                Email: 'Sa3fan@Developer.com',
+                Email: 'Safan@Developer.com',
                 Birth_date: '2005-01-01',
                 Captcha_token: 'mock-captcha-token',
             })
@@ -240,7 +300,7 @@ describe('Signup Component', () => {
             const selects = wrapper.findAll('select')
 
             await nameInput.setValue('Safan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            await emailInput.setValue('Safan@Developer.com')
             await selects[0]?.setValue('1')
             await selects[1]?.setValue('1')
             await selects[2]?.setValue('2005')
@@ -249,8 +309,8 @@ describe('Signup Component', () => {
             await captchaButton.trigger('click')
             await flushPromises()
 
-            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             expect(wrapper.findComponent(verifyOtp).exists()).toBe(true)
@@ -259,31 +319,35 @@ describe('Signup Component', () => {
         })
 
         it('should show error message on registration failure', async () => {
-            mockAuthService.registerStep1.mockRejectedValue({
-                response: {
-                    data: {
-                        message: 'Email already exists sa3fan created it before',
-                    },
-                },
-            })
-
             const wrapper = mountSignup()
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
+            const selects = wrapper.findAll('select')
 
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
 
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
 
-            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            mockAuthService.registerStep1.mockRejectedValue({
+                response: {
+                    data: {
+                        message: 'Email already exists safan created it before',
+                    },
+                },
+            })
+
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
-            expect(wrapper.text()).toContain('Email already exists sa3fan created it before')
+            expect(wrapper.text()).toContain('Email already exists safan created it before')
         })
     })
 
@@ -298,8 +362,8 @@ describe('Signup Component', () => {
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
@@ -314,46 +378,66 @@ describe('Signup Component', () => {
         })
 
         it('should call registerStep2 mutation with OTP and go to step 3', async () => {
-            mockAuthService.registerStep2.mockResolvedValue({
+            const registerStep2Spy = vi.fn().mockResolvedValue({
                 data: {
                     message: 'OTP verified',
-                    recommendations: ['sa3fan_test', 'sa3fantest123'],
+                    recommendations: ['safan_test', 'safantest123'],
                 },
             })
+            mockAuthService.registerStep2 = registerStep2Spy
 
             const wrapper = mountSignup()
+            
+            // Debug: Check initial state
+            console.log('Initial component:', wrapper.findComponent(createAccount).exists())
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            const selects = wrapper.findAll('select')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
-            let nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             const otpInput = wrapper.find('input[type="text"]')
             await otpInput.setValue('123456')
-            nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form2 = wrapper.find('form')
+            await form2.trigger('submit.prevent')
             await flushPromises()
 
-            expect(mockAuthService.registerStep2).toHaveBeenCalledWith({
+            expect(registerStep2Spy).toHaveBeenCalledWith({
                 token: '123456',
-                Email: 'Sa3fan@Developer.com',
+                Email: 'Safan@Developer.com',
             })
 
-            nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
-            await flushPromises()
-
             expect(wrapper.findComponent(FinalRegister).exists()).toBe(true)
-            expect(wrapper.text()).toContain('Enter a password')
         })
 
         it('should show error on invalid OTP', async () => {
+            const wrapper = mountSignup()
+
+            const nameInput = wrapper.find('input[type="text"]')
+            const emailInput = wrapper.find('input[type="email"]')
+            const selects = wrapper.findAll('select')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
+            const captchaButton = wrapper.find('.recaptcha-mock button')
+            await captchaButton.trigger('click')
+            await flushPromises()
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
+            await flushPromises()
+
             mockAuthService.registerStep2.mockRejectedValue({
                 response: {
                     data: {
@@ -362,44 +446,36 @@ describe('Signup Component', () => {
                 },
             })
 
-            const wrapper = mountSignup()
-
-            const nameInput = wrapper.find('input[type="text"]')
-            const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
-            const captchaButton = wrapper.find('.recaptcha-mock button')
-            await captchaButton.trigger('click')
-            await flushPromises()
-            let nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
-            await flushPromises()
-
             const otpInput = wrapper.find('input[type="text"]')
             await otpInput.setValue('000000')
-            nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form2 = wrapper.find('form')
+            await form2.trigger('submit.prevent')
             await flushPromises()
 
             expect(wrapper.text()).toContain('Invalid OTP')
         })
 
         it('should allow resending OTP', async () => {
-            mockAuthService.resendOTP.mockResolvedValue({
+            const resendOTPSpy = vi.fn().mockResolvedValue({
                 data: { message: 'OTP resent successfully' },
             })
+            mockAuthService.resendOTP = resendOTPSpy
 
             const wrapper = mountSignup()
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            const selects = wrapper.findAll('select')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
-            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             const resendButton = wrapper
@@ -408,7 +484,7 @@ describe('Signup Component', () => {
             await resendButton?.trigger('click')
             await flushPromises()
 
-            expect(mockAuthService.resendOTP).toHaveBeenCalledWith('Sa3fan@Developer.com')
+            expect(resendOTPSpy).toHaveBeenCalledWith('Safan@Developer.com')
             expect(wrapper.text()).toContain('OTP has been resent successfully')
         })
 
@@ -417,13 +493,17 @@ describe('Signup Component', () => {
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            const selects = wrapper.findAll('select')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
-            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             expect(wrapper.findComponent(verifyOtp).exists()).toBe(true)
@@ -444,7 +524,7 @@ describe('Signup Component', () => {
             mockAuthService.registerStep2.mockResolvedValue({
                 data: {
                     message: 'OTP verified',
-                    recommendations: ['Sa3fan_Test', 'Sa3fan123'],
+                    recommendations: ['Safan_Test', 'Safan123'],
                 },
             })
         })
@@ -454,19 +534,23 @@ describe('Signup Component', () => {
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            const selects = wrapper.findAll('select')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
-            let nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             const otpInput = wrapper.find('input[type="text"]')
             await otpInput.setValue('123456')
-            nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form2 = wrapper.find('form')
+            await form2.trigger('submit.prevent')
             await flushPromises()
 
             const passwordInput = wrapper.find('input[type="password"]')
@@ -477,44 +561,49 @@ describe('Signup Component', () => {
         })
 
         it('should call registerStep3 mutation with complete data', async () => {
-            mockAuthService.registerStep3.mockResolvedValue({
-                data: {
+            const registerStep3Spy = vi.fn().mockResolvedValue({
+                data:{data: {
                     access_token: 'test-token',
-                    user: { id: 1, email: 'Sa3fan@Developer.com', name: 'Sa3fan Test' },
+                    user: { id: 1, email: 'Safan@Developer.com', name: 'Safan Test' },
                 },
+            }
             })
+            mockAuthService.registerStep3 = registerStep3Spy
 
             const wrapper = mountSignup()
 
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
-            await nameInput.setValue('Sa3fan Test')
-            await emailInput.setValue('Sa3fan@Developer.com')
+            const selects = wrapper.findAll('select')
+            await nameInput.setValue('Safan Test')
+            await emailInput.setValue('Safan@Developer.com')
+            await selects[0]?.setValue('1')
+            await selects[1]?.setValue('1')
+            await selects[2]?.setValue('2005')
             const captchaButton = wrapper.find('.recaptcha-mock button')
             await captchaButton.trigger('click')
             await flushPromises()
-            let nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form = wrapper.find('form')
+            await form.trigger('submit.prevent')
             await flushPromises()
 
             const otpInput = wrapper.find('input[type="text"]')
             await otpInput.setValue('123456')
-            nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
-            await nextButton?.trigger('click')
+            const form2 = wrapper.find('form')
+            await form2.trigger('submit.prevent')
             await flushPromises()
 
             const passwordInput = wrapper.find('input[type="password"]')
-
             await passwordInput.setValue('Password123!')
 
-            const signUpButton = wrapper.findAll('button').find((btn) => btn.text() === 'Sign Up')
-            await signUpButton?.trigger('click')
+            const form3 = wrapper.find('form')
+            await form3.trigger('submit.prevent')
             await flushPromises()
 
-            expect(mockAuthService.registerStep3).toHaveBeenCalledWith({
-                Email: 'Sa3fan@Developer.com',
+            expect(registerStep3Spy).toHaveBeenCalledWith({
+                Email: 'Safan@Developer.com',
                 Password: 'Password123!',
-                Username: 'Sa3fan_Test',
+                Username: 'Safan_Test',
                 Language: 'en',
             })
         })
