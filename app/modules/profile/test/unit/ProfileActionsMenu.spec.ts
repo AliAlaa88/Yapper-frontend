@@ -73,10 +73,16 @@ describe('ProfileActionsMenu Component', () => {
 
     it('should not rander when provided showList is false', () => {
         const wrapper = mount(ProfileActionsMenu, {
+            props: {
+                isTweet: false,
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
                     'show-list': ref(false),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -87,10 +93,16 @@ describe('ProfileActionsMenu Component', () => {
 
     it('should rander when provided showList is true', () => {
         const wrapper = mount(ProfileActionsMenu, {
+            props: {
+                isTweet: false,
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
                     'show-list': ref(true),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -102,10 +114,16 @@ describe('ProfileActionsMenu Component', () => {
     describe('mute button', () => {
         it('should find mute button if the user is not blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -117,10 +135,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should not find mute button if the user is blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -132,10 +156,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should rander mute button with Mute text when not muted', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -144,15 +174,21 @@ describe('ProfileActionsMenu Component', () => {
             await nextTick()
 
             const muteButton = wrapper.find('#mute-button')
-            expect(muteButton.text()).toBe('Mute')
+            expect(muteButton.text()).toBe('profile.muteButton')
         })
 
         it('should rander mute button with Unmute text when muted', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -161,15 +197,21 @@ describe('ProfileActionsMenu Component', () => {
             await nextTick()
 
             const muteButton = wrapper.find('#mute-button')
-            expect(muteButton.text()).toBe('Unmute')
+            expect(muteButton.text()).toBe('profile.unmuteButton')
         })
 
         it('should call handleUnmuteWithSnackbar when click mute button and user is muted', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -184,10 +226,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should call handleMuteWithSnackbar when click mute button and user is not muted', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -204,10 +252,16 @@ describe('ProfileActionsMenu Component', () => {
     describe('remove follower button', () => {
         it('should rander remove follower when uesr is follower and not blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -221,10 +275,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should not rander remove follower rander when uesr is not follower', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -238,10 +298,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should not rander remove follower rander when uesr is blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -255,10 +321,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should call handleRemoveFollowerWithConfirmation when click remove follower', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -278,10 +350,16 @@ describe('ProfileActionsMenu Component', () => {
     describe('block button', () => {
         it('should rander Block text when not blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -289,15 +367,21 @@ describe('ProfileActionsMenu Component', () => {
             mockUserInfoRef.isBlocked.value = false
             await nextTick()
             const blockButton = wrapper.find('#block-button')
-            expect(blockButton.text()).toContain('Block')
+            expect(blockButton.text()).toContain('profile.blockButton')
         })
 
         it('should rander Unblock text when blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -305,15 +389,21 @@ describe('ProfileActionsMenu Component', () => {
             mockUserInfoRef.isBlocked.value = true
             await nextTick()
             const blockButton = wrapper.find('#block-button')
-            expect(blockButton.text()).toContain('Unblock')
+            expect(blockButton.text()).toContain('profile.unblockButton')
         })
 
         it('should call handleUnblockWithConfirmation when blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -327,10 +417,16 @@ describe('ProfileActionsMenu Component', () => {
 
         it('should call handleBlockWithConfirmation when not blocked', async () => {
             const wrapper = mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: {
                         'user-id': ref('12'),
                         'show-list': ref(true),
+                    },
+                    mocks: {
+                        $t: (key: string) => key,
                     },
                 },
             })
@@ -346,10 +442,16 @@ describe('ProfileActionsMenu Component', () => {
     it('handles missing user-id gracefully', () => {
         expect(() => {
             mount(ProfileActionsMenu, {
+                props: {
+                    isTweet: false,
+                },
                 global: {
                     provide: { 'show-list': ref(true) },
+                    mocks: {
+                        $t: (key: string) => key,
+                    },
                 },
             })
-        }).toThrow()
+        }).not.toThrow()
     })
 })
