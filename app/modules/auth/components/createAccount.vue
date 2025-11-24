@@ -87,6 +87,7 @@ const onCloseFinal = () => {
 const onSignupFinish = () => {
     showFinalStep.value = false
     showCompleteAccount.value = true
+    Recommendations.value = Recommendations.value.splice(1)
 }
 
 const onCompleteAccountClose = () => {

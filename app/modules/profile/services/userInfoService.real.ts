@@ -308,7 +308,7 @@ export const userInfoServiceReal = {
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to fetch followers')
             }
-            return response.data.data
+            return response.data.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -330,7 +330,7 @@ export const userInfoServiceReal = {
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to fetch following list')
             }
-            return response.data.data
+            return response.data.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {

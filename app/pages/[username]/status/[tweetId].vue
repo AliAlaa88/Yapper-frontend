@@ -26,6 +26,7 @@ import { ArrowLeft } from 'lucide-vue-next'
 
 definePageMeta({
     layout: 'main-layout',
+    middleware: ['auth'],
 })
 
 // Set page metadata

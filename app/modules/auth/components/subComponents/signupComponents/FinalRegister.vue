@@ -63,7 +63,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
-
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
@@ -87,6 +87,8 @@ const emit = defineEmits<{
 const registerMutation = useRegisterS3Query(
     (data) => {
         errorMessage.value = ''
+        const userStore = useUserStore()
+        userStore.setAuth(data.data)
         emit('finish')
     },
     (error: any) => {

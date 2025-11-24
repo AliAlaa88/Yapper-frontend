@@ -1,10 +1,22 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
+import { createI18n } from 'vue-i18n'
+import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
+import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
 import Signup from '../../components/createAccount.vue'
 import createAccount from '../../components/subComponents/signupComponents/createAccount.vue'
 import verifyOtp from '../../components/subComponents/signupComponents/verifyOtp.vue'
 import FinalRegister from '../../components/subComponents/signupComponents/FinalRegister.vue'
+
+const i18n = createI18n({
+    legacy: false,
+    locale: 'en',
+    messages: {
+        en: enMessages,
+        ar: arMessages,
+    },
+})
 
 // Mock the auth service
 const mockAuthService = {
@@ -25,6 +37,30 @@ vi.mock('#app', () => ({
             recaptcha: 'test-key',
         },
     }),
+}))
+
+// Mock register queries - return success immediately after frontend validation
+vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
+    useRegisterS1Query: vi.fn((onSuccess) => ({
+        mutate: vi.fn(() => {
+            onSuccess?.({ Email: 'test@example.com' })
+        }),
+    })),
+    useRegisterS2Query: vi.fn((onSuccess) => ({
+        mutate: vi.fn(() => {
+            onSuccess?.({ session_token: 'test-session' })
+        }),
+    })),
+    useRegisterS3Query: vi.fn((onSuccess) => ({
+        mutate: vi.fn(() => {
+            onSuccess?.({ access_token: 'test-token' })
+        }),
+    })),
+    useResendOTPQuery: vi.fn((onSuccess) => ({
+        mutate: vi.fn(() => {
+            onSuccess?.({ message: 'OTP resent' })
+        }),
+    })),
 }))
 
 // Mock the user store
@@ -57,11 +93,18 @@ function mountSignup() {
 
     return mount(Signup, {
         global: {
-            plugins: [[VueQueryPlugin, { queryClient }]],
+            plugins: [
+                [VueQueryPlugin, { queryClient }],
+                i18n,
+            ],
             stubs: {
                 logo: true,
                 closeButton: true,
                 backButton: true,
+                Popup: {
+                    template: '<div class="popup-mock"><slot /></div>',
+                },
+                NuxtLink: { template: '<a><slot /></a>' },
                 Recaptcha: {
                     template:
                         '<div class="recaptcha-mock"><button @click="$emit(\'verified\', \'mock-captcha-token\')">Verify Captcha</button></div>',
@@ -89,7 +132,7 @@ describe('Signup Component', () => {
 
         it('should display create account title', () => {
             const wrapper = mountSignup()
-            expect(wrapper.text()).toContain('Create Your account')
+            expect(wrapper.text()).toContain('Create your account')
         })
 
         it('should have name, email, and date of birth inputs', () => {

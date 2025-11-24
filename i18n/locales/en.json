@@ -267,6 +267,11 @@
             "message": "You have muted posts from this account.",
             "action": "Unmute"
         },
+        "notFound": {
+            "title": "This account doesn't exist",
+            "description": "Try searching for another.",
+            "goHome": "Go to Home"
+        },
         "actions": {
             "block": {
                 "title": "Block",
@@ -422,7 +427,8 @@
             "unlike": "Unlike",
             "views": "Views",
             "bookmark": "Bookmark",
-            "removeBookmark": "Remove bookmark"
+            "removeBookmark": "Remove bookmark",
+            "share": "Share Tweet"
         },
         "loading": {
             "tweets": "Loading tweets...",
