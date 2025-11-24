@@ -3,6 +3,12 @@ import { ref, computed } from 'vue'
 import { useUserInfo } from '../../composables/useUserInfo'
 import { useFollow } from '../../composables/useFollow'
 
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({
+        t: (key: string) => key,
+    }),
+}))
+
 vi.mock('../../composables/useUserInfo', () => ({
     useUserInfo: vi.fn(),
 }))
@@ -62,7 +68,7 @@ describe('useFollow Composable', () => {
 
             const userId = ref('12')
             const {buttonText} = useFollow(userId)
-            expect(buttonText.value).toBe('Follow')
+            expect(buttonText.value).toBe('profile.followButton')
         })
 
         it('should return Follow back text when is follower and not following', () => {
@@ -71,7 +77,7 @@ describe('useFollow Composable', () => {
 
             const userId = ref('12')
             const { buttonText } = useFollow(userId)
-            expect(buttonText.value).toBe('Follow back')
+            expect(buttonText.value).toBe('profile.followBackButton')
         })
 
         it('should return Following text when following and not hovering', () => {
@@ -81,7 +87,7 @@ describe('useFollow Composable', () => {
             const { buttonText, handleMouseOut } = useFollow(userId)
             handleMouseOut()
 
-            expect(buttonText.value).toBe('Following')
+            expect(buttonText.value).toBe('profile.followingButton')
         })
 
         it('should return Unfollow text when following and hovering', () => {
@@ -91,7 +97,7 @@ describe('useFollow Composable', () => {
             const { buttonText, handleMouseOver } = useFollow(userId)
             handleMouseOver()
 
-            expect(buttonText.value).toBe('Unfollow')
+            expect(buttonText.value).toBe('profile.unfollowButton')
         })
     })
 
@@ -101,10 +107,10 @@ describe('useFollow Composable', () => {
         const userId = ref('12')
         const { buttonText } = useFollow(userId)
 
-        expect(buttonText.value).toBe('Follow')
+        expect(buttonText.value).toBe('profile.followButton')
 
         mockUserInfoRef.isFollowing.value = true
-        expect(buttonText.value).toBe('Following')
+        expect(buttonText.value).toBe('profile.followingButton')
     })
 
     it('should update buttonText when isFollower changes', () => {
@@ -113,10 +119,10 @@ describe('useFollow Composable', () => {
         const userId = ref('12')
         const { buttonText } = useFollow(userId)
 
-        expect(buttonText.value).toBe('Follow')
+        expect(buttonText.value).toBe('profile.followButton')
 
         mockUserInfoRef.isFollower.value = true
-        expect(buttonText.value).toBe('Follow back')
+        expect(buttonText.value).toBe('profile.followBackButton')
     })
 
     describe('All Button State Combinations', () => {
@@ -125,43 +131,43 @@ describe('useFollow Composable', () => {
                 isFollower: false,
                 isFollowing: false,
                 hover: false,
-                expectedText: 'Follow',
-                expectedClassContains: 'bg-alternate',
+                expectedText: 'profile.followButton',
+                expectedClassContains: 'bg-[#eff3f4]',
             },
             {
                 isFollower: true,
                 isFollowing: false,
                 hover: false,
-                expectedText: 'Follow back',
-                expectedClassContains: 'bg-alternate',
+                expectedText: 'profile.followBackButton',
+                expectedClassContains: 'bg-[#eff3f4]',
             },
             {
                 isFollower: false,
                 isFollowing: true,
                 hover: false,
-                expectedText: 'Following',
+                expectedText: 'profile.followingButton',
                 expectedClassContains: 'bg-transparent',
             },
             {
                 isFollower: true,
                 isFollowing: true,
                 hover: false,
-                expectedText: 'Following',
+                expectedText: 'profile.followingButton',
                 expectedClassContains: 'bg-transparent',
             },
             {
                 isFollower: false,
                 isFollowing: true,
                 hover: true,
-                expectedText: 'Unfollow',
-                expectedClassContains: 'bg-red/10',
+                expectedText: 'profile.unfollowButton',
+                expectedClassContains: 'bg-[#f4212e1a]',
             },
             {
                 isFollower: true,
                 isFollowing: true,
                 hover: true,
-                expectedText: 'Unfollow',
-                expectedClassContains: 'bg-red/10',
+                expectedText: 'profile.unfollowButton',
+                expectedClassContains: 'bg-[#f4212e1a]',
             },
         ]
 
