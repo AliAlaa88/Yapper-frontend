@@ -427,7 +427,8 @@
             "unlike": "Unlike",
             "views": "Views",
             "bookmark": "Bookmark",
-            "removeBookmark": "Remove bookmark"
+            "removeBookmark": "Remove bookmark",
+            "share": "Share Tweet"
         },
         "loading": {
             "tweets": "Loading tweets...",
