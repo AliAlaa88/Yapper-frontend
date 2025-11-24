@@ -1,9 +1,9 @@
 <template>
     <div class="space-y-4">
         <div class="md:hidden w-full sticky top-0 z-20">
-            <DetailedHeader :title="$t('navigation.settings')" />
+            <DetailedHeader :title="t('navigation.settings')" />
         </div>
-        <h1 class="hidden md:block text-xl px-4 pt-4 font-bold">{{ $t('navigation.settings') }}</h1>
+        <h1 class="hidden md:block text-xl px-4 pt-4 font-bold">{{ t('navigation.settings') }}</h1>
         <div class="relative w-full px-2">
             <Search class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40" />
             <input
@@ -11,11 +11,12 @@
                 placeholder="Search Settings"
                 class="w-full text-[15px] border border-primary py-2.5 pl-9 pr-3 rounded-full
                 transition text-primary bg-transparent focus:outline-none
-                focus:ring-2 focus:ring-accent" />
+                focus:ring-2 focus:ring-accent" >
         </div>
         <div>
             <NuxtLink
                 v-for="category in settingsCategories"
+                id="settings-sidebar-buttons"
                 :key="category.href"
                 :to="category.href"
                 class="block relative px-5 py-3 rounded hover:bg-hover

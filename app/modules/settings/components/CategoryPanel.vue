@@ -20,7 +20,7 @@
                 <div class="flex items-center">
                     <component
                         :is="category.icon"
-                        class="flex-shrink-0 opacity-50 w-4.5 h-4.5 mr-8 ml-2"
+                        class="shrink-0 opacity-50 w-4.5 h-4.5 mr-8 ml-2"
                     />
                     <div>
                         <span class="block text-[15px] text-primary"> {{ category.label }} </span>

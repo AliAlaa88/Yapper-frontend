@@ -2,12 +2,13 @@
     <div
         v-if="showList"
         ref="dropdownRef"
-        @click.stop
         class="sm:absolute right-0 mt-2 bg-primary rounded-xl fixed bottom-0 sm:bottom-auto
         sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-allduration-200
         sm:w-70 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
         sm:translate-x-0 w-full sm:rounded-xl rounded-t-2xl sm:max-h-none max-h-[50vh]
-        overflow-y-auto">
+        overflow-y-auto"
+        @click.stop
+    >
         <Button
             v-if="isTweet"
             id="follow-tweeet-button"
@@ -124,12 +125,9 @@ const {
 async function handleMuteAndUnmute() {
     if (isMuted.value) {
         await handleUnmuteWithSnackbar(showList)
-        // Emit after the action completes
         emit('user-action', 'unmute')
-    }
-    else {
+    } else {
         await handleMuteWithSnackbar(showList)
-        // Emit after the action completes
         emit('user-action', 'mute')
     }
 }
@@ -141,12 +139,10 @@ function handleFollowAndUnfollow() {
 function handleBlockAndUnblock() {
     if (isBlocked.value) {
         handleUnblockWithConfirmation(showList, () => {
-            // Emit only after confirmation and action completion
             emit('user-action', 'unblock')
         })
     } else {
         handleBlockWithConfirmation(showList, () => {
-            // Emit only after confirmation and action completion
             emit('user-action', 'block')
         })
     }
