@@ -32,24 +32,18 @@ describe('useOtherUserQuery', () => {
         const username = 'testuser'
         useOtherUserQuery(username)
 
-        expect(mockUseQuery).toHaveBeenCalledWith(
-            expect.objectContaining({
-                queryKey: ['user', username],
-                enabled: true,
-            }),
-        )
+        const callArgs = mockUseQuery.mock.calls[0]![0]
+        expect(callArgs.queryKey).toEqual(['user', username])
+        expect(callArgs.enabled.value).toBe(true)
     })
 
     it('creates query with correct configuration for empty username', () => {
         const username = ''
         useOtherUserQuery(username)
 
-        expect(mockUseQuery).toHaveBeenCalledWith(
-            expect.objectContaining({
-                queryKey: ['user', ''],
-                enabled: false,
-            }),
-        )
+        const callArgs = mockUseQuery.mock.calls[0]![0]
+        expect(callArgs.queryKey).toEqual(['user', ''])
+        expect(callArgs.enabled.value).toBe(false)
     })
 
     it('uses correct query function', () => {
@@ -79,6 +73,6 @@ describe('useOtherUserQuery', () => {
         useOtherUserQuery('')
 
         const callArgs = mockUseQuery.mock.calls[0]![0]
-        expect(callArgs.enabled).toBe(false)
+        expect(callArgs.enabled.value).toBe(false)
     })
 })

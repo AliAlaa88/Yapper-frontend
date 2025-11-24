@@ -82,7 +82,7 @@ describe('AccountInformation Component', () => {
             {
                 label: 'settings.accountInfo.birthDate',
                 content: 'May 15, 1990',
-                href: 'hagar/settings/profile',
+                href: '/hagar/settings/profile',
             },
             {
                 label: 'settings.accountInfo.age',
@@ -114,7 +114,7 @@ describe('AccountInformation Component', () => {
         expect(categories[5]?.content).toBe('34')
         expect(categories[6]?.content).toBe('January 15, 2020 at 10:30 AM')
         expect(categories[3]?.href).toBe('/settings/languages')
-        expect(categories[4]?.href).toBe('hagar/settings/profile')
+        expect(categories[4]?.href).toBe('/hagar/settings/profile')
         expect(categories[5]?.href).toBe('/settings/your_yapper_data/age')
         expect(categories[6]?.href).toBe('/settings/your_twitter_data/account_creation')
     })
