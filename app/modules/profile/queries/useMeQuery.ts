@@ -10,6 +10,9 @@ export function useMeQuery(enabled: Ref<boolean> = ref(true)) {
         queryKey: ['me'],
         queryFn: () => $userInfoService.getMe(),
         enabled,
+        refetchOnWindowFocus: true,
+        staleTime: 0,
+        retry: 1,
     })
 
     return meQuery
