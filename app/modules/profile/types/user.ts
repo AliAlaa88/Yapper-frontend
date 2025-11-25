@@ -88,6 +88,8 @@ export interface FollowUser {
     is_blocked: boolean
 }
 
+
+
 export interface FollowListApiResponse {
     data: FollowUser[]
     count: number
