@@ -30,7 +30,6 @@ export const createAuthService = () => {
                 birth_date: payload.Birth_date,
                 captcha_token: payload.Captcha_token
             });
-            console.log("Register Step 1 Response:", response.data);
             return response.data;
         },
         registerStep2: async (payload: verifyAccountPayload) => {
@@ -77,8 +76,6 @@ export const createAuthService = () => {
             return response.data;
         },
         OAuthCompleteStep1: async (OAuth_session_token: string, Birth_date: string) => {
-            console.log("OAuth Step 1:", { OAuth_session_token, Birth_date });
-            console.log("API URL:", `${API_URL}/auth/oauth/complete/step1`);
             const response = await $yapperApi.post(`${API_URL}/auth/oauth/complete/step1`, {
                 oauth_session_token: OAuth_session_token,
                 birth_date: Birth_date

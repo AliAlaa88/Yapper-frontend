@@ -69,7 +69,6 @@ import { validateOtp } from '../../../utils/validators'
 const { locale, t } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
-// Use v-model for otp
 const otp = defineModel<string>('otp', { default: '' })
 
 const errorMessage = ref('')

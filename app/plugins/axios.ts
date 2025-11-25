@@ -22,7 +22,6 @@ export default defineNuxtPlugin(() => {
         (config) => {
             if (process.client) {
                 const token = useCookie('access_token')
-                console.log("Attaching token to request:", token.value);
                 if (token) {
                     config.headers.Authorization = `Bearer ${token.value}`
                 }
@@ -38,8 +37,6 @@ export default defineNuxtPlugin(() => {
         (response) => response,
         async (error) => {
             const requestUrl = error.config?.url
-            console.log("Response error URL:", requestUrl);
-            console.log(`${apiBase}/auth/refresh`);
             if (error.response?.status === 401) {
                 if (process.client && window.location.pathname !== '/auth/login' && requestUrl !== `${apiBase}/auth/refresh`) {
                     const nuxtApp = useNuxtApp()
