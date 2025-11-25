@@ -140,6 +140,14 @@ export const createAuthService = () => {
                 category_ids: categoryIds
             }, {withCredentials: true});
             return response.data;
+        },
+        updateProfile: async (image_url: string) => {
+            console.log("inside updateProfile service");
+            console.log("Updating profile with image_url:", image_url);
+            const response = await $yapperApi.patch(`${API_URL}/users/me`, {
+                "avatar_url": image_url
+            }, {withCredentials: true});
+            return response.data;
         }
     };
 };

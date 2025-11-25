@@ -4,7 +4,7 @@
         :class="border ? 'border-b border-primary' : ''"
         @submit.prevent="handleSubmit"
     >
-        <NuxtLink :to="`/profile/${user.username}`">
+        <NuxtLink :to="`/${user.username}`">
             <img :src="user.avatar_url" :alt="user.name" class="w-10 h-10 rounded-full" />
         </NuxtLink>
 

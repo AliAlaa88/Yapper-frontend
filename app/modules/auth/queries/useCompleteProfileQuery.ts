@@ -78,3 +78,18 @@ export const useUpdateInterestsMutation = (
     onError: (error) => onError?.(error),
   });
 };
+
+export const useUpdateProfileMutation = (
+  onSuccess?: (data: any) => void,
+  onError?: (error: any) => void
+) => {
+  const { $authService } = useNuxtApp();
+  console.log("inside the mutation of profile update")
+  return useMutation({
+    mutationKey: ['updateProfile'],
+    mutationFn: ({image_url}: {image_url: any}) => $authService.updateProfile(image_url),
+    retry: false,
+    onSuccess: (data) => onSuccess?.(data),
+    onError: (error) => onError?.(error),  
+  });
+};
