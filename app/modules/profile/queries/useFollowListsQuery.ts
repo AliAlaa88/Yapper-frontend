@@ -6,13 +6,13 @@ export const useFollowListsQuery = (userId: Ref<string>) => {
     const { $userInfoService } = useNuxtApp()
 
     const followersQuery = useQuery<FollowUser[], Error>({
-        queryKey: ['followers', userId] as const,
+        queryKey: ['followers', userId.value] as const,
         queryFn: () => $userInfoService.getFollowers(userId.value),
         enabled: computed(() => !!userId.value),
     })
 
     const followingQuery = useQuery<FollowUser[], Error>({
-        queryKey: ['following', userId] as const,
+        queryKey: ['following', userId.value] as const,
         queryFn: () => $userInfoService.getFollowing(userId.value),
         enabled: computed(() => !!userId.value),
     })

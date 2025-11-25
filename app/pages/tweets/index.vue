@@ -4,4 +4,7 @@
 
 <script setup lang="ts">
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
+definePageMeta({
+    middleware: ['auth'],
+})
 </script>

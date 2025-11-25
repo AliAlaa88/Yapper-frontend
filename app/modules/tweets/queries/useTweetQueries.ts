@@ -56,16 +56,16 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
                 
                 return null
             } catch (error: any) {
-                console.error('💥 Error fetching tweet details:', error)
+                console.error('Error fetching tweet details:', error)
                 
                 // On error, fallback to initialData if available
                 if (initialData) {
-                    console.log('🔄 Using initialData as fallback due to error')
+                    console.log('Using initialData as fallback due to error')
                     return { tweet: initialData, replies: [] }
                 }
                 
                 // If no initialData, return null instead of throwing
-                console.warn('⚠️ Returning null due to error (no initialData)')
+                console.warn('Returning null due to error (no initialData)')
                 return null
             }
         },

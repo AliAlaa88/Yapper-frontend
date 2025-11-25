@@ -40,8 +40,8 @@ export function useLogoutQuery(
 ) {
     const { $authService } = useNuxtApp()
     const userStore = useUserStore()
-    console.log("Inside useLogoutQuery");
-  //  userStore.logout()
+    // console.log("Inside useLogoutQuery");
+    //  userStore.logout()
     return useMutation({
         mutationKey: ['logout'],
         mutationFn: () => $authService.logout(),
@@ -49,7 +49,7 @@ export function useLogoutQuery(
         onSuccess: (data) => {
             onSuccess?.(data)
             userStore.logout()
-            window.location.href ='/auth/login'
+            window.location.href = '/auth'
         },
         onError: (error) => onError?.(error),
     })

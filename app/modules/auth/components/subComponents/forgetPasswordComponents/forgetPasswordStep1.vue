@@ -16,6 +16,7 @@
             <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step1Info') }}</p>
 
             <!-- Input -->
+            <form @submit.prevent="onNext">
             <input
                 id="input-identifier-forgot-password-s1"
                 type="text"
@@ -37,10 +38,11 @@
             <button
                 id="button-next-forgot-password-s1"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
-                @click="onNext"
+                type="submit"
             >
                 {{ $t('auth.common.next') }}
             </button>
+            </form>
     </Popup>
 </template>
 

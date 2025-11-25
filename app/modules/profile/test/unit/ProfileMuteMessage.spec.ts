@@ -52,6 +52,16 @@ const mockUserInteractions = {
     handleFollowAction: vi.fn(),
 }
 
+const globalMocks = {
+    mocks: {
+        $t: (key: string) => {
+            if (key === 'profile.muted.message') return 'You have muted posts from this account.'
+            if (key === 'profile.muted.action') return 'Unmute'
+            return key
+        }
+    }
+}
+
 describe('ProfileMuteMessage Component', () => {
     beforeEach(() => {
         vi.clearAllMocks()
@@ -77,6 +87,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
 
@@ -89,6 +100,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
 
@@ -108,13 +120,14 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
 
         mockUserInfoRef.isMuted.value = true
         await nextTick()
         console.log(wrapper.html())
-        const unmuteLink = wrapper.find('.text-blue')
+        const unmuteLink = wrapper.find('#unmute-button')
         expect(unmuteLink.exists()).toBe(true)
         await unmuteLink.trigger('click')
 
@@ -127,6 +140,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
 
@@ -145,6 +159,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
         mockUserInfoRef.isMuted.value = true
@@ -164,6 +179,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
 
@@ -188,13 +204,14 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                ...globalMocks
             },
         })
 
         mockUserInfoRef.isMuted.value = true
         await nextTick()
 
-        const unmuteLink = wrapper.find('.text-blue')
+        const unmuteLink = wrapper.find('#unmute-button')
 
         await unmuteLink.trigger('click')
         await unmuteLink.trigger('click')

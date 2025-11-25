@@ -88,8 +88,12 @@ export interface FollowUser {
     is_blocked: boolean
 }
 
-export interface FollowListApiResponse {
+export interface Data {
     data: FollowUser[]
+}
+
+export interface FollowListApiResponse {
+    data: Data
     count: number
     message: string
 }

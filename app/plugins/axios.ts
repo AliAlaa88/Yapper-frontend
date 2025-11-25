@@ -1,7 +1,6 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
-import Cookies from 'js-cookie'
 import { useNuxtApp } from '#app'
 
 export default defineNuxtPlugin(() => {

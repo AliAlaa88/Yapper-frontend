@@ -4,6 +4,12 @@ import { useUserInfo } from '../../composables/useUserInfo'
 import { useUserActions } from '../../composables/useUserActions'
 import { useUserInteractions } from '../../composables/useUserInteractions'
 
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({
+        t: (key: string) => key,
+    }),
+}))
+
 const mockSnackbar = {
     showSnackbar: ref(false),
     handleShowSnackbar: vi.fn(),
@@ -105,12 +111,12 @@ describe('useUserInteractions', () => {
 
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
-                'Block',
-                'Block',
+                'profile.actions.block.title',
+                'profile.actions.block.button',
                 'bg-red',
                 'text-primary',
                 'hover:opacity-90',
-                expect.stringContaining('They will be able to see your public posts'),
+                'profile.actions.block.description',
                 expect.any(Function),
                 'hagar',
             )
@@ -143,9 +149,9 @@ describe('useUserInteractions', () => {
 
             expect(mockUserActions.handleBlock).toHaveBeenCalled()
             expect(mockSnackbar.handleShowSnackbar).toHaveBeenCalledWith(
-                'Successfully blocked.',
+                'profile.actions.block.snackbar',
                 '',
-                'Unblock',
+                'profile.actions.block.undoButton',
                 mockUserActions.handleUnblock,
             )
         })
@@ -160,14 +166,12 @@ describe('useUserInteractions', () => {
 
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
-                'Unfollow',
-                'Unfollow',
+                'profile.actions.unfollow.title',
+                'profile.actions.unfollow.button',
                 'bg-alternate',
                 'text-alternate',
                 'hover:opacity-90',
-                expect.stringContaining(
-                    'Their posts will no longer show up in your Following timeline.',
-                ),
+                'profile.actions.unfollow.description',
                 mockUserActions.handleUnfollow,
                 'hagar',
             )
@@ -194,9 +198,9 @@ describe('useUserInteractions', () => {
             expect(mockUserActions.handleMute).toHaveBeenCalled()
             expect(mockSnackbar.showSnackbar.value).toBe(true)
             expect(mockSnackbar.handleShowSnackbar).toHaveBeenCalledWith(
-                ' has been muted.',
-                'hagar',
-                'Undo',
+                'profile.actions.mute.snackbar',
+                '',
+                'profile.actions.mute.undoButton',
                 expect.any(Function),
             )
         })
@@ -221,12 +225,12 @@ describe('useUserInteractions', () => {
 
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
-                'Remove',
-                'Remove this follower',
+                'profile.actions.removeFollower.title',
+                'profile.actions.removeFollower.button',
                 'bg-red',
                 'text-primary',
                 'hover:opacity-90',
-                expect.stringContaining('They can follow you again in the future.'),
+                'profile.actions.removeFollower.description',
                 expect.any(Function),
             )
             expect(mockUserActions.handleRemoveFollower).not.toHaveBeenCalled()
@@ -248,8 +252,7 @@ describe('useUserInteractions', () => {
 
             expect(mockUserActions.handleRemoveFollower).toHaveBeenCalled()
             expect(mockSnackbar.handleShowSnackbar).toHaveBeenCalledWith(
-                ' is no longer following you.',
-                'hagar',
+                'profile.actions.removeFollower.snackbar',
             )
         })
     })
@@ -263,13 +266,13 @@ describe('useUserInteractions', () => {
 
             expect(mockConfirmation.showConfirmation.value).toBe(true)
             expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
-                'Unblock',
-                'Unblock',
+                'profile.actions.unblock.title',
+                'profile.actions.unblock.button',
                 'bg-alternate',
                 'text-alternate',
                 'hover:opacity-90',
-                'They will be able to follow you and engage with your public posts.',
-                mockUserActions.handleUnblock,
+                'profile.actions.unblock.description',
+                expect.any(Function),
                 'hagar',
             )
         })
@@ -293,12 +296,12 @@ describe('useUserInteractions', () => {
 
         expect(mockConfirmation.showConfirmation.value).toBe(true)
         expect(mockConfirmation.handleShowConfirmation).toHaveBeenCalledWith(
-            'UnMute',
-            'UnMute',
+            'profile.actions.unmute.title',
+            'profile.actions.unmute.button',
             'bg-alternate',
             'text-alternate',
             'hover:opacity-90',
-            'Posts from this account will now be allowed in your Home timeline. ',
+            'profile.actions.unmute.description',
             expect.any(Function),
             'hagar',
         )
@@ -314,8 +317,7 @@ describe('useUserInteractions', () => {
 
             expect(mockUserActions.handleUnmute).toHaveBeenCalled()
             expect(mockSnackbar.handleShowSnackbar).toHaveBeenCalledWith(
-                ' has been unmuted.',
-                'hagar',
+                'profile.actions.unmute.snackbar',
             )
         })
 

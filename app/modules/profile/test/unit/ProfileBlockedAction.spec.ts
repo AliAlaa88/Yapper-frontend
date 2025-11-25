@@ -5,6 +5,12 @@ import { ref, computed, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import ProfileBlockedAction from '../../components/ProfileHeader/SubComponents/ProfileBlockedAction.vue'
 
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({
+        t: (key: string) => key,
+    }),
+}))
+
 vi.mock('../../composables/useUserInfo', () => ({
     useUserInfo: vi.fn(),
 }))
@@ -77,6 +83,9 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                mocks: {
+                    $t: (key: string) => key,
+                },
             },
         })
 
@@ -89,6 +98,9 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                mocks: {
+                    $t: (key: string) => key,
+                },
             },
         })
 
@@ -96,7 +108,7 @@ describe('ProfileMuteMessage Component', () => {
         await nextTick()
 
         expect(wrapper.find('div').exists()).toBe(true)
-        expect(wrapper.text()).toContain('Blocked')
+        expect(wrapper.text()).toContain('profile.blockedButton')
     })
 
     it('should change button text on hover', async () => {
@@ -105,6 +117,9 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
+                mocks: {
+                    $t: (key: string) => key,
+                },
             },
         })
 
@@ -112,13 +127,13 @@ describe('ProfileMuteMessage Component', () => {
         await nextTick()
 
         const button = wrapper.find('button')
-        expect(button.text()).toBe('Blocked')
+        expect(button.text()).toBe('profile.blockedButton')
 
         await button.trigger('mouseover')
-        expect(button.text()).toBe('Unblock')
+        expect(button.text()).toBe('profile.unblockButton')
 
         await button.trigger('mouseout')
-        expect(button.text()).toBe('Blocked')
+        expect(button.text()).toBe('profile.blockedButton')
     })
 
     it('should call handleUnblockWithConfirmation when unblock is clicked', async () => {
@@ -126,6 +141,9 @@ describe('ProfileMuteMessage Component', () => {
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
