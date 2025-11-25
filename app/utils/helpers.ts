@@ -70,3 +70,11 @@ export function parseTextWithTags(text: string): string {
 
     return result
 }
+
+
+export function shorterName(name: string, maxLength: number = 15): string {
+    if (name.length > maxLength) {
+        return name.slice(0, maxLength) + '...'
+    }
+    return name
+}
