@@ -267,6 +267,11 @@
             "message": "You have muted posts from this account.",
             "action": "Unmute"
         },
+        "notFound": {
+            "title": "This account doesn't exist",
+            "description": "Try searching for another.",
+            "goHome": "Go to Home"
+        },
         "actions": {
             "block": {
                 "title": "Block",
@@ -283,11 +288,17 @@
             "unfollow": {
                 "title": "Unfollow",
                 "button": "Unfollow",
+                "snackbar": "You unfollowed {username}",
                 "description": "Their posts will no longer show up in your Following timeline. You can still view their profile, unless their posts are protected."
             },
             "mute": {
                 "snackbar": "{username} has been muted.",
                 "undoButton": "Undo"
+            },
+            "follow": {
+                "title": "Follow",
+                "button": "Follow",
+                "snackbar": "You followed {username}"
             },
             "unmute": {
                 "title": "UnMute",
@@ -422,7 +433,8 @@
             "unlike": "Unlike",
             "views": "Views",
             "bookmark": "Bookmark",
-            "removeBookmark": "Remove bookmark"
+            "removeBookmark": "Remove bookmark",
+            "share": "Share Tweet"
         },
         "loading": {
             "tweets": "Loading tweets...",

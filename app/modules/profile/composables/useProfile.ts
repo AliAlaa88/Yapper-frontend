@@ -39,6 +39,7 @@ export const useProfile = (username: string) => {
             profile: profileStore.profile,
             isMyProfile: profileStore.isMyProfile,
             isLoading: meQuery.isLoading,
+            error: meQuery.error,
         }
     } else {
         const userQuery = useOtherUserQuery(username)
@@ -62,6 +63,7 @@ export const useProfile = (username: string) => {
             profile: profileStore.profile,
             isMyProfile: profileStore.isMyProfile,
             isLoading: userQuery.isLoading,
+            error: userQuery.error,
         }
     }
 }

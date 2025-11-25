@@ -16,6 +16,7 @@
             <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
 
             <!-- Date of Birth Dropdowns -->
+             <form @submit.prevent="onNext">
             <div class="flex gap-3 mb-4">
                 <!-- Month -->
                 <div class="flex-1 relative">
@@ -84,10 +85,11 @@
             <button
                 id="button-signup-oauth-s1"
                 class="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
-                @click="onNext"
+                type="submit"
             >
                 {{ $t('auth.common.next') }}
             </button>
+            </form>
     </Popup>
 </template>
 
@@ -165,6 +167,7 @@ const oauthCompleteStep2Mutation = useOAuthCompleteStep2Query(
     (data: any) => {
         userStore.setAuth(data.data)
         errorMessage.value = ''
+        recommendations.value = recommendations.value.splice(1)
         emit('finish', recommendations.value)
     },
     (error: any) => {

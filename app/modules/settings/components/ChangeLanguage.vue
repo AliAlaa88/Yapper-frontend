@@ -14,7 +14,9 @@
             @click="isOpen = true">
             <div class="flex justify-between items-center">
                 <div class="flex flex-col items-start">
-                    <span class="block text-[15px] text-primary">{{ $t('settings.languages.appsAndLanguage') }}</span>
+                    <span class="block text-[15px] text-primary">
+                        {{ $t('settings.languages.appsAndLanguage') }}
+                    </span>
                     <p class="text-muted text-[13px]">
                         English and Arabic
                     </p>

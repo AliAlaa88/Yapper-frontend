@@ -19,6 +19,7 @@
             <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step3Info') }}</p>
 
             <!-- Input -->
+            <form @submit.prevent="onFinish">
             <div class="mb-4">
                 <input
                     id="input-password-forgot-password-s3"
@@ -64,10 +65,11 @@
             <button
                 id="button-reset-password-forgot-password-s3"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
-                @click="onFinish"
+                type="submit"
             >
                 {{ $t('auth.forgotPassword.resetButton') }}
             </button>
+            </form>
     </Popup>
 </template>
 
