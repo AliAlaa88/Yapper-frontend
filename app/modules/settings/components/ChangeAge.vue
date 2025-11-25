@@ -15,7 +15,7 @@
                     Not right? You can add your date of birth to your
                     <NuxtLink
                         id="profile-link"
-                        to="/settings/profile"
+                        :to="profileRoute"
                         class="text-accent hover:underline">
                         profile
                     </NuxtLink>
@@ -34,5 +34,6 @@ import { calculateAge } from '../utils/calculations'
 import { useI18n } from 'vue-i18n'
 const user = getUser() as User
 const age = computed(() => calculateAge(user.birth_date ?? ''))
+const profileRoute = '/' + user.username + '/settings/profile'
 const { t } = useI18n()
 </script>

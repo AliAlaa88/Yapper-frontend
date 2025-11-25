@@ -10,9 +10,7 @@ export function userSettingsQueries() {
     const myMutedUsersQuery = useQuery<OtherUser[]>({
         queryKey: ['myMutedUsers'],
         queryFn: async () => {
-            console.log('Querying muted users...')
             const res = await $settingsService.getMuted()
-            console.log('Muted query result:', res)
             return res
         },
     })

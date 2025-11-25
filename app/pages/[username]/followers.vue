@@ -5,4 +5,8 @@
 
 <script setup lang="ts">
 import FollowLists from '../../modules/profile/components/FollowLists/FollowLists.vue'
+
+definePageMeta({
+    middleware: ['auth'],
+})
 </script>

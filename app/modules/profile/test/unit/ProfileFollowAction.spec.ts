@@ -55,6 +55,7 @@ const mockUserInteractions = {
     handleUnmuteWithSnackbar: vi.fn(),
     handleUnfollowWithConfirmation: vi.fn(),
     handleFollowAction: vi.fn(),
+    isFollowLoading: ref(false),
 }
 
 const buttonClass = ref('bg-alternate text-alternate')
@@ -90,9 +91,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should render button when user is not blocked', () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -102,9 +109,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should not render button when user is not blocked', async () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -117,9 +130,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should show/hide button when isBlocked changes', async () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -140,9 +159,15 @@ describe('ProfileFollowAction Component', () => {
     it('should display correct button text', async () => {
 
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -154,9 +179,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should call handleFollowAction when not following and button is clicked', async () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -172,9 +203,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should call handleUnfollowWithConfirmation when following and button is clicked', async () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -190,9 +227,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should handle hover sequence correctly', async () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -211,9 +254,15 @@ describe('ProfileFollowAction Component', () => {
 
     it('should update button text when buttonText changes', async () => {
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
@@ -230,18 +279,37 @@ describe('ProfileFollowAction Component', () => {
         mockUserInfoRef.isFollowing.value = false
 
         const wrapper = mount(ProfileFollowAction, {
+            props: {
+                userId: '12',
+            },
             global: {
                 provide: {
                     'user-id': ref('12'),
+                },
+                mocks: {
+                    $t: (key: string) => key,
                 },
             },
         })
 
         const button = wrapper.find('button')
+
+        // Simulate loading state
+        mockUserInteractions.isFollowLoading.value = true
+        await nextTick()
+
         await button.trigger('click')
         await button.trigger('click')
         await button.trigger('click')
 
+        // Should not be called because button is disabled/loading
+        expect(mockUserInteractions.handleFollowAction).toHaveBeenCalledTimes(0)
+
+        // Reset loading
+        mockUserInteractions.isFollowLoading.value = false
+        await nextTick()
+
+        await button.trigger('click')
         expect(mockUserInteractions.handleFollowAction).toHaveBeenCalledTimes(1)
     })
 })

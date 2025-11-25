@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import CoverModal from '../../components/ProfilePhoto/CoverModal.vue'
-import { useProfilePhotoStore } from '../../stores/photo'
+import { useProfileStore } from '../../stores/profileStore'
 
-const mockPush = vi.fn()
+const mockBack = vi.fn()
 const mockRoute = {
     params: { username: 'testuser' },
 }
@@ -12,7 +12,7 @@ const mockRoute = {
 vi.mock('nuxt/app', () => ({
     useRoute: vi.fn(() => mockRoute),
     useRouter: vi.fn(() => ({
-        push: mockPush,
+        back: mockBack,
     })),
 }))
 
@@ -26,12 +26,17 @@ vi.mock('lucide-vue-next', () => ({
 describe('CoverModal', () => {
     beforeEach(() => {
         setActivePinia(createPinia())
-        mockPush.mockClear()
+        mockBack.mockClear()
     })
 
     it('renders the cover modal with image', () => {
-        const store = useProfilePhotoStore()
-        store.setCoverUrl('https://example.com/cover.jpg')
+        const store = useProfileStore()
+        store.setProfile({
+            user_id: '1',
+            username: 'testuser',
+            name: 'Test User',
+            cover_url: 'https://example.com/cover.jpg'
+        } as any, true)
 
         const wrapper = mount(CoverModal)
 
@@ -40,22 +45,17 @@ describe('CoverModal', () => {
     })
 
     it('closes modal when close button is clicked', async () => {
-        const store = useProfilePhotoStore()
-        store.setCoverUrl('https://example.com/cover.jpg')
+        const store = useProfileStore()
+        store.setProfile({
+            user_id: '1',
+            username: 'testuser',
+            name: 'Test User',
+            cover_url: 'https://example.com/cover.jpg'
+        } as any, true)
 
         const wrapper = mount(CoverModal)
         await wrapper.find('button').trigger('click')
 
-        expect(mockPush).toHaveBeenCalledWith('/profile/testuser')
-    })
-
-    it('clears cover URL on unmount', () => {
-        const store = useProfilePhotoStore()
-        store.setCoverUrl('https://example.com/cover.jpg')
-
-        const wrapper = mount(CoverModal)
-        wrapper.unmount()
-
-        expect(store.coverUrl).toBeNull()
+        expect(mockBack).toHaveBeenCalled()
     })
 })

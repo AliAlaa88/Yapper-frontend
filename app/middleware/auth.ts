@@ -1,5 +1,5 @@
-import { useNuxtApp } from "#app"
-import Cookies from "js-cookie";
+import { useNuxtApp } from '#app'
+
 export default defineNuxtRouteMiddleware(async (to) => {
     const { $authService } = useNuxtApp()
 
@@ -11,6 +11,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     if (requiresAuth && !isAuthenticated) {
         // Redirect to auth if trying to access protected route without authentication
+        window.document.title = 'login'
         return navigateTo('/auth')
     }
 

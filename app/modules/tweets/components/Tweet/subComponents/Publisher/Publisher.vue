@@ -61,7 +61,7 @@
                 <NuxtLink
                     :id="`publisher-name-link-timeline-${id}`"
                     :to="linkComputed"
-                    class="font-bold text-primary hover:underline text-sm"
+                    class="font-bold text-primary hover:underline text-sm truncate max-w-[200px] sm:max-w-[150px] xs:max-w-[100px]"
                 >
                     {{ name }}
                 </NuxtLink>
@@ -78,7 +78,7 @@
                 />
             </template>
         </CustomToolTip>
-        <span class="text-secondary text-sm">@{{ username }}</span>
+        <span class="text-secondary text-sm truncate max-w-[200px] sm:max-w-[150px] xs:max-w-[100px]">@{{ username }}</span>
         <span class="text-secondary text-sm">·</span>
         <span class="text-secondary text-sm hover:underline cursor-pointer">
             {{ formatDate(createdAt, locale) }}
@@ -102,7 +102,6 @@ const props = defineProps<{
 
 const { id, name, username, avatar_url, link } = toRefs(props.publisher)
 const { locale } = useI18n()
-
 // Use the utility function for consistent profile URLs
 const linkComputed = computed(() => getProfileUrl(props.publisher))
 </script>
