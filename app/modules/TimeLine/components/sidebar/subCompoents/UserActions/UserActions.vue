@@ -52,10 +52,10 @@
                 <div class="absolute bottom-0 left-6 transform translate-y-full w-0 h-0">
                     <div
                         class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-white"
-                    ></div>
+                    />
                     <div
                         class="absolute left-[-1px] top-[-1px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-dark"
-                    ></div>
+                    />
                 </div>
 
                 <!-- Menu Items -->
@@ -80,23 +80,23 @@
         </Transition>
 
         <!-- Backdrop to close on click outside -->
-        <div v-if="isPopupOpen" class="fixed inset-0 z-40" @click="closePopup"></div>
+        <div v-if="isPopupOpen" class="fixed inset-0 z-40" @click="closePopup"/>
 
         <!-- Logout Confirmation Popup -->
         <Popup
-            :isOpen="isLogoutConfirmOpen"
-            :hasCloseButton="false"
+            :is-open="isLogoutConfirmOpen"
+            :has-close-button="false"
             x-position="center"
             y-position="center"
-            contentClass="max-w-[320px] w-full mx-4"
-            headerClass=""
-            slotClass="p-8 flex flex-col items-center justify-center max-h-none overflow-visible"
+            content-class="max-w-[320px] w-full mx-4"
+            header-class=""
+            slot-class="p-8 flex flex-col items-center justify-center max-h-none overflow-visible"
             @close="closeLogoutConfirm"
         >
             <div class="flex flex-col items-center">
                 <!-- Logo -->
                 <div class="mb-5">
-                    <Logo imgClass="w-8 h-8" />
+                    <Logo img-class="w-8 h-8" />
                 </div>
 
                 <!-- Title -->
