@@ -13,7 +13,7 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.profilePicture.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.info') }}</p>
 
             <!-- Profile Picture Preview -->
             <div class="flex justify-center mb-6">
@@ -62,23 +62,23 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-profile-picture"
                 v-if="previewImage"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate cursor-pointer font-semibold rounded-full py-2 transition duration-200 mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
                 @click="onNext"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
 
             <!-- Skip Button -->
-            <button
+            <Button
                 id="button-skip-profile-picture"
-                class="w-full text-primary cursor-pointer hover:text-blue transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}
-            </button>
+            </Button>
     </Popup>
 </template>
 
@@ -89,6 +89,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateProfilePictureMutation } from '../../../queries/useCompleteProfileQuery'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

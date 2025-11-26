@@ -44,32 +44,32 @@
                 {{ errorMessage }}
             </p>
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-login-s1"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
             <!-- Forgot password -->
-            <button
+            <Button
                 id="button-forgot-password-login"
-                class="w-full border-2 border-alternate text-primary hover:bg-hover font-semibold cursor-pointer rounded-full py-2 transition mb-6 hover:border-blue"
+                class="w-full border-2 border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
                 @click="onForgotPassword"
             >
                 {{ $t('auth.login.forgotPassword') }}
-            </button>
+            </Button>
 
             <p class="text-center text-primary text-sm">
                 {{ $t('auth.login.switchPrompt') }}
-                <button
+                <Button
                     id="button-switch-to-signup"
-                    class="text-accent hover:underline font-semibold cursor-pointer transition duration-200"
+                    class="text-accent hover:underline font-semibold transition duration-200"
                     @click="$emit('switch')"
                 >
                     {{ $t('auth.common.signUp') }}
-                </button>
+                </Button>
             </p>
     </Popup>
 </template>

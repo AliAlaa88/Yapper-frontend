@@ -14,7 +14,7 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.verifyOtp.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.verifyOtp.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.verifyOtp.info') }}</p>
 
             <!-- OTP Input -->
             <form @submit.prevent="onNext">
@@ -41,23 +41,23 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-signup-s2"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
             <p class="text-center text-primary text-sm">
                 {{ $t('auth.verifyOtp.resendPrompt') }}
-                <button
+                <Button
                     id="button-resend-code-signup-s2"
-                    class="text-blue hover:underline font-semibold cursor-pointer transition duration-200"
+                    class="text-blue hover:underline font-semibold transition duration-200"
                     @click="onResendCode"
                 >
                     {{ $t('auth.common.resendCode') }}
-                </button>
+                </Button>
             </p>
             <div class="mt-4">
                 <p
@@ -86,6 +86,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validateOtp } from '../../../utils/validators'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

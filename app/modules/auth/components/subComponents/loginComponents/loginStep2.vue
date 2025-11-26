@@ -59,23 +59,23 @@
             </div>
 
             <!-- Login Button -->
-            <button
+            <Button
                 id="button-login-s2"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
                 type="submit"
             >
                 {{ $t('auth.common.signIn') }}
-            </button>
+            </Button>
             </form>
             <p class="text-center text-primary text-sm">
                 {{ $t('auth.login.switchPrompt') }}
-                <button
+                <Button
                     id="button-switch-to-signup-login-s2"
-                    class="text-accent hover:underline font-semibold cursor-pointer transition duration-200"
+                    class="text-accent hover:underline font-semibold transition duration-200"
                     @click="$emit('switch')"
                 >
                     {{ $t('auth.common.signUp') }}
-                </button>
+                </Button>
             </p>
     </Popup>
 </template>

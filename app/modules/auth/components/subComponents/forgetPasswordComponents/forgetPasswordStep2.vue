@@ -46,13 +46,13 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-forgot-password-s2"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>
@@ -65,6 +65,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validateOtp } from '../../../utils/validators'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale, t } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

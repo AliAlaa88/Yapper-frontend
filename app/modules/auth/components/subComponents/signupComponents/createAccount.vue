@@ -59,8 +59,8 @@
                         v-model="month"
                         class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>{{ $t('auth.signup.month') }}</option>
-                        <option v-for="m in months" :key="m.value" :value="m.value">
+                        <option value="" disabled selected :class="isArabic? 'text-right':'text-left'">{{ $t('auth.signup.month') }}</option>
+                        <option v-for="m in months" :key="m.value" :value="m.value" :class="isArabic ? 'text-right' : 'text-left'">
                             {{ m.label }}
                         </option>
                     </select>
@@ -78,8 +78,8 @@
                         v-model="day"
                         class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>{{ $t('auth.signup.day') }}</option>
-                        <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
+                        <option value="" disabled selected :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.day') }}</option>
+                        <option v-for="d in days" :key="d" :value="d" :class="isArabic ? 'text-right' : 'text-left'">{{ d }}</option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
@@ -95,8 +95,8 @@
                         v-model="year"
                         class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>{{ $t('auth.signup.year') }}</option>
-                        <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+                        <option value="" disabled selected :class="isArabic?'text-right':'text-left'">{{ $t('auth.signup.year') }}</option>
+                        <option v-for="y in years" :key="y" :value="y" :class="isArabic ? 'text-right' : 'text-left'">{{ y }}</option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
@@ -106,13 +106,13 @@
                 </div>
             </div>
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-signup-s1"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
             <!-- reCAPTCHA -->
             <div class="flex justify-center mt-4">
@@ -137,10 +137,10 @@ import Recaptcha from '../recaptcha.vue'
 import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
-
+import Button from '~/modules/Common/components/ui/Button.vue'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
-
+console.log('isArabic:', isArabic.value)
 const name = ref('')
 const email = ref('')
 const month = ref('')

@@ -35,13 +35,13 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-forgot-password-s1"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>

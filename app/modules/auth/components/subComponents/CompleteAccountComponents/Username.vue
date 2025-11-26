@@ -15,7 +15,7 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.username.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.info') }}</p>
 
             <!-- Username Input -->
             <div class="mb-6">
@@ -31,7 +31,7 @@
                         :placeholder="$t('auth.username.placeholder')"
                         class="w-full bg-primary text-primary border-2 border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
                         :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
-                        maxlength="15"
+                        maxlength="25"
                         @input="validateUsername"
                     />
                 </div>
@@ -55,6 +55,7 @@
             <div
                 v-if="props.Recommendations && props.Recommendations.length"
                 class="my-2 text-sm text-muted"
+                :class="isArabic ? 'text-right' : 'text-left'"
             >
                 <p>{{ $t('auth.username.recommendations') }}</p>
                 <ul class="mt-1 flex flex-wrap gap-2">
@@ -71,28 +72,28 @@
             </div>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-username"
                 :disabled="!isValid"
                 :class="[
                     'w-full font-semibold rounded-full py-2 transition my-3 duration-200',
                     isValid
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate cursor-pointer'
-                        : 'bg-alternate text-alternate opacity-50 cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
+                        : 'bg-alternate text-alternate opacity-50',
                 ]"
                 @click="onNext"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
 
             <!-- Skip Button -->
-            <button
+            <Button
                 id="button-skip-username"
                 class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}
-            </button>
+            </Button>
     </Popup>
 </template>
 
@@ -103,6 +104,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateUsernameMutation } from '../../../queries/useCompleteProfileQuery'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

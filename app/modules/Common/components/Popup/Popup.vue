@@ -2,12 +2,12 @@
     <Teleport to="body">
         <div
             v-if="isOpen"
-            class="fixed inset-0 bg-popup flex flex-col z-50 backdrop-blur-sm py-10"
+            class="fixed inset-0 bg-popup flex flex-col z-50 backdrop-blur-sm md:py-10"
             :class="containerPositionClasses"
             @click="handleClose"
         >
             <div
-                class="bg-primary rounded-2xl p-0 overflow-hidden z-50"
+                class="bg-primary md:rounded-2xl p-0 overflow-hidden z-50 h-full md:h-auto"
                 :class="contentClass"
                 @click.stop
             >

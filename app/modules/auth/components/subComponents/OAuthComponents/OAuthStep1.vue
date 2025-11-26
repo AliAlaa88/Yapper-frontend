@@ -82,13 +82,13 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-signup-oauth-s1"
                 class="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>
@@ -101,6 +101,7 @@ import Logo from '~/modules/Common/components/Logo'
 import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery'
 import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
+import Button from '~/modules/Common/components/ui/Button.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore';
 const userStore = useUserStore()
 const { locale } = useI18n()

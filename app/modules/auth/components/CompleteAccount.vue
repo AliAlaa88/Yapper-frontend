@@ -42,6 +42,7 @@ import Interests from './subComponents/CompleteAccountComponents/Interests.vue'
 import { useRouter } from 'vue-router'
 import { useGetUserQuery } from '../queries/useGetuserQuery'
 import { useUserStore } from '~/modules/auth/stores/userStore';
+import { language } from 'happy-dom/lib/PropertySymbol.js'
 const userStore = useUserStore()
 const router = useRouter()
 const showProfilePicture = ref(false)
@@ -49,6 +50,8 @@ const showUsername = ref(false)
 const showLanguage = ref(false)
 const showInterests = ref(false)
 const enableUserQuery = ref(false)
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 // Centralized profile completion state
 const profileData = reactive({
     profilePicture: null as string | null,
@@ -111,6 +114,7 @@ const onUsernameBack = () => {
 // Language handlers
 const onLanguageNext = (language: string) => {
     profileData.language = language
+    locale.value = language as 'en' | 'ar'
     showLanguage.value = false
     showInterests.value = true
 }
@@ -161,6 +165,9 @@ const onInterestsBack = () => {
 }
 
 const onClose = () => {
-    router.push('/')
+    if(profileData.language) {
+        locale.value = profileData.language as 'en' | 'ar'
+    }
+    router
 }
 </script>

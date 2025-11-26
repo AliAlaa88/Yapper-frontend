@@ -46,28 +46,28 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-interests"
                 :disabled="selectedInterests.length < 3"
                 :class="[
                     'w-full font-semibold rounded-full py-2 transition mb-3',
                     selectedInterests.length >= 3
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate  cursor-pointer'
-                        : 'bg-alternate text-alternate cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
+                        : 'bg-alternate text-alternate',
                 ]"
                 @click="onNext"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
 
             <!-- Skip Button -->
-            <button
+            <Button
                 id="button-skip-interests"
                 class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}
-            </button>
+            </Button>
     </Popup>
 </template>
 
@@ -78,6 +78,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateInterestsMutation } from '../../../queries/useCompleteProfileQuery'
+import Button from '~/modules/Common/components/ui/Button.vue'
 import { useFetchInterests } from '~/modules/auth/queries/useCompleteProfileQuery'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

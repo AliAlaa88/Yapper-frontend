@@ -15,10 +15,10 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.finalRegister.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.info') }}</p>
 
             <!-- Error Message -->
-            <p v-if="errorMessage" id="error-message-signup-s3" class="text-red text-sm mb-4">
+            <p v-if="errorMessage" id="error-message-signup-s3" class="text-red text-sm mb-4" :class="isArabic ? 'text-right' : 'text-left'">
                 {{ errorMessage }}
             </p>
 
@@ -34,23 +34,22 @@
                     @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        passwordError ? 'border-red focus:border-red' : ''
+                        passwordError ? 'border-red focus:border-red' : '', isArabic ? 'text-right' : 'text-left'    
                     ]"
                 />
-                <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
-                <p v-if="!passwordError && password" class="text-green text-xs mt-1">✓ Strong password</p>
+                <p v-if="passwordError" class="text-red text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">{{ passwordError }}</p>
+                <p v-if="!passwordError && password" class="text-green text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">✓ Strong password</p>
             </div>
 
-            <p class="text-muted mb-6">{{ $t('auth.finalRegister.passwordHint') }}</p>
-
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.passwordHint') }}</p>
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-signup-s3"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
                 type="submit"
             >
                 {{ $t('auth.finalRegister.signUpButton') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>
@@ -63,6 +62,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
+import Button from '~/modules/Common/components/ui/Button.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
