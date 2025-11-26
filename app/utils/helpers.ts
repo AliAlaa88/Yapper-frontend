@@ -1,5 +1,5 @@
 import type { User } from '~/modules/auth/types/user'
-import Cookie from 'js-cookie';
+import Cookie from 'js-cookie'
 export function isLoggedIn(): boolean {
     const user = localStorage.getItem('user')
     const token = Cookie.get('access_token')
