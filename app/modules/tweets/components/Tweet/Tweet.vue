@@ -27,8 +27,8 @@
                                 :src="user.avatar"
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
-                                @error="handleImageError"
-                            />
+                                @error="(event) => handleImageError(user.name, event)"
+                            >
                         </template>
                         <template #content>
                             <UserCard

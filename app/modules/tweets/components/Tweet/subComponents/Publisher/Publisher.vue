@@ -10,8 +10,8 @@
                             :src="avatar_url"
                             :alt="name"
                             class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity"
-                            :onerror="`this.src='https://ui-avatars.com/api/?name=${name}'`"
-                        />
+                            :onerror="(event) => handleImageError(name, event)"
+                        >
                     </NuxtLink>
                 </template>
                 <template #content>

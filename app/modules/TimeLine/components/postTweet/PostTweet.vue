@@ -4,15 +4,26 @@
         :class="border ? 'border-b border-primary' : ''"
         @submit.prevent="handleSubmit"
     >
-        <NuxtLink :to="`/profile/${user.username}`">
-            <img :src="user.avatar_url" :alt="user.name" class="w-10 h-10 rounded-full" />
+        <NuxtLink :to="`/${user.username}`">
+            <img
+                v-if="user?.avatar_url"
+                :src="user.avatar_url"
+                :alt="user.name"
+                class="w-16 h-16 object-cover rounded-full"
+                :onerror="(event)=> handleImageError(user.name,event)"
+            >
+            <div
+                v-else
+                class="w-12 h-12 flex items-center justify-center bg-blue rounded-full mt-1">
+                <User class="w-7 h-7 text-white" />
+            </div>
         </NuxtLink>
 
         <div class="flex-1">
             <FormattedTextarea
+                id="post-tweet-textarea"
                 v-model="content"
                 :placeholder="t('timeline.postTweet.placeholder')"
-                id="post-tweet-textarea"
             />
 
             <div

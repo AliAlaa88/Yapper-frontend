@@ -66,7 +66,11 @@ export function parseTextWithTags(text: string): string {
 
     // 4. Handle line breaks for display
     // Note: We don't replace \n with <br> here because the CSS white-space: pre-wrap
-    // handles that better for synchronization with textarea
+    // handles that better for synchronization with textareas
 
     return result
+}
+export const handleImageError = (userName: string, event: Event) => {
+    const target = event.target as HTMLImageElement
+    target.src = `https://ui-avatars.com/api/?name=${userName}`
 }

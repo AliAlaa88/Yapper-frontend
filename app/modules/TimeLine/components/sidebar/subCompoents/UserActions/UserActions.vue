@@ -14,7 +14,7 @@
                         :src="user.avatar_url"
                         :alt="user.name"
                         class="w-full h-full object-cover"
-                    />
+                    >
                     <div v-else class="w-full h-full flex items-center justify-center bg-blue">
                         <User class="w-7 h-7 text-white" />
                     </div>
