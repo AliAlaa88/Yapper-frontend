@@ -59,17 +59,25 @@
                             :src="media.url"
                             :alt="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
                             class="w-full h-full object-cover"
-                        />
+                        >
                         <video
                             v-else-if="media.type === 'video'"
                             :src="media.url"
                             class="w-full h-full object-cover"
                             controls
-                        />
+                            :aria-label="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
+                        >
+                            <track
+                                kind="subtitles"
+                                :src="`${media.url}.vtt`"
+                                srclang="en" 
+                                label="English" >
+                            <p>{{ t('timeline.postTweet.videoNotSupported') }}</p>
+                        </video>
                         <button
                             type="button"
-                            @click="removeMedia(index)"
                             class="absolute top-2 right-2 w-8 h-8 bg-alternate hover:bg-hover-alternate rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                            @click="removeMedia(index)"
                         >
                             <X class="w-5 h-5 text-alternate" />
                         </button>
