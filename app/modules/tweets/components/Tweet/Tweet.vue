@@ -39,8 +39,9 @@
                                 :username="user.username"
                                 :avatar="user.avatar"
                                 :bio="user.bio"
-                                :followers-count="user.followers_count"
-                                :following-count="user.following_count"
+                                :followers-count="user.followers"
+                                :following-count="user.following"
+                                :is_following="user.is_following"
                             />
                         </template>
                     </CustomToolTip>

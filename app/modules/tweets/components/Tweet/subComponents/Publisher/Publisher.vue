@@ -2,7 +2,10 @@
     <!-- Tweet Details View - Name above username -->
     <div v-if="isDetail" class="mb-4">
         <div class="flex items-center gap-3 mb-4">
-            <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-primary">
+            <CustomToolTip
+                :delay-duration="300"
+                content-class="rounded-2xl shadow-xl border border-primary"
+            >
                 <template #trigger>
                     <NuxtLink :id="`publisher-avatar-link-${id}`" :to="linkComputed">
                         <img
@@ -11,7 +14,7 @@
                             :alt="name"
                             class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity"
                             :onerror="(event) => handleImageError(name, event)"
-                        >
+                        />
                     </NuxtLink>
                 </template>
                 <template #content>
@@ -23,11 +26,15 @@
                         :bio="publisher.bio"
                         :followers-count="publisher.followers"
                         :following-count="publisher.following"
+                        :is_following="publisher.is_following"
                     />
                 </template>
             </CustomToolTip>
             <div class="flex flex-col">
-                <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-primary">
+                <CustomToolTip
+                    :delay-duration="300"
+                    content-class="rounded-2xl shadow-xl border border-primary"
+                >
                     <template #trigger>
                         <NuxtLink
                             :id="`publisher-name-link-${id}`"
@@ -46,6 +53,7 @@
                             :bio="publisher.bio"
                             :followers-count="publisher.followers"
                             :following-count="publisher.following"
+                            :is_following="publisher.is_following"
                         />
                     </template>
                 </CustomToolTip>
@@ -56,7 +64,10 @@
 
     <!-- Timeline View - Name and username inline -->
     <div v-else class="flex items-center gap-1 mb-0.5">
-        <CustomToolTip :delay-duration="300" content-class="rounded-2xl shadow-xl border border-primary">
+        <CustomToolTip
+            :delay-duration="300"
+            content-class="rounded-2xl shadow-xl border border-primary"
+        >
             <template #trigger>
                 <NuxtLink
                     :id="`publisher-name-link-timeline-${id}`"
@@ -75,10 +86,14 @@
                     :bio="publisher.bio"
                     :followers-count="publisher.followers"
                     :following-count="publisher.following"
+                    :is_following="publisher.is_following"
                 />
             </template>
         </CustomToolTip>
-        <span class="text-secondary text-sm truncate max-w-[200px] sm:max-w-[150px] xs:max-w-[100px]">@{{ username }}</span>
+        <span
+            class="text-secondary text-sm truncate max-w-[200px] sm:max-w-[150px] xs:max-w-[100px]"
+            >@{{ username }}</span
+        >
         <span class="text-secondary text-sm">·</span>
         <span class="text-secondary text-sm hover:underline cursor-pointer">
             {{ formatDate(createdAt, locale) }}
