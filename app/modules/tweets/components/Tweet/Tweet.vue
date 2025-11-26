@@ -14,8 +14,8 @@
             <div class="shrink-0">
                 <NuxtLink
                     :id="`tweet-avatar-link-${id}`"
-                    @click.stop
                     :to="profileUrl"
+                    @click.stop
                 >
                     <CustomToolTip
                         :delay-duration="300"
@@ -57,16 +57,16 @@
                         <button
                             :id="`tweet-menu-button-${id}`"
                             class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
-                            @click.stop="toggleActionsMenu"
                             :aria-label="$t('tweets.moreActions')"
+                            @click.stop="toggleActionsMenu"
                         >
                             <MoreHorizontal :size="16" />
                         </button>
                         
                         <ProfileActionsMenu 
                             :userid="user.id"
-                            @user-action="handleUserAction"
                             :is-tweet="true"
+                            @user-action="handleUserAction"
                         />
                     </div>
                 </div>
@@ -91,8 +91,8 @@ import { navigateTo } from '#app'
 import { Repeat2,MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useQueryClient } from '@tanstack/vue-query'
-import ProfileActionsMenu from "../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue"
-
+import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
+import { handleImageError } from '~/utils/helpers'
 const props = defineProps<{
     tweet: TweetType
 }>()
@@ -124,10 +124,10 @@ const removeTweetsFromUser = (userId: string) => {
                 ...oldData,
                 pages: oldData.pages.map((page: any) => ({
                     ...page,
-                    data: page.data.filter((tweet: TweetType) => tweet.user.id !== userId)
-                }))
+                    data: page.data.filter((tweet: TweetType) => tweet.user.id !== userId),
+                })),
             }
-        }
+        },
     )
 }
 
@@ -180,9 +180,6 @@ const navigateToTweet = async () => {
     }
 }
 
-const handleImageError = (event: Event) => {
-    const target = event.target as HTMLImageElement
-    target.src = `https://ui-avatars.com/api/?name=${user.value.name}`
-}
+
 
 </script>
