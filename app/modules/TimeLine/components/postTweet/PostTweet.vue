@@ -36,10 +36,10 @@
                         mediaUrls.length === 1
                             ? 'grid-cols-1'
                             : mediaUrls.length === 2
-                              ? 'grid-cols-2'
-                              : mediaUrls.length === 3
                                 ? 'grid-cols-2'
-                                : 'grid-cols-2'
+                                : mediaUrls.length === 3
+                                    ? 'grid-cols-2'
+                                    : 'grid-cols-2'
                     "
                 >
                     <div
@@ -50,8 +50,8 @@
                             mediaUrls.length === 1
                                 ? 'aspect-video'
                                 : mediaUrls.length === 3 && index === 0
-                                  ? 'col-span-2 aspect-video'
-                                  : 'aspect-square'
+                                    ? 'col-span-2 aspect-video'
+                                    : 'aspect-square'
                         "
                     >
                         <img
@@ -89,19 +89,19 @@
                 <ul class="flex flex-row gap-2 items-center">
                     <li class="relative inline-flex">
                         <MediaUpload
-                            @select="handleSelectMedia"
                             :disabled="mediaUrls.length >= 4"
+                            @select="handleSelectMedia"
                         />
                     </li>
                     <li class="relative inline-flex">
                         <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
-                                    type="button"
-                                    @click="toggleGifPicker"
                                     id="post-tweet-gif-picker-btn"
+                                    type="button"
                                     :disabled="mediaUrls.length >= 4"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    @click="toggleGifPicker"
                                 >
                                     <ImagePlay class="w-5 h-5 text-accent" />
                                 </button>
@@ -121,10 +121,10 @@
                         <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
-                                    type="button"
-                                    @click="toggleEmojiPicker"
                                     id="post-tweet-emoji-picker-btn"
+                                    type="button"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
+                                    @click="toggleEmojiPicker"
                                 >
                                     <Smile class="w-5 h-5 text-accent" />
                                 </button>
@@ -141,9 +141,9 @@
                     </li>
                 </ul>
                 <button
+                    id="post-tweet-post-btn"
                     type="submit"
                     :disabled="disablePostButton"
-                    id="post-tweet-post-btn"
                     class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {{ t('timeline.postTweet.post') }}
