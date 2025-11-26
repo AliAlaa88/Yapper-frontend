@@ -93,14 +93,14 @@ import { formatDate } from '../../../../utils/lib'
 import { getProfileUrl } from '../../../../utils/navigation'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import UserCard from './UserCard.vue'
-
+import { handleImageError } from '~/utils/helpers'
 const props = defineProps<{
     publisher: UserType
     createdAt: string
     isDetail?: boolean
 }>()
 
-const { id, name, username, avatar_url, link } = toRefs(props.publisher)
+const { id, name, username, avatar_url } = toRefs(props.publisher)
 const { locale } = useI18n()
 // Use the utility function for consistent profile URLs
 const linkComputed = computed(() => getProfileUrl(props.publisher))
