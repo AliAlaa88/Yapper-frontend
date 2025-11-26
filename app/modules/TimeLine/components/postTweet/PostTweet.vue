@@ -154,19 +154,18 @@
 </template>
 
 <script setup lang="ts">
-import { Smile, ImagePlay, X } from 'lucide-vue-next'
+import { Smile, ImagePlay, X, User } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import the new component
-import { getUser } from '~/utils/helpers'
+import { getUser,handleImageError } from '~/utils/helpers'
 import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
 import { useI18n } from 'vue-i18n'
-
 const props = withDefaults(
     defineProps<{
         border: boolean
