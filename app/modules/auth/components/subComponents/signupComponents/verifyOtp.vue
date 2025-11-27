@@ -3,18 +3,20 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="false"
+        @back="$emit('close')"
+        :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
-        <backButton @close="$emit('close')" />
+        <!-- <backButton @close="$emit('close')" /> -->
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.verifyOtp.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.verifyOtp.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.verifyOtp.info') }}</p>
 
             <!-- OTP Input -->
             <form @submit.prevent="onNext">
@@ -28,7 +30,7 @@
                     @input="handleOtpInput"
                     @blur="validateOtpField"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
+                        'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
                         otpError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -41,23 +43,25 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-signup-s2"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
+                :loading-text="t('auth.common.loading')"
+                :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
             <p class="text-center text-primary text-sm">
                 {{ $t('auth.verifyOtp.resendPrompt') }}
-                <button
+                <Button
                     id="button-resend-code-signup-s2"
-                    class="text-blue hover:underline font-semibold cursor-pointer transition duration-200"
+                    class="text-blue hover:underline font-semibold transition duration-200"
                     @click="onResendCode"
                 >
                     {{ $t('auth.common.resendCode') }}
-                </button>
+                </Button>
             </p>
             <div class="mt-4">
                 <p
@@ -86,6 +90,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validateOtp } from '../../../utils/validators'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -98,6 +103,7 @@ const otp = defineModel<string>('otp', { default: '' })
 const errorMessage = ref('')
 const resendCodeSuccess = ref('')
 const resendCodeFailure = ref('')
+const loading = ref(false)
 
 const props = defineProps<{
     Email: string
@@ -114,6 +120,7 @@ const registerMutation = useRegisterS2Query(
         const rec = Data?.data?.recommendations ?? []
         const recommendations = Array.isArray(rec) ? rec : []
         errorMessage.value = ''
+        loading.value = false
         emit('next', recommendations)
     },
     (error: any) => {
@@ -124,6 +131,7 @@ const registerMutation = useRegisterS2Query(
 
         if (Array.isArray(errorMsg)) errorMessage.value = errorMsg[0]
         else errorMessage.value = errorMsg
+        loading.value = false
     },
 )
 
@@ -163,6 +171,7 @@ const onNext = () => {
         return
     }
     errorMessage.value = '' // Clear previous errors
+    loading.value = true
     registerMutation.mutate({ token: otp.value, Email: props.Email })
 }
 

@@ -105,7 +105,7 @@ const goBack = () => {
 }
 
 const onFinish = () => {
-    // Signup complete, redirect back to auth or home
-    router.push('/auth')
+    // CompleteAccount handles the loading and navigation
+    router.push('/')
 }
 </script>

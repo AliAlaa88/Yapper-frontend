@@ -25,6 +25,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: ['auth'],
+})
 import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
 import { ArrowLeft } from 'lucide-vue-next'
 

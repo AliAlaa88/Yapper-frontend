@@ -3,19 +3,21 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="false"
+        @back="$emit('back')"
+        :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
-        <backButton @close="$emit('back')" />
+        <!-- <backButton @close="$emit('back')" /> -->
         
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.username.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.info') }}</p>
 
             <!-- Username Input -->
             <div class="mb-6">
@@ -29,9 +31,9 @@
                         v-model="username"
                         type="text"
                         :placeholder="$t('auth.username.placeholder')"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
+                        class="w-full bg-primary text-primary border border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
                         :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
-                        maxlength="15"
+                        maxlength="25"
                         @input="validateUsername"
                     />
                 </div>
@@ -55,6 +57,7 @@
             <div
                 v-if="props.Recommendations && props.Recommendations.length"
                 class="my-2 text-sm text-muted"
+                :class="isArabic ? 'text-right' : 'text-left'"
             >
                 <p>{{ $t('auth.username.recommendations') }}</p>
                 <ul class="mt-1 flex flex-wrap gap-2">
@@ -62,7 +65,7 @@
                         v-for="(suggestion, index) in props.Recommendations"
                         :key="index"
                         :id="`recommendation-${index}-username`"
-                        class="px-2 py-1 border-2 border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
+                        class="px-2 py-1 border border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
                         @click="username = suggestion"
                     >
                         {{ suggestion }}
@@ -71,28 +74,30 @@
             </div>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-username"
                 :disabled="!isValid"
+                buttonClass="w-full font-semibold rounded-full py-2 transition my-3 duration-200"
                 :class="[
-                    'w-full font-semibold rounded-full py-2 transition my-3 duration-200',
                     isValid
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate cursor-pointer'
-                        : 'bg-alternate text-alternate opacity-50 cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
+                        : 'bg-alternate text-alternate opacity-50',
                 ]"
+                :loading-text="$t('auth.common.loading')"
+                :is-loading="loading"
                 @click="onNext"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
 
             <!-- Skip Button -->
-            <button
+            <Button
                 id="button-skip-username"
                 class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}
-            </button>
+            </Button>
     </Popup>
 </template>
 
@@ -103,6 +108,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateUsernameMutation } from '../../../queries/useCompleteProfileQuery'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -112,6 +118,7 @@ const username = defineModel<string | null>('username', { default: null })
 
 const errorMessage = ref('')
 const isSubmitting = ref(false)
+const loading = ref(false)
 
 const emit = defineEmits<{
     (e: 'next', username: string): void
@@ -162,12 +169,14 @@ const isValid = computed(() => {
 const usernameMutation = useUpdateUsernameMutation(
     (data) => {
         isSubmitting.value = false
+        loading.value = false
         errorMessage.value = ''
         emit('next', username.value!)
     },
     (error) => {
         console.error('Username update error:', error)
         isSubmitting.value = false
+        loading.value = false
         const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update username'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
     }
@@ -176,6 +185,7 @@ const usernameMutation = useUpdateUsernameMutation(
 const onNext = () => {
     if (isValid.value && username.value && !isSubmitting.value) {
         isSubmitting.value = true
+        loading.value = true
         usernameMutation.mutate({ username: username.value })
     }
 }
