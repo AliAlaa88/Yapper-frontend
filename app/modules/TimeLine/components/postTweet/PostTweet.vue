@@ -12,11 +12,7 @@
                 class="w-16 h-16 object-cover rounded-full"
                 :onerror="(event: any)=> handleImageError(user.name,event)"
             >
-            <div
-                v-else
-                class="w-12 h-12 flex items-center justify-center bg-blue rounded-full mt-1">
-                <User class="w-7 h-7 text-white" />
-            </div>
+            <img v-else :src="`https://ui-avatars.com/api/?name=${user.name}`" :alt="user.name" class="w-14 h-14 object-cover rounded-full" />
         </NuxtLink>
 
         <div class="flex-1">

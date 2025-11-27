@@ -14,10 +14,9 @@
                         :src="user.avatar_url"
                         :alt="user.name"
                         class="w-full h-full object-cover"
-                    >
-                    <div v-else class="w-full h-full flex items-center justify-center bg-blue">
-                        <User class="w-7 h-7 text-white" />
-                    </div>
+                        :onerror="(event: any)=> handleImageError(user.name,event)"
+                    />
+                    <img :src="`https://ui-avatars.com/api/?name=${user.name}`" alt="User" class="w-full h-full object-cover" />
                 </div>
                 <!-- Name and Username -->
                 <div class="flex flex-col flex-1 min-w-0">
@@ -136,9 +135,9 @@ import { User, MoreVertical } from 'lucide-vue-next'
 
 import { useLogoutQuery } from '~/modules/auth/queries/useLoginQuery'
 import type { User as UserType } from '~/modules/Common/types/user'
-import { getUser } from '~/utils/helpers'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { getUser,handleImageError } from '~/utils/helpers'
 
 const user = getUser() as UserType
 
