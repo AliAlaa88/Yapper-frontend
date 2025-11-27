@@ -88,7 +88,7 @@ import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
-import { useUpdateProfilePictureMutation } from '../../../queries/useCompleteProfileQuery'
+import { useUpdateProfilePictureMutation, useUpdateProfileMutation } from '../../../queries/useCompleteProfileQuery'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -145,11 +145,33 @@ const onFileChange = (event: Event) => {
     }
 }
 
-const uploadMutation = useUpdateProfilePictureMutation(
+const updateProfileMutation = useUpdateProfileMutation(
     (data) => {
+        console.log("updating profile pic");
         isUploading.value = false
         errorMessage.value = ''
-        emit('next', data.avatar_url || previewImage.value)
+        emit('next', data.data?.avatar_url || previewImage.value)
+    },
+    (error) => {
+        console.error('Profile update error:', error)
+        isUploading.value = false
+        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update profile'
+        errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
+    }
+)
+
+const uploadMutation = useUpdateProfilePictureMutation(
+    (data) => {
+        const avatarUrl = data.data?.image_url || data.image_url
+        console.log(avatarUrl);
+        if (avatarUrl) {
+            updateProfileMutation.mutate({
+                    image_url: avatarUrl
+            })
+        } else {
+            isUploading.value = false
+            errorMessage.value = 'Failed to get avatar URL from upload response'
+        }
     },
     (error) => {
         console.error('Profile picture upload error:', error)

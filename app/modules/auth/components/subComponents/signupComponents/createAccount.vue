@@ -141,17 +141,18 @@ import { validateName, validateEmail, validateDateOfBirth } from '../../../utils
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
-const name = ref('')
-const email = ref('')
-const month = ref('')
-const day = ref('')
-const year = ref('')
+const name = defineModel<string>('name', { default: '' })
+const email = defineModel<string>('email', { default: '' })
+const month = defineModel<string>('month', { default: '' })
+const day = defineModel<string>('day', { default: '' })
+const year = defineModel<string>('year', { default: '' })
+
 const error = ref('')
 const success = ref('')
 const nameError = ref('')
 const emailError = ref('')
 const dobError = ref('')
-// Month options
+
 const months = [
     { value: '1', label: 'January' },
     { value: '2', label: 'February' },
