@@ -48,7 +48,7 @@
         </div>
 
         <!-- Popup -->
-        <Popup :is-open="isOpen" :title="t('timeline.sidebar.postTweet')" @close="handleClose">
+        <Popup :isOpen="isOpen" :title="t('timeline.sidebar.postTweet')" @close="handleClose" bgColor="bg-popup/20">
             <PostTweet :border="false" />
         </Popup>
     </aside>

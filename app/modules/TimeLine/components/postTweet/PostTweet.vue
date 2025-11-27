@@ -10,7 +10,7 @@
                 :src="user.avatar_url"
                 :alt="user.name"
                 class="w-16 h-16 object-cover rounded-full"
-                :onerror="(event)=> handleImageError(user.name,event)"
+                :onerror="(event: any)=> handleImageError(user.name,event)"
             >
             <div
                 v-else
@@ -70,7 +70,7 @@
                             <track
                                 kind="subtitles"
                                 :src="`${media.url}.vtt`"
-                                srclang="en" 
+                                srclang="en"
                                 label="English" >
                             <p>{{ t('timeline.postTweet.videoNotSupported') }}</p>
                         </video>
@@ -140,14 +140,15 @@
                         />
                     </li>
                 </ul>
-                <button
-                    id="post-tweet-post-btn"
-                    type="submit"
+                <Button
                     :disabled="disablePostButton"
-                    class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {{ t('timeline.postTweet.post') }}
-                </button>
+                    id="post-tweet-post-btn"
+                    button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    :button-text="t('timeline.postTweet.post')"
+                    @click="handleSubmit"
+                    :loading-text="t('timeline.postTweet.posting')"
+                    :is-loading="postTweet.isPending.value"
+                />
             </div>
         </div>
     </form>
@@ -166,6 +167,9 @@ import { tooltipContentClass as contentClass } from '~/modules/Common/constants/
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
 import { useI18n } from 'vue-i18n'
+import Button from '~/modules/Common/components/Button/Button.vue'
+import type { Event } from 'happy-dom'
+
 const props = withDefaults(
     defineProps<{
         border: boolean

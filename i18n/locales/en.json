@@ -472,7 +472,8 @@
             "gifs": "GIFs",
             "emoji": "Emoji",
             "post": "Post",
-            "uploadedMedia": "Uploaded media {index}"
+            "uploadedMedia": "Uploaded media {index}",
+            "posting": "Posting..."
         },
         "banner": {
             "search": "Search",

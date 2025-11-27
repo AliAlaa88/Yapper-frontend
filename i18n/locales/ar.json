@@ -452,7 +452,8 @@
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
             "post": "نشر",
-            "uploadedMedia": "وسائط مرفوعة {index}"
+            "uploadedMedia": "وسائط مرفوعة {index}",
+            "posting": "جاري النشر..."
         },
         "banner": {
             "search": "البحث",
