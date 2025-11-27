@@ -14,7 +14,7 @@
                         :src="user.avatar_url"
                         :alt="user.name"
                         class="w-full h-full object-cover"
-                        :onerror="(event: any)=> handleImageError(user.name,event)"
+                        :onerror="(event: any)=> handleImageError(user?.name ?? '',event)"
                     />
                     <img :src="`https://ui-avatars.com/api/?name=${user?.name}`" alt="User" class="w-full h-full object-cover" />
                 </div>
@@ -72,7 +72,7 @@
                         class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
                         @click="handleLogoutClick"
                     >
-                        Log out @{{ user.username || 'username' }}
+                        Log out @{{ user?.username || 'username' }}
                     </button>
                 </div>
             </div>
@@ -137,7 +137,7 @@ import { useLogoutQuery } from '~/modules/auth/queries/useLoginQuery'
 import type { User as UserType } from '~/modules/Common/types/user'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
-import { getUser,handleImageError } from '~/utils/helpers'
+import { handleImageError } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 

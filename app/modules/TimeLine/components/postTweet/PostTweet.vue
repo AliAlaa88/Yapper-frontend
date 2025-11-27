@@ -4,15 +4,15 @@
         :class="border ? 'border-b border-primary' : ''"
         @submit.prevent="handleSubmit"
     >
-        <NuxtLink :to="`/${user.username}`">
+        <NuxtLink :to="`/${user?.username}`">
             <img
                 v-if="user?.avatar_url"
                 :src="user.avatar_url"
                 :alt="user.name"
                 class="w-16 h-16 object-cover rounded-full"
-                :onerror="(event: any)=> handleImageError(user.name,event)"
+                :onerror="(event: any)=> handleImageError(user?.name ?? '',event)"
             >
-            <img v-else :src="`https://ui-avatars.com/api/?name=${user.name}`" :alt="user.name" class="w-14 h-14 object-cover rounded-full" />
+            <img v-else :src="`https://ui-avatars.com/api/?name=${user?.name}`" :alt="user?.name" class="w-14 h-14 object-cover rounded-full" />
         </NuxtLink>
 
         <div class="flex-1">
@@ -157,7 +157,9 @@ import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import the new component
-import { getUser,handleImageError } from '~/utils/helpers'
+import { handleImageError } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
@@ -176,7 +178,8 @@ const props = withDefaults(
 )
 
 const { t } = useI18n()
-const user = getUser() as UserType
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 interface MediaItem {
     url: string

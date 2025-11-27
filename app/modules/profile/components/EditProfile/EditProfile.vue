@@ -192,22 +192,15 @@ const handleSave = async () => {
 
     try {
         await editProfileMutation.mutateAsync(updates)
-        localStorage.setItem('user',
-                             JSON.stringify({
-                                 ...user.value,
-                                 ...updates,
-                             }),
-        )
-        if(storeUser.value && user.value?.user_id) {
-            const newUser = {
-                ...storeUser.value,
+        // Update the userStore with partial updates
+        if (storeUser.value && user.value?.user_id) {
+            userStore.updateUser({
                 name: updates.name,
                 bio: updates.bio,
                 country: updates.country,
                 birth_date: updates.birth_date,
-                avatar_url: updates.avatar_url,
-            }
-            userStore.setUser(newUser)
+                avatar_url: updates.avatar_url ?? undefined,
+            })
         }
         closeModal()
     } catch (error) {

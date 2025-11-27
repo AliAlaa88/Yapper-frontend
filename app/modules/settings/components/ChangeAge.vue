@@ -7,7 +7,7 @@
                 </p>
             </div>
             <div class="border-t border-b border-primary px-5 py-3">
-                <p v-if="user.birth_date">{{ age }}</p>
+                <p v-if="user?.birth_date">{{ age }}</p>
                 <p v-else>Age not provided</p>
             </div>
             <div class="relative w-full pb-2 px-5 pt-2">
@@ -29,11 +29,13 @@
 <script setup lang="ts">
 import DetailedPanel from './DetailedPanel.vue'
 import type { User } from '~/modules/Common/types/user'
-import { getUser } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import { calculateAge } from '../utils/calculations'
 import { useI18n } from 'vue-i18n'
-const user = getUser() as User
-const age = computed(() => calculateAge(user.birth_date ?? ''))
-const profileRoute = '/' + user.username + '/settings/profile'
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+const age = computed(() => calculateAge(user.value?.birth_date ?? ''))
+const profileRoute = computed(() => '/' + user.value?.username + '/settings/profile')
 const { t } = useI18n()
 </script>

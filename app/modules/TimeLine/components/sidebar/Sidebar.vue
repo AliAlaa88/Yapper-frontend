@@ -60,13 +60,15 @@ import PostTweet from '../postTweet/PostTweet.vue'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import UserActions from './subCompoents/UserActions/index'
-import { getUser } from '#imports'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const user = getUser()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
-const navLinks = [
+const navLinks = computed(() => [
     {
         labelKey: 'timeline.sidebar.home',
         icon: House,
@@ -90,7 +92,7 @@ const navLinks = [
     {
         labelKey: 'timeline.sidebar.profile',
         icon: User,
-        href: user ? `/${user.username}` : '/profile',
+        href: user.value ? `/${user.value.username}` : '/profile',
     },
     {
         labelKey: 'timeline.sidebar.bookmarks',
@@ -102,7 +104,7 @@ const navLinks = [
         icon: Settings,
         href: '/settings/account',
     },
-]
+])
 
 const isOpen = ref(false)
 
