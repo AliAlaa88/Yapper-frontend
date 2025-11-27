@@ -106,6 +106,7 @@ const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
 
 const handleOtpInput = (event: Event) => {
     const target = event.target as HTMLInputElement
+    // Allow only alphanumeric characters and limit to 6 characters
     otp.value = target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6)
     otpError.value = ''
     errorMessage.value = ''

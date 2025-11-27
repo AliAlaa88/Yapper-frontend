@@ -54,6 +54,7 @@ import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import { useForgotPasswordQuery } from '../../../queries/useForgetPasswordQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

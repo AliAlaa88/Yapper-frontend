@@ -28,7 +28,6 @@
                     :placeholder="$t('auth.forgotPassword.passwordPlaceholder')"
                     v-model="password"
                     @blur="validatePasswordField"
-                    @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         passwordError ? 'border-red focus:border-red' : ''
@@ -43,7 +42,6 @@
                     type="password"
                     :placeholder="$t('auth.forgotPassword.verifyPasswordPlaceholder')"
                     v-model="verifyPassword"
-                    @input="clearMatchError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         matchError ? 'border-red focus:border-red' : ''
@@ -77,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useResetPasswordQuery } from '../../../queries/useForgetPasswordQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
@@ -138,6 +136,15 @@ const clearPasswordError = () => {
 const clearMatchError = () => {
     matchError.value = ''
 }
+
+const validatePasswordMatch = (pwd: string, confirmPwd: string) => {
+  if (!confirmPwd) return ''
+  return pwd === confirmPwd ? '' : 'Passwords do not match.'
+}
+
+watch([password, verifyPassword], ([pwd, confirmPwd]) => {
+  matchError.value = validatePasswordMatch(pwd, confirmPwd)
+})
 
 const onFinish = () => {
     errorMessage.value = '' // Clear previous errors
