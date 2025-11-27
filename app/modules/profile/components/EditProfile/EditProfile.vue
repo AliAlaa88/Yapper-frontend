@@ -36,7 +36,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleCoverFileChange"
-                />
+                >
                 <input
                     id="avatar-file-input"
                     ref="avatarFileInput"
@@ -44,7 +44,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleAvatarFileChange"
-                />
+                >
             </div>
         </div>
     </div>
@@ -189,6 +189,12 @@ const handleSave = async () => {
 
     try {
         await editProfileMutation.mutateAsync(updates)
+        localStorage.setItem('user',
+                             JSON.stringify({
+                                 ...user.value,
+                                 ...updates,
+                             }),
+        )
         closeModal()
     } catch (error) {
         console.error('Failed to save profile:', error)

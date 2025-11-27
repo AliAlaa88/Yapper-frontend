@@ -4,19 +4,21 @@
         class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
-        <div v-if="tweet.type === 'repost' || (tweet.type === 'quote' && tweet.reposted_by === undefined)" class="flex items-center gap-2 mb-2 text-secondary">
+        <div
+            v-if="
+                tweet.type === 'repost' ||
+                (tweet.type === 'quote' && tweet.reposted_by === undefined)
+            "
+            class="flex items-center gap-2 mb-2 text-secondary"
+        >
             <Repeat2 :size="16" />
             <span class="text-sm"> {{ repostedUsername }} {{ $t('tweets.reposted') }} </span>
         </div>
-        
+
         <div class="flex gap-3">
             <!-- Avatar column -->
             <div class="shrink-0">
-                <NuxtLink
-                    :id="`tweet-avatar-link-${id}`"
-                    @click.stop
-                    :to="profileUrl"
-                >
+                <NuxtLink :id="`tweet-avatar-link-${id}`" :to="profileUrl" @click.stop>
                     <CustomToolTip
                         :delay-duration="300"
                         content-class="rounded-2xl shadow-xl border border-primary"
@@ -27,7 +29,7 @@
                                 :src="user.avatar"
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
-                                @error="handleImageError"
+                                @error="(event) => handleImageError(user.name, event)"
                             />
                         </template>
                         <template #content>
@@ -37,42 +39,43 @@
                                 :username="user.username"
                                 :avatar="user.avatar"
                                 :bio="user.bio"
-                                :followers-count="user.followers_count"
-                                :following-count="user.following_count"
+                                :followers-count="user.followers"
+                                :following-count="user.following"
+                                :is_following="user.is_following"
                             />
                         </template>
                     </CustomToolTip>
                 </NuxtLink>
             </div>
-            
+
             <!-- Content column -->
             <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-2">
                     <div class="flex-1 min-w-0">
                         <Publisher :publisher="user" :created-at="createdAt" />
                     </div>
-                    
+
                     <!-- Actions Menu Button -->
                     <div class="relative">
                         <button
                             :id="`tweet-menu-button-${id}`"
                             class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
-                            @click.stop="toggleActionsMenu"
                             :aria-label="$t('tweets.moreActions')"
+                            @click.stop="toggleActionsMenu"
                         >
                             <MoreHorizontal :size="16" />
                         </button>
-                        
-                        <ProfileActionsMenu 
+
+                        <ProfileActionsMenu
                             :userid="user.id"
-                            @user-action="handleUserAction"
                             :is-tweet="true"
+                            @user-action="handleUserAction"
                         />
                     </div>
                 </div>
-                
+
                 <Content :content="content" />
-                <Stats :stats="stats"/>
+                <Stats :stats="stats" />
             </div>
         </div>
     </article>
@@ -88,11 +91,11 @@ import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed, nextTick, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
-import { Repeat2,MoreHorizontal } from 'lucide-vue-next'
+import { Repeat2, MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useQueryClient } from '@tanstack/vue-query'
-import ProfileActionsMenu from "../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue"
-
+import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
+import { handleImageError } from '~/utils/helpers'
 const props = defineProps<{
     tweet: TweetType
 }>()
@@ -115,20 +118,17 @@ const handleUserAction = (action: 'mute' | 'block' | 'unmute' | 'unblock') => {
 
 const removeTweetsFromUser = (userId: string) => {
     // Update all tweet queries in the cache
-    queryClient.setQueriesData(
-        { queryKey: ['tweets'] },
-        (oldData: any) => {
-            if (!oldData) return oldData
-            
-            return {
-                ...oldData,
-                pages: oldData.pages.map((page: any) => ({
-                    ...page,
-                    data: page.data.filter((tweet: TweetType) => tweet.user.id !== userId)
-                }))
-            }
+    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData) return oldData
+
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+                ...page,
+                data: page.data.filter((tweet: TweetType) => tweet.user.id !== userId),
+            })),
         }
-    )
+    })
 }
 
 const tweetTransitionStore = useTweetTransitionStore()
@@ -162,9 +162,7 @@ const stats = computed(() => ({
     username: props.tweet.user.username,
 }))
 
-const type = computed(() => props.tweet.type)
 const createdAt = computed(() => props.tweet.created_at)
-const updatedAt = computed(() => props.tweet.updated_at)
 
 // Use utility functions for URLs
 const profileUrl = computed(() => getProfileUrl(user.value))
@@ -179,10 +177,4 @@ const navigateToTweet = async () => {
         navigateTo(tweetUrl.value)
     }
 }
-
-const handleImageError = (event: Event) => {
-    const target = event.target as HTMLImageElement
-    target.src = `https://ui-avatars.com/api/?name=${user.value.name}`
-}
-
 </script>

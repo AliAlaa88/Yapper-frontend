@@ -10,7 +10,7 @@ export default withNuxt({
         }],
         'brace-style': ['error', '1tbs', { 'allowSingleLine': true }],
         'max-len': ['warn', {
-            'code': 100,
+            'code': 150,
             'ignoreUrls': true,
             'ignoreStrings': true,
             'ignoreTemplateLiterals': true,

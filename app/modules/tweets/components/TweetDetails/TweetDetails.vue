@@ -1,105 +1,105 @@
 <template>
-  <div class="bg-primary min-h-screen">
-    <!-- Main Tweet -->
-    <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
-      <div class="flex items-start justify-between gap-2 mb-4">
-        <div class="flex-1">
-          <Publisher
-            :publisher="mainTweetUser"
-            :created-at="tweetDetails.created_at"
-            :is-detail="true"
-          />
+    <div class="bg-primary min-h-screen">
+        <!-- Main Tweet -->
+        <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
+            <div class="flex items-start justify-between gap-2 mb-4">
+                <div class="flex-1">
+                    <Publisher
+                        :publisher="mainTweetUser"
+                        :created-at="tweetDetails.created_at"
+                        :is-detail="true"
+                    />
+                </div>
+
+                <!-- Actions Menu Button -->
+                <div class="relative">
+                    <button
+                        id="tweet-detail-menu-button"
+                        class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                        :aria-label="$t('tweets.moreActions')"
+                        @click.stop="toggleActionsMenu"
+                    >
+                        <MoreHorizontal :size="16" />
+                    </button>
+
+                    <ProfileActionsMenu
+                        :userid="tweetDetails.user.id"
+                        :is-tweet="true"
+                        @user-action="handleUserAction"
+                    />
+                </div>
+            </div>
+
+            <Content
+                :content="mainTweetContent"
+            />
+            <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
+                <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
+                    {{ formatDetailDate(tweetDetails.created_at, locale) }}
+                </time>
+            </div>
+            <Stats
+                :stats="mainTweetStats"
+            />
         </div>
 
-        <!-- Actions Menu Button -->
-        <div class="relative">
-          <button
-            id="tweet-detail-menu-button"
-            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
-            @click.stop="toggleActionsMenu"
-            :aria-label="$t('tweets.moreActions')"
-          >
-            <MoreHorizontal :size="16" />
-          </button>
+        <!-- Replies Section -->
+        <div v-if="tweetDetails && !isLoading && !error">
+            <!-- Loading Replies State -->
+            <div v-if="isFetchingReplies" class="p-8 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+                <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
+            </div>
 
-          <ProfileActionsMenu
-            :userid="tweetDetails.user.id"
-            @user-action="handleUserAction"
-            :is-tweet="true"
-          />
+            <!-- No Replies State -->
+            <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
+                <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
+                <p class="text-lg">{{ $t('tweets.empty.noReplies') }}</p>
+                <p class="text-sm mt-1">{{ $t('tweets.empty.noRepliesDescription') }}</p>
+            </div>
+
+            <!-- Replies List -->
+            <div v-else>
+                <Reply
+                    v-for="reply in replies"
+                    :key="reply.tweet_id"
+                    :reply="reply"
+                />
+            </div>
         </div>
-      </div>
 
-      <Content
-        :content="mainTweetContent"
-      />
-      <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
-        <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
-          {{ formatDetailDate(tweetDetails.created_at, locale) }}
-        </time>
-      </div>
-      <Stats
-        :stats="mainTweetStats"
-      />
+        <!-- Loading State -->
+        <div v-if="isLoading" class="p-8 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+            <p class="text-secondary">{{ $t('tweets.loading.tweetDetails') }}</p>
+        </div>
+
+        <!-- Tweet Not Found State (when data is null but no error) -->
+        <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
+            <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
+            <p class="text-primary text-lg font-semibold mb-2">{{ $t('tweets.errors.tweetNotFound') }}</p>
+            <p class="text-secondary text-sm">{{ $t('tweets.errors.tweetNotFoundDescription') }}</p>
+            <button
+                class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
+                @click="$router.back()"
+            >
+                {{ $t('tweets.errors.goBack') }}
+            </button>
+        </div>
+
+        <!-- Error State -->
+        <div v-if="error" class="p-8 text-center">
+            <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
+            <p class="text-red text-lg">{{ error?.message || $t('tweets.errors.loadFailed') }}</p>
+            <button
+                id="tweet-detail-retry-button"
+                class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
+                @click="fetchTweetDetails()"
+            >
+                {{ $t('tweets.errors.tryAgain') }}
+            </button>
+        </div>
     </div>
-
-    <!-- Replies Section -->
-    <div v-if="tweetDetails && !isLoading && !error">
-      <!-- Loading Replies State -->
-      <div v-if="isFetchingReplies" class="p-8 text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
-        <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
-      </div>
-
-      <!-- No Replies State -->
-      <div v-else-if="replies.length === 0" class="text-center py-12 text-secondary">
-        <MessageCircle class="w-16 h-16 text-light mx-auto mb-4" :stroke-width="1" />
-        <p class="text-lg">{{ $t('tweets.empty.noReplies') }}</p>
-        <p class="text-sm mt-1">{{ $t('tweets.empty.noRepliesDescription') }}</p>
-      </div>
-
-      <!-- Replies List -->
-      <div v-else>
-        <Reply
-          v-for="reply in replies"
-          :key="reply.tweet_id"
-          :reply="reply"
-        />
-      </div>
-    </div>
-
-    <!-- Loading State -->
-    <div v-if="isLoading" class="p-8 text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"></div>
-      <p class="text-secondary">{{ $t('tweets.loading.tweetDetails') }}</p>
-    </div>
-
-    <!-- Tweet Not Found State (when data is null but no error) -->
-    <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
-      <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
-      <p class="text-primary text-lg font-semibold mb-2">{{ $t('tweets.errors.tweetNotFound') }}</p>
-      <p class="text-secondary text-sm">{{ $t('tweets.errors.tweetNotFoundDescription') }}</p>
-      <button
-        @click="$router.back()"
-        class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
-      >
-        {{ $t('tweets.errors.goBack') }}
-      </button>
-    </div>
-
-    <!-- Error State -->
-    <div v-if="error" class="p-8 text-center">
-      <AlertTriangle class="w-16 h-16 text-red mx-auto mb-4" :stroke-width="1" />
-      <p class="text-red text-lg">{{ error?.message || $t('tweets.errors.loadFailed') }}</p>
-      <button
-        id="tweet-detail-retry-button"
-        @click="fetchTweetDetails()"
-        class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
-      >
-        {{ $t('tweets.errors.tryAgain') }}
-      </button>
-    </div>
-  </div>
 </template>
 
 <script setup>
@@ -110,7 +110,7 @@ import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import Reply from './Reply/Reply.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
-import { useRoute, useRouter, navigateTo } from '#app'
+import { useRoute, useRouter } from '#app'
 import { MessageCircle, AlertTriangle, MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
@@ -126,39 +126,39 @@ const showActionsMenu = ref(false)
 provide('show-list', showActionsMenu)
 
 const toggleActionsMenu = () => {
-  showActionsMenu.value = !showActionsMenu.value
+    showActionsMenu.value = !showActionsMenu.value
 }
 
 const queryClient = useQueryClient()
 
 const handleUserAction = (action) => {
-  // When user is muted or blocked, navigate back
-  if (action === 'mute' || action === 'block') {
-    // Remove tweets from this user from all queries
-    if (tweetDetails.value) {
-      removeTweetsFromUser(tweetDetails.value.user.id)
+    // When user is muted or blocked, navigate back
+    if (action === 'mute' || action === 'block') {
+        // Remove tweets from this user from all queries
+        if (tweetDetails.value) {
+            removeTweetsFromUser(tweetDetails.value.user.id)
+        }
+        // Navigate back to previous page
+        router.back()
     }
-    // Navigate back to previous page
-    router.back()
-  }
 }
 
 const removeTweetsFromUser = (userId) => {
-  // Update all tweet queries in the cache
-  queryClient.setQueriesData(
-    { queryKey: ['tweets'] },
-    (oldData) => {
-      if (!oldData) return oldData
+    // Update all tweet queries in the cache
+    queryClient.setQueriesData(
+        { queryKey: ['tweets'] },
+        (oldData) => {
+            if (!oldData) return oldData
 
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page) => ({
-          ...page,
-          data: page.data.filter((tweet) => tweet.user.id !== userId)
-        }))
-      }
-    }
-  )
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page) => ({
+                    ...page,
+                    data: page.data.filter((tweet) => tweet.user.id !== userId),
+                })),
+            }
+        },
+    )
 }
 
 // Get the transition store
@@ -171,7 +171,6 @@ const { tweetDetails, isLoading, error, replies, isFetchingReplies, fetchTweetDe
 // Transform main tweet data
 const mainTweetUser = computed(() => {
     if (!tweetDetails.value) return null
-    //console.log(tweetDetails.value);
     return {
         ...tweetDetails.value.user,
         avatar:
