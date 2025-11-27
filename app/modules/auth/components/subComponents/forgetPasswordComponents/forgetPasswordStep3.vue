@@ -10,7 +10,6 @@
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
-        <!-- <backButton @close="$emit('back')" /> -->
 
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
