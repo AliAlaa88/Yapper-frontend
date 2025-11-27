@@ -39,6 +39,7 @@ useGetUserQuery(
             access_token: useCookie('access_token').value || '',
             user: data.data,
         })
+        userStore.setUser(data.data)
         isLoading.value = false
         router.push('/')
     },

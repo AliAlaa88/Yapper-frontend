@@ -60,7 +60,10 @@ import EditProfileHeader from './SubComponents/EditProfileHeader.vue'
 import EditProfileCover from './SubComponents/EditProfileCover.vue'
 import EditProfileAvatar from './SubComponents/EditProfileAvatar.vue'
 import EditProfileForm from './SubComponents/EditProfileForm.vue'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
+const userStore = useUserStore()
+const { user: storeUser } = storeToRefs(userStore)
 const router = useRouter()
 const profileStore = useProfileStore()
 const { profile: user } = storeToRefs(profileStore)
@@ -195,6 +198,17 @@ const handleSave = async () => {
                                  ...updates,
                              }),
         )
+        if(storeUser.value && user.value?.user_id) {
+            const newUser = {
+                ...storeUser.value,
+                name: updates.name,
+                bio: updates.bio,
+                country: updates.country,
+                birth_date: updates.birth_date,
+                avatar_url: updates.avatar_url,
+            }
+            userStore.setUser(newUser)
+        }
         closeModal()
     } catch (error) {
         console.error('Failed to save profile:', error)

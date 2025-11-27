@@ -16,7 +16,7 @@
                         class="w-full h-full object-cover"
                         :onerror="(event: any)=> handleImageError(user.name,event)"
                     />
-                    <img :src="`https://ui-avatars.com/api/?name=${user.name}`" alt="User" class="w-full h-full object-cover" />
+                    <img :src="`https://ui-avatars.com/api/?name=${user?.name}`" alt="User" class="w-full h-full object-cover" />
                 </div>
                 <!-- Name and Username -->
                 <div class="flex flex-col flex-1 min-w-0">
@@ -24,7 +24,7 @@
                         {{ user?.name || 'User' }}
                     </span>
                     <span class="text-secondary text-sm truncate">
-                        @{{ user.username || 'username' }}
+                        @{{ user?.username || 'username' }}
                     </span>
                 </div>
             </div>
@@ -138,8 +138,12 @@ import type { User as UserType } from '~/modules/Common/types/user'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { getUser,handleImageError } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 
-const user = getUser() as UserType
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+console.log('UserActions user:', user.value, user)
 
 const isPopupOpen = ref(false)
 const isLogoutConfirmOpen = ref(false)
