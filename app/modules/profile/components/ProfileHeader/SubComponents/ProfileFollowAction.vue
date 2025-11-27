@@ -20,7 +20,7 @@ import { computed } from 'vue'
 import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const props = defineProps<{
     userId: string

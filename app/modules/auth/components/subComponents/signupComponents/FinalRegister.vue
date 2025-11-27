@@ -39,7 +39,6 @@
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">{{ passwordError }}</p>
-                <!-- <p v-if="!passwordError && password" class="text-green text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">✓ Strong password</p> -->
             </div>
 
             <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.passwordHint') }}</p>

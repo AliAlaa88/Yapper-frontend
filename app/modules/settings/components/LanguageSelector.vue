@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { Circle, CheckCircle2 } from 'lucide-vue-next'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/ui/Button.vue'
 import { userSettingsQueries } from '../queries/userSettingsQueries'
 import { useI18n } from 'vue-i18n'
 import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
