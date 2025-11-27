@@ -4,15 +4,26 @@
         :class="border ? 'border-b border-primary' : ''"
         @submit.prevent="handleSubmit"
     >
-        <NuxtLink :to="`/profile/${user.username}`">
-            <img :src="user.avatar_url" :alt="user.name" class="w-10 h-10 rounded-full" />
+        <NuxtLink :to="`/${user.username}`">
+            <img
+                v-if="user?.avatar_url"
+                :src="user.avatar_url"
+                :alt="user.name"
+                class="w-16 h-16 object-cover rounded-full"
+                :onerror="(event)=> handleImageError(user.name,event)"
+            >
+            <div
+                v-else
+                class="w-12 h-12 flex items-center justify-center bg-blue rounded-full mt-1">
+                <User class="w-7 h-7 text-white" />
+            </div>
         </NuxtLink>
 
         <div class="flex-1">
             <FormattedTextarea
+                id="post-tweet-textarea"
                 v-model="content"
                 :placeholder="t('timeline.postTweet.placeholder')"
-                id="post-tweet-textarea"
             />
 
             <div
@@ -25,10 +36,10 @@
                         mediaUrls.length === 1
                             ? 'grid-cols-1'
                             : mediaUrls.length === 2
-                              ? 'grid-cols-2'
-                              : mediaUrls.length === 3
                                 ? 'grid-cols-2'
-                                : 'grid-cols-2'
+                                : mediaUrls.length === 3
+                                    ? 'grid-cols-2'
+                                    : 'grid-cols-2'
                     "
                 >
                     <div
@@ -39,8 +50,8 @@
                             mediaUrls.length === 1
                                 ? 'aspect-video'
                                 : mediaUrls.length === 3 && index === 0
-                                  ? 'col-span-2 aspect-video'
-                                  : 'aspect-square'
+                                    ? 'col-span-2 aspect-video'
+                                    : 'aspect-square'
                         "
                     >
                         <img
@@ -48,17 +59,25 @@
                             :src="media.url"
                             :alt="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
                             class="w-full h-full object-cover"
-                        />
+                        >
                         <video
                             v-else-if="media.type === 'video'"
                             :src="media.url"
                             class="w-full h-full object-cover"
                             controls
-                        />
+                            :aria-label="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
+                        >
+                            <track
+                                kind="subtitles"
+                                :src="`${media.url}.vtt`"
+                                srclang="en" 
+                                label="English" >
+                            <p>{{ t('timeline.postTweet.videoNotSupported') }}</p>
+                        </video>
                         <button
                             type="button"
-                            @click="removeMedia(index)"
                             class="absolute top-2 right-2 w-8 h-8 bg-alternate hover:bg-hover-alternate rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                            @click="removeMedia(index)"
                         >
                             <X class="w-5 h-5 text-alternate" />
                         </button>
@@ -70,19 +89,19 @@
                 <ul class="flex flex-row gap-2 items-center">
                     <li class="relative inline-flex">
                         <MediaUpload
-                            @select="handleSelectMedia"
                             :disabled="mediaUrls.length >= 4"
+                            @select="handleSelectMedia"
                         />
                     </li>
                     <li class="relative inline-flex">
                         <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
-                                    type="button"
-                                    @click="toggleGifPicker"
                                     id="post-tweet-gif-picker-btn"
+                                    type="button"
                                     :disabled="mediaUrls.length >= 4"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    @click="toggleGifPicker"
                                 >
                                     <ImagePlay class="w-5 h-5 text-accent" />
                                 </button>
@@ -102,10 +121,10 @@
                         <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
-                                    type="button"
-                                    @click="toggleEmojiPicker"
                                     id="post-tweet-emoji-picker-btn"
+                                    type="button"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
+                                    @click="toggleEmojiPicker"
                                 >
                                     <Smile class="w-5 h-5 text-accent" />
                                 </button>
@@ -122,9 +141,9 @@
                     </li>
                 </ul>
                 <button
+                    id="post-tweet-post-btn"
                     type="submit"
                     :disabled="disablePostButton"
-                    id="post-tweet-post-btn"
                     class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {{ t('timeline.postTweet.post') }}
@@ -135,19 +154,18 @@
 </template>
 
 <script setup lang="ts">
-import { Smile, ImagePlay, X } from 'lucide-vue-next'
+import { Smile, ImagePlay, X, User } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import the new component
-import { getUser } from '~/utils/helpers'
+import { getUser,handleImageError } from '~/utils/helpers'
 import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
 import { useI18n } from 'vue-i18n'
-
 const props = withDefaults(
     defineProps<{
         border: boolean
