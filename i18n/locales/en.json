@@ -69,7 +69,7 @@
             "alreadyHaveAccount": "Already have an account?"
         },
         "login": {
-            "title": "Sign in to X",
+            "title": "Sign in to Yapper",
             "identifierPlaceholder": "Phone, email, or username",
             "forgotPassword": "Forgot password?",
             "switchPrompt": "Don't have an account?"
@@ -434,11 +434,15 @@
             "views": "Views",
             "bookmark": "Bookmark",
             "removeBookmark": "Remove bookmark",
-            "share": "Share Tweet"
+            "share": "Share Tweet",
+            "linkCopied": "Link copied",
+            "bookmarkAdded": "Added to your Bookmarks",
+            "bookmarkRemoved": "Removed from your Bookmarks",
+            "copiedToClipboard": "Copied to clipboard"
         },
         "loading": {
             "tweets": "Loading tweets...",
-            "tweetDetails": "Loading tweet details...",
+            "tweetDetails": "Loading tweet details...", 
             "replies": "Loading replies..."
         },
         "empty": {
@@ -472,7 +476,9 @@
             "gifs": "GIFs",
             "emoji": "Emoji",
             "post": "Post",
-            "uploadedMedia": "Uploaded media {index}"
+            "uploadedMedia": "Uploaded media {index}",
+            "posting": "Posting...",
+            "success": "Your post was sent."
         },
         "banner": {
             "search": "Search",

@@ -132,19 +132,21 @@ const validateUsername = () => {
         return
     }
 
-    // Username validation rules
     if (value.length < 3) {
         errorMessage.value = 'Username must be at least 3 characters'
         return
     }
 
-    // Only alphanumeric and underscores
+    if (value.length > 25){
+        errorMessage.value = 'Username must be shorter than 25 characters'
+        return
+    }
+
     if (!/^[a-zA-Z0-9_]+$/.test(value)) {
         errorMessage.value = 'Only letters, numbers, and underscores allowed'
         return
     }
 
-    // Cannot start with a number
     if (/^[0-9]/.test(value)) {
         errorMessage.value = 'Username cannot start with a number'
         return

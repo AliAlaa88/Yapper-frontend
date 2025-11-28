@@ -146,19 +146,20 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs, ref, watch, onMounted } from 'vue'
+import { toRefs, ref, watch, onMounted, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
-import { useQueryClient } from '@tanstack/vue-query'
 import {
     mutateTweetLikesQuery,
     mutateTweetRepostsQuery,
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
-import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import { cacheInvalidation } from '~/modules/Common/queries'
+
+const {$queryClient} = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
@@ -183,13 +184,23 @@ const localRepostsCount = ref(retweets.value)
 const localIsBookmarked = ref(is_bookmarked.value)
 const shareTooltipText = ref('')
 const { t, locale } = useI18n()
-const snackBar = useSnackbar()
+
+// Inject the global snackbar from layout
+const snackbar = inject<{
+    handleShowSnackbar: (
+        message: string,
+        username?: string,
+        action?: string,
+        handleClick?: () => void,
+    ) => void
+}>('snackbar')
+
 // Initialize share tooltip text
 onMounted(() => {
     shareTooltipText.value = t('tweets.actions.share')
 })
 
-const queryClient = useQueryClient()
+
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
 const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(
@@ -228,7 +239,7 @@ const handleLikeClick = () => {
 
     // Optimistically update all tweets queries (infinite queries)
     // Using setQueriesData to update all matching queries
-    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
         if (!oldData?.pages) return oldData
 
         // Create completely new objects to ensure Vue reactivity detects changes
@@ -259,12 +270,7 @@ const handleLikeClick = () => {
     mutateLike(localIsLiked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
-            snackBar.handleShowSnackbar(
-                localIsLiked.value
-                    ? t('tweets.notifications.likedTweet')
-                    : t('tweets.notifications.unlikedTweet'),
-            )
+            console.log('Like mutation succeeded for tweet:', $queryClient, tweet_id.value)
         },
         onError: (error) => {
             // Rollback on error
@@ -279,7 +285,7 @@ const handleLikeClick = () => {
             }
 
             // Rollback the cache update
-            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData
 
                 return {
@@ -303,8 +309,6 @@ const handleLikeClick = () => {
                     }),
                 }
             })
-
-            // Optional: Show error toast/notification
         },
     })
 }
@@ -328,7 +332,7 @@ const handleRepostClick = () => {
     }
 
     // Optimistically update all tweets queries (infinite queries)
-    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
         if (!oldData?.pages) return oldData
 
         // Create completely new objects to ensure Vue reactivity detects changes
@@ -359,7 +363,7 @@ const handleRepostClick = () => {
     mutateRepost(localIsReposted.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
         },
         onError: (error) => {
             // Rollback on error
@@ -374,7 +378,7 @@ const handleRepostClick = () => {
             }
 
             // Rollback the cache update
-            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData
 
                 return {
@@ -398,9 +402,6 @@ const handleRepostClick = () => {
                     }),
                 }
             })
-
-            // Optional: Show error toast/notification
-            // showErrorToast('Failed to update repost status')
         },
     })
 }
@@ -418,7 +419,7 @@ const handleBookmarkClick = () => {
     }
 
     // Optimistically update all tweets queries (infinite queries)
-    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
         if (!oldData?.pages) return oldData
 
         return {
@@ -446,7 +447,13 @@ const handleBookmarkClick = () => {
     mutateBookmark(localIsBookmarked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+           $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+
+            snackbar?.handleShowSnackbar(
+                localIsBookmarked.value
+                    ? t('tweets.actions.bookmarkAdded')
+                    : t('tweets.actions.bookmarkRemoved'),
+            )
         },
         onError: (error) => {
             // Rollback on error
@@ -459,7 +466,7 @@ const handleBookmarkClick = () => {
             }
 
             // Rollback the cache update
-            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData
 
                 return {
@@ -490,7 +497,6 @@ const handleShareClick = async () => {
     try {
         // Construct the tweet URL
         const tweetUrl = `${window.location.origin}/${username.value}/status/${tweet_id.value}`
-        // console.log('Share clicked', tweetUrl);
 
         // Try to use the Web Share API if available (mobile devices)
         if (navigator.share) {
@@ -508,6 +514,9 @@ const handleShareClick = async () => {
                 shareTooltipText.value = t('tweets.actions.share')
             }, 2000)
         }
+
+        // Show snackbar for successful copy/share
+        snackbar?.handleShowSnackbar(t('tweets.actions.copiedToClipboard'))
     } catch (error) {
         // If user cancels share or permission denied, silently fail
         console.log('Share cancelled or failed:', error)

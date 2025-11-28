@@ -1,19 +1,3 @@
-import type { User } from '~/modules/auth/types/user'
-import Cookie from 'js-cookie'
-export function isLoggedIn(): boolean {
-    const user = localStorage.getItem('user')
-    const token = Cookie.get('access_token')
-    if (user && token) {
-        return true
-    }
-    return false
-}
-
-export function getUser(): User {
-    const user = localStorage.getItem('user')
-    return JSON.parse(user as string) as User
-}
-
 export const formatDate = (date: string) => {
     const now = new Date()
     const tweetDate = new Date(date)

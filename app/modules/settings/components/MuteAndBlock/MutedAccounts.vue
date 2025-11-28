@@ -35,7 +35,7 @@ import UserAccountItem from './UserAccountItem.vue'
 import DetailedPanel from '../DetailedPanel.vue'
 import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import { MegaphoneOff } from 'lucide-vue-next'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
