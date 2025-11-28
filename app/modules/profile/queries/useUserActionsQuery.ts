@@ -69,7 +69,8 @@ export function useUserActionsQuery(
 
     const blockMutation = useMutation({
         mutationFn: () => $userInfoService.blockUser(userId.value),
-        onSuccess: () => {
+        onSuccess: (data) => {
+            console.log('data from block', data)
             console.log('block successfully')
             if (userId.value) {
                 cacheInvalidation.onBlockChange($queryClient, userId.value)
@@ -102,7 +103,7 @@ export function useUserActionsQuery(
             console.error('Failed to unblock:', error)
         },
     })
-
+    // sdfg
     const muteMutation = useMutation({
         mutationFn: () => $userInfoService.muteUser(userId.value),
         onSuccess: () => {

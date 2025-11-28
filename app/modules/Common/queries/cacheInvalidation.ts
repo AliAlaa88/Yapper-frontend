@@ -1,17 +1,12 @@
 import type { QueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './queryKeys'
-
-
+import { query } from 'happy-dom/lib/PropertySymbol.js'
 
 export const cacheInvalidation = {
     // ==================== Tweet Mutations ====================
     /**
      * Call after creating a new tweet
      */
-    onCreatePostTweet: (queryClient: QueryClient) => {
-        const followingKey = queryKeys.tweets.list('/timeline/following')
-        queryClient.invalidateQueries({ queryKey: followingKey })
-    },
 
     /**
      * Call after deleting a tweet
@@ -51,6 +46,7 @@ export const cacheInvalidation = {
     onProfileUpdate: (queryClient: QueryClient, username: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.profile(username) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
     /**
@@ -106,6 +102,7 @@ export const cacheInvalidation = {
     onBlockChange: (queryClient: QueryClient, targetUserId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
+        // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
     /**
@@ -114,6 +111,7 @@ export const cacheInvalidation = {
     onMuteChange: (queryClient: QueryClient, targetUserId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
+        // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
     /**

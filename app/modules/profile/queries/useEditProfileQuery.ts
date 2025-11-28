@@ -8,8 +8,10 @@ export function useEditProfileMutation(userId: string, username: string) {
 
     const editProfileMutation = useMutation({
         mutationFn: (updates: Partial<Me>) => $userInfoService.updateUserProfile(userId, updates),
-        onSuccess: async (_, variables) => {
+        onSuccess: (data, variables) => {
+            console.log('profile updated successfully', data)
             // Check if username was changed
+            console.log('username changed', variables)
             if (variables.username && variables.username !== username) {
                 cacheInvalidation.onUsernameChange($queryClient, username)
             } else {
