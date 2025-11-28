@@ -269,11 +269,6 @@ const handleLikeClick = () => {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
             queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
-            snackbar?.handleShowSnackbar(
-                localIsLiked.value
-                    ? t('tweets.notifications.likedTweet')
-                    : t('tweets.notifications.unlikedTweet'),
-            )
         },
         onError: (error) => {
             // Rollback on error
@@ -407,9 +402,6 @@ const handleRepostClick = () => {
                     }),
                 }
             })
-
-            // Optional: Show error toast/notification
-            // showErrorToast('Failed to update repost status')
         },
     })
 }
