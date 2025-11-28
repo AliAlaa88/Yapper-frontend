@@ -7,6 +7,7 @@
             <NuxtPage />
         </NuxtLayout>
     </div>
+    <VueQueryDevtools />
 </template>
 
 <script setup lang="ts">

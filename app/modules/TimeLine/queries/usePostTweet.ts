@@ -1,10 +1,13 @@
-import { useMutation } from '@tanstack/vue-query'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import type { TweetBody } from '../types/tweetBody'
 import type { Tweet, TweetsPage } from '~/modules/tweets/types/tweet'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+import { cacheInvalidation } from '~/modules/Common/queries'
+
 export function usePostTweet() {
-    const { $timelineService, $queryClient } = useNuxtApp()
+    const { $timelineService } = useNuxtApp()
+    const queryClient = useQueryClient()
     const router = useRouter()
     const userStore = useUserStore()
 
@@ -22,7 +25,7 @@ export function usePostTweet() {
             }
 
             // update the infinite query cache optimistically
-            $queryClient.setQueryData<{ pages: TweetsPage[]; pageParams: string[] }>(
+            queryClient.setQueryData<{ pages: TweetsPage[]; pageParams: string[] }>(
                 ['tweets', path],
                 (oldData) => {
                     if (!oldData) return oldData
@@ -41,6 +44,7 @@ export function usePostTweet() {
                     }
                 },
             )
+            cacheInvalidation.onCreatePostTweet(queryClient)
         },
         onError: (error) => {
             console.log('post tweet error =======>', error)

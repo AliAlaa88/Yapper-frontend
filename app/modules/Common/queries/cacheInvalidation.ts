@@ -1,19 +1,23 @@
 import type { QueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './queryKeys'
 
-/**
- * Centralized cache invalidation utilities.
- * Use these functions in mutation onSuccess handlers to ensure proper cache invalidation.
- */
+
+
 export const cacheInvalidation = {
     // ==================== Tweet Mutations ====================
+    /**
+     * Call after creating a new tweet
+     */
+    onCreatePostTweet: (queryClient: QueryClient) => {
+        const followingKey = queryKeys.tweets.list('/timeline/following')
+        queryClient.invalidateQueries({ queryKey: followingKey })
+    },
 
     /**
      * Call after deleting a tweet
      */
     onTweetDelete: (queryClient: QueryClient, tweetId: string) => {
         queryClient.removeQueries({ queryKey: queryKeys.tweets.details(tweetId) })
-        
     },
 
     /**
