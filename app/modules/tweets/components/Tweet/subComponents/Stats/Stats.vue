@@ -151,13 +151,15 @@ import { useI18n } from 'vue-i18n'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
-import { useQueryClient } from '@tanstack/vue-query'
 import {
     mutateTweetLikesQuery,
     mutateTweetRepostsQuery,
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
+import { cacheInvalidation } from '~/modules/Common/queries'
+
+const {$queryClient} = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
@@ -198,7 +200,7 @@ onMounted(() => {
     shareTooltipText.value = t('tweets.actions.share')
 })
 
-const queryClient = useQueryClient()
+
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
 const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(
@@ -237,7 +239,7 @@ const handleLikeClick = () => {
 
     // Optimistically update all tweets queries (infinite queries)
     // Using setQueriesData to update all matching queries
-    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
         if (!oldData?.pages) return oldData
 
         // Create completely new objects to ensure Vue reactivity detects changes
@@ -268,7 +270,7 @@ const handleLikeClick = () => {
     mutateLike(localIsLiked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+            console.log('Like mutation succeeded for tweet:', $queryClient, tweet_id.value)
         },
         onError: (error) => {
             // Rollback on error
@@ -283,7 +285,7 @@ const handleLikeClick = () => {
             }
 
             // Rollback the cache update
-            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData
 
                 return {
@@ -330,7 +332,7 @@ const handleRepostClick = () => {
     }
 
     // Optimistically update all tweets queries (infinite queries)
-    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
         if (!oldData?.pages) return oldData
 
         // Create completely new objects to ensure Vue reactivity detects changes
@@ -361,7 +363,7 @@ const handleRepostClick = () => {
     mutateRepost(localIsReposted.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
         },
         onError: (error) => {
             // Rollback on error
@@ -376,7 +378,7 @@ const handleRepostClick = () => {
             }
 
             // Rollback the cache update
-            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData
 
                 return {
@@ -417,7 +419,7 @@ const handleBookmarkClick = () => {
     }
 
     // Optimistically update all tweets queries (infinite queries)
-    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
         if (!oldData?.pages) return oldData
 
         return {
@@ -445,7 +447,7 @@ const handleBookmarkClick = () => {
     mutateBookmark(localIsBookmarked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+           $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
 
             snackbar?.handleShowSnackbar(
                 localIsBookmarked.value
@@ -464,7 +466,7 @@ const handleBookmarkClick = () => {
             }
 
             // Rollback the cache update
-            queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData
 
                 return {

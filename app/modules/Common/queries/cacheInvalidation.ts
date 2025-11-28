@@ -21,6 +21,8 @@ export const cacheInvalidation = {
     onTweetLikeChange: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
         //  TODO: add the cache invalidation for profile tabs (likes tab)
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list('/users/me/liked-posts') })
+        console.log('Invalidated like cache for tweet:', tweetId)   
     },
 
     /**

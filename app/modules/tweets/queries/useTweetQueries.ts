@@ -85,6 +85,7 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
 }
 
 export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
+    const { $queryClient } = useNuxtApp()
     return useMutation({
         mutationKey: ['mutateTweetLikes', tweetId],
         mutationFn: (isLike: boolean) => {
@@ -92,6 +93,13 @@ export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
             return isLike
                 ? ($tweetService as any).likeTweet(tweetId)
                 : ($tweetService as any).unlikeTweet(tweetId)
+        },
+        onSuccess: () => {
+            console.log('Successfully mutated like status for tweet:', tweetId)
+            cacheInvalidation.onTweetLikeChange($queryClient, tweetId)
+        },
+        onError: (error) => {
+            console.error('Error mutating like status for tweet:', tweetId, error)
         },
     })
 }
