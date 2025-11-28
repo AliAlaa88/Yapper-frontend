@@ -36,7 +36,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleCoverFileChange"
-                >
+                />
                 <input
                     id="avatar-file-input"
                     ref="avatarFileInput"
@@ -44,7 +44,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleAvatarFileChange"
-                >
+                />
             </div>
         </div>
     </div>
@@ -68,11 +68,9 @@ const router = useRouter()
 const profileStore = useProfileStore()
 const { profile: user } = storeToRefs(profileStore)
 const userId = computed(() => user.value?.user_id || '')
-const {
-    editProfileMutation,
-    uploadCoverPhotoMutation,
-    uploadAvatarMutation,
-} = useEditProfileMutation(userId.value)
+const username = computed(() => user.value?.username || '')
+const { editProfileMutation, uploadCoverPhotoMutation, uploadAvatarMutation } =
+    useEditProfileMutation(userId.value, username.value)
 
 const isSaving = computed(
     () =>
@@ -80,7 +78,6 @@ const isSaving = computed(
         uploadCoverPhotoMutation.isPending.value ||
         uploadAvatarMutation.isPending.value,
 )
-
 
 const formData = ref({
     name: '',
@@ -93,7 +90,6 @@ const avatarUrl = ref<string | null>(null)
 const coverUrl = ref<string | null>(null)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
-
 
 onMounted(() => {
     if (user.value) {

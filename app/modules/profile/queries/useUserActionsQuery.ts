@@ -2,8 +2,13 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import type { OtherUser } from '../types/user'
 import { computed } from 'vue'
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
-export function useUserActionsQuery(userId: Ref<string | undefined>) {
+export function useUserActionsQuery(
+    userId: Ref<string | undefined>,
+    targetUsername?: Ref<string | undefined>,
+    currentUserId?: Ref<string | undefined>,
+) {
     const { $userInfoService, $queryClient } = useNuxtApp()
 
     const userQuery = useQuery<OtherUser>({
@@ -16,7 +21,16 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.followUser(userId.value),
         onSuccess: () => {
             console.log('success follow')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value && targetUsername?.value && currentUserId?.value) {
+                cacheInvalidation.onFollowChange(
+                    $queryClient,
+                    userId.value,
+                    targetUsername.value,
+                    currentUserId.value,
+                )
+            } else {
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already following')) {
@@ -32,7 +46,16 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unfollowUser(userId.value),
         onSuccess: () => {
             console.log('unfollow successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value && targetUsername?.value && currentUserId?.value) {
+                cacheInvalidation.onFollowChange(
+                    $queryClient,
+                    userId.value,
+                    targetUsername.value,
+                    currentUserId.value,
+                )
+            } else {
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Not following') || error.message.includes('Already')) {
@@ -48,7 +71,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.blockUser(userId.value),
         onSuccess: () => {
             console.log('block successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onBlockChange($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already blocked')) {
@@ -64,7 +89,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unblockUser(userId.value),
         onSuccess: () => {
             console.log('unblock successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onBlockChange($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already') || error.message.includes('Not blocked')) {
@@ -80,7 +107,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.muteUser(userId.value),
         onSuccess: () => {
             console.log('mute successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onMuteChange($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already muted')) {
@@ -96,7 +125,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unmuteUser(userId.value),
         onSuccess: () => {
             console.log('unmute successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onMuteChange($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already') || error.message.includes('Not muted')) {
@@ -112,6 +143,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.removeFollower(userId.value),
         onSuccess: () => {
             console.log('remove this follower correctly')
+            if (currentUserId?.value) {
+                cacheInvalidation.onRemoveFollower($queryClient, currentUserId.value)
+            }
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
         onError: (error: Error) => {

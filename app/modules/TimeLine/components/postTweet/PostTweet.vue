@@ -217,7 +217,7 @@ const handleSubmit = async () => {
             images: mediaUrls.value
                 .filter((media) => media.type === 'image')
                 .map((media) => media.url),
-        })
+        },)
 
         content.value = ''
         mediaUrls.value = []

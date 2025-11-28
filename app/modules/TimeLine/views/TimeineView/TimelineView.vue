@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
-        <PostTweet :border="true" />
+        <PostTweet :border="true" :tab="activeTab" />
         <TweetsList
             :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/following'}`"
             class="w-full"
@@ -12,20 +12,13 @@
 <script setup lang="ts">
 import Tabs from '~/modules/Common/components/Tabs'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 import { useI18n } from 'vue-i18n'
-import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const { t } = useI18n()
 const router = useRouter()
-const userStore = useUserStore()
-
-onMounted(() => {
-    if (!userStore.isLoggedIn) {
-        router.push('/auth')
-    }
-})
+const route = useRoute()
 
 const tabs = computed(() => [
     {
@@ -42,7 +35,22 @@ const tabs = computed(() => [
 
 const activeTab = ref('foryou')
 
+watch(
+    () => route.query.tab,
+    (newTab) => {
+        if (newTab === 'following' || newTab === 'foryou') {
+            activeTab.value = newTab as string
+        } else {
+            // Default to 'foryou' if no valid tab param
+            activeTab.value = 'foryou'
+            router.replace({ query: { ...route.query, tab: 'foryou' } })
+        }
+    },
+    { immediate: true },
+)
+
 function handleChange(tab: string) {
     activeTab.value = tab
+    router.push({ query: { ...route.query, tab } })
 }
 </script>
