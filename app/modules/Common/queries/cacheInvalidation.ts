@@ -20,7 +20,7 @@ export const cacheInvalidation = {
      */
     onTweetLikeChange: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
+        //  TODO: add the cache invalidation for profile tabs (likes tab)
     },
 
     /**
@@ -28,7 +28,7 @@ export const cacheInvalidation = {
      */
     onTweetRepostChange: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
+        //  TODO: add the cache invalidation for profile tabs (posts tab)
     },
 
     /**
