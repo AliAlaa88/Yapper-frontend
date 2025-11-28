@@ -9,7 +9,7 @@ export function checkIdentifier(
     const { $authService } = useNuxtApp();
     return useMutation({
         mutationKey: ['checkIdentifier'],
-        mutationFn: (identifier: string) => $authService.checkIdentifier(identifier),
+        mutationFn: (identifier: string) => $authService.checkIdentifierAvailability(identifier),
         retry: false,
         onSuccess: (data) => onSuccess?.(data),
         onError: (error) => onError?.(error),

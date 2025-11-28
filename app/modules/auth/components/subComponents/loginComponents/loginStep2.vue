@@ -93,6 +93,7 @@ import backButton from '../backButton.vue'
 import { useLoginQuery } from '../../../queries/useLoginQuery'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { validatePassword } from '../../../utils/validators'
+import Button from '~/modules/Common/components/ui/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

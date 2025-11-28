@@ -136,7 +136,7 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from '../recaptcha.vue'
-import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
+import { useRegisterS1Query, checkIdentifier } from '../../../queries/useRegisterQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
 import Button from '~/modules/Common/components/ui/Button.vue'
@@ -201,6 +201,28 @@ const registerMutation = useRegisterS1Query(
         success.value = ''
     },
 )
+const checkIdentifierMutation = checkIdentifier(
+    (data) => {
+        if(data.data.identifier_type === 'email'){
+            if(emailError.value === '')
+                emailError.value = 'this identifier is already in use.'
+        }
+        else
+            if(emailError.value === '')
+                emailError.value = 'invalid email format.'
+    },
+    (err: any) => {
+        const errorMsg =
+            err?.response?.data?.message || err?.message || 'Identifier check failed. Please try again.'
+        if(errorMsg.includes('Email not found')){
+            if(emailError.value === '')
+                emailError.value = ''
+        } else {
+            if(emailError.value === '')
+                emailError.value = 'invalid email format.'
+        }
+    },
+)
 const emit = defineEmits<{
     (e: 'next', email: string): void
     (e: 'close'): void
@@ -218,6 +240,7 @@ const validateNameField = () => {
 const validateEmailField = () => {
     const result = validateEmail(email.value)
     emailError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    checkIdentifierMutation.mutate(email.value)
     return result.valid
 }
 
@@ -247,10 +270,6 @@ watch(recaptcha, (newVal) => {
     if (newVal && error.value === 'Please complete the reCAPTCHA.') {
         error.value = ''
     }
-})
-
-watch(email,()=>{
- error.value=''   
 })
 
 const onNext = async () => {
