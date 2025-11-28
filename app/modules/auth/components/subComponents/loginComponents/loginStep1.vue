@@ -4,6 +4,7 @@
         @close="$emit('close')"
         :hasCloseButton="true"
         contentClass="sm:max-w-xl w-full"
+        container-class="bg-auth-popup"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
         slotClass="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
     >

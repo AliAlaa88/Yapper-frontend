@@ -3,6 +3,7 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="true"
+        container-class="bg-auth-popup"
         contentClass="max-w-lg sm:max-w-xl w-full"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"

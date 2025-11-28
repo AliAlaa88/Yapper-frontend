@@ -48,7 +48,7 @@
                         {{ $t('auth.username.available') }}
                     </p>
                     <p v-else class="text-transparent text-sm">.</p>
-                    <p class="text-muted text-sm">{{ username?.length || 0 }}/15</p>
+                    <p class="text-muted text-sm">{{ username?.length || 0 }}/25</p>
                 </div>
             </div>
 

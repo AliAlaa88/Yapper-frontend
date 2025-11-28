@@ -5,6 +5,7 @@
         :hasCloseButton="false"
         @back="$emit('close')"
         :hasBackButton="true"
+        container-class="bg-auth-popup"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
