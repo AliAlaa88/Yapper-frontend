@@ -32,7 +32,7 @@
         <!-- Tweets list -->
         <div v-else-if="!isPending" class="divide-y divide-primary flex flex-col items-center">
             <div class="w-full">
-                <Tweet v-for="tweet in tweets" :key="tweet.tweet_id" :tweet="tweet" />
+                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" />
             </div>
 
             <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
@@ -70,7 +70,8 @@ import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw } from 'lucide-vue-next'
 import Logo from '~/modules/Common/components/Logo/Logo.vue'
-
+import type { Tweet as TweetType } from '../../types/tweet.ts'
+import { get } from '@vueuse/core'
 const props = defineProps<{
     fetchingSource?: string | null
 }>()
@@ -124,8 +125,22 @@ watch(
 
 const tweets = computed(() => {
     const pages = data.value?.pages
+
     if (!pages) return []
 
-    return pages.flatMap((p) => p.data)
+    return pages.flatMap((p) => p.data.map((tweet) => ({ ...tweet })))
 })
+
+const getTweetKey = (tweet: TweetType): string => {
+    const user = tweet.user
+    return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.likes_count}-${tweet.is_liked}-${tweet.is_reposted}-${tweet.is_bookmarked}`
+}
+
+watch(
+    tweets,
+    (newTweets) => {
+        console.log('tweets updated', newTweets)
+    },
+    { deep: true },
+)
 </script>
