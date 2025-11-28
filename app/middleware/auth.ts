@@ -1,7 +1,6 @@
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 export default defineNuxtRouteMiddleware(async (to) => {
-    const userStore = useUserStore()
     const token = useCookie('access_token').value
 
     // Check if route requires authentication

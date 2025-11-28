@@ -9,18 +9,11 @@ export const cacheInvalidation = {
     // ==================== Tweet Mutations ====================
 
     /**
-     * Call after creating a new tweet
-     */
-    onTweetCreate: (queryClient: QueryClient) => {
-        throw new Error('Not implemented yet')
-    },
-
-    /**
      * Call after deleting a tweet
      */
     onTweetDelete: (queryClient: QueryClient, tweetId: string) => {
         queryClient.removeQueries({ queryKey: queryKeys.tweets.details(tweetId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
+        
     },
 
     /**
@@ -109,8 +102,6 @@ export const cacheInvalidation = {
     onBlockChange: (queryClient: QueryClient, targetUserId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
-        // Blocked user's tweets should be removed from timeline
-        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
     /**
