@@ -307,8 +307,6 @@ const handleLikeClick = () => {
                     }),
                 }
             })
-
-            // Optional: Show error toast/notification
         },
     })
 }

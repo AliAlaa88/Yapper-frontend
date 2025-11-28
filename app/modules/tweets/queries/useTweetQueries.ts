@@ -85,7 +85,6 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
 }
 
 export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
-    const { $queryClient } = useNuxtApp()
     return useMutation({
         mutationKey: ['mutateTweetLikes', tweetId],
         mutationFn: (isLike: boolean) => {
@@ -94,14 +93,10 @@ export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
                 ? ($tweetService as any).likeTweet(tweetId)
                 : ($tweetService as any).unlikeTweet(tweetId)
         },
-        onSuccess: () => {
-            cacheInvalidation.onTweetLikeChange($queryClient, tweetId)
-        },
     })
 }
 
 export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean) {
-    const { $queryClient } = useNuxtApp()
     return useMutation({
         mutationKey: ['mutateTweetRetweets', tweetId],
         mutationFn: (isRetweet: boolean) => {
@@ -110,14 +105,10 @@ export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean) {
                 ? ($tweetService as any).repostTweet(tweetId)
                 : ($tweetService as any).unrepostTweet(tweetId)
         },
-        onSuccess: () => {
-            cacheInvalidation.onTweetRepostChange($queryClient, tweetId)
-        },
     })
 }
 
 export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean) {
-    const { $queryClient } = useNuxtApp()
     return useMutation({
         mutationKey: ['mutateTweetBookmark', tweetId],
         mutationFn: (isBookmarked: boolean) => {
@@ -125,9 +116,6 @@ export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean)
             return isBookmarked
                 ? ($tweetService as any).bookmarkTweet(tweetId)
                 : ($tweetService as any).unbookmarkTweet(tweetId)
-        },
-        onSuccess: () => {
-            cacheInvalidation.onTweetBookmarkChange($queryClient, tweetId)
         },
     })
 }
