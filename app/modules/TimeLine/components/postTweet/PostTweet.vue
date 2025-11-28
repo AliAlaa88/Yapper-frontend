@@ -10,9 +10,14 @@
                 :src="user.avatar_url"
                 :alt="user.name"
                 class="w-16 h-16 object-cover rounded-full"
-                :onerror="(event: any)=> handleImageError(user?.name ?? '',event)"
-            >
-            <img v-else :src="`https://ui-avatars.com/api/?name=${user?.name}`" :alt="user?.name" class="w-14 h-14 object-cover rounded-full" />
+                :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
+            />
+            <img
+                v-else
+                :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                :alt="user?.name"
+                class="w-14 h-14 object-cover rounded-full"
+            />
         </NuxtLink>
 
         <div class="flex-1">
@@ -32,10 +37,10 @@
                         mediaUrls.length === 1
                             ? 'grid-cols-1'
                             : mediaUrls.length === 2
+                              ? 'grid-cols-2'
+                              : mediaUrls.length === 3
                                 ? 'grid-cols-2'
-                                : mediaUrls.length === 3
-                                    ? 'grid-cols-2'
-                                    : 'grid-cols-2'
+                                : 'grid-cols-2'
                     "
                 >
                     <div
@@ -46,8 +51,8 @@
                             mediaUrls.length === 1
                                 ? 'aspect-video'
                                 : mediaUrls.length === 3 && index === 0
-                                    ? 'col-span-2 aspect-video'
-                                    : 'aspect-square'
+                                  ? 'col-span-2 aspect-video'
+                                  : 'aspect-square'
                         "
                     >
                         <img
@@ -55,19 +60,22 @@
                             :src="media.url"
                             :alt="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
                             class="w-full h-full object-cover"
-                        >
+                        />
                         <video
                             v-else-if="media.type === 'video'"
                             :src="media.url"
                             class="w-full h-full object-cover"
                             controls
-                            :aria-label="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
+                            :aria-label="
+                                t('timeline.postTweet.uploadedMedia', { index: index + 1 })
+                            "
                         >
                             <track
                                 kind="subtitles"
                                 :src="`${media.url}.vtt`"
                                 srclang="en"
-                                label="English" >
+                                label="English"
+                            />
                             <p>{{ t('timeline.postTweet.videoNotSupported') }}</p>
                         </video>
                         <button
@@ -167,6 +175,7 @@ import { usePostTweet } from '../../queries/usePostTweet'
 import { useI18n } from 'vue-i18n'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import type { Event } from 'happy-dom'
+import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 
 const props = withDefaults(
     defineProps<{
@@ -180,6 +189,9 @@ const props = withDefaults(
 const { t } = useI18n()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+// Inject snackbar from parent layout
+const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
 
 interface MediaItem {
     url: string
@@ -217,10 +229,13 @@ const handleSubmit = async () => {
             images: mediaUrls.value
                 .filter((media) => media.type === 'image')
                 .map((media) => media.url),
-        },)
+        })
 
         content.value = ''
         mediaUrls.value = []
+
+        // Show success snackbar
+        snackbar?.handleShowSnackbar(t('timeline.postTweet.success'))
     } catch (error) {
         console.error('Failed to post tweet:', error)
     }

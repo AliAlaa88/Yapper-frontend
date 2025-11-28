@@ -473,7 +473,8 @@
             "emoji": "Emoji",
             "post": "Post",
             "uploadedMedia": "Uploaded media {index}",
-            "posting": "Posting..."
+            "posting": "Posting...",
+            "success": "Your post was sent."
         },
         "banner": {
             "search": "Search",
