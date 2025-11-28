@@ -71,7 +71,6 @@ import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw } from 'lucide-vue-next'
 import Logo from '~/modules/Common/components/Logo/Logo.vue'
 import type { Tweet as TweetType } from '../../types/tweet.ts'
-import { get } from '@vueuse/core'
 const props = defineProps<{
     fetchingSource?: string | null
 }>()
