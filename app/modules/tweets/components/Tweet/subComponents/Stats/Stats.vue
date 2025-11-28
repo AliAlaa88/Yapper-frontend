@@ -146,7 +146,7 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs, ref, watch, onMounted } from 'vue'
+import { toRefs, ref, watch, onMounted, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
@@ -158,7 +158,6 @@ import {
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
-import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 
 const props = defineProps<{
     stats: StatsType
@@ -183,7 +182,17 @@ const localRepostsCount = ref(retweets.value)
 const localIsBookmarked = ref(is_bookmarked.value)
 const shareTooltipText = ref('')
 const { t, locale } = useI18n()
-const snackBar = useSnackbar()
+
+// Inject the global snackbar from layout
+const snackbar = inject<{
+    handleShowSnackbar: (
+        message: string,
+        username?: string,
+        action?: string,
+        handleClick?: () => void,
+    ) => void
+}>('snackbar')
+
 // Initialize share tooltip text
 onMounted(() => {
     shareTooltipText.value = t('tweets.actions.share')
@@ -260,7 +269,7 @@ const handleLikeClick = () => {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
             queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
-            snackBar.handleShowSnackbar(
+            snackbar?.handleShowSnackbar(
                 localIsLiked.value
                     ? t('tweets.notifications.likedTweet')
                     : t('tweets.notifications.unlikedTweet'),
@@ -447,6 +456,8 @@ const handleBookmarkClick = () => {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
             queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+
+            snackbar?.handleShowSnackbar('Bookmark updated')
         },
         onError: (error) => {
             // Rollback on error
@@ -490,7 +501,6 @@ const handleShareClick = async () => {
     try {
         // Construct the tweet URL
         const tweetUrl = `${window.location.origin}/${username.value}/status/${tweet_id.value}`
-        // console.log('Share clicked', tweetUrl);
 
         // Try to use the Web Share API if available (mobile devices)
         if (navigator.share) {
@@ -508,6 +518,9 @@ const handleShareClick = async () => {
                 shareTooltipText.value = t('tweets.actions.share')
             }, 2000)
         }
+
+        // Show snackbar for successful copy/share
+        snackbar?.handleShowSnackbar('Copied to clipboard')
     } catch (error) {
         // If user cancels share or permission denied, silently fail
         console.log('Share cancelled or failed:', error)
