@@ -452,7 +452,7 @@ const handleBookmarkClick = () => {
             snackbar?.handleShowSnackbar(
                 localIsBookmarked.value
                     ? t('tweets.actions.bookmarkAdded')
-                    : t('tweets.actions.bookmarkRemoved')
+                    : t('tweets.actions.bookmarkRemoved'),
             )
         },
         onError: (error) => {
