@@ -1,5 +1,5 @@
 <template>
-    <div :dir="currentDirection" :lang="currentLocale" class="bg-primary">
+    <div :dir="currentDirection" :lang="currentLocale" class="bg-primary min-h-screen">
         <!-- Hany comment those because the reponsive app bar in the mobile view un comment them if you as a test -->
         <!-- <LanguageButton /> -->
         <!-- <StyleButton /> -->
@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import LanguageButton from './modules/Common/components/LanguageButton/LanguageButton.vue'
-import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
+// import LanguageButton from './modules/Common/components/LanguageButton/LanguageButton.vue'
+// import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
 
 const { locale, locales } = useI18n()
 
