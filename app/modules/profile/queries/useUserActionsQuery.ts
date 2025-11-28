@@ -3,6 +3,33 @@ import { useNuxtApp } from 'nuxt/app'
 import type { OtherUser } from '../types/user'
 import { computed } from 'vue'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
+import type { TweetsPage } from '~/modules/tweets/types/tweet'
+
+interface TweetsQueryData {
+    pages: TweetsPage[]
+    pageParams: string[]
+}
+
+const removeTweetsFromUserInCache = (
+    queryClient: ReturnType<typeof useNuxtApp>['$queryClient'],
+    userIdToRemove: string,
+) => {
+    const timelineKeys = ['/timeline/for-you', '/timeline/following']
+
+    timelineKeys.forEach((timelineKey) => {
+        queryClient.setQueryData<TweetsQueryData>(['tweets', timelineKey], (oldData) => {
+            if (!oldData) return oldData
+
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page) => ({
+                    ...page,
+                    data: page.data.filter((tweet) => tweet.user.id !== userIdToRemove),
+                })),
+            }
+        })
+    })
+}
 
 export function useUserActionsQuery(
     userId: Ref<string | undefined>,
@@ -69,11 +96,11 @@ export function useUserActionsQuery(
 
     const blockMutation = useMutation({
         mutationFn: () => $userInfoService.blockUser(userId.value),
-        onSuccess: (data) => {
-            console.log('data from block', data)
-            console.log('block successfully')
+        onSuccess: () => {
+            console.log('block successfully', userId.value)
             if (userId.value) {
                 cacheInvalidation.onBlockChange($queryClient, userId.value)
+                removeTweetsFromUserInCache($queryClient, userId.value)
             }
         },
         onError: (error: Error) => {
@@ -103,13 +130,14 @@ export function useUserActionsQuery(
             console.error('Failed to unblock:', error)
         },
     })
-    // sdfg
+
     const muteMutation = useMutation({
         mutationFn: () => $userInfoService.muteUser(userId.value),
         onSuccess: () => {
             console.log('mute successfully')
             if (userId.value) {
                 cacheInvalidation.onMuteChange($queryClient, userId.value)
+                removeTweetsFromUserInCache($queryClient, userId.value)
             }
         },
         onError: (error: Error) => {

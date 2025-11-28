@@ -53,10 +53,8 @@ export const cacheInvalidation = {
      * Call after updating username
      */
     onUsernameChange: (queryClient: QueryClient, oldUsername: string) => {
-        // Remove old username cache completely
         queryClient.removeQueries({ queryKey: queryKeys.users.profile(oldUsername) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
-        // Invalidate all tweets since they contain user info
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
@@ -66,7 +64,6 @@ export const cacheInvalidation = {
     onAvatarChange: (queryClient: QueryClient, username: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.profile(username) })
-        // Invalidate tweets since they display user avatars
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
