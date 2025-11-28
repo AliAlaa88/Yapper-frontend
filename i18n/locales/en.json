@@ -69,7 +69,7 @@
             "alreadyHaveAccount": "Already have an account?"
         },
         "login": {
-            "title": "Sign in to X",
+            "title": "Sign in to Yapper",
             "identifierPlaceholder": "Phone, email, or username",
             "forgotPassword": "Forgot password?",
             "switchPrompt": "Don't have an account?"
@@ -442,7 +442,7 @@
         },
         "loading": {
             "tweets": "Loading tweets...",
-            "tweetDetails": "Loading tweet details...",
+            "tweetDetails": "Loading tweet details...", 
             "replies": "Loading replies..."
         },
         "empty": {

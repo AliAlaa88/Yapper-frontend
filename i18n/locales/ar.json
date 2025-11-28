@@ -69,7 +69,7 @@
             "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
         },
         "login": {
-            "title": "سجّل الدخول إلى X",
+            "title": "سجّل الدخول إلى Yapper",
             "identifierPlaceholder": "رقم الهاتف أو البريد الإلكتروني أو اسم المستخدم",
             "forgotPassword": "هل نسيت كلمة المرور؟",
             "switchPrompt": "ليس لديك حساب؟"
