@@ -434,7 +434,11 @@
             "views": "Views",
             "bookmark": "Bookmark",
             "removeBookmark": "Remove bookmark",
-            "share": "Share Tweet"
+            "share": "Share Tweet",
+            "linkCopied": "Link copied",
+            "bookmarkAdded": "Added to your Bookmarks",
+            "bookmarkRemoved": "Removed from your Bookmarks",
+            "copiedToClipboard": "Copied to clipboard"
         },
         "loading": {
             "tweets": "Loading tweets...",

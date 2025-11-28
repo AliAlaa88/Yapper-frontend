@@ -449,7 +449,11 @@ const handleBookmarkClick = () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
             queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
 
-            snackbar?.handleShowSnackbar('Bookmark updated')
+            snackbar?.handleShowSnackbar(
+                localIsBookmarked.value
+                    ? t('tweets.actions.bookmarkAdded')
+                    : t('tweets.actions.bookmarkRemoved')
+            )
         },
         onError: (error) => {
             // Rollback on error
@@ -512,7 +516,7 @@ const handleShareClick = async () => {
         }
 
         // Show snackbar for successful copy/share
-        snackbar?.handleShowSnackbar('Copied to clipboard')
+        snackbar?.handleShowSnackbar(t('tweets.actions.copiedToClipboard'))
     } catch (error) {
         // If user cancels share or permission denied, silently fail
         console.log('Share cancelled or failed:', error)
