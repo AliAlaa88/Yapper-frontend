@@ -39,7 +39,11 @@ export default defineNuxtPlugin(() => {
         (response) => response,
         async (error) => {
             const requestUrl = error.config?.url
-
+            if (requestUrl == `${apiBase}/auth/refresh`) {
+                userStore.logout()
+                window.location.href = '/auth/login'
+                return Promise.reject(error)
+            }
             if (error.response?.status === 401) {
                 if (process.client && window.location.pathname !== '/auth/login' && requestUrl !== `${apiBase}/auth/refresh`) {
                     const nuxtApp = useNuxtApp()
