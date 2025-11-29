@@ -69,6 +69,7 @@ import { usePostTweet } from '~/modules/TimeLine/queries/usePostTweet'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 import type { TweetBody } from '~/modules/TimeLine/types/tweetBody'
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
 const props = defineProps<{
     isOpen: boolean
@@ -85,7 +86,7 @@ const buttonClass = 'px-4 py-2 bg-alternate text-alternate rounded-full font-bol
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 const postTweet = usePostTweet()
-
+const { $queryClient } = useNuxtApp()
 const content = ref('')
 
 const userAvatar = computed(() =>
@@ -110,6 +111,12 @@ const handleSubmit = async () => {
         }
 
         await postTweet.mutateAsync(tweetData)
+        console.log("here",user)
+        cacheInvalidation.onTweetRepostChange(
+            $queryClient,
+            props.quotedTweet.tweet_id,
+            `/users/${user.value?.user_id}/posts`,
+        )
         content.value = ''
         emit('success')
         emit('close')
