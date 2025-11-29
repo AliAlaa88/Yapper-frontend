@@ -4,7 +4,7 @@
             <h1 class="text-xl font-bold text-primary">
                 {{ user?.name }}
             </h1>
-            <p class="text-sm text-secondary">@{{ user?.username }}</p>
+            <p class="text-lg text-secondary">@{{ user?.username }}</p>
         </div>
 
         <p v-if="user?.bio" class="mt-3 text-[15px] text-primary whitespace-pre-wrap break-words">
