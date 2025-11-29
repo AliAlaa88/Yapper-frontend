@@ -299,11 +299,14 @@ export const userInfoServiceReal = {
         }
     },
 
-    async getFollowers(userId: string): Promise<FollowUser[]> {
+    async getFollowers(userId: string, mutual: boolean): Promise<FollowUser[]> {
         const { $axios } = useNuxtApp()
         try {
             const response = await $axios.get<FollowListApiResponse>(
                 `/users/${userId}/followers`,
+                {
+                    params: { following: mutual }
+                }
             )
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to fetch followers')

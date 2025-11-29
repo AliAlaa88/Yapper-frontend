@@ -39,6 +39,6 @@ const profileStore = useProfileStore()
 const { isMyProfile } = storeToRefs(profileStore)
 const userId = computed(() => profileStore.getProfileId() || '')
 
-const { followersQuery } = useFollowListsQuery(userId)
+const { followersQuery } = useFollowListsQuery(userId, false)
 const followers = computed(() => followersQuery.data.value || [])
 </script>

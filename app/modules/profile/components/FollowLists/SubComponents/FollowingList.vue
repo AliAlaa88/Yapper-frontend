@@ -36,6 +36,6 @@ import FollowListUserCard from '../../../../Common/components/UserCard/UserCard.
 const profileStore = useProfileStore()
 const userId = computed(() => profileStore.getProfileId() || '')
 
-const { followingQuery } = useFollowListsQuery(userId)
+const { followingQuery } = useFollowListsQuery(userId, false)
 const following = computed(() => followingQuery.data.value || [])
 </script>

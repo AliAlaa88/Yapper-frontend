@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/vue-query'
 import { computed, type Ref } from 'vue'
 import type { FollowUser } from '../types/user'
 
-export const useFollowListsQuery = (userId: Ref<string>) => {
+export const useFollowListsQuery = (userId: Ref<string>, mutual: boolean) => {
     const { $userInfoService } = useNuxtApp()
 
     const followersQuery = useQuery<FollowUser[], Error>({
-        queryKey: ['followers', userId.value] as const,
-        queryFn: () => $userInfoService.getFollowers(userId.value),
+        queryKey: ['followers', userId.value, mutual] as const,
+        queryFn: () => $userInfoService.getFollowers(userId.value, mutual),
         enabled: computed(() => !!userId.value),
     })
 

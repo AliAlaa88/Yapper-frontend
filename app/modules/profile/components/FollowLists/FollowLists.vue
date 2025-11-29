@@ -55,7 +55,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const username = computed(() => route.params.username as string)
-const { profile } = useProfile(username.value)
+const { profile, isMyProfile } = useProfile(username.value)
 
 const currentTab = computed(() => {
     const path = route.path
@@ -70,7 +70,7 @@ const tabsConfig = computed(() => {
         { label: t('profile.following'), value: 'following', test_id: 'tab-following' },
     ]
 
-    if (!isMyProfile.value) {
+    if (!isMyProfile) {
         tabs.push({ label: t('profile.followersYouFollow'), value: 'followers_you_follow', test_id: 'tab-followers-you-follow' })
     }
 

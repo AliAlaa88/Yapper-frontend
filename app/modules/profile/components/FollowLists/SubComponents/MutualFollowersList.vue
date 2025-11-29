@@ -1,9 +1,11 @@
 <template>
     <div>
-        <div v-if="!profile">
-            <div class="p-4 text-center text-muted">
-                {{ $t('messages.loading') }}
-            </div>
+        <div v-if="followersQuery.isLoading.value" class="p-4 text-center text-muted">
+            {{ $t('messages.loading') }}
+        </div>
+
+        <div v-else-if="followersQuery.isError.value" class="p-4 text-center text-red-500">
+            {{ $t('messages.error') }}
         </div>
 
         <div v-else-if="mutualFollowers && mutualFollowers.length === 0">
@@ -30,13 +32,12 @@ import { storeToRefs } from 'pinia'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import EmptyState from '~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vue'
 import FollowListUserCard from '../../../../Common/components/UserCard/UserCard.vue'
-import type { OtherUser } from '~/modules/profile/types/user'
+import { useFollowListsQuery } from '~/modules/profile/queries/useFollowListsQuery'
 
 const profileStore = useProfileStore()
-const { profile } = storeToRefs(profileStore)
+// const { isMyProfile } = storeToRefs(profileStore)
+const userId = computed(() => profileStore.getProfileId() || '')
 
-const mutualFollowers = computed(() => {
-    if (!profile.value) return []
-    return (profile.value as OtherUser).top_mutual_followers || []
-})
+const { followersQuery } = useFollowListsQuery(userId, true)
+const mutualFollowers = computed(() => followersQuery.data.value || [])
 </script>
