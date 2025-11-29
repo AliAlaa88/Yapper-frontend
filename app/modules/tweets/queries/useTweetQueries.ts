@@ -104,7 +104,7 @@ export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
     })
 }
 
-export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean) {
+export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean,path:string) {
     return useMutation({
         mutationKey: ['mutateTweetRetweets', tweetId],
         mutationFn: (isRetweet: boolean) => {
@@ -113,6 +113,11 @@ export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean) {
                 ? ($tweetService as any).repostTweet(tweetId)
                 : ($tweetService as any).unrepostTweet(tweetId)
         },
+        onSuccess: () => {
+            const { $queryClient } = useNuxtApp()
+            console.log('Successfully mutated repost status for tweet:', tweetId,path)
+            cacheInvalidation.onTweetRepostChange($queryClient, tweetId,path)
+        }
     })
 }
 

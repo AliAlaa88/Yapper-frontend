@@ -28,9 +28,10 @@ export const cacheInvalidation = {
     /**
      * Call after reposting/unreposting a tweet
      */
-    onTweetRepostChange: (queryClient: QueryClient, tweetId: string) => {
+    onTweetRepostChange: (queryClient: QueryClient, tweetId: string,path:string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
         //  TODO: add the cache invalidation for profile tabs (posts tab)
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(path) })
     },
 
     /**
