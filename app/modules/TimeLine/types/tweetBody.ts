@@ -3,5 +3,5 @@ export interface TweetBody {
     videos: string[]
     images: string[]
     parent_tweet_id?: string
-    type?: 'tweet' | 'reply'
+    type?: 'tweet' | 'reply' | 'quote'
 }

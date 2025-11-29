@@ -9,10 +9,15 @@ export function usePostTweet() {
     const userStore = useUserStore()
 
     return useMutation({
-        mutationFn: (tweet: TweetBody) =>
-            tweet.parent_tweet_id
-                ? ($timelineService as any).createReply(tweet, tweet.parent_tweet_id) as Promise<any>
-                : ($timelineService as any).createTweet(tweet) as Promise<any>,
+        mutationFn: (tweet: TweetBody) => {
+            if (tweet.type === 'quote' && tweet.parent_tweet_id) {
+                return ($timelineService as any).createQuote(tweet, tweet.parent_tweet_id) as Promise<any>
+            }
+            if (tweet.type === 'reply' && tweet.parent_tweet_id) {
+                return ($timelineService as any).createReply(tweet, tweet.parent_tweet_id) as Promise<any>
+            }
+            return ($timelineService as any).createTweet(tweet) as Promise<any>
+        },
         onSuccess: (data, variables) => {
             const tweet = {
                 ...data.data,
@@ -20,14 +25,14 @@ export function usePostTweet() {
             }
 
             // If this is a reply, update the parent tweet's replies count
-            if (variables.parent_tweet_id) {
+            if (variables.type === 'reply' && variables.parent_tweet_id) {
                 $queryClient.invalidateQueries({
                     queryKey: ['tweetDetails', variables.parent_tweet_id],
                 })
                 return
             }
 
-            // For regular tweets, update timeline caches
+            // For quotes and regular tweets, update timeline caches
             $queryClient.setQueryData<{ pages: TweetsPage[]; pageParams: string[] }>(
                 ['tweets', '/timeline/for-you'],
                 (oldData) => {
