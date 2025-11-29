@@ -21,10 +21,19 @@
         </NuxtLink>
 
         <div class="flex-1">
+            <!-- Replying to indicator -->
+            <div v-if="replyingToUsername" class="text-secondary text-sm mb-2">
+                {{ t('timeline.postTweet.replyingTo') }}
+                <NuxtLink :to="`/${replyingToUsername}`" class="text-accent hover:underline" @click.stop>
+                    @{{ replyingToUsername }}
+                </NuxtLink>
+            </div>
+
             <FormattedTextarea
                 id="post-tweet-textarea"
                 v-model="content"
-                :placeholder="t('timeline.postTweet.placeholder')"
+                :placeholder="placeholder || (parentTweetId ? t('timeline.postTweet.replyPlaceholder') : t('timeline.postTweet.placeholder'))"
+                :inlineborder="inlineborder"
             />
 
             <div
@@ -176,15 +185,28 @@ import { useI18n } from 'vue-i18n'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import type { Event } from 'happy-dom'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import type { TweetBody } from '../../types/tweetBody'
 
 const props = withDefaults(
     defineProps<{
-        border: boolean
+        border?: boolean
+        inlineborder?: boolean
+        parentTweetId?: string
+        replyingToUsername?: string
+        placeholder?: string
     }>(),
     {
         border: true,
+        parentTweetId: undefined,
+        replyingToUsername: undefined,
+        placeholder: undefined,
+        inlineborder: true,
     },
 )
+
+const emit = defineEmits<{
+    (e: 'success'): void
+}>()
 
 const { t } = useI18n()
 const userStore = useUserStore()
