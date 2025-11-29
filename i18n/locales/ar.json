@@ -330,9 +330,14 @@
                 "noFollowing": {
                     "title": "لا يتابع أحدًا بعد",
                     "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
+                },
+                "noMutualFollowers": {
+                    "title": "لا يوجد متابعون مشتركون",
+                    "description": "أنت لا تتابع أي من متابعي هذا الحساب."
                 }
             }
-        }
+        },
+        "followersYouFollow": "متابعون تتابعهم"
     },
     "settings": {
         "yourAccount": "حسابك",

@@ -56,12 +56,15 @@
                     class="h-6 w-6 rounded-full border-2 border-primary"
                 >
             </div>
-            <span>
+            <NuxtLink
+                :to="`/${user?.username}/followers_you_follow`"
+                class="hover:underline"
+            >
                 {{ t('profile.mutualFollowers.followedBy') }}
                 <span class="font-semibold text-primary">
                     {{ formatMutualFollowers }}
                 </span>
-            </span>
+            </NuxtLink>
         </div>
 
         <ProfileMuteMessage />

@@ -43,6 +43,14 @@
                         alt="Tweet Media"
                         class="h-full w-full object-cover"
                     />
+                    <VideoPlayer
+                        v-else-if="tweet.videos && tweet.videos.length > 0"
+                        :src="tweet.videos[0]"
+                        :fluid="true"
+                        :autoplay=true
+                        :muted=true
+                        class="mb-2 last:mb-0 video-js vjs-big-play-centered"
+                    />
                 </NuxtLink>
             </div>
 
@@ -76,9 +84,11 @@
 </template>
 
 <script setup lang="ts">
-import Tweet from '~/modules/tweets/components/Tweet/Tweet.vue';
-import type { Tweet as TweetType } from '~/modules/tweets/types/tweet'
 import { useTweetsQuery } from '~/modules/tweets/queries/useTweetQueries'
+import { toRef, computed } from 'vue'
+import { RotateCw } from 'lucide-vue-next'
+import Logo from '~/modules/Common/components/Logo/Logo.vue'
+import { VideoPlayer } from '@videojs-player/vue'
 
 const props = defineProps<{
     fetchingSource?: string | null
@@ -136,4 +146,12 @@ const tweets = computed(() => {
 
     return pages.flatMap((p) => p.data)
 })
+
+const playerOptions = {
+  controls: true,
+  autoplay: false,
+  preload: 'auto',
+  fluid: true,
+}
+
 </script>

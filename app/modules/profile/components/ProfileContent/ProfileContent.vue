@@ -7,7 +7,7 @@
             :on-change="handleTabChange"
         />
         <TweetsList
-            v-if="!isBlocked && userId"
+            v-if="!isBlocked && userId && (currentTab === 'posts' || currentTab === 'replies' || currentTab === 'likes')"
             :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : currentTab === 'likes' ? `/users/me/liked-posts` : ''}`"
             class="min-h-[650px] w-full"
         />

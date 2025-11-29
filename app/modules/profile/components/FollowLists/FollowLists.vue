@@ -26,6 +26,7 @@
         <div class="min-h-[100vh]">
             <FollowersList v-if="currentTab === 'followers'" />
             <FollowingList v-else-if="currentTab === 'following'" />
+            <MutualFollowersList v-else-if="currentTab === 'followers_you_follow'" />
         </div>
 
         <SnackBar />
@@ -42,6 +43,7 @@ import { ArrowLeft } from 'lucide-vue-next'
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 import FollowersList from './SubComponents/FollowersList.vue'
 import FollowingList from './SubComponents/FollowingList.vue'
+import MutualFollowersList from './SubComponents/MutualFollowersList.vue'
 import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
@@ -56,7 +58,7 @@ const router = useRouter()
 const username = route.params.username as string
 
 const profileStore = useProfileStore()
-const { profile } = storeToRefs(profileStore)
+const { profile, isMyProfile } = storeToRefs(profileStore)
 if (!profile.value) {
     useProfile(username)
 }
@@ -64,13 +66,22 @@ if (!profile.value) {
 const currentTab = computed(() => {
     const path = route.path
     if (path.endsWith('/following')) return 'following'
+    if (path.endsWith('/followers_you_follow')) return 'followers_you_follow'
     return 'followers'
 })
 
-const tabsConfig = computed(() => [
-    { label: t('profile.followers'), value: 'followers', test_id: 'tab-followers' },
-    { label: t('profile.following'), value: 'following', test_id: 'tab-following' },
-])
+const tabsConfig = computed(() => {
+    const tabs = [
+        { label: t('profile.followers'), value: 'followers', test_id: 'tab-followers' },
+        { label: t('profile.following'), value: 'following', test_id: 'tab-following' },
+    ]
+
+    if (!isMyProfile.value) {
+        tabs.push({ label: t('profile.followersYouFollow'), value: 'followers_you_follow', test_id: 'tab-followers-you-follow' })
+    }
+
+    return tabs
+})
 
 const handleTabChange = (tab: string) => {
     const username = route.params.username as string

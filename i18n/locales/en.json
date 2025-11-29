@@ -336,9 +336,14 @@
                 "noFollowing": {
                     "title": "Not following anyone yet",
                     "description": "When this account follows people, they'll show up here."
+                },
+                "noMutualFollowers": {
+                    "title": "No mutual followers",
+                    "description": "You don't follow any of this account's followers."
                 }
             }
         },
+        "followersYouFollow": "Followers you follow",
         "months": {
             "january": "January",
             "february": "February",
