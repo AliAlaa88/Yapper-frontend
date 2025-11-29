@@ -339,6 +339,9 @@
                 }
             }
         },
+        "privacy": {
+            "likesPrivate": "Your likes are private. Only you can see them."
+        },
         "months": {
             "january": "January",
             "february": "February",
@@ -442,7 +445,7 @@
         },
         "loading": {
             "tweets": "Loading tweets...",
-            "tweetDetails": "Loading tweet details...", 
+            "tweetDetails": "Loading tweet details...",
             "replies": "Loading replies..."
         },
         "empty": {
