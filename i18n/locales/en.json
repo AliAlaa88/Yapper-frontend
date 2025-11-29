@@ -429,6 +429,7 @@
             "reply": "Reply",
             "retweet": "Repost",
             "undoRetweet": "Undo repost",
+            "quote": "Quote",
             "like": "Like",
             "unlike": "Unlike",
             "views": "Views",
@@ -474,6 +475,7 @@
         "postTweet": {
             "placeholder": "What's happening?",
             "replyPlaceholder": "Post your reply",
+            "quotePlaceholder": "Add a comment",
             "replyingTo": "Replying to",
             "gifs": "GIFs",
             "emoji": "Emoji",

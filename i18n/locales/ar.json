@@ -409,6 +409,7 @@
             "reply": "رد",
             "retweet": "إعادة نشر",
             "undoRetweet": "التراجع عن إعادة النشر",
+            "quote": "اقتباس",
             "like": "إعجاب",
             "unlike": "إلغاء الإعجاب",
             "views": "المشاهدات",
@@ -454,6 +455,7 @@
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
             "replyPlaceholder": "انشر ردك",
+            "quotePlaceholder": "أضف تعليقاً",
             "replyingTo": "رد على",
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
