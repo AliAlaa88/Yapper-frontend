@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-between max-w-[425px] mt-3">
+    <div class="flex items-center justify-between mt-3">
         <!-- Reply -->
         <CustomToolTip side="bottom" align="start" :delay-duration="300">
             <template #trigger>
@@ -11,7 +11,7 @@
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(replies, locale) }}</span>
+                    <span class="text-xs min-w-5">{{ formatCount(localRepliesCount, locale) }}</span>
                 </button>
             </template>
             <template #content>
@@ -183,6 +183,7 @@ const localIsReposted = ref(is_reposted.value)
 const localRepostsCount = ref(retweets.value)
 const localIsBookmarked = ref(is_bookmarked.value)
 const shareTooltipText = ref('')
+const localRepliesCount = ref(replies.value) 
 const { t, locale } = useI18n()
 
 // Inject the global snackbar from layout
@@ -538,4 +539,21 @@ watch(retweets, (newVal) => {
 watch(is_bookmarked, (newVal) => {
     localIsBookmarked.value = newVal
 })
+watch(replies, (newVal) => {
+    localRepliesCount.value = newVal
+})
+
+// Watch the entire stats prop for deep changes (when parent object is replaced)
+watch(
+    () => props.stats,
+    (newStats) => {
+        localIsLiked.value = newStats.is_liked
+        localLikesCount.value = newStats.likes
+        localIsReposted.value = newStats.is_reposted
+        localRepostsCount.value = newStats.retweets
+        localIsBookmarked.value = newStats.is_bookmarked
+        localRepliesCount.value = newStats.replies
+    },
+    { deep: true }
+)
 </script>

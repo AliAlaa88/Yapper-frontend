@@ -1,23 +1,33 @@
 import { useMutation } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import type { TweetBody } from '../types/tweetBody'
-import type { Tweet, TweetsPage } from '~/modules/tweets/types/tweet'
+import type { TweetsPage } from '~/modules/tweets/types/tweet'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 export function usePostTweet() {
     const { $timelineService, $queryClient } = useNuxtApp()
-    const router = useRouter()
     const userStore = useUserStore()
 
     return useMutation({
         mutationFn: (tweet: TweetBody) =>
-            ($timelineService as any).createTweet(tweet) as Promise<any>,
-        onSuccess: (data) => {
+            tweet.parent_tweet_id
+                ? ($timelineService as any).createReply(tweet, tweet.parent_tweet_id) as Promise<any>
+                : ($timelineService as any).createTweet(tweet) as Promise<any>,
+        onSuccess: (data, variables) => {
             const tweet = {
                 ...data.data,
                 user: userStore.getUser(),
             }
 
+            // If this is a reply, update the parent tweet's replies count
+            if (variables.parent_tweet_id) {
+                $queryClient.invalidateQueries({
+                    queryKey: ['tweetDetails', variables.parent_tweet_id],
+                })
+                return
+            }
+
+            // For regular tweets, update timeline caches
             $queryClient.setQueryData<{ pages: TweetsPage[]; pageParams: string[] }>(
                 ['tweets', '/timeline/for-you'],
                 (oldData) => {
