@@ -9,14 +9,15 @@
                 :src="avatarUrl"
                 :alt="displayName"
                 class="h-full w-full rounded-full object-cover"
-            >
+            />
         </NuxtLink>
-        <div
+
+        <img
             v-else
+            :src="`https://ui-avatars.com/api/?name=${displayName}`"
+            :alt="displayName"
             class="flex h-[85px] w-[85px] sm:h-[133px] sm:w-[133px] items-center justify-center rounded-full border-4 border-black bg-[#71767b] text-3xl sm:text-5xl font-bold text-white"
-        >
-            {{ displayName.charAt(0).toUpperCase() }}
-        </div>
+        />
     </div>
 </template>
 

@@ -1,77 +1,71 @@
 import { defineStore } from 'pinia'
 import type { User, AuthResponse } from '../types/user'
-import Cookies from 'js-cookie'
-import { toRaw } from 'vue'
+import { ref, computed } from 'vue'
 
-export const useUserStore = defineStore('user', {
-    state: () => ({
-        user: null as User | null,
-        accessToken: null as string | null,
-    }),
+export const useUserStore = defineStore('user', () => {
+    const user = ref<User | null>(null)
+    const accessToken = ref<string | null>(null)
 
-    getters: {
-        isLoggedIn: () =>
-            localStorage.getItem('user') !== null && useCookie('access_token').value !== undefined,
-    },
+    const isLoggedIn = computed(() => !!user.value && !!accessToken.value)
 
-    actions: {
-        setAuth(authData: AuthResponse) {
-            this.user = authData.user
-            console.log('Setting auth user:', this.user)
-            this.accessToken = authData.access_token
-            if (import.meta.client) {
-                const token = useCookie('access_token')
-                token.value = authData.access_token
-                // Unwrap Vue Proxy before stringifying
-                const rawUser = toRaw(authData.user)
-                localStorage.setItem('user', JSON.stringify(rawUser))
-            }
-        },
+    const getUser = () => user.value
 
-        setUser(userData: User) {
-            this.user = userData
+    const getAccessToken = () => accessToken.value
 
-            if (import.meta.client) {
-                const rawUser = toRaw(userData)
-                localStorage.setItem('user', JSON.stringify(rawUser))
-            }
-        },
+    const setAuth = (authData: AuthResponse) => {
+        user.value = authData.user
+        accessToken.value = authData.access_token
+        if (import.meta.client) {
+            const token = useCookie('access_token')
+            token.value = authData.access_token
+        }
+    }
 
-        updateUser(updates: Partial<User>) {
-            if (this.user) {
-                this.user = { ...this.user, ...updates }
+    const setUser = (userData: User) => {
+        user.value = userData
+    }
 
-                if (import.meta.client) {
-                    localStorage.setItem('user', JSON.stringify(this.user))
+    const updateUser = (updates: Partial<User>) => {
+        if (user.value) {
+            user.value = { ...user.value, ...updates }
+        }
+    }
+
+    const logout = () => {
+        user.value = null
+        accessToken.value = null
+
+        if (import.meta.client) {
+            const token = useCookie('access_token')
+            token.value = null
+        }
+    }
+
+    const initAuth = async (fetchUserFn: () => Promise<User>) => {
+        if (import.meta.client) {
+            const token = useCookie('access_token')
+            if (token.value && !user.value) {
+                accessToken.value = token.value
+                try {
+                    user.value = await fetchUserFn()
+                } catch (error) {
+                    console.error('Failed to initialize auth:', error)
+                    logout()
                 }
             }
-        },
+        }
+    }
 
-        logout() {
-            this.user = null
-            this.accessToken = null
-
-            if (import.meta.client) {
-                Cookies.remove('access_token')
-                localStorage.removeItem('user')
-            }
-        },
-
-        restoreSession() {
-            if (import.meta.client) {
-                const token = useCookie('access_token')
-                const userStr = localStorage.getItem('user')
-
-                if (token.value && userStr) {
-                    try {
-                        this.accessToken = token.value
-                        this.user = JSON.parse(userStr)
-                    } catch (error) {
-                        console.error('Failed to restore session:', error)
-                        this.logout()
-                    }
-                }
-            }
-        },
-    },
+    return {
+        user,
+        accessToken,
+        isLoggedIn,
+        getUser,
+        getAccessToken,
+        setAuth,
+        setUser,
+        updateUser,
+        logout,
+        initAuth,
+    }
 })

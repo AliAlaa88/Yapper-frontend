@@ -4,7 +4,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery'
 import { useRouter } from 'vue-router'
@@ -19,9 +19,14 @@ const enableUserQuery = ref(false)
 
 const exchangeTokenMutation = useExchangeTokenQuery(
     (data: any) => {
+        // setAuth will handle both token and user, but we need to fetch user first
+        // Store token temporarily via cookie, then fetch user
         const token = useCookie('access_token')
         token.value = data.access_token
-        userStore.accessToken = data.access_token
+        userStore.setAuth({
+            access_token: data.access_token,
+            user: userStore.user!, // Will be set properly after user fetch
+        })
         enableUserQuery.value = true
     },
     (error: any) => {

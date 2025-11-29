@@ -6,8 +6,17 @@
             :active-tab="currentTab"
             :on-change="handleTabChange"
         />
+        <div
+            v-if="!isBlocked && currentTab === 'likes' && isMyProfile"
+            class="mx-4 my-3 flex items-center gap-3 rounded-lg bg-blue-500/10 px-4 py-3"
+        >
+            <Lock :size="20" class="flex-shrink-0 text-blue-500" />
+            <span class="text-sm text-blue-500">
+                {{ t('profile.privacy.likesPrivate') }}
+            </span>
+        </div>
         <TweetsList
-            v-if="!isBlocked && userId"
+            v-if="!isBlocked && userId && (currentTab !== 'likes' || isMyProfile)"
             :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
             class="min-h-[650px] w-full"
         />
@@ -19,6 +28,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { Lock } from 'lucide-vue-next'
 
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 

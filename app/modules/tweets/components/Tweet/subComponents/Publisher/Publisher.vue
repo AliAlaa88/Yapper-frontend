@@ -10,10 +10,10 @@
                     <NuxtLink :id="`publisher-avatar-link-${id}`" :to="linkComputed">
                         <img
                             :id="`publisher-avatar-${id}`"
-                            :src="avatar_url"
+                            :src="avatar_url === '' || !avatar_url ? 'https://ui-avatars.com/api/?name=' + name : avatar_url"
                             :alt="name"
                             class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity"
-                            :onerror="(event) => handleImageError(name, event)"
+                            :onerror="(event: any) => handleImageError(name, event)"
                         />
                     </NuxtLink>
                 </template>
