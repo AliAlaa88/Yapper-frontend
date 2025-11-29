@@ -159,7 +159,7 @@
                     button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     :button-text="parentTweetId ? t('timeline.postTweet.reply') : t('timeline.postTweet.post')"
                     @click="handleSubmit"
-                    :loading-text="t('timeline.postTweet.posting')"
+                    :loading-text="parentTweetId ? t('timeline.postTweet.replying') : t('timeline.postTweet.posting')"
                     :is-loading="postTweet.isPending.value"
                 />
             </div>

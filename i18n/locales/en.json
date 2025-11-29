@@ -482,7 +482,8 @@
             "uploadedMedia": "Uploaded media {index}",
             "posting": "Posting...",
             "success": "Your post was sent.",
-            "replySuccess": "Your reply was sent."
+            "replySuccess": "Your reply was sent.",
+            "replying": "Replying..."
         },
         "banner": {
             "search": "Search",

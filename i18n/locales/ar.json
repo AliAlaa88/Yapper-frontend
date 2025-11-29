@@ -462,7 +462,8 @@
             "uploadedMedia": "وسائط مرفوعة {index}",
             "posting": "جاري النشر...",
             "success": "تم إرسال منشورك.",
-            "replySuccess": "تم إرسال ردك."
+            "replySuccess": "تم إرسال ردك.",
+            "replying": "جاري الرد..."
         },
         "banner": {
             "search": "البحث",
