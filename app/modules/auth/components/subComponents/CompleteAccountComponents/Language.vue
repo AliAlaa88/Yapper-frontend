@@ -83,7 +83,7 @@ import Logo from '~/modules/Common/components/Logo'
 
 import { useUpdateLanguageMutation } from '../../../queries/useCompleteProfileQuery'
 import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
-import Button from '~/modules/Common/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

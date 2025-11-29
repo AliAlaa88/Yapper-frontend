@@ -56,7 +56,6 @@
 import Logo from '~/modules/Common/components/Logo'
 import OAuth from '../components/subComponents/OAuth.vue'
 import { useRouter } from 'vue-router'
-import { isLoggedIn } from '~/utils/helpers'
 const router = useRouter()
 
 const goToLogin = () => {

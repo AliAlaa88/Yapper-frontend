@@ -82,7 +82,7 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
-import Button from '~/modules/Common/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 const { locale, t } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

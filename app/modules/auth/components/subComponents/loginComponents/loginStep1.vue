@@ -87,7 +87,7 @@ import OAuth from '../OAuth.vue'
 import { useCheckIdentifierAvailabilityQuery } from '~/modules/auth/queries/useLoginQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateIdentifier } from '../../../utils/validators'
-import Button from '~/modules/Common/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

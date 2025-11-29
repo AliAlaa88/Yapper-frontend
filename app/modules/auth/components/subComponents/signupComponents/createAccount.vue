@@ -140,7 +140,7 @@ import Recaptcha from '../recaptcha.vue'
 import { useRegisterS1Query, checkIdentifier } from '../../../queries/useRegisterQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
-import Button from '~/modules/Common/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
