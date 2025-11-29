@@ -31,10 +31,6 @@
                         >
                             <Search :size="24" class="text-primary" />
                         </button>
-                        <ProfileFollowAction
-                            v-if="profile?.user_id && !isMyProfile"
-                            :user-id="profile.user_id"
-                        />
                     </div>
                 </div>
             </div>
