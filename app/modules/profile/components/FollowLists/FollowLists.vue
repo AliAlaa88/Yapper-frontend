@@ -44,7 +44,6 @@ import FollowersList from './SubComponents/FollowersList.vue'
 import FollowingList from './SubComponents/FollowingList.vue'
 import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
-import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import { useProfile } from '~/modules/profile/composables/useProfile'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
 
@@ -53,13 +52,8 @@ useProfileProviders()
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const username = route.params.username as string
-
-const profileStore = useProfileStore()
-const { profile } = storeToRefs(profileStore)
-if (!profile.value) {
-    useProfile(username)
-}
+const username = computed(() => route.params.username as string)
+const { profile } = useProfile(username.value)
 
 const currentTab = computed(() => {
     const path = route.path
