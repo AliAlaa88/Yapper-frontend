@@ -469,5 +469,107 @@
             "forYou": "من أجلك",
             "following": "المتابعون"
         }
+    },
+    "seo": {
+        "home": {
+            "title": "الصفحة الرئيسية / Yapper",
+            "description": "يابر هو ما يحدث وما يتحدث عنه الناس الآن.",
+            "keywords": "يابر، وسائل التواصل الاجتماعي، المنشورات، الجدول الزمني، الترند"
+        },
+        "login": {
+            "title": "تسجيل الدخول إلى Yapper / Yapper",
+            "description": "سجّل الدخول إلى يابر لترى ما يحدث في العالم الآن.",
+            "keywords": "يابر، تسجيل الدخول، دخول، وسائل التواصل الاجتماعي"
+        },
+        "signup": {
+            "title": "سجّل في Yapper / Yapper",
+            "description": "انضم إلى يابر اليوم. أنشئ حساباً لتتابع اهتماماتك، وتتواصل مع الأصدقاء، وتشارك في المحادثة.",
+            "keywords": "يابر، تسجيل، إنشاء حساب، انضمام"
+        },
+        "profile": {
+            "title": "{name} ({username}) / Yapper",
+            "description": "{name} ({username}) على يابر. {bio}",
+            "keywords": "يابر، ملف شخصي، {username}، منشورات، وسائل التواصل الاجتماعي"
+        },
+        "followers": {
+            "title": "الأشخاص الذين يتابعون {name} ({username}) / Yapper",
+            "description": "شاهد من يتابع {name} على يابر.",
+            "keywords": "يابر، متابعون، {username}"
+        },
+        "following": {
+            "title": "الأشخاص الذين يتابعهم {name} ({username}) / Yapper",
+            "description": "شاهد من يتابع {name} على يابر.",
+            "keywords": "يابر، متابَعون، {username}"
+        },
+        "tweet": {
+            "title": "{name} على Yapper: \"{text}\" / Yapper",
+            "description": "{text}",
+            "keywords": "يابر، منشور، تغريدة، {username}"
+        },
+        "media": {
+            "title": "منشورات الوسائط من {name} ({username}) / Yapper",
+            "description": "شاهد الصور ومقاطع الفيديو من {name} ({username}) على يابر.",
+            "keywords": "يابر، وسائط، صور، فيديو، {username}"
+        },
+        "likes": {
+            "title": "المنشورات التي أعجب بها {name} ({username}) / Yapper",
+            "description": "شاهد ما أعجب به {name} على يابر.",
+            "keywords": "يابر، إعجابات، مفضلة، {username}"
+        },
+        "replies": {
+            "title": "ردود {name} ({username}) / Yapper",
+            "description": "شاهد الردود من {name} على يابر.",
+            "keywords": "يابر، ردود، محادثات، {username}"
+        },
+        "settings": {
+            "title": "الإعدادات / Yapper",
+            "description": "إدارة إعدادات وتفضيلات حساب يابر الخاص بك.",
+            "keywords": "يابر، إعدادات، تفضيلات، حساب"
+        },
+        "settingsAccount": {
+            "title": "معلومات الحساب / Yapper",
+            "description": "إدارة معلومات حسابك على يابر.",
+            "keywords": "يابر، حساب، إعدادات، معلومات"
+        },
+        "settingsPassword": {
+            "title": "تغيير كلمة المرور / Yapper",
+            "description": "حدّث كلمة المرور للحفاظ على أمان حساب يابر الخاص بك.",
+            "keywords": "يابر، كلمة المرور، الأمان، تغيير كلمة المرور"
+        },
+        "settingsDisplay": {
+            "title": "العرض / Yapper",
+            "description": "خصّص كيف يظهر يابر لك.",
+            "keywords": "يابر، عرض، سمة، مظهر"
+        },
+        "settingsLanguages": {
+            "title": "اللغات / Yapper",
+            "description": "إدارة تفضيلات اللغة على يابر.",
+            "keywords": "يابر، لغات، ترجمة"
+        },
+        "settingsPrivacy": {
+            "title": "الخصوصية والأمان / Yapper",
+            "description": "إدارة المعلومات التي تراها وتشاركها على يابر.",
+            "keywords": "يابر، خصوصية، أمان، حماية"
+        },
+        "settingsMuted": {
+            "title": "الحسابات المكتومة / Yapper",
+            "description": "إدارة الحسابات التي قمت بكتمها على يابر.",
+            "keywords": "يابر، مكتوم، حسابات، إعدادات"
+        },
+        "settingsBlocked": {
+            "title": "الحسابات المحظورة / Yapper",
+            "description": "إدارة الحسابات التي قمت بحظرها على يابر.",
+            "keywords": "يابر، محظور، حسابات، إعدادات"
+        },
+        "forgotPassword": {
+            "title": "اعثر على حسابك في Yapper / Yapper",
+            "description": "أعد تعيين كلمة مرور يابر الخاصة بك.",
+            "keywords": "يابر، نسيت كلمة المرور، إعادة تعيين كلمة المرور، استرداد"
+        },
+        "default": {
+            "title": "Yapper. هذا ما يحدث",
+            "description": "من الأخبار العاجلة والترفيه إلى الرياضة والسياسة، احصل على القصة الكاملة مع جميع التعليقات الحية.",
+            "keywords": "يابر، وسائل التواصل الاجتماعي، شبكة اجتماعية، منشورات، ترند، أخبار"
+        }
     }
 }
