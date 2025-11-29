@@ -2,8 +2,8 @@
     <Teleport to="body">
         <div
             v-if="isOpen"
-            class="fixed inset-0 bg-popup flex flex-col z-50 backdrop-blur-sm md:py-10 md:px-0 px-0"
-            :class="containerPositionClasses"
+            class="fixed inset-0 flex flex-col z-50 backdrop-blur-sm md:py-10 md:px-0 px-0"
+            :class="[containerPositionClasses, bgColor]"
             @click="handleClose"
         >
             <div
@@ -65,6 +65,7 @@ interface Props {
     headerClass?: string
     slotClass?: string
     hasBackButton?: boolean
+    bgColor?: string
 }
 
 const {
@@ -78,6 +79,7 @@ const {
     contentClass = 'md:max-w-[600px] w-full md:w-auto',
     headerClass = 'border-b border-gray-700',
     slotClass = 'max-h-[calc(90vh-60px)]',
+    bgColor = 'bg-popup',
 } = defineProps<Props>()
 
 const containerPositionClasses = computed(() => {

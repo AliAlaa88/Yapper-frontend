@@ -2,18 +2,17 @@ import { watch, onUnmounted } from 'vue'
 import { useProfileStore } from '../stores/profileStore'
 import { useMeQuery } from '../queries/useMeQuery'
 import { useOtherUserQuery } from '../queries/useOtherUserQuery'
-
+import { useUserStore } from '~/modules/auth/stores/userStore'
 export const useProfile = (username: string) => {
+    const userStore = useUserStore()
+
     const currentUser = (() => {
         if (typeof window === 'undefined') return undefined
-        const raw = localStorage.getItem('currentUser') || localStorage.getItem('user')
+        const raw = userStore.getUser()
         if (!raw) return undefined
-        try {
-            return JSON.parse(raw)
-        } catch {
-            return undefined
-        }
+        return raw
     })()
+
     const isMyProfile = currentUser?.username === username
     const profileStore = useProfileStore()
 

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from '~/modules/Common/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import { ref, computed } from 'vue'

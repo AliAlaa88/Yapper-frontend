@@ -3,22 +3,26 @@
         <!-- Header with avatar and follow button -->
         <div class="flex items-start justify-between">
             <NuxtLink :id="`user-card-avatar-link-${id}`" :to="profileLink">
-                <img v-if="!isLoading" :id="`user-card-avatar-${id}`" :src="avatarSrc" :alt="name" class="w-16 h-16 rounded-full hover:opacity-90 transition-opacity"
-                    @error="handleImageError"   
+                <img
+                    v-if="!isLoading"
+                    :id="`user-card-avatar-${id}`"
+                    :src="avatarSrc"
+                    :alt="name"
+                    class="w-16 h-16 rounded-full hover:opacity-90 transition-opacity"
+                    @error="(event) => handleImageError(name, event)"
                 />
-                <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse"></div>
+                <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse" />
             </NuxtLink>
-            <button 
-                :id="`user-card-follow-button-${id}`"
-                class="px-4 py-1.5 rounded-full font-bold text-sm bg-alternate text-alternate hover:brightness-90 transition-all cursor-pointer"
-            >
-                Follow
-            </button>
+            <ProfileFollowAction :userId="id" />
         </div>
 
         <!-- Name and Username -->
         <div>
-            <NuxtLink :id="`user-card-name-link-${id}`" :to="profileLink" class="font-bold text-primary hover:underline text-base leading-5 block">
+            <NuxtLink
+                :id="`user-card-name-link-${id}`"
+                :to="profileLink"
+                class="font-bold text-primary hover:underline text-base leading-5 block"
+            >
                 {{ name }}
             </NuxtLink>
             <span class="text-secondary text-sm">@{{ username }}</span>
@@ -44,26 +48,41 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, toRef, onBeforeMount } from 'vue'
 import { getProfileUrl } from '../../../../utils/navigation'
-
+import { handleImageError } from '~/utils/helpers'
+import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
+import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue';
 const props = defineProps<{
     id: string
     name: string
     username: string
     avatar: string
-    bio: string | null;
-    followersCount: number | null;
-    followingCount: number | null;
+    bio: string | null
+    followersCount: number | null
+    followingCount: number | null
+    is_following?: boolean
 }>()
 
 const avatarSrc = ref(props.avatar)
 const isLoading = ref(true)
 
-const profileLink = computed(() => getProfileUrl({ 
-    username: props.username,
-    link: null
-}))
+const { followMutation, unfollowMutation, userQuery } = useUserActionsQuery(toRef(props.id))
+
+// Use the query data if available, otherwise use prop as fallback
+const localeIsFollowing = computed(() => {
+    if (userQuery.data.value?.is_following !== undefined) {
+        return userQuery.data.value.is_following
+    }
+    return !!props.is_following
+})
+
+const profileLink = computed(() =>
+    getProfileUrl({
+        username: props.username,
+        link: null,
+    }),
+)
 
 const formatNumber = (num?: number | null): string => {
     if (!num && num !== 0) return '0'
@@ -76,9 +95,22 @@ const formatNumber = (num?: number | null): string => {
     return num.toString()
 }
 
-const handleImageError = (event: Event) => {
-    const target = event.target as HTMLImageElement
-    target.src = `https://ui-avatars.com/api/?name=${props.name}`
+const handleFollowToggle = async () => {
+    if (localeIsFollowing.value) {
+        localeIsFollowing.value = false
+        try {
+            await unfollowMutation.mutateAsync()
+        } catch {
+            localeIsFollowing.value = true
+        }
+    } else {
+        localeIsFollowing.value = true
+        try {
+            await followMutation.mutateAsync()
+        } catch {
+            localeIsFollowing.value = false
+        }
+    }
 }
 
 // Preload image before mount

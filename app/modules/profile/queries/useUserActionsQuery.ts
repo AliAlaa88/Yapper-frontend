@@ -2,8 +2,50 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import type { OtherUser } from '../types/user'
 import { computed } from 'vue'
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
+import type { TweetsPage } from '~/modules/tweets/types/tweet'
 
-export function useUserActionsQuery(userId: Ref<string | undefined>) {
+interface TweetsQueryData {
+    pages: TweetsPage[]
+    pageParams: string[]
+}
+
+const filterTweetsFromPage = (page: TweetsPage, userIdToRemove: string): TweetsPage => ({
+    ...page,
+    data: page.data.filter((tweet) => tweet.user.id !== userIdToRemove),
+})
+
+const updateTimelineQueryData = (
+    queryClient: ReturnType<typeof useNuxtApp>['$queryClient'],
+    timelineKey: string,
+    userIdToRemove: string,
+) => {
+    queryClient.setQueryData<TweetsQueryData>(['tweets', timelineKey], (oldData) => {
+        if (!oldData) return oldData
+
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page) => filterTweetsFromPage(page, userIdToRemove)),
+        }
+    })
+}
+
+const removeTweetsFromUserInCache = (
+    queryClient: ReturnType<typeof useNuxtApp>['$queryClient'],
+    userIdToRemove: string,
+) => {
+    const timelineKeys = ['/timeline/for-you', '/timeline/following']
+
+    timelineKeys.forEach((timelineKey) => {
+        updateTimelineQueryData(queryClient, timelineKey, userIdToRemove)
+    })
+}
+
+export function useUserActionsQuery(
+    userId: Ref<string | undefined>,
+    targetUsername?: Ref<string | undefined>,
+    currentUserId?: Ref<string | undefined>,
+) {
     const { $userInfoService, $queryClient } = useNuxtApp()
 
     const userQuery = useQuery<OtherUser>({
@@ -16,7 +58,16 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.followUser(userId.value),
         onSuccess: () => {
             console.log('success follow')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value && targetUsername?.value && currentUserId?.value) {
+                cacheInvalidation.onFollowChange(
+                    $queryClient,
+                    userId.value,
+                    targetUsername.value,
+                    currentUserId.value,
+                )
+            } else {
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already following')) {
@@ -32,7 +83,16 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unfollowUser(userId.value),
         onSuccess: () => {
             console.log('unfollow successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value && targetUsername?.value && currentUserId?.value) {
+                cacheInvalidation.onFollowChange(
+                    $queryClient,
+                    userId.value,
+                    targetUsername.value,
+                    currentUserId.value,
+                )
+            } else {
+                $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Not following') || error.message.includes('Already')) {
@@ -47,8 +107,11 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
     const blockMutation = useMutation({
         mutationFn: () => $userInfoService.blockUser(userId.value),
         onSuccess: () => {
-            console.log('block successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            console.log('block successfully', userId.value)
+            if (userId.value) {
+                cacheInvalidation.onBlockChange($queryClient, userId.value)
+                removeTweetsFromUserInCache($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already blocked')) {
@@ -64,7 +127,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unblockUser(userId.value),
         onSuccess: () => {
             console.log('unblock successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onBlockChange($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already') || error.message.includes('Not blocked')) {
@@ -80,7 +145,10 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.muteUser(userId.value),
         onSuccess: () => {
             console.log('mute successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onMuteChange($queryClient, userId.value)
+                removeTweetsFromUserInCache($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already muted')) {
@@ -96,7 +164,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.unmuteUser(userId.value),
         onSuccess: () => {
             console.log('unmute successfully')
-            $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            if (userId.value) {
+                cacheInvalidation.onMuteChange($queryClient, userId.value)
+            }
         },
         onError: (error: Error) => {
             if (error.message.includes('Already') || error.message.includes('Not muted')) {
@@ -112,6 +182,9 @@ export function useUserActionsQuery(userId: Ref<string | undefined>) {
         mutationFn: () => $userInfoService.removeFollower(userId.value),
         onSuccess: () => {
             console.log('remove this follower correctly')
+            if (currentUserId?.value) {
+                cacheInvalidation.onRemoveFollower($queryClient, currentUserId.value)
+            }
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
         },
         onError: (error: Error) => {

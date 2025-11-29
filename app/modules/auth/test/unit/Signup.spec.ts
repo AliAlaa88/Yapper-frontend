@@ -98,8 +98,13 @@ vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
 // Mock the user store
 const mockUserStore = {
     setAuth: vi.fn(),
+    setUser: vi.fn(),
+    updateUser: vi.fn(),
+    logout: vi.fn(),
+    initAuth: vi.fn(),
     user: null,
     accessToken: null,
+    isLoggedIn: false,
 }
 
 vi.mock('~/modules/auth/stores/userStore', () => ({
@@ -152,7 +157,7 @@ function mountSignup() {
 describe('Signup Component', () => {
     beforeEach(() => {
         vi.clearAllMocks()
-        
+
         // Set default successful mock implementations for navigation tests
         mockAuthService.registerStep1.mockResolvedValue({
             data: { message: 'Registration successful' },
@@ -236,7 +241,7 @@ describe('Signup Component', () => {
 
         it('should show error if captcha not completed', async () => {
             const wrapper = mountSignup()
-            
+
             const nameInput = wrapper.find('input[type="text"]')
             const emailInput = wrapper.find('input[type="email"]')
             const selects = wrapper.findAll('select')
@@ -246,7 +251,7 @@ describe('Signup Component', () => {
             await selects[0]?.setValue('1')
             await selects[1]?.setValue('1')
             await selects[2]?.setValue('2005')
-            
+
             const form = wrapper.find('form')
             await form.trigger('submit.prevent')
             await flushPromises()
@@ -387,7 +392,7 @@ describe('Signup Component', () => {
             mockAuthService.registerStep2 = registerStep2Spy
 
             const wrapper = mountSignup()
-            
+
             // Debug: Check initial state
             console.log('Initial component:', wrapper.findComponent(createAccount).exists())
 
