@@ -19,35 +19,45 @@
             </template>
         </CustomToolTip>
 
-        <!-- Retweet -->
-        <CustomToolTip side="bottom" align="start" :delay-duration="300">
-            <template #trigger>
-                <button
-                    id="tweet-retweet-button"
-                    :class="[
-                        'group flex cursor-pointer items-center gap-1 transition-colors',
-                        localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
-                    ]"
-                    @click.stop="handleRepostClick"
-                >
-                    <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
-                        <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
-                    </div>
-                    <span class="text-xs min-w-5">{{
-                        formatCount(localRepostsCount, locale)
-                    }}</span>
-                </button>
-            </template>
-            <template #content>
-                <div :class="contentClass">
-                    {{
-                        localIsReposted
-                            ? $t('tweets.actions.undoRetweet')
-                            : $t('tweets.actions.retweet')
-                    }}
+        <!-- Retweet with dropdown -->
+        <div ref="repostContainerRef" class="relative">
+            <button
+                id="tweet-retweet-button"
+                :class="[
+                    'group flex cursor-pointer items-center gap-1 transition-colors',
+                    localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
+                ]"
+                @click.stop="toggleRepostMenu"
+            >
+                <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                    <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
                 </div>
-            </template>
-        </CustomToolTip>
+                <span class="text-xs min-w-5">{{
+                    formatCount(localRepostsCount, locale)
+                }}</span>
+            </button>
+
+            <!-- Repost Dropdown Menu -->
+            <div
+                v-if="showRepostMenu"
+                class="absolute bottom-full left-0 mb-2 bg-primary border border-primary rounded-xl shadow-lg py-2 min-w-40 z-50"
+            >
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
+                    @click.stop="handleRepostAction"
+                >
+                    <Repeat2 :size="18" />
+                    <span class="font-semibold">{{ localIsReposted ? $t('tweets.actions.undoRetweet') : $t('tweets.actions.retweet') }}</span>
+                </button>
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
+                    @click.stop="handleQuoteClick"
+                >
+                    <Quote :size="18" />
+                    <span class="font-semibold">{{ $t('tweets.actions.quote') }}</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Like -->
         <CustomToolTip side="bottom" align="start" :delay-duration="300">
@@ -146,9 +156,9 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs, ref, watch, onMounted, inject } from 'vue'
+import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark } from 'lucide-vue-next'
+import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark, Quote } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import {
@@ -157,12 +167,17 @@ import {
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
-import { cacheInvalidation } from '~/modules/Common/queries'
-
+import {useUserStore} from '~/modules/auth/stores/userStore'
+const userStore = useUserStore()
+const {user_id} = toRefs(userStore.getUser())
 const {$queryClient} = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
+}>()
+
+const emit = defineEmits<{
+    (e: 'quote'): void
 }>()
 
 const {
@@ -183,7 +198,9 @@ const localIsReposted = ref(is_reposted.value)
 const localRepostsCount = ref(retweets.value)
 const localIsBookmarked = ref(is_bookmarked.value)
 const shareTooltipText = ref('')
-const localRepliesCount = ref(replies.value) 
+const localRepliesCount = ref(replies.value)
+const showRepostMenu = ref(false)
+const repostContainerRef = ref<HTMLElement | null>(null)
 const { t, locale } = useI18n()
 
 // Inject the global snackbar from layout
@@ -199,7 +216,18 @@ const snackbar = inject<{
 // Initialize share tooltip text
 onMounted(() => {
     shareTooltipText.value = t('tweets.actions.share')
+    document.addEventListener('click', handleClickOutsideRepostMenu)
 })
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutsideRepostMenu)
+})
+
+const handleClickOutsideRepostMenu = (event: MouseEvent) => {
+    if (repostContainerRef.value && !repostContainerRef.value.contains(event.target as Node)) {
+        showRepostMenu.value = false
+    }
+}
 
 
 const tweetTransitionStore = useTweetTransitionStore()
@@ -207,6 +235,7 @@ const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, 
 const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(
     tweet_id.value,
     localIsReposted.value,
+    `/users/${user_id.value}/posts`,
 )
 const { mutate: mutateBookmark, isPending: isBookmarkPending } = mutateTweetBookmarkQuery(
     tweet_id.value,
@@ -313,7 +342,22 @@ const handleLikeClick = () => {
         },
     })
 }
-const handleRepostClick = () => {
+
+const toggleRepostMenu = () => {
+    showRepostMenu.value = !showRepostMenu.value
+}
+
+const closeRepostMenu = () => {
+    showRepostMenu.value = false
+}
+
+const handleQuoteClick = () => {
+    showRepostMenu.value = false
+    emit('quote')
+}
+
+const handleRepostAction = () => {
+    showRepostMenu.value = false
     // Logic to handle repost/unrepost action can be added here
     if (isRepostPending.value) return // Prevent multiple clicks while mutation is in progress
 
@@ -361,50 +405,7 @@ const handleRepostClick = () => {
     })
 
     //call mutation to update repost status
-    mutateRepost(localIsReposted.value, {
-        onSuccess: () => {
-            // Invalidate relevant queries to refetch data and confirm the optimistic update
-            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
-        },
-        onError: (error) => {
-            // Rollback on error
-            console.error('Error reposting/unreposting tweet:', error)
-            localIsReposted.value = previousRepostedState
-            localRepostsCount.value = previousRepostsCount
-
-            // Rollback transition store as well
-            if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
-                tweetTransitionStore.transitionTweet.is_reposted = previousRepostedState
-                tweetTransitionStore.transitionTweet.reposts_count = previousRepostsCount
-            }
-
-            // Rollback the cache update
-            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
-                if (!oldData?.pages) return oldData
-
-                return {
-                    ...oldData,
-                    pages: oldData.pages.map((page: any) => {
-                        const updatedData = page.data.map((tweet: any) => {
-                            if (tweet.tweet_id === tweet_id.value) {
-                                return {
-                                    ...tweet,
-                                    is_reposted: previousRepostedState,
-                                    reposts_count: previousRepostsCount,
-                                }
-                            }
-                            return tweet
-                        })
-
-                        return {
-                            ...page,
-                            data: updatedData,
-                        }
-                    }),
-                }
-            })
-        },
-    })
+    mutateRepost(localIsReposted.value, tweet_id.value, `/users/${user_id.value}/posts`)
 }
 
 const handleBookmarkClick = () => {
