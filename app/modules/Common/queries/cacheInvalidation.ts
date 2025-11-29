@@ -32,6 +32,7 @@ export const cacheInvalidation = {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
         //  TODO: add the cache invalidation for profile tabs (posts tab)
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(path) })
+        console.log('Invalidated repost cache for tweet:', tweetId ,path)
     },
 
     /**
