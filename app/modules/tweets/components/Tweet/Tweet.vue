@@ -6,8 +6,7 @@
     >
         <div
             v-if="
-                tweet.type === 'repost' ||
-                (tweet.type === 'quote' && tweet.reposted_by === undefined)
+                tweet.type === 'repost'
             "
             class="flex items-center gap-2 mb-2 text-secondary"
         >
@@ -75,10 +74,18 @@
                 </div>
 
                 <Content :content="content" />
-                <Stats :stats="stats" />
+                <Stats :stats="stats" @quote="handleQuote" />
             </div>
         </div>
     </article>
+
+    <!-- Quote Modal -->
+    <QuoteModal
+        :is-open="showQuoteModal"
+        :quoted-tweet="tweet"
+        @close="showQuoteModal = false"
+        @success="handleQuoteSuccess"
+    />
 </template>
 
 <script setup lang="ts">
@@ -87,6 +94,7 @@ import Publisher from './subComponents/Publisher/Publisher.vue'
 import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
+import QuoteModal from '../QuoteModal/QuoteModal.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed, nextTick, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
@@ -101,10 +109,19 @@ const props = defineProps<{
 }>()
 
 const showActionsMenu = ref(false)
+const showQuoteModal = ref(false)
 provide('show-list', showActionsMenu)
 
 const toggleActionsMenu = () => {
     showActionsMenu.value = !showActionsMenu.value
+}
+
+const handleQuote = () => {
+    showQuoteModal.value = true
+}
+
+const handleQuoteSuccess = () => {
+    // Quote posted successfully
 }
 
 const queryClient = useQueryClient()
@@ -140,6 +157,7 @@ const content = computed(() => ({
     text: props.tweet.content,
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
+    parentTweet: props.tweet.type === 'quote' ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet) : undefined,
 }))
 
 // Transform user to include avatar property
@@ -160,6 +178,7 @@ const stats = computed(() => ({
     is_reposted: props.tweet.is_reposted,
     is_bookmarked: props.tweet.is_bookmarked,
     username: props.tweet.user.username,
+    user_id: props.tweet.user.id,
 }))
 
 const createdAt = computed(() => props.tweet.created_at)

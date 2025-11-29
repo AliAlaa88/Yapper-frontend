@@ -69,7 +69,7 @@
             "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
         },
         "login": {
-            "title": "سجّل الدخول إلى X",
+            "title": "سجّل الدخول إلى Yapper",
             "identifierPlaceholder": "رقم الهاتف أو البريد الإلكتروني أو اسم المستخدم",
             "forgotPassword": "هل نسيت كلمة المرور؟",
             "switchPrompt": "ليس لديك حساب؟"
@@ -337,7 +337,10 @@
                 }
             }
         },
-        "followersYouFollow": "متابعون تتابعهم"
+        "followersYouFollow": "متابعون تتابعهم",
+        "privacy": {
+            "likesPrivate": "إعجاباتك خاصة. يمكنك أنت فقط رؤيتها."
+        }
     },
     "settings": {
         "yourAccount": "حسابك",
@@ -414,12 +417,17 @@
             "reply": "رد",
             "retweet": "إعادة نشر",
             "undoRetweet": "التراجع عن إعادة النشر",
+            "quote": "اقتباس",
             "like": "إعجاب",
             "unlike": "إلغاء الإعجاب",
             "views": "المشاهدات",
             "bookmark": "إضافة إلى المفضلة",
             "removeBookmark": "إزالة من المفضلة",
-            "share": "مشاركة المنشور"
+            "share": "مشاركة المنشور",
+            "linkCopied": "تم نسخ الرابط",
+            "bookmarkAdded": "تمت الإضافة إلى مفضلتك",
+            "bookmarkRemoved": "تمت الإزالة من مفضلتك",
+            "copiedToClipboard": "تم النسخ إلى الحافظة"
         },
         "loading": {
             "tweets": "جاري تحميل المنشورات...",
@@ -454,10 +462,18 @@
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
+            "replyPlaceholder": "انشر ردك",
+            "quotePlaceholder": "أضف تعليقاً",
+            "replyingTo": "رد على",
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
             "post": "نشر",
-            "uploadedMedia": "وسائط مرفوعة {index}"
+            "reply": "رد",
+            "uploadedMedia": "وسائط مرفوعة {index}",
+            "posting": "جاري النشر...",
+            "success": "تم إرسال منشورك.",
+            "replySuccess": "تم إرسال ردك.",
+            "replying": "جاري الرد..."
         },
         "banner": {
             "search": "البحث",

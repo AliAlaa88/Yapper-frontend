@@ -62,8 +62,13 @@ vi.mock('~/modules/auth/queries/useLoginQuery', () => ({
 
 const mockUserStore = {
     setAuth: vi.fn(),
+    setUser: vi.fn(),
+    updateUser: vi.fn(),
+    logout: vi.fn(),
+    initAuth: vi.fn(),
     user: null,
     accessToken: null,
+    isLoggedIn: false,
 }
 
 vi.mock('~/modules/auth/stores/userStore', () => ({
@@ -212,12 +217,12 @@ describe('Login Component', () => {
 
         it('emits close event when close button is clicked', async () => {
             const wrapper = mountLogin()
-            
+
             // The Login component receives close event from loginStep1 and re-emits it
             // Simulate the close event from the step component
             const step1 = wrapper.findComponent(loginStep1)
             await step1.vm.$emit('close')
-            
+
             expect(wrapper.emitted('close')).toBeTruthy()
         })
     })

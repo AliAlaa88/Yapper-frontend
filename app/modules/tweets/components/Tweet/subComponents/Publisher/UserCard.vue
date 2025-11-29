@@ -13,13 +13,7 @@
                 />
                 <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse" />
             </NuxtLink>
-            <button
-                :id="`user-card-follow-button-${id}`"
-                class="px-4 py-1.5 rounded-full font-bold text-sm bg-alternate text-alternate hover:brightness-90 transition-all cursor-pointer"
-                @click.prevent="handleFollowToggle()"
-            >
-                {{ localeIsFollowing ? 'Unfollow' : 'Follow' }}
-            </button>
+            <ProfileFollowAction :userId="id" />
         </div>
 
         <!-- Name and Username -->
@@ -58,6 +52,7 @@ import { computed, ref, toRef, onBeforeMount } from 'vue'
 import { getProfileUrl } from '../../../../utils/navigation'
 import { handleImageError } from '~/utils/helpers'
 import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
+import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue';
 const props = defineProps<{
     id: string
     name: string

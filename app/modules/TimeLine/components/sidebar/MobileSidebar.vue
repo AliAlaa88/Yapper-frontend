@@ -105,12 +105,14 @@
 import { ref, computed } from 'vue'
 import { House, Search, Bell, Mail, User, Settings, Bookmark, X } from 'lucide-vue-next'
 import Logo from '~/modules/Common/components/Logo'
-import { getUser } from '#imports'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import type { User as UserType } from '~/modules/Common/types/user'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale, locales } = useI18n()
-const user = getUser() as UserType
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 const isOpen = ref(false)
 
 const isRTL = computed(() => {

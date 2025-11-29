@@ -2,8 +2,8 @@
     <Teleport to="body">
         <div
             v-if="isOpen"
-            class="fixed inset-0 bg-popup flex flex-col z-50 backdrop-blur-sm py-10"
-            :class="containerPositionClasses"
+            class="fixed inset-0 flex flex-col z-50 backdrop-blur-sm py-10"
+            :class="[containerPositionClasses, bgColor]"
             @click="handleClose"
         >
             <div
@@ -54,6 +54,7 @@ interface Props {
     contentClass?: string
     headerClass?: string
     slotClass?: string
+    bgColor?: string
 }
 
 const {
@@ -66,6 +67,7 @@ const {
     contentClass = 'max-w-[600px] w-full', // Added w-full here so it fills its max-width
     headerClass = 'border-b border-gray-700',
     slotClass = 'max-h-[calc(90vh-60px)]',
+    bgColor = 'bg-popup',
 } = defineProps<Props>()
 
 const emit = defineEmits(['close'])

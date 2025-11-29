@@ -14,10 +14,9 @@
                         :src="user.avatar_url"
                         :alt="user.name"
                         class="w-full h-full object-cover"
-                    >
-                    <div v-else class="w-full h-full flex items-center justify-center bg-blue">
-                        <User class="w-7 h-7 text-white" />
-                    </div>
+                        :onerror="(event: any)=> handleImageError(user?.name ?? '',event)"
+                    />
+                    <img :src="`https://ui-avatars.com/api/?name=${user?.name}`" alt="User" class="w-full h-full object-cover" />
                 </div>
                 <!-- Name and Username -->
                 <div class="flex flex-col flex-1 min-w-0">
@@ -25,7 +24,7 @@
                         {{ user?.name || 'User' }}
                     </span>
                     <span class="text-secondary text-sm truncate">
-                        @{{ user.username || 'username' }}
+                        @{{ user?.username || 'username' }}
                     </span>
                 </div>
             </div>
@@ -73,7 +72,7 @@
                         class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
                         @click="handleLogoutClick"
                     >
-                        Log out @{{ user.username || 'username' }}
+                        Log out @{{ user?.username || 'username' }}
                     </button>
                 </div>
             </div>
@@ -136,11 +135,15 @@ import { User, MoreVertical } from 'lucide-vue-next'
 
 import { useLogoutQuery } from '~/modules/auth/queries/useLoginQuery'
 import type { User as UserType } from '~/modules/Common/types/user'
-import { getUser } from '~/utils/helpers'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
+import { handleImageError } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 
-const user = getUser() as UserType
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+console.log('UserActions user:', user.value, user)
 
 const isPopupOpen = ref(false)
 const isLogoutConfirmOpen = ref(false)

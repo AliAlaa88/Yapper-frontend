@@ -69,7 +69,7 @@
             "alreadyHaveAccount": "Already have an account?"
         },
         "login": {
-            "title": "Sign in to X",
+            "title": "Sign in to Yapper",
             "identifierPlaceholder": "Phone, email, or username",
             "forgotPassword": "Forgot password?",
             "switchPrompt": "Don't have an account?"
@@ -344,6 +344,9 @@
             }
         },
         "followersYouFollow": "Followers you follow",
+        "privacy": {
+            "likesPrivate": "Your likes are private. Only you can see them."
+        },
         "months": {
             "january": "January",
             "february": "February",
@@ -434,12 +437,17 @@
             "reply": "Reply",
             "retweet": "Repost",
             "undoRetweet": "Undo repost",
+            "quote": "Quote",
             "like": "Like",
             "unlike": "Unlike",
             "views": "Views",
             "bookmark": "Bookmark",
             "removeBookmark": "Remove bookmark",
-            "share": "Share Tweet"
+            "share": "Share Tweet",
+            "linkCopied": "Link copied",
+            "bookmarkAdded": "Added to your Bookmarks",
+            "bookmarkRemoved": "Removed from your Bookmarks",
+            "copiedToClipboard": "Copied to clipboard"
         },
         "loading": {
             "tweets": "Loading tweets...",
@@ -474,10 +482,18 @@
         },
         "postTweet": {
             "placeholder": "What's happening?",
+            "replyPlaceholder": "Post your reply",
+            "quotePlaceholder": "Add a comment",
+            "replyingTo": "Replying to",
             "gifs": "GIFs",
             "emoji": "Emoji",
             "post": "Post",
-            "uploadedMedia": "Uploaded media {index}"
+            "reply": "Reply",
+            "uploadedMedia": "Uploaded media {index}",
+            "posting": "Posting...",
+            "success": "Your post was sent.",
+            "replySuccess": "Your reply was sent.",
+            "replying": "Replying..."
         },
         "banner": {
             "search": "Search",

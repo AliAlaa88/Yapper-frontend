@@ -40,14 +40,23 @@
             </div>
             <Stats
                 :stats="mainTweetStats"
+                @quote="handleQuote"
             />
         </div>
 
         <!-- Replies Section -->
         <div v-if="tweetDetails && !isLoading && !error">
+            <!-- Post Reply Form -->
+            <ReplyForm 
+                :parent-tweet-id="tweetDetails.tweet_id"
+                :replying-to-username="tweetDetails.user.username"
+            />
+
             <!-- Loading Replies State -->
             <div v-if="isFetchingReplies" class="p-8 text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+                <div class="flex justify-center mb-4">
+                    <LoadingSpinner size="xl" color="blue" />
+                </div>
                 <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
             </div>
 
@@ -70,7 +79,9 @@
 
         <!-- Loading State -->
         <div v-if="isLoading" class="p-8 text-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+            <div class="flex justify-center mb-4">
+                <LoadingSpinner size="xl" color="blue" />
+            </div>
             <p class="text-secondary">{{ $t('tweets.loading.tweetDetails') }}</p>
         </div>
 
@@ -99,6 +110,15 @@
                 {{ $t('tweets.errors.tryAgain') }}
             </button>
         </div>
+
+        <!-- Quote Modal -->
+        <QuoteModal
+            v-if="tweetDetails"
+            :is-open="showQuoteModal"
+            :quoted-tweet="tweetDetails"
+            @close="showQuoteModal = false"
+            @success="handleQuoteSuccess"
+        />
     </div>
 </template>
 
@@ -108,11 +128,14 @@ import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import Reply from './Reply/Reply.vue'
+import ReplyForm from './Reply/ReplyForm.vue'
+import QuoteModal from '../QuoteModal/QuoteModal.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 import { useRoute, useRouter } from '#app'
 import { MessageCircle, AlertTriangle, MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { useQueryClient } from '@tanstack/vue-query'
 
@@ -123,10 +146,19 @@ const tweetId = computed(() => route.params.tweetId)
 const { locale } = useI18n()
 
 const showActionsMenu = ref(false)
+const showQuoteModal = ref(false)
 provide('show-list', showActionsMenu)
 
 const toggleActionsMenu = () => {
     showActionsMenu.value = !showActionsMenu.value
+}
+
+const handleQuote = () => {
+    showQuoteModal.value = true
+}
+
+const handleQuoteSuccess = () => {
+    // Quote posted successfully
 }
 
 const queryClient = useQueryClient()
@@ -185,6 +217,7 @@ const mainTweetContent = computed(() => {
         text: tweetDetails.value.content,
         images: tweetDetails.value.images || [],
         videos: tweetDetails.value.videos || [],
+        parentTweet: tweetDetails.value.type === 'quote' ? tweetDetails.value.parent_tweet : undefined,
     }
 })
 
@@ -200,6 +233,7 @@ const mainTweetStats = computed(() => {
         is_reposted: tweetDetails.value.is_reposted,
         is_bookmarked: tweetDetails.value.is_bookmarked,
         username: tweetDetails.value.user.username,
+        user_id: tweetDetails.value.user.id,
     }
 })
 
