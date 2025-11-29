@@ -45,6 +45,12 @@
 
         <!-- Replies Section -->
         <div v-if="tweetDetails && !isLoading && !error">
+            <!-- Post Reply Form -->
+            <ReplyForm 
+                :parent-tweet-id="tweetDetails.tweet_id"
+                :replying-to-username="tweetDetails.user.username"
+            />
+
             <!-- Loading Replies State -->
             <div v-if="isFetchingReplies" class="p-8 text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
@@ -108,6 +114,7 @@ import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import Reply from './Reply/Reply.vue'
+import ReplyForm from './Reply/ReplyForm.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 import { useRoute, useRouter } from '#app'
