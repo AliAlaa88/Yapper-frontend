@@ -473,12 +473,16 @@
         },
         "postTweet": {
             "placeholder": "What's happening?",
+            "replyPlaceholder": "Post your reply",
+            "replyingTo": "Replying to",
             "gifs": "GIFs",
             "emoji": "Emoji",
             "post": "Post",
+            "reply": "Reply",
             "uploadedMedia": "Uploaded media {index}",
             "posting": "Posting...",
-            "success": "Your post was sent."
+            "success": "Your post was sent.",
+            "replySuccess": "Your reply was sent."
         },
         "banner": {
             "search": "Search",

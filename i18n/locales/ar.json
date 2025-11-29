@@ -453,12 +453,16 @@
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
+            "replyPlaceholder": "انشر ردك",
+            "replyingTo": "رد على",
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
             "post": "نشر",
+            "reply": "رد",
             "uploadedMedia": "وسائط مرفوعة {index}",
             "posting": "جاري النشر...",
-            "success": "تم إرسال منشورك."
+            "success": "تم إرسال منشورك.",
+            "replySuccess": "تم إرسال ردك."
         },
         "banner": {
             "search": "البحث",
