@@ -7,7 +7,7 @@
 import FollowLists from '../../modules/profile/components/FollowLists/FollowLists.vue'
 
 definePageMeta({
-    layout: 'profile',
+    layout: 'main-layout',
     middleware: ['auth'],
 })
 </script>
