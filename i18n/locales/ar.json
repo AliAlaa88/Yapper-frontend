@@ -412,6 +412,7 @@
             "reply": "رد",
             "retweet": "إعادة نشر",
             "undoRetweet": "التراجع عن إعادة النشر",
+            "quote": "اقتباس",
             "like": "إعجاب",
             "unlike": "إلغاء الإعجاب",
             "views": "المشاهدات",
@@ -456,12 +457,18 @@
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
+            "replyPlaceholder": "انشر ردك",
+            "quotePlaceholder": "أضف تعليقاً",
+            "replyingTo": "رد على",
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
             "post": "نشر",
+            "reply": "رد",
             "uploadedMedia": "وسائط مرفوعة {index}",
             "posting": "جاري النشر...",
-            "success": "تم إرسال منشورك."
+            "success": "تم إرسال منشورك.",
+            "replySuccess": "تم إرسال ردك.",
+            "replying": "جاري الرد..."
         },
         "banner": {
             "search": "البحث",

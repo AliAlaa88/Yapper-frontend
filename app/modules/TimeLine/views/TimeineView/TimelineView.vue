@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
-        <PostTweet :border="true" />
+        <PostTweet :border="true" :inlineborder="true" />
         <TweetsList
             :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/following'}`"
             class="w-full"

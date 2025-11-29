@@ -18,7 +18,8 @@
             @scroll="handleScroll"
             :id="id"
             :placeholder="!modelValue ? placeholder : ''"
-            class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap break-words overflow-y-hidden text-base leading-normal font-sans border-b border-primary placeholder:text-transparent z-20 selection:bg-blue-200/30"
+            class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap break-words overflow-y-hidden text-base leading-normal font-sans placeholder:text-transparent z-20 selection:bg-blue-200/30"
+            :class="props.inlineborder ? 'border-b border-primary focus:border-blue' : ''"
             spellcheck="false"
         ></textarea>
     </div>
@@ -31,11 +32,13 @@ interface Props {
     modelValue: string
     placeholder?: string
     id?: string
+    inlineborder?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
     placeholder: "What's happening?",
     id: '',
+    inlineborder: true,
 })
 
 const emit = defineEmits<{

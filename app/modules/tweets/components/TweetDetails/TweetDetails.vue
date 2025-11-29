@@ -40,11 +40,18 @@
             </div>
             <Stats
                 :stats="mainTweetStats"
+                @quote="handleQuote"
             />
         </div>
 
         <!-- Replies Section -->
         <div v-if="tweetDetails && !isLoading && !error">
+            <!-- Post Reply Form -->
+            <ReplyForm 
+                :parent-tweet-id="tweetDetails.tweet_id"
+                :replying-to-username="tweetDetails.user.username"
+            />
+
             <!-- Loading Replies State -->
             <div v-if="isFetchingReplies" class="p-8 text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
@@ -99,6 +106,15 @@
                 {{ $t('tweets.errors.tryAgain') }}
             </button>
         </div>
+
+        <!-- Quote Modal -->
+        <QuoteModal
+            v-if="tweetDetails"
+            :is-open="showQuoteModal"
+            :quoted-tweet="tweetDetails"
+            @close="showQuoteModal = false"
+            @success="handleQuoteSuccess"
+        />
     </div>
 </template>
 
@@ -108,6 +124,8 @@ import Publisher from '../Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../Tweet/subComponents/Content/Content.vue'
 import Stats from '../Tweet/subComponents/Stats/Stats.vue'
 import Reply from './Reply/Reply.vue'
+import ReplyForm from './Reply/ReplyForm.vue'
+import QuoteModal from '../QuoteModal/QuoteModal.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 import { useRoute, useRouter } from '#app'
@@ -123,10 +141,19 @@ const tweetId = computed(() => route.params.tweetId)
 const { locale } = useI18n()
 
 const showActionsMenu = ref(false)
+const showQuoteModal = ref(false)
 provide('show-list', showActionsMenu)
 
 const toggleActionsMenu = () => {
     showActionsMenu.value = !showActionsMenu.value
+}
+
+const handleQuote = () => {
+    showQuoteModal.value = true
+}
+
+const handleQuoteSuccess = () => {
+    // Quote posted successfully
 }
 
 const queryClient = useQueryClient()
@@ -185,6 +212,7 @@ const mainTweetContent = computed(() => {
         text: tweetDetails.value.content,
         images: tweetDetails.value.images || [],
         videos: tweetDetails.value.videos || [],
+        parentTweet: tweetDetails.value.type === 'quote' ? tweetDetails.value.parent_tweet : undefined,
     }
 })
 
@@ -200,6 +228,7 @@ const mainTweetStats = computed(() => {
         is_reposted: tweetDetails.value.is_reposted,
         is_bookmarked: tweetDetails.value.is_bookmarked,
         username: tweetDetails.value.user.username,
+        user_id: tweetDetails.value.user.id,
     }
 })
 

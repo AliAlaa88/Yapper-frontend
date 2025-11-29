@@ -21,10 +21,19 @@
         </NuxtLink>
 
         <div class="flex-1">
+            <!-- Replying to indicator -->
+            <div v-if="replyingToUsername" class="text-secondary text-sm mb-2">
+                {{ t('timeline.postTweet.replyingTo') }}
+                <NuxtLink :to="`/${replyingToUsername}`" class="text-accent hover:underline" @click.stop>
+                    @{{ replyingToUsername }}
+                </NuxtLink>
+            </div>
+
             <FormattedTextarea
                 id="post-tweet-textarea"
                 v-model="content"
-                :placeholder="t('timeline.postTweet.placeholder')"
+                :placeholder="placeholder || (parentTweetId ? t('timeline.postTweet.replyPlaceholder') : t('timeline.postTweet.placeholder'))"
+                :inlineborder="inlineborder"
             />
 
             <div
@@ -148,9 +157,9 @@
                     :disabled="disablePostButton"
                     id="post-tweet-post-btn"
                     button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    :button-text="t('timeline.postTweet.post')"
+                    :button-text="parentTweetId ? t('timeline.postTweet.reply') : t('timeline.postTweet.post')"
                     @click="handleSubmit"
-                    :loading-text="t('timeline.postTweet.posting')"
+                    :loading-text="parentTweetId ? t('timeline.postTweet.replying') : t('timeline.postTweet.posting')"
                     :is-loading="postTweet.isPending.value"
                 />
             </div>
@@ -176,15 +185,28 @@ import { useI18n } from 'vue-i18n'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import type { Event } from 'happy-dom'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import type { TweetBody } from '../../types/tweetBody'
 
 const props = withDefaults(
     defineProps<{
-        border: boolean
+        border?: boolean
+        inlineborder?: boolean
+        parentTweetId?: string
+        replyingToUsername?: string
+        placeholder?: string
     }>(),
     {
         border: true,
+        parentTweetId: undefined,
+        replyingToUsername: undefined,
+        placeholder: undefined,
+        inlineborder: true,
     },
 )
+
+const emit = defineEmits<{
+    (e: 'success'): void
+}>()
 
 const { t } = useI18n()
 const userStore = useUserStore()
@@ -221,7 +243,7 @@ const disablePostButton = computed(() => {
 
 const handleSubmit = async () => {
     try {
-        await postTweet.mutateAsync({
+        const tweetData:TweetBody = {
             content: content.value,
             videos: mediaUrls.value
                 .filter((media) => media.type === 'video')
@@ -229,13 +251,28 @@ const handleSubmit = async () => {
             images: mediaUrls.value
                 .filter((media) => media.type === 'image')
                 .map((media) => media.url),
-        })
+        }
+
+        // Add reply fields if this is a reply
+        if (props.parentTweetId) {
+            tweetData.parent_tweet_id = props.parentTweetId
+            tweetData.type = 'reply'
+            console.log('Preparing to post a reply to tweet ID:', props.parentTweetId);
+        }
+        
+        await postTweet.mutateAsync(tweetData)
 
         content.value = ''
         mediaUrls.value = []
 
         // Show success snackbar
-        snackbar?.handleShowSnackbar(t('timeline.postTweet.success'))
+        const successMessage = props.parentTweetId
+            ? t('timeline.postTweet.replySuccess')
+            : t('timeline.postTweet.success')
+        snackbar?.handleShowSnackbar(successMessage)
+
+        // Emit success event for parent components
+        emit('success')
     } catch (error) {
         console.error('Failed to post tweet:', error)
     }
