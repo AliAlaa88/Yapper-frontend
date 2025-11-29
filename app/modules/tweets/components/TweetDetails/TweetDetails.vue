@@ -54,7 +54,9 @@
 
             <!-- Loading Replies State -->
             <div v-if="isFetchingReplies" class="p-8 text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+                <div class="flex justify-center mb-4">
+                    <LoadingSpinner size="xl" color="blue" />
+                </div>
                 <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
             </div>
 
@@ -77,7 +79,9 @@
 
         <!-- Loading State -->
         <div v-if="isLoading" class="p-8 text-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+            <div class="flex justify-center mb-4">
+                <LoadingSpinner size="xl" color="blue" />
+            </div>
             <p class="text-secondary">{{ $t('tweets.loading.tweetDetails') }}</p>
         </div>
 
@@ -131,6 +135,7 @@ import { formatDetailDate } from '../../utils/lib'
 import { useRoute, useRouter } from '#app'
 import { MessageCircle, AlertTriangle, MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { useQueryClient } from '@tanstack/vue-query'
 
