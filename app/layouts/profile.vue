@@ -18,9 +18,6 @@
                             <h2 class="text-xl font-bold text-primary">
                                 {{ profile?.name }}
                             </h2>
-                            <!-- <p class="text-xs text-muted">
-                                {{ profile?.posts_count }} {{ $t('profile.tweets') }}
-                            </p> -->
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -51,7 +48,6 @@ import ProfileHeader from '../modules/profile/components/ProfileHeader/ProfileHe
 import ProfileDataProvider from '../modules/profile/components/ProfileDataProvider.vue'
 import SnackBar from '../modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
-import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import MainLayout from './main-layout.vue'
