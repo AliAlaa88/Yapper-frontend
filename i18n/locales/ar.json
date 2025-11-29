@@ -61,7 +61,8 @@
             "resendCode": "إعادة إرسال الرمز",
             "selectedSuffix": "مختار",
             "neededMoreSuffix": "مطلوب أكثر",
-            "loading": "جاري التحميل..."
+            "loading": "جاري التحميل...",
+            "redirecting": "جارٍ نقلك إلى صفحتك الرئيسية..."
         },
         "home": {
             "happeningNow": "يحدث الآن",

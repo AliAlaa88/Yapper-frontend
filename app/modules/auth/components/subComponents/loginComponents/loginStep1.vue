@@ -49,6 +49,8 @@
                 id="button-next-login-s1"
                 class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
                 type="submit"
+                :is-loading="loading"
+                :loading-text="t('auth.common.loading')"
             >
                 {{ $t('auth.common.next') }}
             </Button>
@@ -58,6 +60,8 @@
                 id="button-forgot-password-login"
                 class="w-full border border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
                 @click="onForgotPassword"
+                :is-loading="loading"
+                :loading-text="t('auth.common.loading')"
             >
                 {{ $t('auth.login.forgotPassword') }}
             </Button>
@@ -67,8 +71,6 @@
                 <Button
                     id="button-switch-to-signup"
                     buttonClass="text-accent hover:underline font-semibold transition duration-200"
-                    :loading-text="t('auth.common.loading')"
-                    :is-loading="loading"
                     @click="$emit('switch')"
                 >
                     {{ $t('auth.common.signUp') }}

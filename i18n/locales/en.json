@@ -61,7 +61,8 @@
             "resendCode": "Resend code",
             "selectedSuffix": "selected",
             "neededMoreSuffix": "more needed",
-            "loading": "Loading..."
+            "loading": "Loading...",
+            "redirecting": "Taking you to your feed..."
         },
         "home": {
             "happeningNow": "Happening now",
