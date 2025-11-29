@@ -14,8 +14,8 @@
 
         <!-- Quoted Tweet -->
         <QuotedTweet
-            v-if="content.parentTweet"
-            :tweet="content.parentTweet"
+            v-if="content.parentTweet || content.quotedTweet"
+            :tweet="content.parentTweet || content.quotedTweet"
         />
     </div>
 </template>
