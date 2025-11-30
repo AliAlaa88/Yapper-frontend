@@ -3,9 +3,10 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
+        container-class="bg-auth-popup"
+        contentClass="sm:max-w-xl w-full"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        slotClass="py-8 px-10 sm:px-10 md:px-12 lg:px-14"
     >
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -24,7 +25,7 @@
                     @blur="validateNameField"
                     @input="clearNameError"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         nameError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -41,7 +42,7 @@
                     @blur="validateEmailField"
                     @input="clearEmailError"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         emailError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -57,10 +58,10 @@
                     <select
                         id="select-month-signup-s1"
                         v-model="month"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
+                        class="w-full bg-primary text-primary cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>{{ $t('auth.signup.month') }}</option>
-                        <option v-for="m in months" :key="m.value" :value="m.value">
+                        <option value="" disabled selected :class="isArabic? 'text-right':'text-left'">{{ $t('auth.signup.month') }}</option>
+                        <option v-for="m in months" :key="m.value" :value="m.value" :class="isArabic ? 'text-right' : 'text-left'">
                             {{ m.label }}
                         </option>
                     </select>
@@ -76,10 +77,10 @@
                     <select
                         id="select-day-signup-s1"
                         v-model="day"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
+                        class="w-full bg-primary text-primary cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>{{ $t('auth.signup.day') }}</option>
-                        <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
+                        <option value="" disabled selected :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.day') }}</option>
+                        <option v-for="d in days" :key="d" :value="d" :class="isArabic ? 'text-right' : 'text-left'">{{ d }}</option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
@@ -93,10 +94,10 @@
                     <select
                         id="select-year-signup-s1"
                         v-model="year"
-                        class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
+                        class="w-full bg-primary text-primary cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected>{{ $t('auth.signup.year') }}</option>
-                        <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+                        <option value="" disabled selected :class="isArabic?'text-right':'text-left'">{{ $t('auth.signup.year') }}</option>
+                        <option v-for="y in years" :key="y" :value="y" :class="isArabic ? 'text-right' : 'text-left'">{{ y }}</option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
@@ -106,13 +107,15 @@
                 </div>
             </div>
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-signup-s1"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                :loading-text="t('auth.common.loading')"
+                :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
             <!-- reCAPTCHA -->
             <div class="flex justify-center mt-4">
@@ -134,10 +137,10 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
 import Recaptcha from '../recaptcha.vue'
-import { useRegisterS1Query } from '../../../queries/useRegisterQuery'
+import { useRegisterS1Query, checkIdentifier } from '../../../queries/useRegisterQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateName, validateEmail, validateDateOfBirth } from '../../../utils/validators'
-
+import Button from '~/modules/Common/components/Button/Button.vue'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
@@ -152,7 +155,7 @@ const success = ref('')
 const nameError = ref('')
 const emailError = ref('')
 const dobError = ref('')
-
+const loading = ref(false)
 const months = [
     { value: '1', label: 'January' },
     { value: '2', label: 'February' },
@@ -187,6 +190,7 @@ const registerMutation = useRegisterS1Query(
     (data) => {
         success.value = 'Registration successful! Please verify your email.'
         error.value = ''
+        loading.value = false
         emit('next', email.value)
     },
     (err: any) => {
@@ -194,7 +198,30 @@ const registerMutation = useRegisterS1Query(
             err?.response?.data?.message || err?.message || 'Registration failed. Please try again.'
         if (Array.isArray(errorMsg)) error.value = errorMsg[0]
         else error.value = errorMsg
+        loading.value = false
         success.value = ''
+    },
+)
+const checkIdentifierMutation = checkIdentifier(
+    (data) => {
+        if(data.data.identifier_type === 'email'){
+            if(emailError.value === '')
+                emailError.value = 'this identifier is already in use.'
+        }
+        else
+            if(emailError.value === '')
+                emailError.value = 'invalid email format.'
+    },
+    (err: any) => {
+        const errorMsg =
+            err?.response?.data?.message || err?.message || 'Identifier check failed. Please try again.'
+        if(errorMsg.includes('Email not found')){
+            if(emailError.value === '')
+                emailError.value = ''
+        } else {
+            if(emailError.value === '')
+                emailError.value = 'invalid email format.'
+        }
     },
 )
 const emit = defineEmits<{
@@ -214,6 +241,7 @@ const validateNameField = () => {
 const validateEmailField = () => {
     const result = validateEmail(email.value)
     emailError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    checkIdentifierMutation.mutate(email.value)
     return result.valid
 }
 
@@ -245,10 +273,6 @@ watch(recaptcha, (newVal) => {
     }
 })
 
-watch(email,()=>{
- error.value=''   
-})
-
 const onNext = async () => {
     // Validate all fields
     const isNameValid = validateNameField()
@@ -271,7 +295,7 @@ const onNext = async () => {
     } else {
         error.value = '' // Clear previous errors
         success.value = ''
-
+        loading.value = true
         registerMutation.mutate({
             Name: name.value,
             Email: email.value,
