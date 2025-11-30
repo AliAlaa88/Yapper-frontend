@@ -35,8 +35,10 @@
 
 <script setup lang="ts">
 import DetailedPanel from './DetailedPanel.vue'
-import { getUser } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import type { User } from '~/modules/Common/types/user'
 
-const user = getUser() as User
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 </script>

@@ -38,7 +38,7 @@
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
-                <p v-if="!passwordError && password" class="text-green text-xs mt-1">✓ Strong password</p>
+                <!-- <p v-if="!passwordError && password" class="text-green text-xs mt-1">✓ Strong password</p> -->
             </div>
 
             <p class="text-muted mb-6">{{ $t('auth.finalRegister.passwordHint') }}</p>

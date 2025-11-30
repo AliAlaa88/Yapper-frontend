@@ -205,7 +205,7 @@ const updateBirthDate = (part: 'month' | 'day' | 'year', value: string) => {
     const year = part === 'year' ? value : currentYear
 
     if (month && day && year) {
-        const birthDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+        const birthDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
         updateField('birth_date', birthDate)
     }
 }

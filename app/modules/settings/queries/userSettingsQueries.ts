@@ -3,7 +3,7 @@ import { useNuxtApp } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
 
 export function userSettingsQueries() {
-    const { $settingsService } = useNuxtApp()
+    const { $settingsService, $queryClient } = useNuxtApp()
     const { locale } = useI18n()
 
     const myMutedUsersQuery = useInfiniteQuery({
@@ -39,10 +39,13 @@ export function userSettingsQueries() {
     })
 
     const useChangeLanguage = useMutation({
-        mutationFn: ({ language }: { language: 'en' | 'ar' }) => $settingsService.changeLanguage(language),
+        mutationFn: ({ language }: { language: 'en' | 'ar' }) =>
+            $settingsService.changeLanguage(language),
         onSuccess: (data, variables) => {
             locale.value = variables.language
             console.log('Language changed successfully:', data)
+            // Invalidate me query to reflect language change
+            $queryClient.invalidateQueries({ queryKey: ['me'] })
         },
         onError: (error: Error) => {
             console.error('Failed to change language:', error)

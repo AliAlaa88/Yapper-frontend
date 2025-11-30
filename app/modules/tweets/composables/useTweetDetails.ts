@@ -1,6 +1,6 @@
 import { computed, toRaw } from 'vue'
 import { useTweetDetailsQuery } from '../queries/useTweetQueries'
-import type { TweetDetails, Tweet } from '../types'
+import type { Tweet } from '../types'
 
 export function useTweetDetails(tweetId: string, initialTweet?: Tweet) {
     const { data: tweetDetailsData, isLoading, error, isFetching, refetch } = useTweetDetailsQuery(tweetId, initialTweet)
@@ -34,7 +34,7 @@ export function useTweetDetails(tweetId: string, initialTweet?: Tweet) {
         error,
         replies,
         fetchTweetDetails: refetch,
-        isFetchingReplies
+        isFetchingReplies,
     }
-    return res;
+    return res
 }

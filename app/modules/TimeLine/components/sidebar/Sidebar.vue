@@ -6,7 +6,7 @@
                 <div
                     class="w-[65px] h-[65px] hover:bg-hover rounded-full flex items-center justify-center transition-colors duration-200"
                 >
-                    <Logo imgClass="w-[40px] h-[40px] object-contain" />
+                    <Logo img-class="w-[40px] h-[40px] object-contain" />
                 </div>
             </NuxtLink>
 
@@ -14,9 +14,9 @@
             <div class="flex flex-col gap-4">
                 <NuxtLink
                     v-for="link in navLinks"
+                    :id="`sidebar-link-${link.href}`"
                     :key="link.href"
                     :to="link.href"
-                    :id="`sidebar-link-${link.href}`"
                     class="inline-flex items-center justify-start group"
                 >
                     <div
@@ -33,9 +33,9 @@
             <!-- Post Button -->
             <div class="mt-10 pr-6">
                 <button
+                    id="sidebar-post-btn"
                     class="w-full py-3 px-6 bg-alternate rounded-full text-[17px] text-alternate font-bold transition-all duration-200 hover:opacity-90"
                     @click="handleOpen"
-                    id="sidebar-post-btn"
                 >
                     {{ t('timeline.sidebar.post') }}
                 </button>
@@ -48,7 +48,7 @@
         </div>
 
         <!-- Popup -->
-        <Popup :isOpen="isOpen" :title="t('timeline.sidebar.postTweet')" @close="handleClose">
+        <Popup :isOpen="isOpen" :title="t('timeline.sidebar.postTweet')" @close="handleClose" bgColor="bg-popup/20">
             <PostTweet :border="false" />
         </Popup>
     </aside>
@@ -60,13 +60,15 @@ import PostTweet from '../postTweet/PostTweet.vue'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import UserActions from './subCompoents/UserActions/index'
-import { getUser } from '#imports'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const user = getUser()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
-const navLinks = [
+const navLinks = computed(() => [
     {
         labelKey: 'timeline.sidebar.home',
         icon: House,
@@ -90,7 +92,7 @@ const navLinks = [
     {
         labelKey: 'timeline.sidebar.profile',
         icon: User,
-        href: user ? `/${user.username}` : '/profile',
+        href: user.value ? `/${user.value.username}` : '/profile',
     },
     {
         labelKey: 'timeline.sidebar.bookmarks',
@@ -102,7 +104,7 @@ const navLinks = [
         icon: Settings,
         href: '/settings/account',
     },
-]
+])
 
 const isOpen = ref(false)
 
