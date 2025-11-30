@@ -283,7 +283,8 @@
             "unblock": {
                 "title": "Unblock",
                 "button": "Unblock",
-                "description": "They will be able to follow you and engage with your public posts."
+                "description": "They will be able to follow you and engage with your public posts.",
+                "snackbar": "Successfully unblocked."
             },
             "unfollow": {
                 "title": "Unfollow",
