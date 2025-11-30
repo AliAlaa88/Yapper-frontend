@@ -60,7 +60,9 @@
             "password": "Password",
             "resendCode": "Resend code",
             "selectedSuffix": "selected",
-            "neededMoreSuffix": "more needed"
+            "neededMoreSuffix": "more needed",
+            "loading": "Loading...",
+            "redirecting": "Taking you to your feed..."
         },
         "home": {
             "happeningNow": "Happening now",
