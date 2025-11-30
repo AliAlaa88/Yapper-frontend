@@ -16,8 +16,13 @@
             </span>
         </div>
         <TweetsList
-            v-if="!isBlocked && userId && (currentTab !== 'likes' || isMyProfile)"
+            v-if="!isBlocked && userId && (currentTab === 'likes' && isMyProfile || currentTab === 'posts' || currentTab === 'replies')"
             :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
+            class="min-h-[650px] w-full"
+        />
+        <MediaGrid
+            v-if="!isBlocked && userId && currentTab === 'media'"
+            :fetching-source="`/users/${userId}/media`"
             class="min-h-[650px] w-full"
         />
         <ProfileBlockedContent v-if="isBlocked" :username="username" />
