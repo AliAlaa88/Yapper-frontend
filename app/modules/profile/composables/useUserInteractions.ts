@@ -61,6 +61,32 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         )
     }
 
+    async function handleBlockWithSnackbar() {
+        try {
+            await handleBlock()
+            showSnackbar.value = true
+            handleShowSnackbar(
+                t('profile.actions.block.snackbar'),
+                '',
+            )
+        } catch (error) {
+            console.error('failed to block: ', error)
+        }
+    }
+
+    async function handleUnblockWithSnackbar() {
+        try {
+            await handleUnblock()
+            showSnackbar.value = true
+            handleShowSnackbar(
+                t('profile.actions.unblock.snackbar'),
+                '',
+            )
+        } catch (error) {
+            console.error('failed to unblock: ', error)
+        }
+    }
+
     function handleUnfollowWithConfirmation() {
         showConfirmation.value = true
         handleShowConfirmation(
@@ -129,7 +155,6 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         async function handleClick() {
             try {
                 await handleUnblock()
-                // Call the success callback after the action completes
                 if (onSuccess) onSuccess()
             } catch (error) {
                 console.error('failed to unblock user: ', error)
@@ -205,6 +230,8 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleFollowAction,
         handleFolloweWithSnackbar,
         handleUnfollowWithSnackbar,
+        handleBlockWithSnackbar,
+        handleUnblockWithSnackbar,
         isUnfollowLoading,
         isBlockLoading,
         isUnblockLoading,

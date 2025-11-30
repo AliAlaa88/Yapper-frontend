@@ -1,47 +1,48 @@
 <template>
-    <DetailedPanel :title="t('settings.mutedAccounts')">
+    <DetailedPanel :title="title">
         <div class="w-full text-primary">
             <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
-                    {{  t('settings.mutedAccounts_desc')    }}
+                    {{ description }}
                 </p>
             </div>
             <div
-                v-if="myMutedUsersQuery.isLoading.value"
+                v-if="query.isLoading.value"
                 class="flex justify-center py-6">
                 <div
-                    class="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"
+                    class="animate-spin rounded-full h-5 w-5 border-2
+                    border-accent border-t-transparent"
                 />
             </div>
-            <div v-else-if="myMutedUsersQuery.isSuccess.value">
+            <div v-else-if="query.isSuccess.value && users.length > 0">
                 <UserAccountItem
                     v-for="user in users"
                     :key="user.user_id"
                     :account="user">
-                    <SettingsMutedButton :user-id="user.user_id" :is-muted="user.is_muted" />
+                    <SettingsBlockedButton :user-id="user.user_id" :is-blocked="user.is_blocked" />
                 </UserAccountItem>
             </div>
             <div
-                v-if="myMutedUsersQuery.hasNextPage.value"
+                v-if="query.hasNextPage.value"
                 ref="loadMore"
                 class="flex justify-center py-4"
             >
                 <div
-                    v-if="myMutedUsersQuery.isFetchingNextPage.value"
-                    class="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"
+                    v-if="query.isFetchingNextPage.value"
+                    class="animate-spin rounded-full h-5 w-5 border-2
+                    border-accent border-t-transparent"
                 />
             </div>
             <div
-                v-else-if="myMutedUsersQuery.isSuccess.value && users.length === 0"
+                v-else-if="query.isSuccess.value && users.length === 0"
                 class="flex justify-center"
             >
                 <div class="flex flex-col justify-center text-left px-10 py-[60px]">
                     <h1 class="m-0 mb-2 text-4xl font-extrabold text-primary max-w-[300px]">
-                        Muted accounts
+                        {{ emptyTitle }}
                     </h1>
                     <p class="m-0 max-w-[350px] text-[15px] leading-6 text-muted">
-                        Posts from muted accounts won’t show up in your Home
-                        timeline. Mute accounts directly from their profile or post.
+                        {{ emptyDescription }}
                     </p>
                 </div>
             </div>
@@ -52,32 +53,33 @@
 <script setup lang="ts">
 import UserAccountItem from './UserAccountItem.vue'
 import DetailedPanel from '../DetailedPanel.vue'
-import { userSettingsQueries } from '../../queries/userSettingsQueries'
-import { useI18n } from 'vue-i18n'
-import SettingsMutedButton from './SettingsMutedButton.vue'
-const { t } = useI18n()
+import SettingsBlockedButton from './SettingsBlockedButton.vue'
+import type { UseInfiniteQueryReturnType } from '@tanstack/vue-query';
+import type { MutedAndBlockedListsApiResponse } from '../../types/settings';
 
-const { myMutedUsersQuery } = userSettingsQueries()
-watch(
-    () => myMutedUsersQuery.data,
-    (val) => {
-        if (val) {
-            console.log('Muted users response:', val)
-        }
-    },
-    { immediate: true, deep: true },
-)
+const props = defineProps<{
+    title: string
+    description: string
+    emptyTitle: string
+    emptyDescription: string
+    query: UseInfiniteQueryReturnType<MutedAndBlockedListsApiResponse>
+}>()
 
-watch(
-    () => myMutedUsersQuery.isLoading.value,
-    (val) => {
-        console.log('isLoading users response:', val)
+console.log('hahaga', props.query)
+watch(() => props.query.data.value, (val) => {
+    console.log('Blocked users response:', val)
+})
 
-    },
-    { immediate: true, deep: true },
-)
+watch(() => props.query.data.value, (val) => {
+    console.log('Blocked users response:', val)
+    if (val?.pages) {
+        console.log('Total pages loaded:', val.pages.length)
+        console.log('All pages:', val.pages)
+    }
+})
+
 const users = computed(() =>
-    myMutedUsersQuery.data.value?.pages
+    props.query.data.value?.pages
         .flatMap(page => page.data.data) ?? [],
 )
 
@@ -89,17 +91,17 @@ onMounted(() => {
             const entry = entries[0]
             console.log('Intersection observed:', {
                 isIntersecting: entry?.isIntersecting,
-                hasNextPage: myMutedUsersQuery.hasNextPage.value,
-                isFetching: myMutedUsersQuery.isFetchingNextPage.value,
+                hasNextPage: props.query.hasNextPage.value,
+                isFetching: props.query.isFetchingNextPage.value,
             })
 
             if (
                 entry?.isIntersecting &&
-                myMutedUsersQuery.hasNextPage.value &&
-                !myMutedUsersQuery.isFetchingNextPage.value
+                props.query.hasNextPage.value &&
+                !props.query.isFetchingNextPage.value
             ) {
                 console.log('Fetching next page...')
-                myMutedUsersQuery.fetchNextPage()
+                props.query.fetchNextPage()
             }
         },
         {
@@ -119,5 +121,4 @@ onMounted(() => {
         observer.disconnect()
     })
 })
-
 </script>
