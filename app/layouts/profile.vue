@@ -51,6 +51,9 @@ import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComp
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import MainLayout from './main-layout.vue'
+import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import {  onBeforeMount } from 'vue'
 
 useProfileProviders()
 
@@ -60,4 +63,8 @@ const username = computed(() => route.params.username as string)
 
 const profileStore = useProfileStore()
 const { profile, isMyProfile } = storeToRefs(profileStore)
+
+onBeforeMount(() => {
+    profileStore.clearProfile()
+})
 </script>
