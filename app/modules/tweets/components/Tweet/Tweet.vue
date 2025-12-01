@@ -4,14 +4,12 @@
         class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
-        <div
-            v-if="
-                tweet.type === 'repost'
-            "
-            class="flex items-center gap-2 mb-2 text-secondary"
-        >
+        <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
             <Repeat2 :size="16" />
-            <span class="text-sm"> {{ repostedUsername }} {{ $t('tweets.reposted') }} </span>
+            <span class="text-sm">
+                {{ repostedUsername }}
+                {{ $t('tweets.reposted') }}
+            </span>
         </div>
 
         <div class="flex gap-3">
@@ -104,10 +102,13 @@ import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useQueryClient } from '@tanstack/vue-query'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { handleImageError } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+
 const props = defineProps<{
     tweet: TweetType
 }>()
-
+const userStore = useUserStore()
+const currentUser = computed(() => userStore.getUser())
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
 provide('show-list', showActionsMenu)
@@ -151,13 +152,22 @@ const removeTweetsFromUser = (userId: string) => {
 const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
-const repostedUsername = computed(() => props.tweet.reposted_by?.name || '')
+const repostedUsername = computed(() => {
+    return currentUser.value?.user_id === props.tweet.reposted_by?.id
+        ? 'You'
+        : props.tweet.reposted_by === undefined
+          ? 'You'
+          : props.tweet.reposted_by.name
+})
 // Transform content string to Content object
 const content = computed(() => ({
     text: props.tweet.content,
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
-    parentTweet: props.tweet.type === 'quote' ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet) : undefined,
+    parentTweet:
+        props.tweet.type === 'quote'
+            ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet)
+            : undefined,
 }))
 
 // Transform user to include avatar property
