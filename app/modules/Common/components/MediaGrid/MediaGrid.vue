@@ -1,107 +1,65 @@
 <template>
-    <div class="max-w-[600px] mx-auto bg-primary min-h-screen">
-        <!-- Loading state -->
-        <div v-if="isPending" class="p-6 text-center">
-            <div class="inline-flex items-center space-x-2 text-secondary">
-                <div
-                    class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"
+    <InfiniteList
+        v-model:load-more-trigger="loadMoreTrigger"
+        :items="items"
+        :is-pending="isPending"
+        :is-fetching="isFetching"
+        :is-fetching-next-page="isFetchingNextPage"
+        :error="error"
+        :loading-text="$t('tweets.loading.tweets')"
+        :error-text="$t('tweets.errors.loadFailed')"
+        :retry-text="$t('tweets.errors.tryAgain')"
+        :empty-title="$t('tweets.empty.noTweets')"
+        :empty-description="$t('tweets.empty.noTweetsDescription')"
+        items-container-class="grid grid-cols-3 gap-0.5 w-full"
+        @retry="refetch"
+    >
+        <template #default="{ items: tweets }">
+            <NuxtLink
+                v-for="tweet in tweets"
+                :key="tweet.tweet_id"
+                :to="`/${tweet.user.username}/status/${tweet.tweet_id}`"
+                class="aspect-square overflow-hidden relative"
+            >
+                <NuxtImg
+                    v-if="tweet.images && tweet.images.length > 0"
+                    :src="tweet.images[0]"
+                    alt="Tweet Media"
+                    class="h-full w-full object-cover"
                 />
-                <span class="text-sm font-medium text-primary">{{
-                    $t('tweets.loading.tweets')
-                }}</span>
-            </div>
-        </div>
-
-        <!-- Error state -->
-        <div v-else-if="error" class="p-6 text-center">
-            <div class="bg-primary rounded-xl p-4 border border-primary">
-                <div class="text-red text-sm font-medium mb-3">
-                    {{ $t('tweets.errors.loadFailed') }}
-                </div>
-                <button
-                    id="tweets-list-retry-button"
-                    class="inline-flex items-center px-4 py-2 bg-blue text-white text-sm font-bold rounded-full hover:bg-blue transition-colors duration-200"
-                    @click="loadTweets"
+                <div
+                    v-else-if="tweet.videos && tweet.videos.length > 0"
+                    class="relative h-full w-full"
                 >
-                    <RotateCw class="w-4 h-4 mr-2" />
-                    {{ $t('tweets.errors.tryAgain') }}
-                </button>
-            </div>
-        </div>
-
-        <div v-else-if="!isPending" class="flex flex-col items-center">
-            <div class="grid grid-cols-3 gap-0.5 w-full">
-                <NuxtLink
-                    v-for="tweet in tweets"
-                    :key="tweet.tweet_id"
-                    :to="`/${tweet.user.username}/status/${tweet.tweet_id}`"
-                    class="aspect-square overflow-hidden relative"
-                >
-                    <NuxtImg
-                        v-if="tweet.images && tweet.images.length > 0"
-                        :src="tweet.images[0]"
-                        alt="Tweet Media"
+                    <video
+                        :src="tweet.videos[0]"
                         class="h-full w-full object-cover"
+                        muted
+                        @loadedmetadata="(e) => handleVideoMetadata(e, tweet.tweet_id)"
                     />
                     <div
-                        v-else-if="tweet.videos && tweet.videos.length > 0"
-                        class="relative h-full w-full"
+                        v-if="videoDurations[tweet.tweet_id]"
+                        class="absolute bottom-1 left-1 bg-black/75 px-1.5 py-0.5 rounded text-xs font-semibold"
+                        style="color: white;"
                     >
-                        <video
-                            :src="tweet.videos[0]"
-                            class="h-full w-full object-cover"
-                            muted
-                            @loadedmetadata="(e) => handleVideoMetadata(e, tweet.tweet_id)"
-                        />
-                        <div
-                            v-if="videoDurations[tweet.tweet_id]"
-                            class="absolute bottom-1 left-1 bg-black/75 px-1.5 py-0.5 rounded text-xs font-semibold"
-                            style="color: white;"
-                        >
-                            {{ videoDurations[tweet.tweet_id] }}
-                        </div>
+                        {{ videoDurations[tweet.tweet_id] }}
                     </div>
-                </NuxtLink>
-            </div>
-
-            <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
-                <div
-                    class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"
-                />
-            </div>
-
-            <!-- Intersection observer target -->
-            <div ref="loadMoreTrigger" class="h-1 w-full" />
-        </div>
-
-        <!-- Empty state -->
-        <div v-if="!isFetching && tweets.length === 0" class="p-8 text-center">
-            <div class="max-w-sm mx-auto">
-                <div
-                    class="w-16 h-16 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center"
-                >
-                    <Logo class="w-8 h-8 text-secondary" />
                 </div>
-                <h3 class="text-lg font-bold text-primary mb-2">
-                    {{ $t('tweets.empty.noTweets') }}
-                </h3>
-                <p class="text-sm text-secondary leading-relaxed">
-                    {{ $t('tweets.empty.noTweetsDescription') }}
-                </p>
-            </div>
-        </div>
-    </div>
+            </NuxtLink>
+        </template>
+    </InfiniteList>
 </template>
 
 <script setup lang="ts">
-import { useTweetsQuery } from '~/modules/tweets/queries/useTweetQueries'
 import { toRef, computed, ref } from 'vue'
-import { RotateCw } from 'lucide-vue-next'
-import Logo from '~/modules/Common/components/Logo/Logo.vue'
+import { useNuxtApp } from '#app'
+import { useGenericInfiniteQuery } from '~/modules/Common/composables/useGenericInfiniteQuery'
+import { InfiniteList } from '~/modules/Common/components/InfiniteList'
+import type { Tweet, TweetsPage } from '~/modules/tweets/types/tweet'
 
 const props = defineProps<{
     fetchingSource?: string | null
-}>();
+}>()
 
 const fetchingSourceRef = toRef(props, 'fetchingSource')
 
@@ -128,55 +86,22 @@ const handleVideoMetadata = (event: Event, tweetId: string) => {
     }
 }
 
-// Use the query with the reactive fetchingSource (provide default empty string)
+const { $listService } = useNuxtApp()
+
+// Use the generic infinite query composable
 const {
-    data,
+    items,
     isFetching,
     error,
     refetch,
-    fetchNextPage,
-    hasNextPage,
     isFetchingNextPage,
     isPending,
-} = useTweetsQuery(computed(() => fetchingSourceRef.value ?? ''))
-
-const loadTweets = () => {
-    refetch()
-}
-
-const loadMoreTrigger = ref<HTMLElement | null>(null)
-
-watch(
-    () => loadMoreTrigger.value,
-    (el) => {
-        if (!el) return
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const entry = entries[0]
-                if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
-                    fetchNextPage()
-                }
-            },
-            {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1,
-            },
-        )
-
-        observer.observe(el)
-
-        onUnmounted(() => observer.disconnect())
-    },
-    { immediate: true },
-)
-
-const tweets = computed(() => {
-    const pages = data.value?.pages
-    if (!pages) return []
-
-    return pages.flatMap((p) => p.data)
+    loadMoreTrigger,
+} = useGenericInfiniteQuery<TweetsPage, Tweet>({
+    queryKey: computed(() => ['tweets', fetchingSourceRef.value ?? '']),
+    queryFn: ({ pageParam }) =>
+        ($listService as any).fetchList(fetchingSourceRef.value ?? '', pageParam),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    getPageData: (page) => page.data,
 })
-
 </script>

@@ -10,11 +10,3 @@ export interface User {
     country: string
     created_at: string
 }
-
-export interface ApiResponse<T> {
-    data?: T
-    count?: number
-    message: string
-    error?: string
-    statusCode: number
-}

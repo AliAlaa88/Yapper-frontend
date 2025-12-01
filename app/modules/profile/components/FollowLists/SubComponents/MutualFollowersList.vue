@@ -1,43 +1,39 @@
 <template>
-    <div>
-        <div v-if="followersQuery.isLoading.value" class="p-4 text-center text-muted">
-            {{ $t('messages.loading') }}
-        </div>
+    <UserList
+        :fetching-source="`/users/${userId}/followers?following=true`"
+        query-key-prefix="mutual-followers"
+        :loading-text="$t('messages.loading')"
+        :error-text="$t('messages.error')"
+        :retry-text="$t('messages.tryAgain')"
+        :empty-title="$t('profile.followLists.emptyState.noMutualFollowers.title')"
+        :empty-description="$t('profile.followLists.emptyState.noMutualFollowers.description')"
+    >
+        <template #default="{ users }">
+            <FollowListUserCard
+                v-for="user in (users as FollowUser[])"
+                :key="user.user_id"
+                :user="user"
+            />
+        </template>
 
-        <div v-else-if="followersQuery.isError.value" class="p-4 text-center text-red-500">
-            {{ $t('messages.error') }}
-        </div>
-
-        <div v-else-if="mutualFollowers && mutualFollowers.length === 0">
+        <template #empty>
             <EmptyState
                 icon="👥"
                 :title="$t('profile.followLists.emptyState.noMutualFollowers.title')"
                 :description="$t('profile.followLists.emptyState.noMutualFollowers.description')"
             />
-        </div>
-
-        <div v-else>
-            <FollowListUserCard
-                v-for="user in mutualFollowers"
-                :key="user.user_id"
-                :user="user"
-            />
-        </div>
-    </div>
+        </template>
+    </UserList>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
+import { UserList } from '~/modules/Common/components/UserList'
 import EmptyState from '~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vue'
 import FollowListUserCard from '../../../../Common/components/UserCard/UserCard.vue'
-import { useFollowListsQuery } from '~/modules/profile/queries/useFollowListsQuery'
+import type { FollowUser } from '~/modules/profile/types/user'
 
 const profileStore = useProfileStore()
-// const { isMyProfile } = storeToRefs(profileStore)
 const userId = computed(() => profileStore.getProfileId() || '')
-
-const { followersQuery } = useFollowListsQuery(userId, true)
-const mutualFollowers = computed(() => followersQuery.data.value || [])
 </script>

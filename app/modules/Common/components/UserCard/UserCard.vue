@@ -48,6 +48,6 @@ import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubC
 
 defineProps<{
     user: FollowUser
-    showTooltip?: boolean
+    showTooltip?: boolean | null
 }>()
 </script>
