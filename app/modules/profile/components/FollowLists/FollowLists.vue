@@ -23,7 +23,7 @@
         </div>
 
 
-        <div class="min-h-[100vh]">
+        <div class="min-h-screen">
             <FollowersList v-if="currentTab === 'followers' && profile" />
             <FollowingList v-else-if="currentTab === 'following' && profile" />
             <MutualFollowersList v-else-if="currentTab === 'followers_you_follow' && profile" />
