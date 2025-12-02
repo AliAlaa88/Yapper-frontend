@@ -13,6 +13,7 @@
                 v-for="chat in mockConversations"
                 :key="chat.id"
                 :conversation="chat"
+                @click="handleSelectConversation(chat)"
             />
             <div v-if="hasNextPage && !isFetching" ref="sentinelRef" class="h-1" />
 
@@ -30,6 +31,14 @@ import type { Conversation } from '~/modules/chat/types'
 import ConversationItem from './subComponents/ConversationItem/ConversationItem.vue'
 import { useGetConversation } from '~/modules/chat/queries/useGetConversation'
 import { useIntersectionObserver } from '@vueuse/core'
+
+const emit = defineEmits<{
+    (e: 'select-conversation', conversation: Conversation): void
+}>()
+
+const handleSelectConversation = (conversation: Conversation) => {
+    emit('select-conversation', conversation)
+}
 const mockConversations = ref<Conversation[]>([
     {
         id: '1',

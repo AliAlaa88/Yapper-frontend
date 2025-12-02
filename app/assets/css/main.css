@@ -42,7 +42,7 @@
     --color-x-text-dark: #e7e9ea;
     --color-x-text-dark-secondary: #71767b;
     --color-x-hover-dark: #2f3336;
-
+    --color-x-dark-gray: #2f3336;
     --color-x-popup-bg: #242d34;
     /* ===========================
        🖋 FONT SETTINGS
@@ -127,7 +127,8 @@
         --color-x-hover-alternate: #ebebeb;
         --color-x-tooltip-bg: #cfd9de;
         --color-x-popup-bg: #999999;
-        --color-x-popup-auth-bg: #0000001A;
+        --color-x-popup-auth-bg: #0000001a;
+        --color-x-dark-gray: #cfd9de;
     }
 
     :root.dark {
@@ -147,7 +148,8 @@
         --color-x-hover-alternate: #2f3336;
         --color-x-hover-dark: #16181c;
         --color-x-popup-bg: #242d34;
-        --color-x-popup-auth-bg: #FFFFFF1A;
+        --color-x-popup-auth-bg: #ffffff1a;
+        --color-x-dark-gray: #2f3336;
     }
 }
 
@@ -309,6 +311,9 @@
 
     .bg-gray {
         background-color: var(--color-x-gray);
+    }
+    .bg-dark-gray {
+        background-color: var(--color-x-dark-gray);
     }
 
     .bg-tooltip {
