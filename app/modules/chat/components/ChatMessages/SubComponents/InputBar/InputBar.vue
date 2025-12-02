@@ -68,6 +68,7 @@
                 </button>
                 <GifPicker
                     :is-open="showGifPicker"
+                    position="top"
                     @select="handleGifSelect"
                     @close="showGifPicker = false"
                 />
@@ -83,6 +84,7 @@
                 </button>
                 <EmojiPicker
                     :is-open="showEmojiPicker"
+                    position="top"
                     @select="handleEmojiSelect"
                     @close="showEmojiPicker = false"
                 />
