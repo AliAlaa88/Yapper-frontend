@@ -1,1 +1,1 @@
-export { chatServices as chatService } from './chatServices'
+export { createChatService } from './chatServices'

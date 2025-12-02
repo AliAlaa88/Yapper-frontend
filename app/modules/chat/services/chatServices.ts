@@ -4,12 +4,11 @@ import type { ConversationApiResponse, Conversation } from '../types'
 const urls = {
     getConversations: '/chat',
     createConversation: '/chat',
-    markAsRead(chatId: string): string { return `/chat/chats/${chatId}/read` },
-    
+    markAsRead: (chatId: string) => `/chat/chats/${chatId}/read`,
 }
 
-export const chatServices = {
-    async getConversations(): Promise<Conversation[]> {
+export const createChatService = () => ({
+    getConversations: async (): Promise<Conversation[]> => {
         const { $axios } = useNuxtApp()
         try {
             const response = await $axios.get<ConversationApiResponse>(urls.getConversations)
@@ -27,7 +26,7 @@ export const chatServices = {
         }
     },
 
-    async markAsRead(chatId: string,lastMessageId: string) {
+    markAsRead: async (chatId: string, lastMessageId: string) => {
         const { $axios } = useNuxtApp()
         try {
             await $axios.post(urls.markAsRead(chatId), { last_read_message_id: lastMessageId })
@@ -41,14 +40,16 @@ export const chatServices = {
         }
     },
 
-    async createConversation(userId: string) {
+    createConversation: async (userId: string) => {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.post<Conversation>(urls.createConversation, { recipient_id: userId })
+            const response = await $axios.post<Conversation>(urls.createConversation, {
+                recipient_id: userId,
+            })
             if (!response.data) {
                 throw new Error('Conversation not found')
             }
-            return response.data;
+            return response.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {
@@ -57,9 +58,5 @@ export const chatServices = {
             }
             throw new Error('Something went wrong')
         }
-    }
-    
-    
-
-
-}
+    },
+})
