@@ -20,7 +20,7 @@
                         swimming.
                     </p>
                     <button
-                        class="bg-blue hover:bg-blue/90 text-white font-bold rounded-full py-3 px-8 transition-colors"
+                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors"
                     >
                         New message
                     </button>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
 import type { Conversation } from '../types'
@@ -50,4 +50,18 @@ const selectedConversation = ref<Conversation | null>(null)
 const handleSelectConversation = (conversation: Conversation) => {
     selectedConversation.value = conversation
 }
+
+const handleEscapeKey = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && selectedConversation.value) {
+        selectedConversation.value = null
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('keydown', handleEscapeKey)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleEscapeKey)
+})
 </script>
