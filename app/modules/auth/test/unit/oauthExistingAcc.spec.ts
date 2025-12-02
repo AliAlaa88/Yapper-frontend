@@ -28,9 +28,13 @@ const mockRouter = {
 
 const mockUserStore = {
     setAuth: vi.fn(),
+    setUser: vi.fn(),
+    updateUser: vi.fn(),
     logout: vi.fn(),
+    initAuth: vi.fn(),
     user: null,
     accessToken: null,
+    isLoggedIn: false,
 }
 
 vi.mock('vue-router', () => ({
@@ -100,7 +104,7 @@ vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
                 }
             }
         }, { immediate: true })
-        
+
         return {
             data: { value: { username: 'testuser', email: 'test@example.com' } },
             isLoading: false,
@@ -214,7 +218,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
             const token = 'oauth-access-token-123'
             mountSuccessPage(token)
             await flushPromises()
-            
+
             expect(mockUserStore.accessToken).toBe(token)
         })
 
@@ -271,7 +275,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
     describe('Error Handling', () => {
         it('should logout user when getUserData fails', async () => {
             const token = 'invalid-token'
-            
+
             mockAuthService.getUserData.mockRejectedValue({
                 response: {
                     status: 401,
@@ -310,7 +314,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
             mockAuthService.getUserData.mockResolvedValue(mockUserData)
 
             const wrapper = mountSuccessPage('test-token')
-            
+
             expect(wrapper.find('.fixed.inset-0').exists()).toBe(true)
         })
 

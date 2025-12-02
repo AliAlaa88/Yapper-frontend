@@ -35,18 +35,20 @@
 import type { User } from '~/modules/Common/types/user'
 import DetailedPanel from './DetailedPanel.vue'
 import DetailedRow from './DetailedRow.vue'
-import { getUser } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { formatFullDateTime, formatDate, calculateAge } from '../utils/calculations'
-const user = getUser() as User
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 const { t } = useI18n()
 const categories = computed(() => [
-    { label: t('settings.accountInfo.username'), content: user.username, href: '' },
-    { label: t('settings.accountInfo.email'), content: user.email, href:''},
-    { label: t('settings.accountInfo.country'), content: user.country, href: '' },
+    { label: t('settings.accountInfo.username'), content: user.value?.username, href: '' },
+    { label: t('settings.accountInfo.email'), content: user.value?.email, href:''},
+    { label: t('settings.accountInfo.country'), content: user.value?.country, href: '' },
     { label: t('settings.accountInfo.languages'), content: 'English, Arabic', href: '/settings/languages' },
-    { label: t('settings.accountInfo.birthDate'), content: formatDate(user.birth_date ?? ''), href: `/${user.username}/settings/profile` },
-    { label: t('settings.accountInfo.age'), content: calculateAge(user.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
-    { label: t('settings.accountInfo.accountCreation'), content: formatFullDateTime(user.created_at ?? ''), href: '/settings/your_twitter_data/account_creation' },
+    { label: t('settings.accountInfo.birthDate'), content: formatDate(user.value?.birth_date ?? ''), href: `/${user.value?.username}/settings/profile` },
+    { label: t('settings.accountInfo.age'), content: calculateAge(user.value?.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
+    { label: t('settings.accountInfo.accountCreation'), content: formatFullDateTime(user.value?.created_at ?? ''), href: '/settings/your_twitter_data/account_creation' },
 ])
 </script>

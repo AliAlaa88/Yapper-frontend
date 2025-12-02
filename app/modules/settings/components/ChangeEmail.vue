@@ -6,7 +6,7 @@
                     <input
                         id="current-email"
                         type="text"
-                        :value="user.email"
+                        :value="user?.email"
                         readonly
                         class="w-full border border-primary px-4 py-4 rounded-md opacity-50
                             text-muted text-base focus:outline-none cursor-default" >
@@ -33,8 +33,10 @@
 
 <script setup lang="ts">
 import DetailedPanel from './DetailedPanel.vue'
-import { getUser } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import type { User } from '~/modules/Common/types/user'
 
-const user = getUser() as User
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 </script>

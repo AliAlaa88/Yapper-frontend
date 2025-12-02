@@ -88,7 +88,7 @@ import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 import { ref, onMounted, onBeforeUnmount, inject, computed } from 'vue'
 import type { Ref } from 'vue'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 
 const props = defineProps<{

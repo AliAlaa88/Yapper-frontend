@@ -60,7 +60,9 @@
             "password": "كلمة المرور",
             "resendCode": "إعادة إرسال الرمز",
             "selectedSuffix": "مختار",
-            "neededMoreSuffix": "مطلوب أكثر"
+            "neededMoreSuffix": "مطلوب أكثر",
+            "loading": "جاري التحميل...",
+            "redirecting": "جارٍ نقلك إلى صفحتك الرئيسية..."
         },
         "home": {
             "happeningNow": "يحدث الآن",
@@ -69,7 +71,7 @@
             "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
         },
         "login": {
-            "title": "سجّل الدخول إلى X",
+            "title": "سجّل الدخول إلى Yapper",
             "identifierPlaceholder": "رقم الهاتف أو البريد الإلكتروني أو اسم المستخدم",
             "forgotPassword": "هل نسيت كلمة المرور؟",
             "switchPrompt": "ليس لديك حساب؟"
@@ -88,10 +90,10 @@
         },
         "username": {
             "title": "ماذا يجب أن نسميك؟",
-            "info": "اسم المستخدم الخاص بك فريد. يمكنك دائماً تغييره لاحقاً.",
+            "info": "اسم المستخدم الخاص بك فريد. يمكنك دائماً تغييره لاحقاً",
             "placeholder": "اسم المستخدم",
             "available": "متاح!",
-            "recommendations": "أسماء المستخدمين الموصى بها:"
+            "recommendations": "أسماء المستخدمين الموصى بها"
         },
         "profilePicture": {
             "title": "اختر صورة ملفك الشخصي",
@@ -124,17 +126,17 @@
         },
         "verifyOtp": {
             "title": "أرسلنا لك رمزاً",
-            "info": "أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني.",
+            "info": "أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني",
             "otpPlaceholder": "أدخل الرمز",
             "resendPrompt": "لم تستلم الرمز؟",
-            "resendSuccess": "تم إعادة إرسال الرمز بنجاح.",
-            "invalidOtp": "رمز غير صالح. حاول مرة أخرى."
+            "resendSuccess": "تم إعادة إرسال الرمز بنجاح",
+            "invalidOtp": "رمز غير صالح. حاول مرة أخرى"
         },
         "finalRegister": {
             "title": "أدخل كلمة مرور",
-            "info": "يرجى إدخال كلمة مرور قوية.",
+            "info": "يرجى إدخال كلمة مرور قوية",
             "passwordPlaceholder": "أدخل كلمة المرور",
-            "passwordHint": "تأكد أن كلمة المرور قوية وآمنة.",
+            "passwordHint": "تأكد أن كلمة المرور قوية وآمنة",
             "signUpButton": "تسجيل"
         },
         "forgotPassword": {
@@ -152,11 +154,11 @@
         },
         "language": {
             "title": "اختر لغتك",
-            "info": "سيساعدنا ذلك على تخصيص تجربتك في Yapper."
+            "info": "سيساعدنا ذلك على تخصيص تجربتك في Yapper"
         },
         "interests": {
             "title": "ما المجالات التي تهمك؟",
-            "info": "اختر 3 اهتمامات على الأقل لمساعدتنا في تخصيص محتواك."
+            "info": "اختر 3 اهتمامات على الأقل لمساعدتنا في تخصيص محتواك"
         },
         "validation": {
             "emailRequired": "البريد الإلكتروني مطلوب",
@@ -332,6 +334,9 @@
                     "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
                 }
             }
+        },
+        "privacy": {
+            "likesPrivate": "إعجاباتك خاصة. يمكنك أنت فقط رؤيتها."
         }
     },
     "settings": {
@@ -409,12 +414,17 @@
             "reply": "رد",
             "retweet": "إعادة نشر",
             "undoRetweet": "التراجع عن إعادة النشر",
+            "quote": "اقتباس",
             "like": "إعجاب",
             "unlike": "إلغاء الإعجاب",
             "views": "المشاهدات",
             "bookmark": "إضافة إلى المفضلة",
             "removeBookmark": "إزالة من المفضلة",
-            "share": "مشاركة المنشور"
+            "share": "مشاركة المنشور",
+            "linkCopied": "تم نسخ الرابط",
+            "bookmarkAdded": "تمت الإضافة إلى مفضلتك",
+            "bookmarkRemoved": "تمت الإزالة من مفضلتك",
+            "copiedToClipboard": "تم النسخ إلى الحافظة"
         },
         "loading": {
             "tweets": "جاري تحميل المنشورات...",
@@ -449,10 +459,18 @@
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
+            "replyPlaceholder": "انشر ردك",
+            "quotePlaceholder": "أضف تعليقاً",
+            "replyingTo": "رد على",
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
             "post": "نشر",
-            "uploadedMedia": "وسائط مرفوعة {index}"
+            "reply": "رد",
+            "uploadedMedia": "وسائط مرفوعة {index}",
+            "posting": "جاري النشر...",
+            "success": "تم إرسال منشورك.",
+            "replySuccess": "تم إرسال ردك.",
+            "replying": "جاري الرد..."
         },
         "banner": {
             "search": "البحث",

@@ -8,7 +8,7 @@
         @click="$emit('close')"
       >
         <ArrowLeft class="w-5 h-5" />
-      </button>
+</button>
 </template>
 
 <script setup lang="ts">

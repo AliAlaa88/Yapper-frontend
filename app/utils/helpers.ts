@@ -1,19 +1,3 @@
-import type { User } from '~/modules/auth/types/user'
-import Cookie from 'js-cookie';
-export function isLoggedIn(): boolean {
-    const user = localStorage.getItem('user')
-    const token = Cookie.get('access_token')
-    if (user && token) {
-        return true
-    }
-    return false
-}
-
-export function getUser(): User {
-    const user = localStorage.getItem('user')
-    return JSON.parse(user as string) as User
-}
-
 export const formatDate = (date: string) => {
     const now = new Date()
     const tweetDate = new Date(date)
@@ -66,11 +50,14 @@ export function parseTextWithTags(text: string): string {
 
     // 4. Handle line breaks for display
     // Note: We don't replace \n with <br> here because the CSS white-space: pre-wrap
-    // handles that better for synchronization with textarea
+    // handles that better for synchronization with textareas
 
     return result
 }
-
+export const handleImageError = (userName: string, event: Event) => {
+    const target = event.target as HTMLImageElement
+    target.src = `https://ui-avatars.com/api/?name=${userName}`
+}
 
 export function shorterName(name: string, maxLength: number = 15): string {
     if (name.length > maxLength) {

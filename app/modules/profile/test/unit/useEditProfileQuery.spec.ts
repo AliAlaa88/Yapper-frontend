@@ -9,6 +9,7 @@ const mockUserInfoService = {
 
 const mockQueryClient = {
     invalidateQueries: vi.fn(),
+    removeQueries: vi.fn(),
 }
 
 const mockUseMutation = vi.fn()
@@ -32,6 +33,15 @@ vi.mock('nuxt/app', () => ({
     }),
 }))
 
+vi.mock('~/modules/Common/queries/cacheInvalidation', () => ({
+    cacheInvalidation: {
+        onUsernameChange: vi.fn(),
+        onProfileUpdate: vi.fn(),
+        onCoverPhotoChange: vi.fn(),
+        onAvatarChange: vi.fn(),
+    },
+}))
+
 describe('useEditProfileMutation', () => {
     beforeEach(() => {
         vi.clearAllMocks()
@@ -39,7 +49,8 @@ describe('useEditProfileMutation', () => {
 
     it('creates edit profile mutation', () => {
         const userId = '123'
-        const result = useEditProfileMutation(userId)
+        const username = 'testuser'
+        const result = useEditProfileMutation(userId, username)
 
         expect(result).toHaveProperty('editProfileMutation')
         expect(mockUseMutation).toHaveBeenCalled()
@@ -47,21 +58,24 @@ describe('useEditProfileMutation', () => {
 
     it('creates upload cover photo mutation', () => {
         const userId = '123'
-        const result = useEditProfileMutation(userId)
+        const username = 'testuser'
+        const result = useEditProfileMutation(userId, username)
 
         expect(result).toHaveProperty('uploadCoverPhotoMutation')
     })
 
     it('creates upload avatar mutation', () => {
         const userId = '123'
-        const result = useEditProfileMutation(userId)
+        const username = 'testuser'
+        const result = useEditProfileMutation(userId, username)
 
         expect(result).toHaveProperty('uploadAvatarMutation')
     })
 
     it('returns all three mutations', () => {
         const userId = '123'
-        const result = useEditProfileMutation(userId)
+        const username = 'testuser'
+        const result = useEditProfileMutation(userId, username)
 
         expect(result.editProfileMutation).toBeDefined()
         expect(result.uploadCoverPhotoMutation).toBeDefined()
@@ -70,7 +84,8 @@ describe('useEditProfileMutation', () => {
 
     it('edit profile mutation uses correct service method', () => {
         const userId = '123'
-        useEditProfileMutation(userId)
+        const username = 'testuser'
+        useEditProfileMutation(userId, username)
 
         const mutationCall = mockUseMutation.mock.calls[0]![0]
         expect(mutationCall.mutationFn).toBeDefined()
@@ -79,7 +94,8 @@ describe('useEditProfileMutation', () => {
 
     it('edit profile mutation has onSuccess handler', () => {
         const userId = '123'
-        useEditProfileMutation(userId)
+        const username = 'testuser'
+        useEditProfileMutation(userId, username)
 
         const mutationCall = mockUseMutation.mock.calls[0]![0]
         expect(mutationCall.onSuccess).toBeDefined()
@@ -88,7 +104,8 @@ describe('useEditProfileMutation', () => {
 
     it('upload cover photo mutation uses correct service method', () => {
         const userId = '123'
-        useEditProfileMutation(userId)
+        const username = 'testuser'
+        useEditProfileMutation(userId, username)
 
         const mutationCall = mockUseMutation.mock.calls[1]![0]
         expect(mutationCall.mutationFn).toBeDefined()
@@ -97,7 +114,8 @@ describe('useEditProfileMutation', () => {
 
     it('upload avatar mutation uses correct service method', () => {
         const userId = '123'
-        useEditProfileMutation(userId)
+        const username = 'testuser'
+        useEditProfileMutation(userId, username)
 
         const mutationCall = mockUseMutation.mock.calls[2]![0]
         expect(mutationCall.mutationFn).toBeDefined()
