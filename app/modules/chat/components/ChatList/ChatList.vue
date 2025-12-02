@@ -8,24 +8,28 @@
                 <MessageSquarePlus class="w-5 h-5 text-primary" />
             </button>
         </div>
-
-        <div class="overflow-y-auto flex-1">
+        <div ref="scrollContainerRef" class="overflow-y-auto flex-1">
             <ConversationItem
                 v-for="chat in mockConversations"
                 :key="chat.id"
                 :conversation="chat"
             />
+            <div v-if="hasNextPage && !isFetching" ref="sentinelRef" class="h-1" />
+
+            <div v-if="isFetching" class="flex justify-center p-4">
+                <Loader class="w-5 h-5 text-primary" />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { MessageSquarePlus } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
+import { MessageSquarePlus, Loader } from 'lucide-vue-next'
 import type { Conversation } from '~/modules/chat/types'
 import ConversationItem from './subComponents/ConversationItem/ConversationItem.vue'
-
-// Mock data for UI testing
+import { useGetConversation } from '~/modules/chat/queries/useGetConversation'
+import { useIntersectionObserver } from '@vueuse/core'
 const mockConversations = ref<Conversation[]>([
     {
         id: '1',
@@ -68,4 +72,24 @@ const mockConversations = ref<Conversation[]>([
         updated_at: new Date(Date.now() - 86400000).toISOString(),
     },
 ])
+
+const { data, isFetching, fetchNextPage, hasNextPage } = useGetConversation()
+const sentinelRef = ref<HTMLElement | null>(null)
+const scrollContainerRef = ref<HTMLElement | null>(null)
+
+const conversations = computed(() => {
+    return data.value?.pages.flatMap((page) => page) || []
+})
+useIntersectionObserver(
+    sentinelRef,
+    ([entry]) => {
+        if (entry?.isIntersecting && hasNextPage.value && !isFetching.value) {
+            fetchNextPage()
+        }
+    },
+    {
+        root: scrollContainerRef,
+        rootMargin: '100px',
+    },
+)
 </script>
