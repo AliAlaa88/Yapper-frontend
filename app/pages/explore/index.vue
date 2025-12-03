@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="overflow-x-hidden">
         <ExploreTabs />
         <!-- Default content for explore index -->
         <ForYou />

@@ -1,5 +1,5 @@
 <template>
-    <div class="sticky top-0 mt-2 bg-primary/95 backdrop-blur-sm z-10">
+    <div class="sticky top-0 mt-2 bg-primary/95 backdrop-blur-sm z-10 overflow-hidden">
 
         <!-- Tabs -->
         <tabsComponent :tabs="tabs" :active-tab="selectedTab" :on-change="onTabsChange" />

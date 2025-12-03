@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="overflow-x-hidden">
         <ExploreTabs />
         <!-- Sports content -->
         <Categories category="sports" />
