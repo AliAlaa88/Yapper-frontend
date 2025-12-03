@@ -4,7 +4,7 @@
             <div class="relative w-full space-y-4">
                 <div class="px-4 py-3">
                     <input
-                        id="username"
+                        id="username-input"
                         v-model="newUsername"
                         type="text"
                         placeholder="Username"
@@ -49,10 +49,10 @@
             </div>
             <div class="px-4 py-4 flex justify-end">
                 <Button
+                    id="save-username-button"
                     type="submit"
                     :disabled="!canSubmit"
                     :is-loading="updateUsernameMutation.isPending.value"
-                    loading-text="Saving..."
                     button-text="Save"
                     button-class="bg-accent text-primary font-medium py-2 px-6 rounded-3xl
                     hover:bg-accent-dark transition disabled:opacity-50 disabled:cursor-not-allowed"

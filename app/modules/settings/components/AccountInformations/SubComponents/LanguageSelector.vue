@@ -28,7 +28,7 @@
                 <Circle v-else class="opacity-40" :size="20" />
             </button>
             <Button
-                id="next-button"
+                id="next-language-button"
                 button-class="w-full cursor-pointer bg-alternate text-alternate
                 font-semibold mt-60 mb-4 py-3 rounded-full"
                 :is-loading="useChangeLanguage.isPending.value"

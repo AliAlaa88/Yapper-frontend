@@ -23,6 +23,7 @@
                 </p>
             </div>
             <Button
+                id="delete-account-button"
                 button-class="w-full hover:bg-red-500/10 h-13 mt-2 text-red bg-primary"
                 button-text="Delete"
                 :is-loading="useDeleteAccount.isPending.value"

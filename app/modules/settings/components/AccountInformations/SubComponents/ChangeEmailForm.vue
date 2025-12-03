@@ -39,6 +39,7 @@
             <div class="pt-8">
                 <Button
                     v-if="!isValidEmail"
+                    id="cancel-email-form-button"
                     :is-loading="sendEmailOTPMutation.isPending.value"
                     button-class="w-full flex-1 bg-transparent border border-primary text-primary py-3 rounded-full
                     hover:bg-hover transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
@@ -47,6 +48,7 @@
                 />
                 <Button
                     v-if="isValidEmail"
+                    id="next-email-form-button"
                     type="submit"
                     :is-loading="sendEmailOTPMutation.isPending.value"
                     button-class="w-full flex-1 bg-alternate text-alternate py-3 rounded-full

@@ -33,6 +33,7 @@
                 disabled:opacity-50 disabled:cursor-not-allowed" >
 
             <Button
+                id="reset-otp-button"
                 button-class="text-accent text-sm hover:underline mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
                 button-text="Didn't receive code? Resend"
                 @click="handleResend"
@@ -42,6 +43,7 @@
             </p>
             <div class="pt-8">
                 <Button
+                    id="verify-otp-button"
                     type="submit"
                     :is-loading="verifyEmailOTPMutation.isPending.value"
                     :disabled="otp.length === 0"
@@ -85,8 +87,12 @@ const handleVerify = async () => {
             otp: otp.value,
         })
         emit('verified')
-    } catch (error: any) {
-        errorMessage.value = error.message || 'An error occurred. Please try again.'
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            errorMessage.value = error.message
+        } else {
+            errorMessage.value = String(error) || 'An error occurred. Please try again.'
+        }
     }
 }
 
@@ -94,8 +100,12 @@ const handleResend = async () => {
     errorMessage.value = ''
     try {
         await sendEmailOTPMutation.mutateAsync({ newEmail: props.newEmail })
-    } catch (error: any) {
-        errorMessage.value = error.message || 'An error occurred. Please try again.'
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            errorMessage.value = error.message
+        } else {
+            errorMessage.value = String(error) || 'An error occurred. Please try again.'
+        }
     }
 }
 

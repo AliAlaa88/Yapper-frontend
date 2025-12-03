@@ -17,11 +17,13 @@
         </p>
         <div>
             <Button
+                id="confirm-change-country-button"
                 button-class="w-full flex-1 bg-alternate text-alternate py-3 rounded-full
                 hover:bg-hover-alternate transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 button-text="Change"
                 @click="$emit('confirm')" />
             <Button
+                id="cancel-change-country-button"
                 button-class="w-full flex-1 bg-transparent text-primary underline py-3 rounded-full
                 hover:bg-hover transition font-medium"
                 button-text="Cancel"

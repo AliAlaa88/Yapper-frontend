@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-start px-4 py-3 transition hover:bg-hover">
-        <NuxtLink :to="`/${account.username}`" class="flex items-start w-full">
+        <NuxtLink id="profile-link-settings" :to="`/${account.username}`" class="flex items-start w-full">
             <img :src="account.avatar_url ?? ''" class="w-12 h-12 rounded-full object-cover" >
 
             <div class="flex-1 ml-3 space-y-1">

@@ -2,6 +2,7 @@
     <DetailedPanel title="Change Country">
         <div class="mx-4 mt-9 relative">
             <select
+                id="countries-options"
                 v-model="country"
                 class="custom-select peer w-full pt-7 pb-3 px-4 border border-primary rounded-md bg-transparent
                 focus:outline-none focus:ring-2 focus:ring-accent transition-colors"

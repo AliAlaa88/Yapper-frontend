@@ -14,6 +14,7 @@
             <div class="relative w-full space-y-4">
                 <div class="px-4 py-3">
                     <input
+                        id="confirm-password-input"
                         v-model="password"
                         type="password"
                         placeholder="password"
@@ -29,7 +30,7 @@
                         required
                         autofocus>
                     <NuxtLink
-                        id="settings-password"
+                        id="settings-link-forgot-password1"
                         to="/auth/forgot-password"
                         class="mt-3 pl-1 text-accent hover:underline">
                         Forgot Password?
@@ -48,7 +49,7 @@
                     Your account doesn't have a password set. This usually happens when you
                     signed up using a social provider (Google, Github).
                 </p>
-                <NuxtLink to="/auth/forgot-password" class="text-accent hover:underline text-sm font-medium">
+                <NuxtLink id="settings-link-forgot-password2" to="/auth/forgot-password" class="text-accent hover:underline text-sm font-medium">
                     Set up a password →
                 </NuxtLink>
             </div>

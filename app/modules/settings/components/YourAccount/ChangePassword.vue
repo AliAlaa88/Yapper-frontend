@@ -4,6 +4,7 @@
             <div class="relative w-full border-b border-primary space-y-4">
                 <div class="px-4 py-3">
                     <input
+                        id="current-password-input"
                         v-model="currentPassword"
                         type="password"
                         placeholder="Current password"
@@ -23,6 +24,7 @@
                 <div class="w-full border-t border-b border-primary px-4 py-3 mb-2 space-y-4">
                     <div>
                         <input
+                            id="new-password-input"
                             v-model="newPassword"
                             type="password"
                             placeholder="New password"
@@ -40,6 +42,7 @@
 
                     <div>
                         <input
+                            id="confirm-change-passowrd-input"
                             v-model="confirmPassword"
                             type="password"
                             placeholder="Confirm password"
@@ -61,6 +64,7 @@
 
             <div class="px-4 py-4 flex justify-end">
                 <Button
+                    id="save-new-password-button"
                     type="submit"
                     :disabled="!isFormValid || useChangePassword.isPending.value"
                     :is-loading="useChangePassword.isPending.value"

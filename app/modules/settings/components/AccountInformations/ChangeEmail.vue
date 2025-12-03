@@ -4,7 +4,7 @@
             <div class="px-4 py-3 mb-2">
                 <div class="relative w-full">
                     <input
-                        id="current-email"
+                        id="current-email-input"
                         type="text"
                         :value="user?.email"
                         readonly
@@ -21,6 +21,7 @@
         </div>
         <div class="w-full flex justify-center items-center hover:bg-accent/10 h-13 mt-2 text-accent bg-primary">
             <NuxtLink
+                id="update-email-address-link"
                 to="/settings/add_email"
             >
                 Update email address
