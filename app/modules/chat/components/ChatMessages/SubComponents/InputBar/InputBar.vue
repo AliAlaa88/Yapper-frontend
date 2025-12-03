@@ -127,12 +127,10 @@ interface MediaItem {
 }
 
 const props = defineProps<{
-    conversationId?: string
+    conversationId: string
 }>()
 
-const emit = defineEmits<{
-    (e: 'send', data: { content: string; media: MediaItem[] }): void
-}>()
+const { $chatSocketService } = useNuxtApp()
 
 const content = ref('')
 const showGifPicker = ref(false)
@@ -141,7 +139,8 @@ const mediaUrls = ref<MediaItem[]>([])
 const uploadMedia = useUploadMedia()
 
 const disableSendButton = computed(() => {
-    return content.value.trim().length === 0 && mediaUrls.value.length === 0
+    const isEmpty = content.value.trim().length === 0 && mediaUrls.value.length === 0
+    return isEmpty || $chatSocketService.isSendingMessage.value
 })
 
 const processUploadResponse = (response: any, type: 'image' | 'video') => {
@@ -198,6 +197,9 @@ const handleTextareaInput = (event: Event) => {
     // Auto-resize textarea
     target.style.height = 'auto'
     target.style.height = `${Math.min(target.scrollHeight, 128)}px`
+
+    // Trigger typing indicator
+    $chatSocketService.handleTyping()
 }
 
 // Watch content changes to auto-resize (e.g., when emoji is added)
@@ -216,9 +218,23 @@ watch(
 const handleSubmit = () => {
     if (disableSendButton.value) return
 
-    emit('send', {
-        content: content.value,
-        media: mediaUrls.value,
+    // Determine message type based on media
+    let messageType: 'text' | 'image' | 'video' = 'text'
+    let mediaUrl: string | undefined
+
+    if (mediaUrls.value.length > 0) {
+        const firstMedia = mediaUrls.value[0]
+        if (firstMedia) {
+            messageType = firstMedia.type
+            mediaUrl = firstMedia.url
+        }
+    }
+
+    // Send message via socket
+    $chatSocketService.sendMessage(props.conversationId, {
+        content: content.value.trim() || undefined,
+        mediaUrl,
+        messageType,
     })
 
     // Clear form after sending

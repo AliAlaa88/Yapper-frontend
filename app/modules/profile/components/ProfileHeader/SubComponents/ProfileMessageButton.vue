@@ -21,7 +21,7 @@ const isLoading = ref(false)
 
 async function goToMessages() {
     const userId = profileStore.getProfileId()
-    
+
     if (!userId) {
         router.push('/messages')
         return

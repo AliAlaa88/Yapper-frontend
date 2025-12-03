@@ -40,19 +40,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
 import type { Conversation } from '../types'
 
 const props = defineProps<{
-    recipientId?: string
+    chatId?: string
 }>()
+
+const { $chatSocketService } = useNuxtApp()
 
 const selectedConversation = ref<Conversation | null>(null)
 
-const handleSelectConversation = (conversation: Conversation) => {
+const handleSelectConversation = async (conversation: Conversation) => {
     selectedConversation.value = conversation
+
+
+    try {
+        await $chatSocketService.enterChat(conversation.id)
+    } catch (error) {
+        console.error('[ChatView] Failed to join chat:', error)
+    }
 }
 
 const handleEscapeKey = (event: KeyboardEvent) => {
@@ -61,11 +70,31 @@ const handleEscapeKey = (event: KeyboardEvent) => {
     }
 }
 
+watch(
+    () => props.chatId,
+    async (newChatId) => {
+        if (newChatId) {
+            try {
+                await $chatSocketService.enterChat(newChatId)
+            } catch (error) {
+                console.error('[ChatView] Failed to join chat from route:', error)
+            }
+        }
+    },
+    { immediate: true },
+)
+
 onMounted(() => {
     window.addEventListener('keydown', handleEscapeKey)
 })
 
-onUnmounted(() => {
+onUnmounted(async () => {
     window.removeEventListener('keydown', handleEscapeKey)
+
+    try {
+        await $chatSocketService.leaveChat()
+    } catch (error) {
+        console.error('[ChatView] Failed to leave chat:', error)
+    }
 })
 </script>
