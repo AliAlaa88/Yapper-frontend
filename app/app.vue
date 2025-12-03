@@ -13,6 +13,28 @@
 <script setup lang="ts">
 // import LanguageButton from './modules/Common/components/LanguageButton/LanguageButton.vue'
 // import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+
+const userStore = useUserStore()
+
+const { $socketService } = useNuxtApp()
+
+onMounted(() => {
+    if (userStore.isLoggedIn) {
+        ;($socketService as any).connect()
+    }
+})
+
+watch(
+    () => userStore.isLoggedIn,
+    (newVal) => {
+        if (newVal) {
+            ;($socketService as any).connect()
+        } else {
+            ;($socketService as any).disconnect()
+        }
+    },
+)
 
 const { locale, locales } = useI18n()
 
