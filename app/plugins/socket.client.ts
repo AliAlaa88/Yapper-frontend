@@ -1,14 +1,51 @@
-import { io } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 
 export default defineNuxtPlugin(() => {
-    const config = useRuntimeConfig()
-    const socket = io(`${config.public.apiUrl}/messages`, {
-        autoConnect: false,
-    })
+    let socket: Socket | null = null
+
+    const createSocket = (): Socket => {
+        // Disconnect existing socket if any
+        if (socket) {
+            socket.disconnect()
+        }
+
+        // Get token from cookie
+        const tokenCookie = useCookie('access_token')
+        const token = tokenCookie.value
+
+        socket = io(`https://dev.yapper.cmp27.space/messages`, {
+            autoConnect: false,
+            transports: ['websocket', 'polling'],
+            reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+            auth: {
+                token,
+            },
+            query: {
+                auth: token,
+            },
+        })
+
+        return socket
+    }
+
+    const getSocket = (): Socket | null => socket
+
+    const disconnectSocket = () => {
+        if (socket) {
+            socket.disconnect()
+            socket = null
+        }
+    }
 
     return {
         provide: {
-            socket,
+            socket: {
+                create: createSocket,
+                get: getSocket,
+                disconnect: disconnectSocket,
+            },
         },
     }
 })

@@ -45,6 +45,10 @@ import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
 import type { Conversation } from '../types'
 
+const props = defineProps<{
+    recipientId?: string
+}>()
+
 const selectedConversation = ref<Conversation | null>(null)
 
 const handleSelectConversation = (conversation: Conversation) => {
