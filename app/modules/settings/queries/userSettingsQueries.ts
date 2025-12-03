@@ -69,9 +69,6 @@ export function userSettingsQueries() {
         onSuccess: (data) => {
             console.log('Password confirmed:', data)
         },
-        onError: (error: Error) => {
-            console.error('Failed to confirm password:', error.message)
-        },
     })
 
     const useDeleteAccount = useMutation({

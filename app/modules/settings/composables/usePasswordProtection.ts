@@ -29,11 +29,10 @@ export function usePasswordProtection() {
             showPasswordConfirmation.value = false
 
             checkPasswordConfirmation()
-            console.log('connnnnfi')
             return true
         } catch (error: unknown) {
-            console.log('error during confirmation', error)
-            return false
+            console.log('error during confirmation', (error as Error).message)
+            throw error
         }
     }
 

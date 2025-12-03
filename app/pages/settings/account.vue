@@ -1,10 +1,13 @@
 <template>
-    <CategoryPanel :item="panelItems" />
+    <PasswordProtectedContent>
+        <CategoryPanel :item="panelItems" />
+    </PasswordProtectedContent>
 </template>
 
 <script setup lang="ts">
 import CategoryPanel from '~/modules/settings/components/CategoryPanel.vue'
 import { UserRound, KeyRound, ShieldMinus } from 'lucide-vue-next'
+import PasswordProtectedContent from '~/modules/settings/components/YourAccount/PasswordProtectedContent.vue'
 definePageMeta({ layout: 'settings' })
 
 const panelItems = {

@@ -127,23 +127,12 @@ export const settingsService = {
             return response.data
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
-                console.log('dsdlfkjsijgks', error.response?.data.message)
-                if (error.response?.status === 401) {
-                    const message = error.response.data?.message || ''
-                    if (
-                        message.includes(
-                            'User registered with social login. Please use social login to access your account',
-                        )
-                    ) {
-                        console.log('lsfjjskfherror')
-                        throw new Error('NO_PASSWORD_SET')
-                    }
-                    throw new Error('Wrong password')
-                } else if (error.response?.status === 404) {
-                    throw new Error('User not found')
-                }
+                const status = error.response?.status
+                if (status === 403) throw new Error('WRONG_PASSWORD')
+                if (status === 409) throw new Error('NO_PASSWORD_SET')
+                if (status === 404) throw new Error('USER_NOT_FOUND')
             }
-            throw new Error('Failed to confirm password. Please try again.')
+            throw new Error('UNKNOWN')
         }
     },
     async updateUsername(username: string): Promise<UpdateUsernameResponse> {
