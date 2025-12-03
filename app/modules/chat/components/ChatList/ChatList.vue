@@ -3,22 +3,39 @@
         <div
             class="p-3 flex items-center justify-between sticky top-0 bg-primary/80 backdrop-blur-md z-10 border-b border-primary"
         >
-            <h1 class="text-xl font-bold text-primary">Messages</h1>
+            <div class="flex items-center gap-2">
+                <h1 class="text-xl font-bold text-primary">Messages</h1>
+  
+                <span
+                    v-if="totalUnreadCount > 0"
+                    class="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full"
+                >
+                    {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
+                </span>
+            </div>
             <button class="p-2 hover:bg-hover rounded-full cursor-pointer transition-colors">
                 <MessageSquarePlus class="w-5 h-5 text-primary" />
             </button>
         </div>
         <div ref="scrollContainerRef" class="overflow-y-auto flex-1">
             <ConversationItem
-                v-for="chat in mockConversations"
+                v-for="chat in conversations"
                 :key="chat.id"
                 :conversation="chat"
+                :is-selected="selectedChatId === chat.id"
                 @click="handleSelectConversation(chat)"
             />
             <div v-if="hasNextPage && !isFetching" ref="sentinelRef" class="h-1" />
 
             <div v-if="isFetching" class="flex justify-center p-4">
-                <Loader class="w-5 h-5 text-primary" />
+                <Loader class="w-5 h-5 text-primary animate-spin" />
+            </div>
+
+            <!-- Empty state -->
+            <div v-if="!isFetching && conversations.length === 0" class="flex flex-col items-center justify-center p-8 text-center">
+                <MessageSquarePlus class="w-12 h-12 text-secondary mb-4" />
+                <p class="text-secondary">No messages yet</p>
+                <p class="text-sm text-muted">Start a conversation from someone's profile</p>
             </div>
         </div>
     </div>
@@ -36,51 +53,14 @@ const emit = defineEmits<{
     (e: 'select-conversation', conversation: Conversation): void
 }>()
 
+const { $chatSocketService } = useNuxtApp()
+
+const selectedChatId = ref<string | null>(null)
+
 const handleSelectConversation = (conversation: Conversation) => {
+    selectedChatId.value = conversation.id
     emit('select-conversation', conversation)
 }
-const mockConversations = ref<Conversation[]>([
-    {
-        id: '1',
-        participant: {
-            id: 'u1',
-            name: 'Elon Musk',
-            username: 'elonmusk',
-            avatar: 'https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_400x400.jpg',
-        },
-        last_message: {
-            id: 'm1',
-            content: 'I am buying Coca-Cola to put the cocaine back in',
-            message_type: 'text',
-            sender_id: 'u1',
-            created_at: new Date().toISOString(),
-            is_read: false,
-        },
-        unread_count: 2,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-    },
-    {
-        id: '2',
-        participant: {
-            id: 'u2',
-            name: 'Vue.js',
-            username: 'vuejs',
-            avatar: 'https://pbs.twimg.com/profile_images/1468993891584073729/a_op8KnL_400x400.jpg',
-        },
-        last_message: {
-            id: 'm2',
-            content: 'Have you tried Nuxt 4 yet?',
-            message_type: 'text',
-            sender_id: 'u2',
-            created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-            is_read: true,
-        },
-        unread_count: 0,
-        created_at: new Date().toISOString(),
-        updated_at: new Date(Date.now() - 86400000).toISOString(),
-    },
-])
 
 const { data, isFetching, fetchNextPage, hasNextPage } = useGetConversation()
 const sentinelRef = ref<HTMLElement | null>(null)
@@ -89,6 +69,10 @@ const scrollContainerRef = ref<HTMLElement | null>(null)
 const conversations = computed(() => {
     return data.value?.pages.flatMap((page) => page) || []
 })
+
+
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
+
 useIntersectionObserver(
     sentinelRef,
     ([entry]) => {

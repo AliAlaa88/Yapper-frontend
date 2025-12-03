@@ -1,6 +1,7 @@
 <template>
     <div
         class="flex items-center gap-3 p-3 hover:bg-hover cursor-pointer transition-colors duration-200"
+        :class="{ 'bg-hover': isSelected }"
     >
         <div class="shrink-0">
             <img
@@ -41,5 +42,8 @@
 import type { Conversation } from '~/modules/chat/types'
 import { shorterName, formatDate } from '~/utils/helpers'
 
-defineProps<{ conversation: Conversation }>()
+defineProps<{
+    conversation: Conversation
+    isSelected?: boolean
+}>()
 </script>
