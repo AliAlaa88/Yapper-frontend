@@ -11,7 +11,7 @@
             {{ user.bio }}
         </p>
 
-        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-secondary">
+        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-primary">
             <div v-if="user?.country" class="flex items-center gap-1">
                 <MapPin :size="18" />
                 <span>{{ user.country }}</span>

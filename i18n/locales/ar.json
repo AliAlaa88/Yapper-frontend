@@ -445,6 +445,18 @@
             "goBack": "العودة"
         }
     },
+    "search": {
+        "searchPlaceholder": "بحث",
+        "recent": "الأخيرة",
+        "clearAll": "مسح الكل",
+        "trending": "الترند",
+        "removeQuery": "إزالة",
+        "noRecentQueries": "لا توجد عمليات بحث حديثة",
+        "noSuggestions": "لم يتم العثور على نتائج",
+        "followEachOther": "تتابعون بعضكم البعض",
+        "youFollow": "أنت تتابع",
+        "followsYou": "يتابعك"
+    },
     "timeline": {
         "sidebar": {
             "home": "الرئيسية",

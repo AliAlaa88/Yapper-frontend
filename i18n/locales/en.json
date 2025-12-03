@@ -465,6 +465,18 @@
             "goBack": "Go back"
         }
     },
+    "search": {
+        "searchPlaceholder": "Search",
+        "recent": "Recent",
+        "clearAll": "Clear all",
+        "trending": "Trending",
+        "removeQuery": "Remove",
+        "noRecentQueries": "No recent searches",
+        "noSuggestions": "No results found",
+        "followEachOther": "You follow each other",
+        "youFollow": "You follow",
+        "followsYou": "Follows you"
+    },
     "timeline": {
         "sidebar": {
             "home": "Home",

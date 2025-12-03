@@ -323,6 +323,12 @@
         background-color: var(--color-x-popup-auth-bg);
     }
 
+    /* Shadow utilities */
+    .shadow-secondary {
+        box-shadow: 0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent),
+                    0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent);
+    }
+
     /* Border colors */
     .border-primary {
         border-color: var(--color-x-border);
