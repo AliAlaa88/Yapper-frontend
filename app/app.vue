@@ -21,7 +21,8 @@ const { $socketService } = useNuxtApp()
 
 onMounted(() => {
     if (userStore.isLoggedIn) {
-        ;($socketService as any).connect()
+        $socketService.connect()
+        console.log(' socket connected on app mount')
     }
 })
 
@@ -29,9 +30,11 @@ watch(
     () => userStore.isLoggedIn,
     (newVal) => {
         if (newVal) {
-            ;($socketService as any).connect()
+            $socketService.connect()
+            console.log(' socket connected on watch')
         } else {
-            ;($socketService as any).disconnect()
+            $socketService.disconnect()
+            console.log(' socket disconnected on watch')
         }
     },
 )
