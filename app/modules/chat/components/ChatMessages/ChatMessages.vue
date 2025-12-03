@@ -29,17 +29,25 @@
                 :message="message"
                 :current-user-id="currentUserId"
             />
+            
+            <!-- Typing Indicator -->
+            <TypingIndicator 
+                v-if="conversationId" 
+                :chat-id="conversationId" 
+                :user-name="participant?.name"
+            />
         </div>
 
         <!-- Input Bar -->
-        <InputBar @send="handleSendMessage" />
+        <InputBar v-if="conversationId" :conversation-id="conversationId" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import Message from './SubComponents/Message/Message.vue'
 import InputBar from './SubComponents/InputBar/InputBar.vue'
+import TypingIndicator from '../TypingIndicator/TypingIndicator.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 import type { participant } from '~/modules/chat/types'
@@ -74,127 +82,8 @@ const currentUserId = computed(() => user.value?.id || 'current-user-id')
 
 const messagesContainerRef = ref<HTMLElement | null>(null)
 
-// Mock messages data
-const messages = ref<MessageWithSender[]>([
-    {
-        id: '1',
-        content: 'Hey! How are you doing?',
-        message_type: 'text',
-        sender_id: 'other-user-id',
-        created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        is_read: true,
-        sender: {
-            id: 'other-user-id',
-            name: 'Elon Musk',
-            username: 'elonmusk',
-            avatar: 'https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_400x400.jpg',
-        },
-    },
-    {
-        id: '2',
-        content: "I'm doing great! Thanks for asking. How about you?",
-        message_type: 'text',
-        sender_id: user.value?.id || 'current-user-id',
-        created_at: new Date(Date.now() - 3300000).toISOString(), // 55 minutes ago
-        is_read: true,
-        sender: {
-            id: user.value?.id || 'current-user-id',
-            name: user.value?.name || 'You',
-            username: user.value?.username || 'you',
-            avatar: user.value?.avatar_url || 'https://ui-avatars.com/api/?name=You',
-        },
-    },
-    {
-        id: '3',
-        content: "I'm good too! Just working on some projects. Want to see something cool?",
-        message_type: 'text',
-        sender_id: 'other-user-id',
-        created_at: new Date(Date.now() - 3000000).toISOString(), // 50 minutes ago
-        is_read: true,
-        sender: {
-            id: 'other-user-id',
-            name: 'Elon Musk',
-            username: 'elonmusk',
-            avatar: 'https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_400x400.jpg',
-        },
-    },
-    {
-        id: '4',
-        content: 'Sure! Show me!',
-        message_type: 'text',
-        sender_id: user.value?.id || 'current-user-id',
-        created_at: new Date(Date.now() - 2700000).toISOString(), // 45 minutes ago
-        is_read: true,
-        sender: {
-            id: user.value?.id || 'current-user-id',
-            name: user.value?.name || 'You',
-            username: user.value?.username || 'you',
-            avatar: user.value?.avatar_url || 'https://ui-avatars.com/api/?name=You',
-        },
-    },
-    {
-        id: '5',
-        content: 'Check this out!',
-        message_type: 'text',
-        sender_id: 'other-user-id',
-        created_at: new Date(Date.now() - 2400000).toISOString(), // 40 minutes ago
-        is_read: true,
-        sender: {
-            id: 'other-user-id',
-            name: 'Elon Musk',
-            username: 'elonmusk',
-            avatar: 'https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_400x400.jpg',
-        },
-        media: [
-            {
-                url: 'https://picsum.photos/400/300',
-                type: 'image',
-            },
-        ],
-    },
-    {
-        id: '6',
-        content: 'Wow, that looks amazing!',
-        message_type: 'text',
-        sender_id: user.value?.id || 'current-user-id',
-        created_at: new Date(Date.now() - 2100000).toISOString(), // 35 minutes ago
-        is_read: true,
-        sender: {
-            id: user.value?.id || 'current-user-id',
-            name: user.value?.name || 'You',
-            username: user.value?.username || 'you',
-            avatar: user.value?.avatar_url || 'https://ui-avatars.com/api/?name=You',
-        },
-    },
-])
-
-const handleSendMessage = (data: {
-    content: string
-    media: Array<{ url: string; type: 'image' | 'video' }>
-}) => {
-    const newMessage: MessageWithSender = {
-        id: Date.now().toString(),
-        content: data.content,
-        message_type: data.media.length > 0 ? 'media' : 'text',
-        sender_id: user.value?.id || 'current-user-id',
-        created_at: new Date().toISOString(),
-        is_read: false,
-        sender: {
-            id: user.value?.id || 'current-user-id',
-            name: user.value?.name || 'You',
-            username: user.value?.username || 'you',
-            avatar: user.value?.avatar_url || 'https://ui-avatars.com/api/?name=You',
-        },
-        media: data.media.length > 0 ? data.media : undefined,
-    }
-
-    messages.value.push(newMessage)
-
-    // Scroll to bottom after new message
-    nextTick(() => {
-        scrollToBottom()
-    })
-}
+// TODO: Replace with real messages from query
+const messages = ref<MessageWithSender[]>([])
 
 const scrollToBottom = () => {
     if (messagesContainerRef.value) {
@@ -202,8 +91,17 @@ const scrollToBottom = () => {
     }
 }
 
+// Watch for new messages and scroll to bottom
+watch(
+    () => messages.value.length,
+    () => {
+        nextTick(() => {
+            scrollToBottom()
+        })
+    }
+)
+
 onMounted(() => {
-    // Scroll to bottom on mount
     nextTick(() => {
         scrollToBottom()
     })
