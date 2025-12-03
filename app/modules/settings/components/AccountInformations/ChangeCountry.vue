@@ -5,14 +5,12 @@
                 v-model="country"
                 class="custom-select peer w-full pt-7 pb-3 px-4 border border-primary rounded-md bg-transparent
                 focus:outline-none focus:ring-2 focus:ring-accent transition-colors"
-                @change="onSelectCountry"
-            >
+                @change="onSelectCountry">
                 <option
                     v-for="count in countries"
                     :key="count"
                     :value="count"
-                    class="bg-primary"
-                >
+                    class="bg-primary">
                     {{ count }}
                 </option>
             </select>
@@ -21,8 +19,7 @@
                         pointer-events-none px-1 py-1">Country</label>
             <ChevronDown
                 :size="25"
-                class="absolute right-4 top-1/2 -translate-y-1/2 text-muted peer-focus:text-accent pointer-events-none"
-            />
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-muted peer-focus:text-accent pointer-events-none" />
         </div>
     </DetailedPanel>
     <ConfirmChangeCountry
@@ -30,16 +27,15 @@
         :is-open="showModal"
         :new-country="selectedCountry"
         @confirm="updateCountry"
-        @cancel="cancelChange"
-    />
+        @cancel="cancelChange" />
 </template>
 
 <script setup lang="ts">
-import { countries } from '../utils/countries'
-import DetailedPanel from './DetailedPanel.vue'
+import { countries } from '../../utils/countries'
+import DetailedPanel from '../DetailedPanel.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
-import ConfirmChangeCountry from './ConfirmChangeCountry.vue'
+import ConfirmChangeCountry from './SubComponents/ConfirmChangeCountry.vue'
 import { useEditProfileMutation } from '~/modules/profile/queries/useEditProfileQuery'
 import { ChevronDown } from 'lucide-vue-next'
 
@@ -52,7 +48,7 @@ const showModal = ref(false)
 const { editProfileMutation } = useEditProfileMutation(user.value?.id ?? '', user.value?.username ?? '')
 const updateCountry = async () => {
     showModal.value = false
-    await editProfileMutation.mutateAsync({ country: selectedCountry.value})
+    await editProfileMutation.mutateAsync({ country: selectedCountry.value })
 }
 
 const onSelectCountry = () => {

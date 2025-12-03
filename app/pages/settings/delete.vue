@@ -4,6 +4,6 @@
 
 
 <script setup lang="ts">
-import DeleteAccount from '~/modules/settings/components/DeleteAccount.vue'
+import DeleteAccount from '~/modules/settings/components/YourAccount/DeleteAccount.vue'
 definePageMeta({ layout: 'settings' })
 </script>

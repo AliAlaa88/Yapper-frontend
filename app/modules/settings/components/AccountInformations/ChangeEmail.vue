@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import DetailedPanel from './DetailedPanel.vue'
+import DetailedPanel from '../DetailedPanel.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 

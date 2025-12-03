@@ -29,12 +29,12 @@
 </template>
 
 <script lang="ts" setup>
-import DetailedPanel from './DetailedPanel.vue'
-import DetailedRow from './DetailedRow.vue'
+import DetailedPanel from '../DetailedPanel.vue'
+import DetailedRow from '../DetailedRow.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { formatFullDateTime, formatDate, calculateAge } from '../utils/calculations'
+import { formatFullDateTime, formatDate, calculateAge } from '../../utils/calculations'
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 const { t } = useI18n()

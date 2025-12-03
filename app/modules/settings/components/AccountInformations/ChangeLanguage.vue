@@ -29,10 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import DetailedPanel from './DetailedPanel.vue'
+import DetailedPanel from '../DetailedPanel.vue'
 import { ChevronRight } from 'lucide-vue-next'
 import { ref } from 'vue'
-import LanguageSelector from './LanguageSelector.vue'
+import LanguageSelector from './SubComponents/LanguageSelector.vue'
 
 const isOpen = ref(false)
 const handleClose = () => {

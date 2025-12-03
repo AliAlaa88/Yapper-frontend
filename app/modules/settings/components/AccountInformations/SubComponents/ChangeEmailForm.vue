@@ -69,8 +69,8 @@
 import Logo from '~/modules/Common/components/Logo'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import VerifyEmailOTP from './VerifyEmailOTP.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import VerifyEmailOTP from '~/modules/settings/components/AccountInformations/SubComponents/VerifyEmailOTP.vue'
+import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()

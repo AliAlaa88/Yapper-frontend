@@ -51,11 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import UserAccountItem from './UserAccountItem.vue'
-import DetailedPanel from '../DetailedPanel.vue'
-import SettingsBlockedButton from './SettingsBlockedButton.vue'
-import type { UseInfiniteQueryReturnType } from '@tanstack/vue-query';
-import type { MutedAndBlockedListsApiResponse } from '../../types/settings';
+import UserAccountItem from '~/modules/settings/components/MuteAndBlock/SubComponents/UserAccountItem.vue'
+import DetailedPanel from '../../DetailedPanel.vue'
+import SettingsBlockedButton from '~/modules/settings/components/MuteAndBlock/SubComponents/SettingsBlockedButton.vue'
+import type { UseInfiniteQueryReturnType } from '@tanstack/vue-query'
+import type { MutedAndBlockedListsApiResponse } from '../../../types/settings'
 
 const props = defineProps<{
     title: string

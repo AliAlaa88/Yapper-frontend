@@ -21,18 +21,6 @@
                         maxlength="30"
                         pattern="[a-zA-Z0-9_]+"
                         @input="validateUsername" >
-                    <!-- <label
-                        for="username"
-                        class="absolute left-3 transition-all pointer-events-none bg-black px-1
-                               text-gray-400 peer-focus:text-blue-500"
-                        :class="{
-                            'top-1/2 -translate-y-1/2 text-base': !user.username && !user.username.length,
-                            'opacity-0': !user.username && !user.username.length,
-                            '-top-2 text-xs opacity-100': user.username && user.username.length
-                        }"
-                    >
-                        Username
-                    </label> -->
 
                     <div v-if="updateUsernameMutation.isError.value" class="mb-4 bg-red/10 rounded-lg pt-1">
                         <p class="text-red text-sm">
@@ -75,11 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import DetailedPanel from './DetailedPanel.vue'
+import DetailedPanel from '../DetailedPanel.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 
 const userStore = useUserStore()

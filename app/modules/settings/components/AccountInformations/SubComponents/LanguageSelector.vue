@@ -44,7 +44,7 @@
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { Circle, CheckCircle2 } from 'lucide-vue-next'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import { useI18n } from 'vue-i18n'
 import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
 const { t, locale } = useI18n()

@@ -58,7 +58,7 @@
 import Logo from '~/modules/Common/components/Logo'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import BackButton from '~/modules/auth/components/subComponents/backButton.vue'
 
 const props = defineProps<{

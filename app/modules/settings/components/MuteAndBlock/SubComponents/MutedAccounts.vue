@@ -50,11 +50,11 @@
 </template>
 
 <script setup lang="ts">
-import UserAccountItem from './UserAccountItem.vue'
-import DetailedPanel from '../DetailedPanel.vue'
-import { userSettingsQueries } from '../../queries/userSettingsQueries'
+import UserAccountItem from '~/modules/settings/components/MuteAndBlock/SubComponents/UserAccountItem.vue'
+import DetailedPanel from '../../DetailedPanel.vue'
+import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import { useI18n } from 'vue-i18n'
-import SettingsMutedButton from './SettingsMutedButton.vue'
+import SettingsMutedButton from '~/modules/settings/components/MuteAndBlock/SubComponents/SettingsMutedButton.vue'
 const { t } = useI18n()
 
 const { myMutedUsersQuery } = userSettingsQueries()

@@ -2,7 +2,7 @@
     <DetailedPanel title="Delete Account">
         <div class="w-full text-primary">
             <div class="flex items-start px-4 py-3 transition">
-                <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover" >
+                <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover">
 
                 <div class="flex-1 ml-3 space-y-1">
                     <div class="flex items-left flex-col justify-between">
@@ -12,14 +12,10 @@
                 </div>
             </div>
             <div class="space-y-4 border-b border-primary">
-                <h1
-                    class="text-xl text-primary font-bold mt-3 ml-5"
-                >
+                <h1 class="text-xl text-primary font-bold mt-3 ml-5">
                     This will delete your account
                 </h1>
-                <p
-                    class="text-[13px] text-muted max-w-lg ml-5 mb-4"
-                >
+                <p class="text-[13px] text-muted max-w-lg ml-5 mb-4">
                     {{ `You’re about to start the process of deleting your
                     Yapper account. Your display name, @${user?.username}, and
                     public profile will no longer be viewable on Yapper.com,
@@ -30,22 +26,21 @@
                 button-class="w-full hover:bg-red-500/10 h-13 mt-2 text-red bg-primary"
                 button-text="Delete"
                 :is-loading="useDeleteAccount.isPending.value"
-                @click="handleDelete"
-            />
+                @click="handleDelete" />
         </div>
     </DetailedPanel>
 </template>
 
 <script setup lang="ts">
-import DetailedPanel from './DetailedPanel.vue'
+import DetailedPanel from '../DetailedPanel.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
-const {useDeleteAccount} = userSettingsQueries()
+const { useDeleteAccount } = userSettingsQueries()
 const handleDelete = async () => {
     try {
         await useDeleteAccount.mutateAsync()
