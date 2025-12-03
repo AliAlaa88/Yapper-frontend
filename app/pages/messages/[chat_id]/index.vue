@@ -1,7 +1,7 @@
 <template>
     <main class="flex flex-row">
         <Sidebar />
-        <ChatView :recipient-id="recipientId" />
+        <ChatView :chat-id="chatId" />
     </main>
 </template>
 
@@ -10,7 +10,7 @@ import ChatView from '~/modules/chat/views/ChatView.vue'
 import Sidebar from '~/modules/TimeLine/components/sidebar/Sidebar.vue'
 
 const route = useRoute()
-const recipientId = route.params.recipient_id as string
+const chatId = route.params.chat_id as string
 
 definePageMeta({
     middleware: ['auth'],
