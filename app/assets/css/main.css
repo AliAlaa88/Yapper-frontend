@@ -210,6 +210,22 @@
         background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
     }
 
+    .hover\:bg-accent\/30:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+    }
+
+    .hover\:bg-accent\/60:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 60%, transparent);
+    }
+
+    .hover\:bg-accent\/80:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 80%, transparent);
+    }
+
+    .hover\:bg-accent\/90:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 90%, transparent);
+    }
+
     .hover\:border-accent:hover {
         border-color: var(--accent-color);
     }
