@@ -1,10 +1,14 @@
 import { useMutation, useInfiniteQuery, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 export function userSettingsQueries() {
     const { $settingsService, $queryClient } = useNuxtApp()
     const { locale } = useI18n()
+
+    const userStore = useUserStore()
 
     const myMutedUsersQuery = useInfiniteQuery({
         queryKey: ['muted-users'],
@@ -92,8 +96,14 @@ export function userSettingsQueries() {
     const updateUsernameMutation = useMutation({
         mutationFn: ({ username }: { username: string }) =>
             $settingsService.updateUsername(username),
-        onSuccess: (data) => {
-            console.log('Username updated successfully:', data)
+        onSuccess: (response: { data?: { username?: string } }) => {
+            const oldUsername = userStore.user?.username
+
+            if (oldUsername) cacheInvalidation.onUsernameChange($queryClient, oldUsername)
+
+            console.log('response username', response?.data?.username)
+            userStore.updateUser({ username: response?.data?.username ?? '' })
+            console.log('Username updated successfully:', response)
         },
         onError: (error: Error) => {
             if (
@@ -106,7 +116,7 @@ export function userSettingsQueries() {
     })
 
     const usernameRecommendation = useQuery({
-        queryKey: ['usernameRecommendation'],
+        queryKey: ['username-recommendation'],
         queryFn: () => $settingsService.getUsernameRecommendations(),
     })
 

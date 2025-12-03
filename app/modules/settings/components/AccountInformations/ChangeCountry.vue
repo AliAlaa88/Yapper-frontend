@@ -48,7 +48,12 @@ const showModal = ref(false)
 const { editProfileMutation } = useEditProfileMutation(user.value?.id ?? '', user.value?.username ?? '')
 const updateCountry = async () => {
     showModal.value = false
-    await editProfileMutation.mutateAsync({ country: selectedCountry.value })
+    try {
+        await editProfileMutation.mutateAsync({ country: selectedCountry.value })
+        userStore.updateUser({ country: selectedCountry.value })
+    } catch (error) {
+        console.log('Failed to update country:', error)
+    }
 }
 
 const onSelectCountry = () => {

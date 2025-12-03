@@ -57,6 +57,7 @@ export const cacheInvalidation = {
         queryClient.removeQueries({ queryKey: queryKeys.users.profile(oldUsername) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
+        queryClient.invalidateQueries({ queryKey: queryKeys.settings.usernameRecommendation() })
     },
 
     /**

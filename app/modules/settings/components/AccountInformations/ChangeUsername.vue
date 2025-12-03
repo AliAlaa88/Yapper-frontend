@@ -110,7 +110,6 @@ const handleSubmit = async () => {
     if (!canSubmit.value) return
     try {
         await updateUsernameMutation.mutateAsync({ username: newUsername.value ?? '' })
-        userStore.updateUser({ username: newUsername.value })
         setTimeout(() => {
             updateUsernameMutation.reset()
         }, 2000)

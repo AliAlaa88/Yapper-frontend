@@ -50,10 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import UserAccountItem from './UserAccountItem.vue'
-import DetailedPanel from '../DetailedPanel.vue'
-import { userSettingsQueries } from '../../queries/userSettingsQueries'
-import SettingsBlockedButton from './SettingsBlockedButton.vue'
+import UserAccountItem from '~/modules/settings/components/MuteAndBlock/SubComponents/UserAccountItem.vue'
+import DetailedPanel from '../../DetailedPanel.vue'
+import { userSettingsQueries } from '../../../queries/userSettingsQueries'
+import SettingsBlockedButton from '~/modules/settings/components/MuteAndBlock/SubComponents/SettingsBlockedButton.vue'
 
 const { myBlockedUsersQuery } = userSettingsQueries()
 console.log('hahaga', myBlockedUsersQuery)
