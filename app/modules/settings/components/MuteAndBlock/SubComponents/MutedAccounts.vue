@@ -58,6 +58,7 @@ import SettingsMutedButton from '~/modules/settings/components/MuteAndBlock/SubC
 const { t } = useI18n()
 
 const { myMutedUsersQuery } = userSettingsQueries()
+const { $queryClient } = useNuxtApp()
 watch(
     () => myMutedUsersQuery.data,
     (val) => {
@@ -120,4 +121,9 @@ onMounted(() => {
     })
 })
 
+onUnmounted(() => {
+    $queryClient.invalidateQueries({
+        queryKey: ['muted-users'],
+    })
+})
 </script>

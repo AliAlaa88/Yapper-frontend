@@ -36,16 +36,18 @@ const buttonClass = computed(() => {
     if (isBlockedRef.value) {
         return 'bg-red hover:opacity-95 text-primary px-[45px] py-[10px] w-[88px] h-[36px]'
     }
-    return 'bg-primary border border-red hover:opacity-95 text-primary px-[45px] py-[10px] w-[88px] h-[36px]'
+    return 'bg-transparent border border-red hover:opacity-95 text-red px-[45px] py-[10px] w-[88px] h-[36px]'
 })
 
 const isLoading = computed(() => isBlockLoading.value || isUnblockLoading.value)
 
-const handleClick = () => {
+const handleClick = async () => {
     if (isBlockedRef.value) {
-        handleUnblockWithSnackbar()
+        await handleUnblockWithSnackbar()
+
     } else {
-        handleBlockWithSnackbar()
+        await handleBlockWithSnackbar()
     }
 }
+
 </script>

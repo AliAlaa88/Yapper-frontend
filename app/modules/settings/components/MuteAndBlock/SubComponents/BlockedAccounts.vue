@@ -56,6 +56,7 @@ import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import SettingsBlockedButton from '~/modules/settings/components/MuteAndBlock/SubComponents/SettingsBlockedButton.vue'
 
 const { myBlockedUsersQuery } = userSettingsQueries()
+const { $queryClient } = useNuxtApp()
 console.log('hahaga', myBlockedUsersQuery)
 watch(() => myBlockedUsersQuery.data.value, (val) => {
     console.log('Blocked users response:', val)
@@ -110,6 +111,12 @@ onMounted(() => {
 
     onUnmounted(() => {
         observer.disconnect()
+    })
+})
+
+onUnmounted(() => {
+    $queryClient.invalidateQueries({
+        queryKey: ['blocked-users'],
     })
 })
 </script>

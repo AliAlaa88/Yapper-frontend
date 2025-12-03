@@ -1,14 +1,13 @@
 <template>
     <Button
         id="settings-mute-button"
-        class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full"
-        :button-class="buttonClass"
+        class="w-9 h-9 flex items-center justify-center cursor-pointer rounded-full"
         :is-loading="isLoading"
+        :button-class="buttonClass"
         @click="handleClick"
     >
-        <MegaphoneOff v-if="isMuted" :size="16" />
+        <MegaphoneOff  v-if="isMuted" :size="16" />
         <Megaphone v-else :size="16" />
-
     </Button>
 </template>
 
@@ -23,7 +22,7 @@ const props = defineProps<{
 }>()
 
 const userIdRef = ref(props.userId)
-const isMutedRef = ref(props.isMuted ?? false)
+const isMutedRef = computed(() => props.isMuted)
 const {
     handleMuteWithSnackbar,
     handleUnmuteWithSnackbar,
@@ -33,18 +32,18 @@ const {
 
 const buttonClass = computed(() => {
     if (isMutedRef.value) {
-        return 'bg-red/10 border border-red text-red hover:bg-red-20 transition ml-3 text-red hover:text-red-400'
+        return 'bg-red/10 border border-red text-red hover:bg-red-20 transition ml-3 hover:text-red-400'
     }
-    return 'bg-primary border border-red hover:opacity-95 text-primary px-[45px] py-[10px] w-[88px] h-[36px]'
+    return 'bg-transparent border border-accent hover:opacity-95 text-accent hover:text-accent-dark transition ml-3'
 })
 
 const isLoading = computed(() => isMuteLoading.value || isUnmuteLoading.value)
 
-const handleClick = () => {
+const handleClick = async () => {
     if (isMutedRef.value) {
-        handleUnmuteWithSnackbar()
+        await handleUnmuteWithSnackbar(true)
     } else {
-        handleMuteWithSnackbar()
+        await handleMuteWithSnackbar()
     }
 }
 </script>

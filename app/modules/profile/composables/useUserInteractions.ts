@@ -1,11 +1,14 @@
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 import { useUserActions } from './useUserActions'
 import type { useConfirmation } from './useConfirmation'
 import type { useSnackbar } from './useSnackbar'
 import { useUserInfo } from './useUserInfo'
 import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { queryKeys } from '~/modules/Common/queries/queryKeys'
 
 export function useUserInteractions(userId: Ref<string | undefined>) {
+    const { $queryClient } = useNuxtApp()
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
         typeof useSnackbar
     >
@@ -37,6 +40,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         async function handleClick() {
             try {
                 await handleBlock()
+                $queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
                 handleShowSnackbar(
                     t('profile.actions.block.snackbar'),
                     '',
@@ -64,11 +68,10 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
     async function handleBlockWithSnackbar() {
         try {
             await handleBlock()
+            if (userId.value)
+                cacheInvalidation.toggleBlockedInCache($queryClient, userId.value, true)
             showSnackbar.value = true
-            handleShowSnackbar(
-                t('profile.actions.block.snackbar'),
-                '',
-            )
+            handleShowSnackbar(t('profile.actions.block.snackbar'), '')
         } catch (error) {
             console.error('failed to block: ', error)
         }
@@ -77,11 +80,10 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
     async function handleUnblockWithSnackbar() {
         try {
             await handleUnblock()
+            if (userId.value)
+                cacheInvalidation.toggleBlockedInCache($queryClient, userId.value, false)
             showSnackbar.value = true
-            handleShowSnackbar(
-                t('profile.actions.unblock.snackbar'),
-                '',
-            )
+            handleShowSnackbar(t('profile.actions.unblock.snackbar'), '')
         } catch (error) {
             console.error('failed to unblock: ', error)
         }
@@ -109,9 +111,10 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         }
     }
 
-    async function handleMuteWithSnackbar(showList?: Ref<boolean>) {
+    async function handleMuteWithSnackbarWithAction(showList?: Ref<boolean>) {
         try {
             await handleMute()
+            $queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
             showSnackbar.value = true
             handleShowSnackbar(
                 t('profile.actions.mute.snackbar', { username: '@' + username.value }),
@@ -125,6 +128,20 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         if (showList) showList.value = false
     }
 
+    async function handleMuteWithSnackbar() {
+        try {
+            await handleMute()
+            if(userId.value) cacheInvalidation.toggleMutedInCache($queryClient, userId.value, true)
+            showSnackbar.value = true
+            handleShowSnackbar(
+                t('profile.actions.mute.snackbar', { username: '@' + username.value }),
+                '',
+            )
+        } catch (error) {
+            console.error('failed to mute: ', error)
+        }
+    }
+
     function handleRemoveFollowerWithConfirmation(showList?: Ref<boolean>) {
         showConfirmation.value = true
         if (showList) showList.value = false
@@ -132,7 +149,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
             try {
                 await handleRemoveFollower()
                 handleShowSnackbar(
-                    t('profile.actions.removeFollower.snackbar', { username: '@' + username.value }),
+                    t('profile.actions.removeFollower.snackbar', {
+                        username: '@' + username.value,
+                    }),
                 )
             } catch (error) {
                 console.error('failed to remove follower: ', error)
@@ -155,6 +174,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         async function handleClick() {
             try {
                 await handleUnblock()
+                $queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
                 if (onSuccess) onSuccess()
             } catch (error) {
                 console.error('failed to unblock user: ', error)
@@ -186,11 +206,16 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         )
     }
 
-    async function handleUnmuteWithSnackbar(showList?: Ref<boolean>) {
+    async function handleUnmuteWithSnackbar(fromList: boolean = false, showList?: Ref<boolean>) {
         try {
             await handleUnmute()
+            if (fromList && userId.value)
+                cacheInvalidation.toggleMutedInCache($queryClient, userId.value, false)
+            else $queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
             showSnackbar.value = true
-            handleShowSnackbar(t('profile.actions.unmute.snackbar', { username: '@' + username.value }))
+            handleShowSnackbar(
+                t('profile.actions.unmute.snackbar', { username: '@' + username.value }),
+            )
         } catch (error) {
             console.error('failed to unmute: ', error)
         }
@@ -201,7 +226,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleFollow()
             showSnackbar.value = true
-            handleShowSnackbar(t('profile.actions.follow.snackbar', { username: '@' + username.value }))
+            handleShowSnackbar(
+                t('profile.actions.follow.snackbar', { username: '@' + username.value }),
+            )
         } catch (error) {
             console.error('failed to follow: ', error)
         }
@@ -212,7 +239,9 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         try {
             await handleUnfollow()
             showSnackbar.value = true
-            handleShowSnackbar(t('profile.actions.unfollow.snackbar', { username: '@' + username.value }))
+            handleShowSnackbar(
+                t('profile.actions.unfollow.snackbar', { username: '@' + username.value }),
+            )
         } catch (error) {
             console.error('failed to unfollow: ', error)
         }
@@ -232,6 +261,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         handleUnfollowWithSnackbar,
         handleBlockWithSnackbar,
         handleUnblockWithSnackbar,
+        handleMuteWithSnackbarWithAction,
         isUnfollowLoading,
         isBlockLoading,
         isUnblockLoading,
