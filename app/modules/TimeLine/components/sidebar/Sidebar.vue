@@ -75,9 +75,9 @@ const navLinks = computed(() => [
         href: '/',
     },
     {
-        labelKey: 'timeline.sidebar.search',
+        labelKey: 'timeline.sidebar.explore',
         icon: Search,
-        href: '/search',
+        href: '/explore',
     },
     {
         labelKey: 'timeline.sidebar.notifications',

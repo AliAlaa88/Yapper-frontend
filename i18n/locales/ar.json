@@ -445,6 +445,20 @@
             "goBack": "العودة"
         }
     },
+    "explore": {
+        "trending": "الترند",
+        "posts": "منشور",
+        "errorLoading": "فشل تحميل الترند",
+        "tryAgain": "حاول مرة أخرى",
+        "noTrends": "لا توجد ترندات حالياً",
+        "tabs": {
+            "forYou": "من أجلك",
+            "trending": "الترند",
+            "news": "الأخبار",
+            "sports": "الرياضة",
+            "entertainment": "الترفيه"
+        }
+    },
     "timeline": {
         "sidebar": {
             "home": "الرئيسية",
@@ -455,7 +469,8 @@
             "bookmarks": "المفضلة",
             "settings": "الإعدادات",
             "post": "نشر",
-            "postTweet": "نشر منشور"
+            "postTweet": "نشر منشور",
+            "explore": "استكشف"
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",

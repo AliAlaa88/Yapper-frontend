@@ -4,7 +4,7 @@ import { createAuthService } from '../modules/auth/services'
 import { createMediaService } from '../modules/Common/services'
 import { createTimelineService } from '../modules/TimeLine/services'
 import { settingsService } from '~/modules/settings/services/settingsService.real'
-
+import { exploreService } from "~/modules/explore/services";
 export const serviceFactories = {
     userInfoService: createUserInfoService,
     tweetService: createTweetService,
@@ -12,6 +12,7 @@ export const serviceFactories = {
     mediaService: createMediaService,
     timelineService: createTimelineService,
     settingsService: () => settingsService,
+    exploreService: exploreService,
 }
 
 export type Services = {
