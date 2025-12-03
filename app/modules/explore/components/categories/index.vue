@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { useGetTrendsQuery } from '../../queries/useGetExploreQuery';
+import { useGetExploreCategoriesQuery } from '../../queries/useGetExploreQuery';
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue';
 import TrendsList from '../common/TrendsList.vue';
 import { ref } from 'vue';
@@ -36,12 +36,12 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const trends = ref<any[]>([]);
-const category = ref('');
-const country = ref('eg');
+const props = defineProps<{
+    category: string;
+}>();
 
-const { isLoading, isError, refetch } = useGetTrendsQuery(
-    category.value,
-    country.value,
+const { isLoading, isError, refetch } = useGetExploreCategoriesQuery(
+    props.category,
     true,
     (response: any) => {
         trends.value = response.data || response;

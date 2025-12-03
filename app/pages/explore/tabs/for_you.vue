@@ -2,14 +2,13 @@
     <div>
         <ExploreTabs />
         <!-- For You content -->
-        <div class="p-4 text-primary">
-            <!-- Content will go here -->
-        </div>
+        <ForYou />
     </div>
 </template>
 
 <script lang="ts" setup>
 import ExploreTabs from '~/modules/explore/components/exploreTabs.vue'
+import ForYou from '~/modules/explore/components/forYou/index.vue'
 
 definePageMeta({
     layout: 'main-layout',

@@ -12,7 +12,7 @@ export const exploreServiceReal = () => {
             const response = await $yapperApi.get(`${API_URL}/explore/trending`, {params: {category, country}});   
             return response.data;
         },
-        getExploreForYou: async (category: String) => {
+        getExploreCategories: async (category: String) => {
             const response = await $yapperApi.get(`${API_URL}/explore/for-you`, {params: {category}});   
             return response.data;
         },
