@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 import { MegaphoneOff, Megaphone } from 'lucide-vue-next'
 

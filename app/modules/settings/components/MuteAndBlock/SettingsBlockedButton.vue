@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 
 const props = defineProps<{
@@ -19,7 +19,10 @@ const props = defineProps<{
 }>()
 
 const userIdRef = ref(props.userId)
-const isBlockedRef = ref(props.isBlocked ?? false)
+const isBlockedRef = computed(() => props.isBlocked)
+watch(()=> isBlockedRef.value , (val) => {
+    console.log('is blockedkkkk', val)
+})
 const {
     handleBlockWithSnackbar,
     handleUnblockWithSnackbar,

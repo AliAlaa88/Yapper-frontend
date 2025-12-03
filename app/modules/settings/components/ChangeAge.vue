@@ -28,7 +28,6 @@
 
 <script setup lang="ts">
 import DetailedPanel from './DetailedPanel.vue'
-import type { User } from '~/modules/Common/types/user'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
 import { calculateAge } from '../utils/calculations'
