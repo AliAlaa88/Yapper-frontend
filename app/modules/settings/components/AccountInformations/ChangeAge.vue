@@ -27,10 +27,10 @@
 </template>
 
 <script setup lang="ts">
-import DetailedPanel from './DetailedPanel.vue'
+import DetailedPanel from '../DetailedPanel.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
-import { calculateAge } from '../utils/calculations'
+import { calculateAge } from '../../utils/calculations'
 import { useI18n } from 'vue-i18n'
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)

@@ -1,9 +1,9 @@
 <template>
-    <ChangeEmailForm />
+    <ChangeEmailForm/>
 </template>
 
 <script setup lang="ts">
-import ChangeEmailForm from '~/modules/settings/components/ChangeEmailForm.vue'
+import ChangeEmailForm from '~/modules/settings/components/AccountInformations/SubComponents/ChangeEmailForm.vue'
 
 definePageMeta({
     requiresAuth: false,
