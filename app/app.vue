@@ -16,13 +16,13 @@
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const userStore = useUserStore()
-
-const { $socketService } = useNuxtApp()
+const { $socketService, $chatSocketService } = useNuxtApp()
 
 onMounted(() => {
     if (userStore.isLoggedIn) {
         $socketService.connect()
-        console.log(' socket connected on app mount')
+        $chatSocketService.initializeListeners()
+        console.log('socket connected on app mount')
     }
 })
 
@@ -31,10 +31,13 @@ watch(
     (newVal) => {
         if (newVal) {
             $socketService.connect()
-            console.log(' socket connected on watch')
+            $chatSocketService.initializeListeners()
+            console.log('socket connected on watch')
         } else {
+            $chatSocketService.removeListeners()
+            $chatSocketService.reset()
             $socketService.disconnect()
-            console.log(' socket disconnected on watch')
+            console.log('socket disconnected on watch')
         }
     },
 )

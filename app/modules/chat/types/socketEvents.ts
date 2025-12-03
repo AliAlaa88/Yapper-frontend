@@ -11,9 +11,9 @@ export interface LeaveChatPayload {
 export interface SendMessagePayload {
     chat_id: string
     message: {
-        content: string
+        content?: string
+        media_url?: string
         message_type: 'text' | 'image' | 'video'
-        reply_to?: string | null
     }
 }
 
