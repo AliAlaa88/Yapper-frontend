@@ -1,6 +1,15 @@
 import axios from 'axios'
 import { useNuxtApp } from 'nuxt/app'
-import type { MutedAndBlockedListsApiResponse, ChangePasswordResponse, DeleteAccountResponse, ConfirmPasswordResponse } from '../types/settings'
+import type {
+    MutedAndBlockedListsApiResponse,
+    ChangePasswordResponse,
+    DeleteAccountResponse,
+    ConfirmPasswordResponse,
+    UpdateUsernameResponse,
+    UsernameRecommendationsResponse,
+    SendEmailOTPResponse,
+    VerifyEmailOTPResponse,
+} from '../types/settings'
 export const settingsService = {
     async getMuted(cursor?: string): Promise<MutedAndBlockedListsApiResponse> {
         const { $axios } = useNuxtApp()
@@ -135,6 +144,98 @@ export const settingsService = {
                 }
             }
             throw new Error('Failed to confirm password. Please try again.')
+        }
+    },
+    async updateUsername(username: string): Promise<UpdateUsernameResponse> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.post<UpdateUsernameResponse>('/auth/update-username', {
+                username,
+            })
+            return response.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 409) {
+                    throw new Error('Username is already taken')
+                } else if (error.response?.status === 400) {
+                    throw new Error(error.response.data?.message || 'Invalid username format')
+                }
+            }
+            throw new Error('Failed to update username. Please try again.')
+        }
+    },
+
+    async getUsernameRecommendations(): Promise<UsernameRecommendationsResponse> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get<UsernameRecommendationsResponse>(
+                '/users/me/username-recommendations',
+            )
+            return response.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                }
+            }
+            throw new Error('Failed to get username recommendations. Please try again.')
+        }
+    },
+
+    async sendEmailOTP(newEmail: string): Promise<SendEmailOTPResponse> {
+        const { $axios } = useNuxtApp()
+        console.log('newEmail in service: ', newEmail)
+        try {
+            const response = await $axios.post<SendEmailOTPResponse>('/auth/update-email', {
+                new_email: newEmail,
+            })
+
+            return response.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                } else if (error.response?.status === 409) {
+                    throw new Error('Email already exists')
+                } else if (error.response?.status === 500) {
+                    throw new Error('Failed to send OTP email')
+                }
+            }
+            throw new Error('Failed to send verification code. Please try again.')
+        }
+    },
+
+    async verifyEmailOTP(newEmail: string, otp: string): Promise<VerifyEmailOTPResponse> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.post<VerifyEmailOTPResponse>(
+                '/auth/update-email/verify',
+                {
+                    new_email: newEmail,
+                    otp,
+                },
+            )
+
+            return response.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 400) {
+                    throw new Error('Invalid or expired OTP')
+                } else if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                } else if (error.response?.status === 404) {
+                    throw new Error('User not found')
+                }
+            }
+            throw new Error('Failed to verify email. Please try again.')
         }
     },
 }

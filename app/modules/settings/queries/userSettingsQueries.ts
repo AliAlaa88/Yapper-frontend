@@ -1,4 +1,4 @@
-import { useMutation, useInfiniteQuery } from '@tanstack/vue-query'
+import { useMutation, useInfiniteQuery, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
 
@@ -8,27 +8,27 @@ export function userSettingsQueries() {
 
     const myMutedUsersQuery = useInfiniteQuery({
         queryKey: ['muted-users'],
-        queryFn: async ({pageParam}) => {
+        queryFn: async ({ pageParam }) => {
             console.log('fetching muted users with cursor:', pageParam)
-            const result =  await $settingsService.getMuted(pageParam)
+            const result = await $settingsService.getMuted(pageParam)
             console.log('query result:', result)
             return result
         },
         initialPageParam: undefined,
         getNextPageParam: (lastPage) => {
-            return lastPage.data.pagination.has_more ?
-                lastPage.data.pagination.next_cursor : undefined
+            return lastPage.data.pagination.has_more
+                ? lastPage.data.pagination.next_cursor
+                : undefined
         },
     })
     const myBlockedUsersQuery = useInfiniteQuery({
         queryKey: ['blocked-users'],
-        queryFn:
-            async ({ pageParam }) => {
-                console.log('fetching blocked users with cursor:', pageParam)
-                const result = await $settingsService.getBlocked(pageParam)
-                console.log('query result:', result)
-                return result
-            },
+        queryFn: async ({ pageParam }) => {
+            console.log('fetching blocked users with cursor:', pageParam)
+            const result = await $settingsService.getBlocked(pageParam)
+            console.log('query result:', result)
+            return result
+        },
         initialPageParam: undefined,
         getNextPageParam: (lastPage) => {
             console.log('has_more', lastPage.data.pagination.has_more)
@@ -91,6 +91,43 @@ export function userSettingsQueries() {
             console.error('Failed to delete account:', error.message)
         },
     })
+
+    const updateUsernameMutation = useMutation({
+        mutationFn: ({ username }: { username: string }) =>
+            $settingsService.updateUsername(username),
+        onSuccess: (data) => {
+            console.log('Username updated successfully:', data)
+        },
+        onError: (error: Error) => {
+            if (
+                !error.message.includes('Username is already taken') &&
+                !error.message.includes('Invalid username format')
+            ) {
+                console.error('Unexpected username update error:', error.message)
+            }
+        },
+    })
+
+    const usernameRecommendation = useQuery({
+        queryKey: ['usernameRecommendation'],
+        queryFn: () => $settingsService.getUsernameRecommendations(),
+    })
+
+    const sendEmailOTPMutation = useMutation({
+        mutationFn: ({ newEmail }: { newEmail: string }) => $settingsService.sendEmailOTP(newEmail),
+        onSuccess: (data) => {
+            console.log('Email OTP sent successfully:', data)
+        },
+        onError: (error: Error) => {
+            console.error('Failed to send email OTP:', error.message)
+        },
+    })
+
+    const verifyEmailOTPMutation = useMutation({
+        mutationFn: ({ newEmail, otp }: { newEmail: string; otp: string }) =>
+            $settingsService.verifyEmailOTP(newEmail, otp),
+    })
+
     return {
         myMutedUsersQuery,
         myBlockedUsersQuery,
@@ -98,5 +135,9 @@ export function userSettingsQueries() {
         useChangePassword,
         useConfirmPassword,
         useDeleteAccount,
+        updateUsernameMutation,
+        usernameRecommendation,
+        sendEmailOTPMutation,
+        verifyEmailOTPMutation,
     }
 }
