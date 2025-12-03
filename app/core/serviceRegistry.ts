@@ -5,6 +5,7 @@ import { createMediaService } from '../modules/Common/services'
 import { createTimelineService } from '../modules/TimeLine/services'
 import { settingsService } from '~/modules/settings/services/settingsService.real'
 import { createChatService } from '../modules/chat/services'
+import { createSocketService } from '../modules/Common/services'
 
 export const serviceFactories = {
     userInfoService: createUserInfoService,
@@ -14,6 +15,7 @@ export const serviceFactories = {
     timelineService: createTimelineService,
     settingsService: () => settingsService,
     chatService: createChatService,
+    socketService: createSocketService,
 }
 
 export type Services = {

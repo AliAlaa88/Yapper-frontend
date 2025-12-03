@@ -24,6 +24,7 @@ export default defineNuxtConfig({
         './app/plugins/vue-query.ts',
         './app/plugins/services.ts',
         './app/plugins/recaptcha.ts',
+        './app/plugins/socket.client.ts',
     ],
     i18n: {
         locales: [
