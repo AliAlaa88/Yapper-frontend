@@ -18,11 +18,15 @@ import {
     type UserTypingEvent,
     type UnreadChatSummaryItem,
 } from '../types/socketEvents'
-import type { Message, Conversation } from '../types'
+import type { Message, Conversation, MessageSender } from '../types'
 
 interface MessagesQueryData {
-    pages: Array<{ data: Message[]; nextCursor?: string }>
-    pageParams: string[]
+    pages: Array<{
+        messages: Message[]
+        sender: MessageSender
+        nextCursor?: string
+    }>
+    pageParams: (string | undefined)[]
 }
 
 export const createChatSocketService = () => {
@@ -225,8 +229,10 @@ export const createChatSocketService = () => {
                 content: data.content,
                 sender_id: data.sender_id,
                 created_at: data.created_at,
+                updated_at: data.created_at,
                 is_read: data.is_read,
                 message_type: options.messageType,
+                reply_to: null,
             }
 
             addMessageToCache(chatId, newMessage)
@@ -358,8 +364,10 @@ export const createChatSocketService = () => {
             content: data.message.content,
             sender_id: data.message.sender_id,
             created_at: data.message.created_at,
+            updated_at: data.message.created_at,
             is_read: data.message.is_read,
             message_type: 'text',
+            reply_to: null,
         }
 
         addMessageToCache(data.chat_id, newMessage)
@@ -396,24 +404,23 @@ export const createChatSocketService = () => {
     // ============ Cache Helpers ============
     const addMessageToCache = (chatId: string, message: Message) => {
         queryClient.setQueryData<MessagesQueryData>(['messages', chatId], (oldData) => {
-            if (!oldData) {
-                return {
-                    pages: [{ data: [message] }],
-                    pageParams: [],
-                }
+            if (!oldData || !oldData.pages.length) {
+                return oldData
             }
 
             const messageExists = oldData.pages.some((page) =>
-                page.data.some((msg) => msg.id === message.id),
+                page.messages.some((msg) => msg.id === message.id),
             )
-
             if (messageExists) return oldData
 
             const newPages = [...oldData.pages]
-            if (newPages[0]) {
-                newPages[0] = {
-                    ...newPages[0],
-                    data: [message, ...newPages[0].data],
+            const lastPageIndex = newPages.length - 1
+            const lastPage = newPages[lastPageIndex]
+
+            if (lastPage) {
+                newPages[lastPageIndex] = {
+                    ...lastPage,
+                    messages: [...lastPage.messages, message],
                 }
             }
 
@@ -429,7 +436,7 @@ export const createChatSocketService = () => {
                 ...oldData,
                 pages: oldData.pages.map((page) => ({
                     ...page,
-                    data: page.data.map((msg) =>
+                    messages: page.messages.map((msg) =>
                         msg.id === messageId ? { ...msg, ...updates } : msg,
                     ),
                 })),
@@ -445,7 +452,7 @@ export const createChatSocketService = () => {
                 ...oldData,
                 pages: oldData.pages.map((page) => ({
                     ...page,
-                    data: page.data.filter((msg) => msg.id !== messageId),
+                    messages: page.messages.filter((msg) => msg.id !== messageId),
                 })),
             }
         })
@@ -582,7 +589,6 @@ export const createChatSocketService = () => {
             typingTimeout = null
         }
     }
-
 
     return {
         // State

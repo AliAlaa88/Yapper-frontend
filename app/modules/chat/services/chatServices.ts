@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useNuxtApp } from 'nuxt/app'
-import type { ConversationApiResponse, Conversation } from '../types'
+import type { ConversationApiResponse, Conversation, MessagesResponse } from '../types'
+
 const urls = {
     getConversations: '/chat',
     createConversation: '/chat',
     markAsRead: (chatId: string) => `/chat/chats/${chatId}/read`,
+    getMessages: (chatId: string) => `/messages/chats/${chatId}/messages`,
 }
 
 export const createChatService = () => ({
@@ -62,6 +64,38 @@ export const createChatService = () => ({
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {
                     throw new Error('Invalid or expired token')
+                }
+            }
+            throw new Error('Something went wrong')
+        }
+    },
+
+    getMessages: async (
+        chatId: string,
+        options?: { limit?: number; before?: string },
+    ): Promise<MessagesResponse> => {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get<MessagesResponse>(urls.getMessages(chatId), {
+                params: {
+                    limit: options?.limit || 50,
+                    before: options?.before,
+                },
+            })
+            if (!response.data) {
+                throw new Error('Messages not found')
+            }
+            return response.data
+        } catch (error: unknown) {
+            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
+                if (error.response?.status === 401) {
+                    throw new Error('Invalid or expired token')
+                }
+                if (error.response?.status === 403) {
+                    throw new Error('Unauthorized access to chat')
+                }
+                if (error.response?.status === 404) {
+                    throw new Error('Chat not found')
                 }
             }
             throw new Error('Something went wrong')

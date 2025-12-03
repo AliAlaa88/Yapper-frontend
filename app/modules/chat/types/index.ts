@@ -5,19 +5,36 @@ export interface participant {
     avatar: string
 }
 
+export interface MessageSender {
+    id: string
+    username: string
+    name: string
+    avatar_url: string
+}
 
 export interface Message {
     id: string
     content: string
-    message_type: string,
-    sender_id: string,
-    created_at: string,
+    message_type: 'text' | 'image' | 'video' | 'reply'
+    sender_id: string
+    reply_to: string | null
     is_read: boolean
+    created_at: string
+    updated_at: string
+}
+
+export interface MessagesResponse {
+    data: {
+        sender: MessageSender
+        messages: Message[]
+    }
+    count: number
+    message: string
 }
 
 export interface Conversation {
     id: string
-    participant: participant,
+    participant: participant
     last_message?: Message
     unread_count: number
     created_at: string
@@ -27,5 +44,3 @@ export interface Conversation {
 export interface ConversationApiResponse {
     data: Conversation[]
 }
-
-
