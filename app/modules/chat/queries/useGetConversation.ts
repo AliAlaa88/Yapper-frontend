@@ -15,7 +15,9 @@ export function useGetConversation(limit: number = 20) {
         queryFn: async ({ pageParam }): Promise<ConversationsPage> => {
             return await ($chatService as any).getConversations(pageParam, limit)
         },
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        getNextPageParam: (lastPage) => {
+            return lastPage.nextCursor ?? undefined
+        },
         initialPageParam: null as string | null,
     })
 }
