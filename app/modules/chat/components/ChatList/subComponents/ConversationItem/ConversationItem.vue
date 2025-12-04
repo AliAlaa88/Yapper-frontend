@@ -5,7 +5,14 @@
     >
         <div class="shrink-0">
             <img
-                :src="conversation.participant.avatar"
+                v-if="conversation.participant.avatar_url"
+                :src="conversation.participant.avatar_url"
+                :alt="conversation.participant.username"
+                class="w-12 h-12 rounded-full object-cover"
+            />
+            <img
+                v-else
+                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}`"
                 :alt="conversation.participant.username"
                 class="w-12 h-12 rounded-full object-cover"
             />

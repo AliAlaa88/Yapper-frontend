@@ -2,7 +2,7 @@ export interface participant {
     id: string
     name: string
     username: string
-    avatar: string
+    avatar_url: string | null
 }
 
 export interface MessageSender {

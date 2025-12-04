@@ -6,8 +6,14 @@
         >
             <div class="flex items-center gap-3">
                 <img
-                    v-if="senderInfo?.avatar_url || participant?.avatar"
-                    :src="senderInfo?.avatar_url || participant?.avatar"
+                    v-if="senderInfo?.avatar_url || participant?.avatar_url"
+                    :src="(senderInfo?.avatar_url || participant?.avatar_url) ?? undefined"
+                    :alt="senderInfo?.username || participant?.username"
+                    class="w-10 h-10 rounded-full object-cover"
+                />
+                <img
+                    v-else
+                    :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(senderInfo?.name || participant?.name || 'User')}`"
                     :alt="senderInfo?.username || participant?.username"
                     class="w-10 h-10 rounded-full object-cover"
                 />
@@ -127,13 +133,17 @@ const messagesWithSender = computed(() => {
                           id: currentUser?.id || '',
                           name: currentUser?.name || 'You',
                           username: currentUser?.username || 'you',
-                          avatar: currentUser?.avatar_url || '',
+                          avatar:
+                              currentUser?.avatar_url ||
+                              `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'You')}`,
                       }
                     : {
                           id: sender?.id || '',
                           name: sender?.name || '',
                           username: sender?.username || '',
-                          avatar: sender?.avatar_url || '',
+                          avatar:
+                              sender?.avatar_url ||
+                              `https://ui-avatars.com/api/?name=${encodeURIComponent(sender?.name || 'User')}`,
                       },
             }
         })
