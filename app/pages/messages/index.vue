@@ -1,4 +1,4 @@
-<template>
+n<template>
     <main class="flex flex-row">
         <Sidebar />
         <ChatView />

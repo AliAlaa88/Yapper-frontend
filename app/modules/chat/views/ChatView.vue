@@ -1,7 +1,10 @@
 <template>
     <div class="flex w-full h-screen border-x border-primary">
         <div class="w-full md:w-[380px] lg:w-[400px] shrink-0 h-screen">
-            <ChatList @select-conversation="handleSelectConversation" />
+            <ChatList
+                :selected-chat-id="selectedConversation?.id"
+                @select-conversation="handleSelectConversation"
+            />
         </div>
 
         <!-- Chat Messages or Placeholder -->
@@ -40,9 +43,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
+import { useGetConversation } from '../queries/useGetConversation'
 import type { Conversation } from '../types'
 
 const props = defineProps<{
@@ -53,9 +57,36 @@ const { $chatSocketService } = useNuxtApp()
 
 const selectedConversation = ref<Conversation | null>(null)
 
+// Get conversations to find the one matching chatId
+const { data: conversationsData } = useGetConversation()
+
+const conversations = computed(() => {
+    return conversationsData.value?.pages.flatMap((page) => page.data) || []
+})
+
+// Find and select conversation based on chatId prop
+watch(
+    [() => props.chatId, conversations],
+    async ([newChatId, convos]) => {
+        if (newChatId && convos.length > 0) {
+            const conversation = convos.find((c) => c.id === newChatId)
+            if (conversation) {
+                selectedConversation.value = conversation
+                try {
+                    await $chatSocketService.enterChat(newChatId)
+                } catch (error) {
+                    console.error('[ChatView] Failed to join chat from route:', error)
+                }
+            }
+        } else if (!newChatId) {
+            selectedConversation.value = null
+        }
+    },
+    { immediate: true },
+)
+
 const handleSelectConversation = async (conversation: Conversation) => {
     selectedConversation.value = conversation
-
 
     try {
         await $chatSocketService.enterChat(conversation.id)
@@ -69,20 +100,6 @@ const handleEscapeKey = (event: KeyboardEvent) => {
         selectedConversation.value = null
     }
 }
-
-watch(
-    () => props.chatId,
-    async (newChatId) => {
-        if (newChatId) {
-            try {
-                await $chatSocketService.enterChat(newChatId)
-            } catch (error) {
-                console.error('[ChatView] Failed to join chat from route:', error)
-            }
-        }
-    },
-    { immediate: true },
-)
 
 onMounted(() => {
     window.addEventListener('keydown', handleEscapeKey)

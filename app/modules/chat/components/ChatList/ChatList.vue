@@ -28,7 +28,7 @@
             <div v-if="hasNextPage && !isFetching" ref="sentinelRef" class="h-1" />
 
             <div v-if="isFetching" class="flex justify-center p-4">
-                <Loader class="w-5 h-5 text-primary animate-spin" />
+                <LoadingSpinner />
             </div>
 
             <div
@@ -44,23 +44,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { MessageSquarePlus, Loader } from 'lucide-vue-next'
 import type { Conversation } from '~/modules/chat/types'
 import ConversationItem from './subComponents/ConversationItem/ConversationItem.vue'
 import { useGetConversation } from '~/modules/chat/queries/useGetConversation'
 import { useIntersectionObserver } from '@vueuse/core'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
+
+const props = defineProps<{
+    selectedChatId?: string | null
+}>()
 
 const emit = defineEmits<{
     (e: 'select-conversation', conversation: Conversation): void
 }>()
 
+const router = useRouter()
 const { $chatSocketService } = useNuxtApp()
 
-const selectedChatId = ref<string | null>(null)
-
 const handleSelectConversation = (conversation: Conversation) => {
-    selectedChatId.value = conversation.id
+    router.push(`/messages/${conversation.id}`)
     emit('select-conversation', conversation)
 }
 

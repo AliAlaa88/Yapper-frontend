@@ -32,9 +32,7 @@
         <div ref="messagesContainerRef" class="flex-1 overflow-y-auto">
             <!-- Loading State -->
             <div v-if="isLoading" class="flex items-center justify-center h-full">
-                <div
-                    class="animate-spin w-6 h-6 border-2 border-accent border-t-transparent rounded-full"
-                />
+                <LoadingSpinner size="lg" />
             </div>
 
             <!-- Error State -->
@@ -89,6 +87,7 @@ import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import Message from './SubComponents/Message/Message.vue'
 import InputBar from './SubComponents/InputBar/InputBar.vue'
 import TypingIndicator from '../TypingIndicator/TypingIndicator.vue'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useMessagesQuery } from '../../queries/useMessagesQuery'
 import { storeToRefs } from 'pinia'
