@@ -5,6 +5,13 @@
             class="p-4 flex items-center justify-between sticky top-0 bg-primary/80 backdrop-blur-md z-10 border-b border-primary"
         >
             <div class="flex items-center gap-3">
+                <button
+                    class="md:hidden p-2 hover:bg-hover rounded-full cursor-pointer transition-colors"
+                    @click="router.push('/messages')"
+                    aria-label="Back to messages"
+                >
+                    <ArrowLeft class="w-5 h-5 text-primary" />
+                </button>
                 <img
                     v-if="participant?.avatar_url"
                     :src="participant.avatar_url"
@@ -35,12 +42,12 @@
 
             <!-- Error State -->
             <div v-else-if="isError" class="flex items-center justify-center h-full">
-                <p class="text-red-500">Failed to load messages</p>
+                <p class="text-red-500">{{ $t('chat.failedToLoad') }}</p>
             </div>
 
             <!-- Empty State -->
             <div v-else-if="messages.length === 0" class="flex items-center justify-center h-full">
-                <p class="text-secondary">No messages yet. Start the conversation!</p>
+                <p class="text-secondary">{{ $t('chat.noMessagesInChat') }}</p>
             </div>
 
             <!-- Messages -->
@@ -52,7 +59,7 @@
                         :disabled="isFetchingNextPage"
                         @click="() => fetchNextPage()"
                     >
-                        {{ isFetchingNextPage ? 'Loading...' : 'Load older messages' }}
+                        {{ isFetchingNextPage ? $t('chat.loading') : $t('chat.loadOlderMessages') }}
                     </button>
                 </div>
 
@@ -74,6 +81,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ArrowLeft } from 'lucide-vue-next'
 import Message from './SubComponents/Message/Message.vue'
 import InputBar from './SubComponents/InputBar/InputBar.vue'
 import TypingIndicator from '../TypingIndicator/TypingIndicator.vue'
@@ -82,6 +90,8 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useMessagesQuery } from '../../queries/useMessagesQuery'
 import { storeToRefs } from 'pinia'
 import type { participant } from '~/modules/chat/types'
+
+const router = useRouter()
 
 const props = defineProps<{
     conversationId?: string

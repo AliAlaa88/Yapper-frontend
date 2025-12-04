@@ -4,7 +4,7 @@
             class="p-3 flex items-center justify-between sticky top-0 bg-primary/80 backdrop-blur-md z-10 border-b border-primary"
         >
             <div class="flex items-center gap-2">
-                <h1 class="text-xl font-bold text-primary">Messages</h1>
+                <h1 class="text-xl font-bold text-primary">{{ $t('chat.messages') }}</h1>
 
                 <span
                     v-if="totalUnreadCount > 0"
@@ -36,8 +36,8 @@
                 class="flex flex-col items-center justify-center p-8 text-center"
             >
                 <MessageSquarePlus class="w-12 h-12 text-secondary mb-4" />
-                <p class="text-secondary">No messages yet</p>
-                <p class="text-sm text-muted">Start a conversation from someone's profile</p>
+                <p class="text-secondary">{{ $t('chat.noMessagesYet') }}</p>
+                <p class="text-sm text-muted">{{ $t('chat.noMessagesYetDescription') }}</p>
             </div>
         </div>
     </div>

@@ -1,6 +1,11 @@
 <template>
     <div class="flex w-full h-screen border-x border-primary">
-        <div class="w-full md:w-[380px] lg:w-[400px] shrink-0 h-screen">
+        <div
+            :class="[
+                'shrink-0 h-screen chat-list-width',
+                props.chatId ? 'hidden md:block w-full' : 'w-full',
+            ]"
+        >
             <ChatList
                 :selected-chat-id="selectedConversation?.id"
                 @select-conversation="handleSelectConversation"
@@ -16,15 +21,16 @@
             />
             <div v-else class="flex-1 flex items-center justify-center">
                 <div class="text-center p-8 max-w-md">
-                    <h2 class="text-3xl font-bold text-primary mb-2">Select a message</h2>
+                    <h2 class="text-3xl font-bold text-primary mb-2">
+                        {{ $t('chat.selectMessage') }}
+                    </h2>
                     <p class="text-secondary mb-6">
-                        Choose from your existing conversations, start a new one, or just keep
-                        swimming.
+                        {{ $t('chat.selectMessageDescription') }}
                     </p>
                     <button
                         class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors"
                     >
-                        New message
+                        {{ $t('chat.newMessage') }}
                     </button>
                 </div>
             </div>
@@ -113,3 +119,33 @@ onUnmounted(async () => {
     }
 })
 </script>
+
+<style scoped>
+.chat-list-width {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .chat-list-width {
+        width: 320px;
+    }
+}
+
+@media (min-width: 1100px) {
+    .chat-list-width {
+        width: 320px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .chat-list-width {
+        width: 380px;
+    }
+}
+
+@media (min-width: 1536px) {
+    .chat-list-width {
+        width: 400px;
+    }
+}
+</style>

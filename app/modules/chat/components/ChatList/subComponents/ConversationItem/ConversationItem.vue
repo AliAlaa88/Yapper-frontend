@@ -36,7 +36,7 @@
                 class="truncate text-sm"
                 :class="conversation.unread_count > 0 ? 'font-bold text-primary' : 'text-secondary'"
             >
-                {{ conversation.last_message?.content || 'No messages yet' }}
+                {{ conversation.last_message?.content || $t('chat.noMessagesYet') }}
             </p>
         </div>
         <div
