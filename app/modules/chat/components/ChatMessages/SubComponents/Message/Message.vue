@@ -50,26 +50,23 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Message } from '~/modules/chat/types'
-import { useUserStore } from '~/modules/auth/stores/userStore'
 import { formatDate } from '~/utils/helpers'
-
-interface MessageWithSender extends Message {
-    sender: {
-        id: string
-        name: string
-        username: string
-        avatar: string
-    }
+import { useUserStore } from '~/modules/auth/stores/userStore'
+interface MessageWithMedia extends Message {
     media?: Array<{
         url: string
         type: 'image' | 'video'
     }>
 }
 
+const userStore = useUserStore()
+
 const props = defineProps<{
-    message: MessageWithSender
-    currentUserId: string
+    message: MessageWithMedia
 }>()
 
-const isOwnMessage = computed(() => props.message.sender_id === props.currentUserId)
+const currentUser = userStore.getUser().user_id
+const isOwnMessage = computed(() => {
+    return props.message.sender.id.toString() === currentUser?.toString()
+})
 </script>

@@ -96,7 +96,6 @@ export const createChatService = () => ({
             }
             return {
                 chatId: response.data.data.data.chat_id,
-                sender: response.data.data.data.sender,
                 messages: response.data.data.data.messages,
                 nextCursor: response.data.data.pagination.next_cursor,
                 hasMore: response.data.data.pagination.has_more,

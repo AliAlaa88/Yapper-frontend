@@ -16,9 +16,10 @@ export interface Message {
     id: string
     content: string
     message_type: 'text' | 'image' | 'video' | 'reply'
-    sender_id: string
+    sender: MessageSender
     reply_to: string | null
     is_read: boolean
+    is_edited: boolean
     created_at: string
     updated_at: string
 }
@@ -41,7 +42,6 @@ export interface MessagesApiResponse {
 
 export interface MessagesPage {
     chatId: string
-    sender: MessageSender
     messages: Message[]
     nextCursor: string | null
     hasMore: boolean

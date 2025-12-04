@@ -64,7 +64,14 @@ export interface LeftChatResponse {
 export interface MessageSentResponse {
     id: string
     content: string
+    sender: {
+        id: string
+        username: string
+        name: string
+        avatar_url: string | null
+    }
     sender_id: string
+    chat_id: string
     is_read: boolean
     created_at: string
 }
@@ -74,6 +81,12 @@ export interface NewMessageEvent {
     message: {
         id: string
         content: string
+        sender: {
+            id: string
+            username: string
+            name: string
+            avatar_url: string | null
+        }
         sender_id: string
         is_read: boolean
         created_at: string

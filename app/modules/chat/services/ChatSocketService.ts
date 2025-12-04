@@ -26,8 +26,8 @@ type SocketService = ReturnType<typeof createSocketService>
 interface MessagesQueryData {
     pages: Array<{
         messages: Message[]
-        sender: MessageSender
-        nextCursor?: string
+        nextCursor?: string | null
+        hasMore?: boolean
     }>
     pageParams: (string | undefined)[]
 }
@@ -226,10 +226,11 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             const newMessage: Message = {
                 id: data.id,
                 content: data.content,
-                sender_id: data.sender_id,
+                sender: data.sender,
                 created_at: data.created_at,
                 updated_at: data.created_at,
                 is_read: data.is_read,
+                is_edited: false,
                 message_type: options.messageType,
                 reply_to: null,
             }
@@ -359,17 +360,18 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         const newMessage: Message = {
             id: data.message.id,
             content: data.message.content,
-            sender_id: data.message.sender_id,
+            sender: data.message.sender,
             created_at: data.message.created_at,
             updated_at: data.message.created_at,
             is_read: data.message.is_read,
+            is_edited: false,
             message_type: 'text',
             reply_to: null,
         }
 
         addMessageToCache(data.chat_id, newMessage)
         updateConversationOnNewMessage(data.chat_id, newMessage)
-        removeTypingUser(data.chat_id, data.message.sender_id)
+        removeTypingUser(data.chat_id, data.message.sender.id)
     }
 
     const handleMessageUpdated = (data: MessageUpdatedEvent) => {

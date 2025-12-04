@@ -6,24 +6,22 @@
         >
             <div class="flex items-center gap-3">
                 <img
-                    v-if="senderInfo?.avatar_url || participant?.avatar_url"
-                    :src="(senderInfo?.avatar_url || participant?.avatar_url) ?? undefined"
-                    :alt="senderInfo?.username || participant?.username"
+                    v-if="participant?.avatar_url"
+                    :src="participant.avatar_url"
+                    :alt="participant?.username"
                     class="w-10 h-10 rounded-full object-cover"
                 />
                 <img
                     v-else
-                    :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(senderInfo?.name || participant?.name || 'User')}`"
-                    :alt="senderInfo?.username || participant?.username"
+                    :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(participant?.name || 'User')}`"
+                    :alt="participant?.username"
                     class="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
                     <h2 class="font-bold text-primary">
-                        {{ senderInfo?.name || participant?.name || 'Chat' }}
+                        {{ participant?.name || 'Chat' }}
                     </h2>
-                    <p class="text-sm text-secondary">
-                        @{{ senderInfo?.username || participant?.username || '' }}
-                    </p>
+                    <p class="text-sm text-secondary">@{{ participant?.username || '' }}</p>
                 </div>
             </div>
         </div>
@@ -41,10 +39,7 @@
             </div>
 
             <!-- Empty State -->
-            <div
-                v-else-if="messagesWithSender.length === 0"
-                class="flex items-center justify-center h-full"
-            >
+            <div v-else-if="messages.length === 0" class="flex items-center justify-center h-full">
                 <p class="text-secondary">No messages yet. Start the conversation!</p>
             </div>
 
@@ -62,10 +57,10 @@
                 </div>
 
                 <Message
-                    v-for="message in messagesWithSender"
+                    v-for="message in messages"
                     :key="message.id"
                     :message="message"
-                    :current-user-id="currentUserId"
+                    :current-user-id="user?.id || ''"
                 />
             </template>
 
@@ -73,7 +68,7 @@
             <TypingIndicator
                 v-if="conversationId"
                 :chat-id="conversationId"
-                :user-name="senderInfo?.name || participant?.name"
+                :user-name="participant?.name"
             />
         </div>
 
@@ -100,52 +95,20 @@ const props = defineProps<{
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
-const currentUserId = computed(() => user.value?.id || '')
 
 const messagesContainerRef = ref<HTMLElement | null>(null)
 
 const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useMessagesQuery(computed(() => props.conversationId))
 
-// Get sender info from the first page
-const senderInfo = computed(() => {
-    return data.value?.pages[0]?.sender
-})
-
-// Flatten paginated messages and add sender info
-const messagesWithSender = computed(() => {
+// Flatten paginated messages - each message already has its sender
+const messages = computed(() => {
     if (!data.value?.pages) return []
-
-    const sender = senderInfo.value
-    const currentUser = user.value
 
     return data.value.pages
         .slice()
         .reverse()
         .flatMap((page) => page.messages)
-        .map((message) => {
-            const isOwnMessage = message.sender_id === currentUserId.value
-            return {
-                ...message,
-                sender: isOwnMessage
-                    ? {
-                          id: currentUser?.id || '',
-                          name: currentUser?.name || 'You',
-                          username: currentUser?.username || 'you',
-                          avatar:
-                              currentUser?.avatar_url ||
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'You')}`,
-                      }
-                    : {
-                          id: sender?.id || '',
-                          name: sender?.name || '',
-                          username: sender?.username || '',
-                          avatar:
-                              sender?.avatar_url ||
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(sender?.name || 'User')}`,
-                      },
-            }
-        })
 })
 
 const scrollToBottom = () => {
@@ -154,11 +117,9 @@ const scrollToBottom = () => {
     }
 }
 
-// Watch for new messages and scroll to bottom
 watch(
-    () => messagesWithSender.value.length,
+    () => messages.value.length,
     (newLength, oldLength) => {
-        // Only scroll if new messages added at the end (not when loading older)
         if (newLength > oldLength && !isFetchingNextPage.value) {
             nextTick(() => {
                 scrollToBottom()
