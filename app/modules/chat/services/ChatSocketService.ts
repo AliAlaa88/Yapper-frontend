@@ -24,7 +24,6 @@ import type { Message, Conversation, MessageSender } from '../types'
 
 type SocketService = ReturnType<typeof createSocketService>
 
-// ============ Optimistic Update Helpers ============
 const generateOptimisticId = (): string => {
     return `optimistic_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
 }
@@ -211,10 +210,8 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             stopTyping(currentChatId.value)
         }
 
-        // Generate optimistic ID
         const optimisticId = generateOptimisticId()
 
-        // Get current user info
         const userStore = useUserStore()
         const currentUser = userStore.user
 
@@ -223,12 +220,11 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             return
         }
 
-        // Create optimistic message
         const optimisticMessage: Message = {
             id: optimisticId,
             content: options.content || '',
             sender: {
-                id: currentUser.user_id,
+                id: (currentUser as any).user_id,
                 username: currentUser.username,
                 name: currentUser.name,
                 avatar_url: currentUser.avatar_url || null,
@@ -240,7 +236,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             message_type: options.messageType,
             reply_to: null,
         }
-        // Add optimistic message to cache immediately
+
         addMessageToCache(chatId, optimisticMessage)
         updateConversationLastMessage(chatId, optimisticMessage)
 
@@ -257,7 +253,6 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
 
         const timeout = setTimeout(() => {
             isSendingMessage.value = false
-            // Remove optimistic message on timeout
             removeMessageFromCache(chatId, optimisticId)
             console.error('[ChatSocket] Send message timeout - removed optimistic message')
         }, 30000)
@@ -279,15 +274,12 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 reply_to: null,
             }
 
-            // Replace optimistic message with real message
             replaceOptimisticMessage(chatId, optimisticId, realMessage)
         })
 
-        // Handle errors
         socketService.once(SOCKET_EVENTS.ERROR, (error: any) => {
             clearTimeout(timeout)
             isSendingMessage.value = false
-            // Remove optimistic message on error
             removeMessageFromCache(chatId, optimisticId)
             console.error('[ChatSocket] Send message error - removed optimistic message:', error)
         })
@@ -558,10 +550,32 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
 
     const updateConversationLastMessage = (chatId: string, message: Message) => {
         try {
-            queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
+            queryClient.setQueryData<{
+                pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
+                pageParams: (string | null)[]
+            }>(['conversations'], (oldData) => {
                 if (!oldData) return oldData
 
-                return oldData.map((conv) => {
+                if ('pages' in oldData) {
+                    return {
+                        ...oldData,
+                        pages: oldData.pages.map((page) => ({
+                            ...page,
+                            data: page.data.map((conv) => {
+                                if (conv.id === chatId) {
+                                    return {
+                                        ...conv,
+                                        last_message: message,
+                                        updated_at: new Date().toISOString(),
+                                    }
+                                }
+                                return conv
+                            }),
+                        })),
+                    }
+                }
+
+                return (oldData as any).map((conv: Conversation) => {
                     if (conv.id === chatId) {
                         return {
                             ...conv,
@@ -581,10 +595,35 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         const isInChat = currentChatId.value === chatId
 
         try {
-            queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
+            queryClient.setQueryData<{
+                pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
+                pageParams: (string | null)[]
+            }>(['conversations'], (oldData) => {
                 if (!oldData) return oldData
 
-                return oldData.map((conv) => {
+                if ('pages' in oldData) {
+                    return {
+                        ...oldData,
+                        pages: oldData.pages.map((page) => ({
+                            ...page,
+                            data: page.data.map((conv) => {
+                                if (conv.id === chatId) {
+                                    return {
+                                        ...conv,
+                                        last_message: message,
+                                        updated_at: new Date().toISOString(),
+                                        unread_count: isInChat
+                                            ? conv.unread_count
+                                            : conv.unread_count + 1,
+                                    }
+                                }
+                                return conv
+                            }),
+                        })),
+                    }
+                }
+
+                return (oldData as any).map((conv: Conversation) => {
                     if (conv.id === chatId) {
                         return {
                             ...conv,
@@ -617,10 +656,28 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         }
 
         try {
-            queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
+            queryClient.setQueryData<{
+                pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
+                pageParams: (string | null)[]
+            }>(['conversations'], (oldData) => {
                 if (!oldData) return oldData
 
-                return oldData.map((conv) => {
+                if ('pages' in oldData) {
+                    return {
+                        ...oldData,
+                        pages: oldData.pages.map((page) => ({
+                            ...page,
+                            data: page.data.map((conv) => {
+                                if (conv.id === chatId) {
+                                    return { ...conv, unread_count: 0 }
+                                }
+                                return conv
+                            }),
+                        })),
+                    }
+                }
+
+                return (oldData as any).map((conv: Conversation) => {
                     if (conv.id === chatId) {
                         return { ...conv, unread_count: 0 }
                     }
