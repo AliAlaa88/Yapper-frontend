@@ -227,7 +227,6 @@ watch(content, () => {
 const handleSubmit = () => {
     if (disableSendButton.value) return
 
-    // Determine message type based on media
     let messageType: 'text' | 'image' | 'video' = 'text'
     let mediaUrl: string | undefined
 
@@ -239,14 +238,12 @@ const handleSubmit = () => {
         }
     }
 
-    // Send message via socket
     $chatSocketService.sendMessage(props.conversationId, {
         content: content.value.trim() || undefined,
         mediaUrl,
         messageType,
     })
 
-    // Clear form after sending
     content.value = ''
     mediaUrls.value = []
 }

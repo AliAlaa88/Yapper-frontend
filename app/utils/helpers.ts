@@ -1,3 +1,8 @@
+import dayjs from 'dayjs'
+import isToday from 'dayjs/plugin/isToday'
+
+dayjs.extend(isToday)
+
 export const formatDate = (date: string) => {
     const now = new Date()
     const tweetDate = new Date(date)
@@ -9,6 +14,22 @@ export const formatDate = (date: string) => {
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`
 
     return tweetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+export const formatMessageDate = (date: string) => {
+    const messageDate = dayjs(date)
+    const now = dayjs()
+
+    if (messageDate.isToday()) {
+        return messageDate.format('h:mm A')
+    }
+
+    const daysDiff = now.diff(messageDate, 'day')
+    if (daysDiff < 7) {
+        return messageDate.format('dddd h:mm A')
+    }
+
+    return messageDate.format('MMM D, YYYY h:mm A')
 }
 
 /**

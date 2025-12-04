@@ -41,7 +41,7 @@
                 class="text-xs text-secondary px-4"
                 :class="isOwnMessage ? 'text-right' : 'text-left'"
             >
-                {{ formatDate(message.created_at) }}
+                {{ formatMessageDate(message.created_at) }}
             </span>
         </div>
     </div>
@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Message } from '~/modules/chat/types'
-import { formatDate } from '~/utils/helpers'
+import { formatMessageDate } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 interface MessageWithMedia extends Message {
     media?: Array<{
