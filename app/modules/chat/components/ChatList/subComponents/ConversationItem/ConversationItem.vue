@@ -28,7 +28,7 @@
                     >
                     <span class="text-secondary text-sm">·</span>
                     <span class="text-secondary text-sm">{{
-                        formatDate(conversation.updated_at)
+                        formatConversationDate(conversation.last_message?.created_at || '')
                     }}</span>
                 </div>
             </div>
@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import type { Conversation } from '~/modules/chat/types'
-import { shorterName, formatDate } from '~/utils/helpers'
+import { shorterName, formatConversationDate } from '~/utils/helpers'
 
 defineProps<{
     conversation: Conversation
