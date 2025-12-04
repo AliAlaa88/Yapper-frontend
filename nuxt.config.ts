@@ -17,6 +17,7 @@ export default defineNuxtConfig({
             gifApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY,
             recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
             socketUrl: process.env.NUXT_PUBLIC_SOCKET_URL,
+            socketPath: process.env.NUXT_PUBLIC_SOCKET_PATH,
         },
     },
 

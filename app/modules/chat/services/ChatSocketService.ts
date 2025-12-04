@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import type { QueryClient } from '@tanstack/vue-query'
 import type { createSocketService } from '~/modules/Common/services/socketServices'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 import {
     SOCKET_EVENTS,
     type JoinChatPayload,
@@ -22,6 +23,15 @@ import {
 import type { Message, Conversation, MessageSender } from '../types'
 
 type SocketService = ReturnType<typeof createSocketService>
+
+// ============ Optimistic Update Helpers ============
+const generateOptimisticId = (): string => {
+    return `optimistic_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+}
+
+const isOptimisticMessage = (messageId: string): boolean => {
+    return messageId.startsWith('optimistic_')
+}
 
 interface MessagesQueryData {
     pages: Array<{
@@ -197,12 +207,44 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             console.warn('[ChatSocket] Cannot send message - socket not connected')
             return
         }
-
-        isSendingMessage.value = true
-
         if (isMeTyping.value && currentChatId.value) {
             stopTyping(currentChatId.value)
         }
+
+        // Generate optimistic ID
+        const optimisticId = generateOptimisticId()
+
+        // Get current user info
+        const userStore = useUserStore()
+        const currentUser = userStore.user
+
+        if (!currentUser) {
+            console.error('[ChatSocket] Cannot send message - no user info')
+            return
+        }
+
+        // Create optimistic message
+        const optimisticMessage: Message = {
+            id: optimisticId,
+            content: options.content || '',
+            sender: {
+                id: currentUser.user_id,
+                username: currentUser.username,
+                name: currentUser.name,
+                avatar_url: currentUser.avatar_url || null,
+            },
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            is_read: false,
+            is_edited: false,
+            message_type: options.messageType,
+            reply_to: null,
+        }
+        // Add optimistic message to cache immediately
+        addMessageToCache(chatId, optimisticMessage)
+        updateConversationLastMessage(chatId, optimisticMessage)
+
+        isSendingMessage.value = true
 
         const payload: SendMessagePayload = {
             chat_id: chatId,
@@ -215,7 +257,9 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
 
         const timeout = setTimeout(() => {
             isSendingMessage.value = false
-            console.error('[ChatSocket] Send message timeout')
+            // Remove optimistic message on timeout
+            removeMessageFromCache(chatId, optimisticId)
+            console.error('[ChatSocket] Send message timeout - removed optimistic message')
         }, 30000)
 
         socketService.once(SOCKET_EVENTS.MESSAGE_SENT, (data: MessageSentResponse) => {
@@ -223,7 +267,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             console.log('[ChatSocket] Message sent:', data)
             isSendingMessage.value = false
 
-            const newMessage: Message = {
+            const realMessage: Message = {
                 id: data.id,
                 content: data.content,
                 sender: data.sender,
@@ -235,8 +279,17 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 reply_to: null,
             }
 
-            addMessageToCache(chatId, newMessage)
-            updateConversationLastMessage(chatId, newMessage)
+            // Replace optimistic message with real message
+            replaceOptimisticMessage(chatId, optimisticId, realMessage)
+        })
+
+        // Handle errors
+        socketService.once(SOCKET_EVENTS.ERROR, (error: any) => {
+            clearTimeout(timeout)
+            isSendingMessage.value = false
+            // Remove optimistic message on error
+            removeMessageFromCache(chatId, optimisticId)
+            console.error('[ChatSocket] Send message error - removed optimistic message:', error)
         })
 
         socketService.emit(SOCKET_EVENTS.SEND_MESSAGE, payload)
@@ -466,6 +519,40 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             })
         } catch (error) {
             console.warn('[ChatSocket] Could not remove message from cache:', error)
+        }
+    }
+
+    const replaceOptimisticMessage = (
+        chatId: string,
+        optimisticId: string,
+        realMessage: Message,
+    ) => {
+        try {
+            queryClient.setQueryData<MessagesQueryData>(['messages', chatId], (oldData) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => ({
+                        ...page,
+                        messages: page.messages.map((msg) =>
+                            msg.id === optimisticId ? realMessage : msg,
+                        ),
+                    })),
+                }
+            })
+
+            // Update conversation with real message
+            updateConversationLastMessage(chatId, realMessage)
+
+            console.log(
+                '[ChatSocket] Replaced optimistic message:',
+                optimisticId,
+                'with real:',
+                realMessage.id,
+            )
+        } catch (error) {
+            console.warn('[ChatSocket] Could not replace optimistic message:', error)
         }
     }
 
