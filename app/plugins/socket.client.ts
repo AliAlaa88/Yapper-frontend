@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client'
 
 export default defineNuxtPlugin(() => {
     let socket: Socket | null = null
-
+    const config = useRuntimeConfig()
     const createSocket = (): Socket => {
         // Disconnect existing socket if any
         if (socket) {
@@ -12,8 +12,9 @@ export default defineNuxtPlugin(() => {
         // Get token from cookie
         const tokenCookie = useCookie('access_token')
         const token = tokenCookie.value
-
-        socket = io(`http://localhost:3000/messages`, {
+        console.log('socket url', config.public.socketUrl)
+        socket = io(`${config.public.socketUrl as string}/messages`, {
+            path: '/socket-local.io',
             autoConnect: false,
             transports: ['websocket', 'polling'],
             reconnection: true,

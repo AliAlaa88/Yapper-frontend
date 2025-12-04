@@ -16,6 +16,7 @@ export default defineNuxtConfig({
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
             gifApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY,
             recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
+            socketUrl: process.env.NUXT_PUBLIC_SOCKET_URL,
         },
     },
 
