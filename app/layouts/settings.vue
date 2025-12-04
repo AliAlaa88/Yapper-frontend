@@ -1,6 +1,9 @@
 <template>
     <main class="min-h-screen flex flex-row container mx-auto max-w-[1325px] bg-primary">
-        <aside class="hidden md:block w-[275px] min-w-[270px] flex-shrink-0">
+        <aside
+            class="hidden md:block flex-shrink-0 transition-all duration-300 ease-in-out"
+            :style="{ width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
+        >
             <Sidebar />
         </aside>
 
@@ -21,10 +24,12 @@
 <script setup lang="ts">
 import SidebarCategories from '~/modules/settings/components/SidebarCategories.vue'
 import Sidebar from '~/modules/TimeLine/components/sidebar/Sidebar.vue'
+import { useSidebarState } from '~/modules/TimeLine/composables/useSidebarState'
 
 import { useRouter, useRoute } from 'nuxt/app'
 const router = useRouter()
 const route = useRoute()
+const { sidebarWidth } = useSidebarState()
 
 const width = ref(import.meta.client ? window.innerWidth : 1024)
 const isDesktop = computed(() => width.value >= 768)

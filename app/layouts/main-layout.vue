@@ -3,8 +3,8 @@
         <!-- Left Sidebar (LTR) / Right Sidebar (RTL) -->
         <aside
             v-if="!isRTL"
-            class="hidden md:block w-[275px] min-w-[275px] shrink-0 fixed top-0 h-screen z-5"
-            :style="leftStyle"
+            class="hidden sm:block shrink-0 fixed top-0 h-screen z-5 transition-all duration-300 ease-in-out"
+            :style="{ ...leftStyle, width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
         >
             <Sidebar />
         </aside>
@@ -12,7 +12,7 @@
         <!-- Right Banner (LTR) / Left Banner (RTL) -->
         <aside
             v-if="isRTL"
-            class="hidden lg:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
+            class="hidden md:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
             :style="bannerLeftStyle"
         >
             <Banner />
@@ -21,13 +21,12 @@
         <!-- Main Content -->
         <div
             :class="[
-                'border-l border-r border-primary w-full md:max-w-[600px]',
-                isRTL
-                    ? 'md:mr-[275px] lg:ml-[250px] xl:ml-[300px]'
-                    : 'md:ml-[275px] lg:mr-[250px] xl:mr-[300px]',
+                'border-l border-r border-primary w-full md:max-w-[600px] transition-all duration-300 ease-in-out',
+                isRTL ? 'lg:ml-[250px] xl:ml-[300px]' : 'lg:mr-[250px] xl:mr-[300px]',
             ]"
+            :style="contentStyle"
         >
-            <div class="md:hidden block">
+            <div class="sm:hidden block">
                 <MobileSidebar />
             </div>
             <slot />
@@ -36,8 +35,8 @@
         <!-- Right Sidebar (RTL) -->
         <aside
             v-if="isRTL"
-            class="hidden md:block w-[275px] min-w-[275px] shrink-0 fixed top-0 h-screen z-5"
-            :style="rightStyle"
+            class="hidden sm:block shrink-0 fixed top-0 h-screen z-5 transition-all duration-300 ease-in-out"
+            :style="{ ...rightStyle, width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
         >
             <Sidebar />
         </aside>
@@ -45,13 +44,12 @@
         <!-- Right Banner (LTR) -->
         <aside
             v-if="!isRTL"
-            class="hidden lg:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
+            class="hidden md:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
             :style="rightStyle"
         >
             <Banner />
         </aside>
 
-        <!-- Global Modals -->
         <SnackBar />
         <ConfirmationModal />
     </main>
@@ -67,12 +65,13 @@ import Banner from '~/modules/TimeLine/components/banner/Banner.vue'
 import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmationModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+import { useSidebarState } from '~/modules/TimeLine/composables/useSidebarState'
 
-// Provide snackbar and confirmation globally
 useProfileProviders()
 
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
+const { sidebarWidth } = useSidebarState()
 
 const isRTL = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)
@@ -95,28 +94,38 @@ const rightStyle = computed(() => {
     const containerLeft = (viewportWidth - containerWidth) / 2
 
     if (isRTL.value) {
-        // In RTL, sidebar (275px wide) is on the right edge
-        // Position it from the right side - it's wider than banner (250px/300px)
-        // The sidebar aligns with the right edge of the container
         return {
             right: `${containerLeft}px`,
         }
     } else {
-        // In LTR, right sidebar (banner) starts after: containerLeft + leftSidebar (275px) + content (600px)
-        const rightSidebarLeft = containerLeft + 275 + 600
+        const rightSidebarLeft = containerLeft + sidebarWidth.value + 600
         return {
             left: `${rightSidebarLeft}px`,
         }
     }
 })
 
-// Style for RTL banner - positioned to be beside the content
+const contentStyle = computed(() => {
+    if (width.value < 800) {
+        return {}
+    }
+
+    if (isRTL.value) {
+        return {
+            marginRight: `${sidebarWidth.value}px`,
+        }
+    } else {
+        return {
+            marginLeft: `${sidebarWidth.value}px`,
+        }
+    }
+})
+
 const bannerLeftStyle = computed(() => {
     const viewportWidth = width.value
     const containerWidth = Math.min(viewportWidth, 1280)
     const containerLeft = (viewportWidth - containerWidth) / 2
 
-    // Banner is positioned at containerLeft in RTL
     return {
         left: `${containerLeft}px`,
     }

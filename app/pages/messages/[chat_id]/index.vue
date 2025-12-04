@@ -1,6 +1,9 @@
 <template>
     <main class="flex flex-row container mx-auto max-w-[1280px]">
-        <aside class="hidden md:block min-w-[275px] shrink-0">
+        <aside
+            class="hidden md:block shrink-0 transition-all duration-300 ease-in-out"
+            :style="{ width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
+        >
             <Sidebar />
         </aside>
         <div class="flex-1 w-full">
@@ -16,9 +19,11 @@
 import ChatView from '~/modules/chat/views/ChatView.vue'
 import Sidebar from '~/modules/TimeLine/components/sidebar/Sidebar.vue'
 import MobileSidebar from '~/modules/TimeLine/components/sidebar/MobileSidebar.vue'
+import { useSidebarState } from '~/modules/TimeLine/composables/useSidebarState'
 
 const route = useRoute()
 const chatId = route.params.chat_id as string
+const { sidebarWidth } = useSidebarState()
 
 definePageMeta({
     middleware: ['auth'],

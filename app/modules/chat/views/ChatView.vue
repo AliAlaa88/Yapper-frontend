@@ -133,7 +133,7 @@ onUnmounted(async () => {
 
 @media (min-width: 1100px) {
     .chat-list-width {
-        width: 320px;
+        width: 350px;
     }
 }
 
