@@ -42,5 +42,13 @@ export interface Conversation {
 }
 
 export interface ConversationApiResponse {
-    data: Conversation[]
+    data: {
+        data: Conversation[]
+        pagination: {
+            next_cursor: string | null
+            has_more: boolean
+        }
+    }
+    count: number
+    message: string
 }

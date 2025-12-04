@@ -5,7 +5,7 @@
         >
             <div class="flex items-center gap-2">
                 <h1 class="text-xl font-bold text-primary">Messages</h1>
-  
+
                 <span
                     v-if="totalUnreadCount > 0"
                     class="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full"
@@ -31,8 +31,10 @@
                 <Loader class="w-5 h-5 text-primary animate-spin" />
             </div>
 
-            <!-- Empty state -->
-            <div v-if="!isFetching && conversations.length === 0" class="flex flex-col items-center justify-center p-8 text-center">
+            <div
+                v-if="!isFetching && conversations.length === 0"
+                class="flex flex-col items-center justify-center p-8 text-center"
+            >
                 <MessageSquarePlus class="w-12 h-12 text-secondary mb-4" />
                 <p class="text-secondary">No messages yet</p>
                 <p class="text-sm text-muted">Start a conversation from someone's profile</p>
@@ -67,9 +69,8 @@ const sentinelRef = ref<HTMLElement | null>(null)
 const scrollContainerRef = ref<HTMLElement | null>(null)
 
 const conversations = computed(() => {
-    return data.value?.pages.flatMap((page) => page) || []
+    return data.value?.pages.flatMap((page) => page.data) || []
 })
-
 
 const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
 

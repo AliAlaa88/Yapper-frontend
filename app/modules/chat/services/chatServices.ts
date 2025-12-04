@@ -13,7 +13,7 @@ export const createChatService = () => ({
     getConversations: async (
         cursor: string | null = null,
         limit: number = 20,
-    ): Promise<Conversation[]> => {
+    ): Promise<{ data: Conversation[]; nextCursor: string | null }> => {
         const { $axios } = useNuxtApp()
         try {
             const response = await $axios.get<ConversationApiResponse>(urls.getConversations, {
@@ -25,7 +25,10 @@ export const createChatService = () => ({
             if (!response.data || !response.data.data) {
                 throw new Error('Conversations not found')
             }
-            return response.data.data
+            return {
+                data: response.data.data.data,
+                nextCursor: response.data.data.pagination.next_cursor,
+            }
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {

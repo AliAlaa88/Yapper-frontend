@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     plugins: [
         './app/plugins/axios.ts',
         './app/plugins/vue-query.ts',
-        './app/plugins/services.ts',
+        './app/plugins/services.client.ts',
         './app/plugins/recaptcha.ts',
         './app/plugins/socket.client.ts',
     ],

@@ -1,12 +1,15 @@
 import { createSocketService } from '~/modules/Common/services/socketServices'
 
-export default defineNuxtPlugin(() => {
-    const socketService = createSocketService()
-    
-    return {
-        provide: {
-            socketService,
-        },
-    }
+export default defineNuxtPlugin({
+    name: 'socketService',
+    setup() {
+        const socketService = createSocketService()
+        
+        return {
+            provide: {
+                socketService,
+            },
+        }
+    },
 })
 
