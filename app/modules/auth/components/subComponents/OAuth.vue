@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-3">
         <button
             id="button-google-oauth"
-            class="cursor-pointer flex items-center justify-center gap-2 bg-alternate border-2 border-alternate text-alternate hover:bg-hover hover:text-primary hover:border-blue font-semibold py-2.5 rounded-full w-full transition duration-200 shadow-sm"
+            class="cursor-pointer flex items-center justify-center gap-2 bg-alternate border border-alternate text-alternate hover:bg-hover hover:text-primary hover:border-blue font-semibold py-2.5 rounded-full w-full transition duration-200 shadow-sm"
             @click="googleSignUp"
         >
             <img
@@ -15,7 +15,7 @@
 
         <button
             id="button-github-oauth"
-            class="button-hover-invert cursor-pointer flex items-center justify-center gap-2 bg-alternate border-2 border-alternate text-alternate hover:bg-hover hover:text-primary hover:border-blue font-semibold py-2.5 rounded-full w-full transition duration-200 shadow-sm"
+            class="button-hover-invert cursor-pointer flex items-center justify-center gap-2 bg-alternate border border-alternate text-alternate hover:bg-hover hover:text-primary hover:border-blue font-semibold py-2.5 rounded-full w-full transition duration-200 shadow-sm"
             @click="githubSignUp"
         >
             <img

@@ -52,6 +52,11 @@ export const cacheInvalidation = {
         )
     },
 
+    onTweetCreate: (queryClient: QueryClient, userId: string) => {
+        console.log('Invalidating caches for new tweet by user:', userId)
+        console.log('Invalidated caches for new tweet by user:', queryClient)
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(`/users/${userId}/posts`) })
+    },
     /**
      * Call after deleting a tweet
      */
