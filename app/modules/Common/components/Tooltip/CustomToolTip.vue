@@ -1,11 +1,11 @@
 <template>
     <TooltipProvider :delay-duration="delayDuration">
-        <Tooltip>
+        <Tooltip v-model:open="isOpen">
             <TooltipTrigger :as-child="asChild">
                 <slot name="trigger" />
             </TooltipTrigger>
             <TooltipContent :side="side" :align="align" :class="contentClass">
-                <slot name="content" />
+                <slot name="content" :is-open="isOpen" />
             </TooltipContent>
         </Tooltip>
     </TooltipProvider>
@@ -34,4 +34,6 @@ withDefaults(
         contentClass: undefined,
     },
 )
+
+const isOpen = defineModel<boolean>('open', { default: false })
 </script>
