@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { useNuxtApp } from 'nuxt/app'
-import type { ConversationApiResponse, Conversation, MessagesResponse } from '../types'
+import type {
+    ConversationApiResponse,
+    Conversation,
+    MessagesApiResponse,
+    MessagesPage,
+} from '../types'
 
 const urls = {
     getConversations: '/chat',
@@ -76,20 +81,26 @@ export const createChatService = () => ({
 
     getMessages: async (
         chatId: string,
-        options?: { limit?: number; before?: string },
-    ): Promise<MessagesResponse> => {
+        options?: { limit?: number; cursor?: string },
+    ): Promise<MessagesPage> => {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.get<MessagesResponse>(urls.getMessages(chatId), {
+            const response = await $axios.get<MessagesApiResponse>(urls.getMessages(chatId), {
                 params: {
                     limit: options?.limit || 50,
-                    before: options?.before,
+                    cursor: options?.cursor,
                 },
             })
-            if (!response.data) {
+            if (!response.data || !response.data.data) {
                 throw new Error('Messages not found')
             }
-            return response.data
+            return {
+                chatId: response.data.data.data.chat_id,
+                sender: response.data.data.data.sender,
+                messages: response.data.data.data.messages,
+                nextCursor: response.data.data.pagination.next_cursor,
+                hasMore: response.data.data.pagination.has_more,
+            }
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {

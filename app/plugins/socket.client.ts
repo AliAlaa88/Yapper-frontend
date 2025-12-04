@@ -13,7 +13,7 @@ export default defineNuxtPlugin(() => {
         const tokenCookie = useCookie('access_token')
         const token = tokenCookie.value
 
-        socket = io(`https://dev.yapper.cmp27.space/messages`, {
+        socket = io(`http://localhost:3000/messages`, {
             autoConnect: false,
             transports: ['websocket', 'polling'],
             reconnection: true,

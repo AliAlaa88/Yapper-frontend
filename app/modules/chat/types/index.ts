@@ -9,7 +9,7 @@ export interface MessageSender {
     id: string
     username: string
     name: string
-    avatar_url: string
+    avatar_url: string | null
 }
 
 export interface Message {
@@ -23,13 +23,28 @@ export interface Message {
     updated_at: string
 }
 
-export interface MessagesResponse {
+export interface MessagesApiResponse {
     data: {
-        sender: MessageSender
-        messages: Message[]
+        data: {
+            chat_id: string
+            sender: MessageSender
+            messages: Message[]
+        }
+        pagination: {
+            next_cursor: string | null
+            has_more: boolean
+        }
     }
     count: number
     message: string
+}
+
+export interface MessagesPage {
+    chatId: string
+    sender: MessageSender
+    messages: Message[]
+    nextCursor: string | null
+    hasMore: boolean
 }
 
 export interface Conversation {

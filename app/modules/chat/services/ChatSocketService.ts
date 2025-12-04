@@ -99,6 +99,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             }
 
             isJoiningChat.value = true
+            console.log('[ChatSocket] Joining chat:', chatId)
             const payload: JoinChatPayload = { chat_id: chatId }
 
             const timeout = setTimeout(() => {
