@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import type { OtherUser } from '../types/user'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 import type { TweetsPage } from '~/modules/tweets/types/tweet'
 
@@ -35,13 +35,15 @@ export function useUserActionsQuery(
     userId: Ref<string | undefined>,
     targetUsername?: Ref<string | undefined>,
     currentUserId?: Ref<string | undefined>,
+    enabled: Ref<boolean> = ref(true),
 ) {
     const { $userInfoService, $queryClient } = useNuxtApp()
 
     const userQuery = useQuery<OtherUser>({
         queryKey: computed(() => ['user', userId.value]),
         queryFn: () => $userInfoService.getUserByID(userId.value!),
-        enabled: computed(() => !!userId.value),
+        enabled: computed(() => !!userId.value && enabled.value),
+        //staleTime: 5 * 60 * 1000, // Cache user data for 5 minutes
     })
 
     const followMutation = useMutation({
