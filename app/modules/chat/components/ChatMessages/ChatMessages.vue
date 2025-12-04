@@ -56,12 +56,7 @@
                     </button>
                 </div>
 
-                <Message
-                    v-for="message in messages"
-                    :key="message.id"
-                    :message="message"
-                    :current-user-id="user?.id || ''"
-                />
+                <Message v-for="message in messages" :key="message.id" :message="message" />
             </template>
 
             <!-- Typing Indicator -->
@@ -101,7 +96,6 @@ const messagesContainerRef = ref<HTMLElement | null>(null)
 const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useMessagesQuery(computed(() => props.conversationId))
 
-// Flatten paginated messages - each message already has its sender
 const messages = computed(() => {
     if (!data.value?.pages) return []
 
