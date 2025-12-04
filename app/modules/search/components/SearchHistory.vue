@@ -12,19 +12,44 @@
             </button>
         </div>
         <div v-else class="px-4 py-3 text-secondary">
-            {{ $t('search.noRecentQueries') }}
+            {{ $t('search.enterQuery') }}
         </div>
-        <SearchQueriesList
-            :list="searchQueries"
-            @remove-query="removeQuery"
-            @select-query="selectQuery"
-        />
+        <ul v-if="searchQueries.length > 0">
+            <li
+                v-for="(item, index) in searchQueries"
+                :key="index"
+                class="px-4 py-3 hover:bg-hover transition-colors"
+            >
+                <div class="flex items-center gap-3">
+                    <Search :size="20" class="text-primary/50 shrink-0" />
+                    <div class="flex-1 min-w-0 cursor-pointer" @click="$emit('handleSearchSubmit', item.query, 'recent_search_click')">
+                        <div class="text-primary font-semibold text-[15px] truncate">{{ item.query }}</div>
+                        <div v-if="item.is_trending" class="text-primary/50 text-[13px]">
+                            {{ $t('search.trending') }}
+                        </div>
+                    </div>
+                    <button
+                        v-if="!item.is_trending"
+                        type="button"
+                        class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
+                        @click.stop="removeQuery(index)"
+                        :aria-label="$t('search.removeQuery') + ' ' + item.query"
+                    >
+                        <X :size="16" class="text-accent" />
+                    </button>
+                </div>
+            </li>
+        </ul>
     </div>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import SearchQueriesList from './SearchQueriesList.vue'
+import { Search, X } from 'lucide-vue-next'
 import type { SearchQuery } from '~/modules/search/types'
+
+defineEmits<{
+    handleSearchSubmit: [query: string, src: 'recent_search_click']
+}>()
 
 const STORAGE_KEY = 'yapper-search-history'
 const searchQueries = ref<SearchQuery[]>([])
@@ -58,11 +83,6 @@ const removeQuery = (index: number) => {
 const clearAll = () => {
     searchQueries.value = []
     saveSearchHistory()
-}
-
-const selectQuery = (query: string) => {
-    // Handle query selection if needed
-    console.log('Selected query:', query)
 }
 
 onMounted(() => {

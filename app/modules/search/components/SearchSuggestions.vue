@@ -15,6 +15,7 @@
                     v-for="(item, index) in suggestionsData.suggested_queries"
                     :key="index"
                     class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer"
+                    @click="$emit('handleSearchSubmit', item.query, 'typeahead_click')"
                 >
                     <div class="flex items-center gap-3">
                         <Search :size="20" class="text-primary/50 shrink-0" />
@@ -88,8 +89,13 @@
 import { computed } from 'vue'
 import { Search, UserRound } from 'lucide-vue-next'
 import { useSearchSuggestionsQuery } from '../queries/useSearchSuggestionsQuery'
+
 const props = defineProps<{
     searchQuery: string
+}>()
+
+const emits = defineEmits<{
+    handleSearchSubmit: [query: string, src: 'typeahead_click']
 }>()
 
 const trimmedQuery = computed(() => props.searchQuery.trim())

@@ -475,7 +475,15 @@
         "noSuggestions": "No results found",
         "followEachOther": "You follow each other",
         "youFollow": "You follow",
-        "followsYou": "Follows you"
+        "followsYou": "Follows you",
+        "enterQuery": "Try searching for people, topics, or keywords",
+        "tabs": {
+            "top": "Top",
+            "latest": "Latest",
+            "people": "People",
+            "media": "Media",
+            "lists": "Lists"
+        }
     },
     "timeline": {
         "sidebar": {

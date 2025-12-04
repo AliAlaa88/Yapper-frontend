@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full border-b border-primary bg-primary">
+    <div class="w-full border-b border-primary bg-primary/80 backdrop-blur-md">
         <ul class="flex">
             <li
                 v-for="tab in tabs"

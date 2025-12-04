@@ -455,7 +455,15 @@
         "noSuggestions": "لم يتم العثور على نتائج",
         "followEachOther": "تتابعون بعضكم البعض",
         "youFollow": "أنت تتابع",
-        "followsYou": "يتابعك"
+        "followsYou": "يتابعك",
+        "enterQuery": "جرب البحث عن أشخاص أو مواضيع أو كلمات رئيسية",
+        "tabs": {
+            "top": "الأعلى",
+            "latest": "الأحدث",
+            "people": "أشخاص",
+            "media": "وسائط",
+            "lists": "قوائم"
+        }
     },
     "timeline": {
         "sidebar": {
