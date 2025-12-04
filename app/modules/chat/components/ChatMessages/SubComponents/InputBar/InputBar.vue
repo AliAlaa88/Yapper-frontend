@@ -215,6 +215,15 @@ watch(
     },
 )
 
+watch(content, () => {
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault()
+            handleSubmit()
+        }
+    })
+})
+
 const handleSubmit = () => {
     if (disableSendButton.value) return
 
