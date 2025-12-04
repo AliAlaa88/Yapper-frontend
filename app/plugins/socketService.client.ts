@@ -4,7 +4,7 @@ export default defineNuxtPlugin({
     name: 'socketService',
     setup() {
         const socketService = createSocketService()
-        
+
         return {
             provide: {
                 socketService,
@@ -12,4 +12,3 @@ export default defineNuxtPlugin({
         }
     },
 })
-

@@ -13,7 +13,7 @@ export const createChatService = () => ({
     getConversations: async (
         cursor: string | null = null,
         limit: number = 20,
-    ): Promise<{ data: Conversation[]; nextCursor: string | null }> => {
+    ): Promise<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }> => {
         const { $axios } = useNuxtApp()
         try {
             const response = await $axios.get<ConversationApiResponse>(urls.getConversations, {
@@ -28,6 +28,7 @@ export const createChatService = () => ({
             return {
                 data: response.data.data.data,
                 nextCursor: response.data.data.pagination.next_cursor,
+                hasMore: response.data.data.pagination.has_more,
             }
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {

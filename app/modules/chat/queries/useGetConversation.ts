@@ -5,6 +5,7 @@ import type { Conversation } from '../types'
 interface ConversationsPage {
     data: Conversation[]
     nextCursor: string | null
+    hasMore: boolean
 }
 
 export function useGetConversation(limit: number = 20) {
@@ -16,7 +17,10 @@ export function useGetConversation(limit: number = 20) {
             return await ($chatService as any).getConversations(pageParam, limit)
         },
         getNextPageParam: (lastPage) => {
-            return lastPage.nextCursor ?? undefined
+            if (lastPage.hasMore) {
+                return lastPage.nextCursor
+            }
+            return undefined
         },
         initialPageParam: null as string | null,
     })
