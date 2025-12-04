@@ -8,7 +8,7 @@
 
                 <span
                     v-if="totalUnreadCount > 0"
-                    class="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full"
+                    class="bg-accent text-primary text-xs font-bold px-2 py-0.5 rounded-full"
                 >
                     {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
                 </span>

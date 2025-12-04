@@ -32,7 +32,10 @@
                     }}</span>
                 </div>
             </div>
-            <p class="text-secondary truncate text-sm">
+            <p
+                class="truncate text-sm"
+                :class="conversation.unread_count > 0 ? 'font-bold text-primary' : 'text-secondary'"
+            >
                 {{ conversation.last_message?.content || 'No messages yet' }}
             </p>
         </div>

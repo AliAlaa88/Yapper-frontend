@@ -7,7 +7,6 @@
             />
         </div>
 
-        <!-- Chat Messages or Placeholder -->
         <div class="hidden md:flex flex-1 border-r border-primary w-full h-screen">
             <ChatMessages
                 v-if="selectedConversation"
@@ -31,7 +30,6 @@
             </div>
         </div>
 
-        <!-- Mobile: Show ChatMessages when conversation is selected -->
         <div v-if="selectedConversation" class="md:hidden flex-1 w-full h-screen">
             <ChatMessages
                 class="w-full h-full"
