@@ -29,7 +29,7 @@
                                 @error="(event) => handleImageError(user.name, event)"
                             />
                         </template>
-                        <template #content>
+                        <template #content="{ isOpen }">
                             <UserCard
                                 :id="user.id"
                                 :name="user.name"
@@ -39,6 +39,7 @@
                                 :followers-count="user.followers"
                                 :following-count="user.following"
                                 :is_following="user.is_following"
+                                :is-open="isOpen"
                             />
                         </template>
                     </CustomToolTip>
@@ -63,7 +64,9 @@
                             <MoreHorizontal :size="16" />
                         </button>
 
+                        <!-- Only render when menu is open to avoid N+1 API calls -->
                         <ProfileActionsMenu
+                            v-if="showActionsMenu"
                             :userid="user.id"
                             :is-tweet="true"
                             @user-action="handleUserAction"
