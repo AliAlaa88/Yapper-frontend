@@ -1,7 +1,7 @@
 <template>
     <div
         class="flex items-center gap-3 p-3 hover:bg-hover cursor-pointer transition-colors duration-200"
-        :class="{ 'bg-hover': isSelected }"
+        :class="{ 'bg-hover border-r-3 border-accent': isSelected }"
     >
         <div class="shrink-0">
             <img
