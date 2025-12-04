@@ -17,7 +17,7 @@
                         />
                     </NuxtLink>
                 </template>
-                <template #content>
+                <template #content="{ isOpen }">
                     <UserCard
                         :id="id"
                         :name="name"
@@ -27,6 +27,7 @@
                         :followers-count="publisher.followers"
                         :following-count="publisher.following"
                         :is_following="publisher.is_following"
+                        :is-open="isOpen"
                     />
                 </template>
             </CustomToolTip>
@@ -44,7 +45,7 @@
                             {{ name }}
                         </NuxtLink>
                     </template>
-                    <template #content>
+                    <template #content="{ isOpen }">
                         <UserCard
                             :id="id"
                             :name="name"
@@ -54,6 +55,7 @@
                             :followers-count="publisher.followers"
                             :following-count="publisher.following"
                             :is_following="publisher.is_following"
+                            :is-open="isOpen"
                         />
                     </template>
                 </CustomToolTip>
@@ -77,7 +79,7 @@
                     {{ name }}
                 </NuxtLink>
             </template>
-            <template #content>
+            <template #content="{ isOpen }">
                 <UserCard
                     :id="id"
                     :name="name"
@@ -87,6 +89,7 @@
                     :followers-count="publisher.followers"
                     :following-count="publisher.following"
                     :is_following="publisher.is_following"
+                    :is-open="isOpen"
                 />
             </template>
         </CustomToolTip>
