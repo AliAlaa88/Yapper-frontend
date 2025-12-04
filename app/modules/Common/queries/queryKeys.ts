@@ -30,4 +30,9 @@ export const queryKeys = {
     auth: {
         user: () => ['getUser'] as const,
     },
+
+    // Chat/Conversation related keys
+    conversations: {
+        all: ['conversations'] as const,
+    },
 } as const

@@ -62,13 +62,13 @@ export const createChatService = () => ({
     createConversation: async (userId: string) => {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.post<Conversation>(urls.createConversation, {
+            const response = await $axios.post<ConversationApiResponse>(urls.createConversation, {
                 recipient_id: userId,
             })
             if (!response.data) {
                 throw new Error('Conversation not found')
             }
-            return response.data
+            return response.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {

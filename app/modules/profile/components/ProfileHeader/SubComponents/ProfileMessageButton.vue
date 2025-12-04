@@ -12,12 +12,11 @@
 <script setup lang="ts">
 import { Mail, Loader2 } from 'lucide-vue-next'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
+import { useAddConversation } from '~/modules/chat/queries/useAddConversation'
 
 const router = useRouter()
 const profileStore = useProfileStore()
-const { $chatService } = useNuxtApp()
-
-const isLoading = ref(false)
+const { mutateAsync: createConversation, isPending: isLoading } = useAddConversation()
 
 async function goToMessages() {
     const userId = profileStore.getProfileId()
@@ -28,14 +27,17 @@ async function goToMessages() {
     }
 
     try {
-        isLoading.value = true
-        const conversation = await $chatService.createConversation(userId)
-        router.push(`/messages/${conversation.id}`)
+        const conversation = await createConversation(userId)
+        const conversationId = conversation.id
+
+        if (conversationId) {
+            router.push(`/messages/${conversationId}`)
+        } else {
+            router.push('/messages')
+        }
     } catch (error) {
         console.error('Failed to start conversation:', error)
         router.push('/messages')
-    } finally {
-        isLoading.value = false
     }
 }
 </script>
