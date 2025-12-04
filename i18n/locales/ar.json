@@ -243,6 +243,12 @@
             "media": "الوسائط",
             "likes": "الإعجابات"
         },
+        "counts": {
+            "posts": "{count} منشور",
+            "replies": "{count} رد",
+            "media": "{count} وسائط",
+            "likes": "{count} إعجاب"
+        },
         "emptyState": {
             "noPosts": {
                 "title": "لا توجد منشورات بعد",

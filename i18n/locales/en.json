@@ -243,6 +243,12 @@
             "media": "Media",
             "likes": "Likes"
         },
+        "counts": {
+            "posts": "{count} Posts",
+            "replies": "{count} Replies",
+            "media": "{count} Media",
+            "likes": "{count} Likes"
+        },
         "emptyState": {
             "noPosts": {
                 "title": "No posts yet",

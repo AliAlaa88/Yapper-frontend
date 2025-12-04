@@ -4,7 +4,7 @@
             <div
                 class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md transition-all duration-200"
             >
-                <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center justify-between px-4 py-1">
                     <div class="flex items-center gap-8">
                         <button
                             type="button"
@@ -18,6 +18,7 @@
                             <h2 class="text-xl font-bold text-primary">
                                 {{ profile?.name }}
                             </h2>
+                            <ProfileCountDisplay />
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -42,10 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeMount } from 'vue'
 import { ArrowLeft, Search } from 'lucide-vue-next'
 import ProfileHeader from '../modules/profile/components/ProfileHeader/ProfileHeader.vue'
 import ProfileDataProvider from '../modules/profile/components/ProfileDataProvider.vue'
+import ProfileCountDisplay from '../modules/profile/components/ProfileCountDisplay.vue'
 import SnackBar from '../modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
@@ -53,7 +55,6 @@ import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import MainLayout from './main-layout.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import {  onBeforeMount } from 'vue'
 
 useProfileProviders()
 

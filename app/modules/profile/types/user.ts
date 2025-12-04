@@ -12,6 +12,10 @@ export interface Me {
     birth_date: string
     followers_count: number
     following_count: number
+    num_posts?: number
+    num_replies?: number
+    num_media?: number
+    num_likes?: number
 }
 
 export interface OtherUser {
@@ -32,6 +36,10 @@ export interface OtherUser {
     birth_date?: string
     top_mutual_followers: User[]
     mutual_followers_count: string
+    num_posts?: number
+    num_replies?: number
+    num_media?: number
+    num_likes?: number
 }
 
 export interface FollowUser {
