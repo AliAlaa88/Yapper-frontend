@@ -1,8 +1,8 @@
 import { useUserActionsQuery } from '../queries/useUserActionsQuery'
-import { computed } from 'vue'
-export function useUserInfo(userId: Ref<string | undefined>) {
+import { computed, ref } from 'vue'
+export function useUserInfo(userId: Ref<string | undefined>, enabled: Ref<boolean> = ref(true)) {
 
-    const { userQuery } = useUserActionsQuery(userId)
+    const { userQuery } = useUserActionsQuery(userId, undefined, undefined, enabled)
 
     const user = userQuery.data
     const id = computed(() => user.value?.user_id ?? '')

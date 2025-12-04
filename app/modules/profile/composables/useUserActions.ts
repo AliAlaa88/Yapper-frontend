@@ -1,7 +1,7 @@
 import { useUserActionsQuery } from '../queries/useUserActionsQuery'
-// import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
-export function useUserActions(userId: Ref<string | undefined>) {
+export function useUserActions(userId: Ref<string | undefined>, enabled: Ref<boolean> = ref(true)) {
     const {
         unfollowMutation,
         blockMutation,
@@ -10,7 +10,7 @@ export function useUserActions(userId: Ref<string | undefined>) {
         unmuteMutation,
         removeFollowerMutation,
         followMutation,
-    } = useUserActionsQuery(userId)
+    } = useUserActionsQuery(userId, undefined, undefined, enabled)
 
     const isUnfollowLoading = computed(() => unfollowMutation.isPending.value)
     const isBlockLoading = computed(() => blockMutation.isPending.value)
