@@ -13,6 +13,9 @@ vi.mock('#app', () => ({
             tweetId: 't1',
         },
     })),
+    useRouter: vi.fn(() => ({
+        back: vi.fn(),
+    })),
 }))
 
 // Mock navigation utilities
@@ -62,14 +65,39 @@ describe('TweetDetails Component', () => {
                         Publisher: true,
                         Content: true,
                         Stats: true,
+                        ReplyForm: { template: '<div></div>' },
+                        Reply: { template: '<div></div>' },
+                        QuoteModal: { template: '<div></div>' },
+                        ProfileActionsMenu: { template: '<div></div>' },
+                    },
+                    mocks: {
+                        $t: (msg) => {
+                            if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                            if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                            return msg;
+                        }
+                    },
+                    config: {
+                        globalProperties: {
+                            $t: (msg) => {
+                                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                                return msg;
+                            },
+                        },
                     },
                 },
             })
 
+            wrapper.vm.t = (msg) => {
+                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                return msg;
+            }
+            await wrapper.vm.$forceUpdate?.()
             expect(wrapper.find('.animate-spin').exists()).toBe(true)
             expect(wrapper.text()).toContain('Loading')
         })
-    })
 
     describe('Error State', () => {
         it('displays error message when error exists', async () => {
@@ -90,9 +118,31 @@ describe('TweetDetails Component', () => {
                         Content: true,
                         Stats: true,
                     },
+                    mocks: {
+                        t: (msg) => {
+                            if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                            if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                            return msg;
+                        },
+                    },
+                    config: {
+                        globalProperties: {
+                            $t: (msg) => {
+                                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                                return msg;
+                            },
+                        },
+                    },
                 },
             })
 
+            wrapper.vm.t = (msg) => {
+                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                return msg;
+            }
+            await wrapper.vm.$forceUpdate?.()
             expect(wrapper.text()).toContain('Failed to load tweet')
         })
 
@@ -115,11 +165,34 @@ describe('TweetDetails Component', () => {
                         Content: true,
                         Stats: true,
                     },
+                    mocks: {
+                        $t: (msg) => {
+                            if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                            if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                            return msg;
+                        },
+                    },
+                    config: {
+                        globalProperties: {
+                            $t: (msg) => {
+                                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                                return msg;
+                            },
+                        },
+                    },
                 },
             })
 
+            wrapper.vm.t = (msg) => {
+                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
+                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
+                return msg;
+            }
+            await wrapper.vm.$forceUpdate?.()
             await wrapper.find('button').trigger('click')
             expect(fetchTweetDetailsMock).toHaveBeenCalled()
         })
     })
-})
+    })
+    })
