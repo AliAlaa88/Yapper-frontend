@@ -22,11 +22,13 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
+                        <!-- change to explore -->
                         <button
                             type="button"
                             class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors"
                             :aria-label="$t('timeline.banner.search')"
-                        >
+                            @click="router.push({ name: 'search', state: {user: username}})"
+                            >
                             <Search :size="24" class="text-primary" />
                         </button>
                     </div>

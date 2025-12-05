@@ -10,19 +10,19 @@
         <div class="min-h-screen">
             <TweetsList
                 v-if="currentTab === 'top' && searchQuery"
-                :fetchingSource="`/search/posts?query=${encodeURIComponent(searchQuery)}`"
+                :fetchingSource="`/search/posts?query=${encodeURIComponent(searchQueryForApi)}${fromUsername ? `&username=${fromUsername}` : ''}`"
                 class="min-h-[650px] w-full"
             />
 
             <TweetsList
                 v-if="currentTab === 'latest' && searchQuery"
-                :fetchingSource="`/search/posts/latest?query=${encodeURIComponent(searchQuery)}`"
+                :fetchingSource="`/search/posts/latest?query=${encodeURIComponent(searchQueryForApi)}${fromUsername ? `&username=${fromUsername}` : ''}`"
                 class="min-h-[650px] w-full"
             />
 
             <UserList
                 v-if="currentTab === 'people' && searchQuery"
-                :fetching-source="`/search/users?query=${encodeURIComponent(searchQuery)}`"
+                :fetching-source="`/search/users?query=${encodeURIComponent(searchQueryForApi)}${fromUsername ? `&username=${fromUsername}` : ''}`"
                 query-key-prefix="search-users"
                 :loading-text="$t('messages.loading')"
                 :error-text="$t('messages.error')"
@@ -51,7 +51,7 @@
 
             <MediaGrid
                 v-if="currentTab === 'media' && searchQuery"
-                :fetching-source="`/search/posts?query=${encodeURIComponent(searchQuery)}&has_media=true`"
+                :fetching-source="`/search/posts?query=${encodeURIComponent(searchQueryForApi)}&has_media=true${fromUsername ? `&username=${fromUsername}` : ''}`"
                 class="min-h-[650px] w-full"
             />
 
@@ -80,6 +80,22 @@ const route = useRoute()
 const router = useRouter()
 
 const searchQuery = computed(() => (route.query.q as string) || '')
+
+// if the query contains the format "from:username ", extract username and add it to the fetching sources.
+const fromUsername = computed(() => {
+    const match = searchQuery.value.match(/^from:(\S+)\s/)
+    return match ? match[1] : null
+})
+
+// remove it from the query that is used for searching
+const searchQueryForApi = computed(() => {
+    let query = searchQuery.value
+    if (fromUsername.value) {
+        query = query.replace(/^from:\S+\s/, '')
+    }
+    return query
+})
+console.log(`/search/posts?query=${encodeURIComponent(searchQueryForApi.value)}${fromUsername ? `&username=${fromUsername}` : ''}`)
 
 const currentTab = computed(() => {
     const filter = route.query.f as string

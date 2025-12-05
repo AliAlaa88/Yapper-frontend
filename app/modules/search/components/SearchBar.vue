@@ -46,8 +46,8 @@ import { ArrowLeft, Search, CircleX } from 'lucide-vue-next'
 import SearchHistory from '~/modules/search/components/SearchHistory.vue'
 import SearchSuggestions from '~/modules/search/components/SearchSuggestions.vue'
 
-defineProps<{
-    hasArrow: boolean
+const props = defineProps<{
+    hasArrow?: boolean
 }>()
 
 const route = useRoute()
@@ -55,9 +55,10 @@ const router = useRouter()
 const isFocused = ref(false)
 const searchQuery = ref('')
 const STORAGE_KEY = 'yapper-search-history'
+const initialQuery = history.state.user as string || ''
 
 onMounted(() => {
-    searchQuery.value = (route.query.q as string) || ''
+    searchQuery.value = (route.query.q as string) || (initialQuery ? `from:${initialQuery} ` : '') || ''
 })
 
 watch(() => route.query.q, (newQuery) => {
