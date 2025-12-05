@@ -7,16 +7,16 @@
 
             <Tabs :tabs="tabsConfig" :active-tab="currentTab" :on-change="handleTabChange" />
         </div>
-        <div class="min-h-[100vh]">
+        <div class="min-h-screen">
             <TweetsList
                 v-if="currentTab === 'top' && searchQuery"
-                :fetchingSource="`/timeline/for-you`"
+                :fetchingSource="`/search/posts?query=${encodeURIComponent(searchQuery)}`"
                 class="min-h-[650px] w-full"
             />
 
             <TweetsList
                 v-if="currentTab === 'latest' && searchQuery"
-                :fetchingSource="`/timeline/for-you`"
+                :fetchingSource="`/search/posts/latest?query=${encodeURIComponent(searchQuery)}`"
                 class="min-h-[650px] w-full"
             />
 
