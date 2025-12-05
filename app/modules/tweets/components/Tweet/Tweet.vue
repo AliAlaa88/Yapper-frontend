@@ -68,8 +68,8 @@
                         <MyTweetActionsMenu
                             v-if="showActionsMenu && isOwnTweet"
                             :tweet-id="tweet.tweet_id"
-                            @edit="handleEdit"
-                            @delete="handleDelete"
+                            @edit="onEdit"
+                            @delete="onDelete"
                         />
                         <ProfileActionsMenu
                             v-else-if="showActionsMenu"
@@ -100,7 +100,7 @@
         :tweet-id="tweet.tweet_id"
         :initial-content="tweet.content"
         :is-loading="isUpdateLoading"
-        @close="showEditModal = false"
+        @close="handleCloseEditModal"
         @save="handleSaveEdit"
     />
 </template>
@@ -133,14 +133,16 @@ const userStore = useUserStore()
 const currentUser = computed(() => userStore.getUser())
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
-const showEditModal = ref(false)
 provide('show-list', showActionsMenu)
 
 // Tweet actions composable
 const tweetId = computed(() => props.tweet.tweet_id)
 const {
     handleDeleteWithConfirmation,
-    handleUpdateWithSnackbar,
+    handleEdit,
+    handleSaveEdit,
+    handleCloseEditModal,
+    showEditModal,
     isUpdateLoading,
 } = useTweetActions(tweetId)
 
@@ -164,19 +166,8 @@ const handleQuoteSuccess = () => {
 const queryClient = useQueryClient()
 
 // Handlers for own tweet actions
-const handleEdit = () => {
-    showActionsMenu.value = false
-    showEditModal.value = true
-}
-
-const handleSaveEdit = async (content: string) => {
-    await handleUpdateWithSnackbar(content)
-    showEditModal.value = false
-}
-
-const handleDelete = () => {
-    handleDeleteWithConfirmation(showActionsMenu)
-}
+const onEdit = () => handleEdit(showActionsMenu)
+const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
 
 const handleUserAction = (action: 'mute' | 'block' | 'unmute' | 'unblock') => {
     // Remove tweets from this user when muted or blocked

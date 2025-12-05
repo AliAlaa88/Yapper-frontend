@@ -26,8 +26,8 @@
                     <MyTweetActionsMenu
                         v-if="showActionsMenu && isOwnTweet"
                         :tweet-id="tweetDetails.tweet_id"
-                        @edit="handleEdit"
-                        @delete="handleDelete"
+                        @edit="onEdit"
+                        @delete="onDelete"
                     />
                     <ProfileActionsMenu
                         v-else-if="showActionsMenu"
@@ -51,7 +51,7 @@
                 :tweet-id="tweetDetails.tweet_id"
                 :initial-content="tweetDetails.content"
                 :is-loading="isUpdateLoading"
-                @close="showEditModal = false"
+                @close="handleCloseEditModal"
                 @save="handleSaveEdit"
             />
         </div>
@@ -162,25 +162,16 @@ const isOwnTweet = computed(() => {
 })
 const {
     handleDeleteWithConfirmation,
-    handleUpdateWithSnackbar,
+    handleEdit,
+    handleSaveEdit,
+    handleCloseEditModal,
+    showEditModal,
     isUpdateLoading,
 } = useTweetActions(tweetId)
 
-const showEditModal = ref(false)
-
-const handleEdit = () => {
-    showActionsMenu.value = false
-    showEditModal.value = true
-}
-
-const handleSaveEdit = async (content) => {
-    await handleUpdateWithSnackbar(content)
-    showEditModal.value = false
-}
-
-const handleDelete = () => {
-    handleDeleteWithConfirmation(showActionsMenu)
-}
+// Handlers for own tweet actions
+const onEdit = () => handleEdit(showActionsMenu)
+const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
 
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
