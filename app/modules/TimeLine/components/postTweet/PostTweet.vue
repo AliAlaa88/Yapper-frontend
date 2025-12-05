@@ -24,7 +24,11 @@
             <!-- Replying to indicator -->
             <div v-if="replyingToUsername" class="text-secondary text-sm mb-2">
                 {{ t('timeline.postTweet.replyingTo') }}
-                <NuxtLink :to="`/${replyingToUsername}`" class="text-accent hover:underline" @click.stop>
+                <NuxtLink
+                    :to="`/${replyingToUsername}`"
+                    class="text-accent hover:underline"
+                    @click.stop
+                >
                     @{{ replyingToUsername }}
                 </NuxtLink>
             </div>
@@ -32,7 +36,12 @@
             <FormattedTextarea
                 id="post-tweet-textarea"
                 v-model="content"
-                :placeholder="placeholder || (parentTweetId ? t('timeline.postTweet.replyPlaceholder') : t('timeline.postTweet.placeholder'))"
+                :placeholder="
+                    placeholder ||
+                    (parentTweetId
+                        ? t('timeline.postTweet.replyPlaceholder')
+                        : t('timeline.postTweet.placeholder'))
+                "
                 :inlineborder="inlineborder"
             />
 
@@ -157,9 +166,15 @@
                     :disabled="disablePostButton"
                     id="post-tweet-post-btn"
                     button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    :button-text="parentTweetId ? t('timeline.postTweet.reply') : t('timeline.postTweet.post')"
+                    :button-text="
+                        parentTweetId ? t('timeline.postTweet.reply') : t('timeline.postTweet.post')
+                    "
                     @click="handleSubmit"
-                    :loading-text="parentTweetId ? t('timeline.postTweet.replying') : t('timeline.postTweet.posting')"
+                    :loading-text="
+                        parentTweetId
+                            ? t('timeline.postTweet.replying')
+                            : t('timeline.postTweet.posting')
+                    "
                     :is-loading="postTweet.isPending.value"
                 />
             </div>
@@ -177,13 +192,11 @@ import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import 
 import { handleImageError } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
-import type { User as UserType } from '~/modules/Common/types/user'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
 import { useI18n } from 'vue-i18n'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import type { Event } from 'happy-dom'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 import type { TweetBody } from '../../types/tweetBody'
 
@@ -243,7 +256,7 @@ const disablePostButton = computed(() => {
 
 const handleSubmit = async () => {
     try {
-        const tweetData:TweetBody = {
+        const tweetData: TweetBody = {
             content: content.value,
             videos: mediaUrls.value
                 .filter((media) => media.type === 'video')
@@ -257,9 +270,9 @@ const handleSubmit = async () => {
         if (props.parentTweetId) {
             tweetData.parent_tweet_id = props.parentTweetId
             tweetData.type = 'reply'
-            console.log('Preparing to post a reply to tweet ID:', props.parentTweetId);
+            console.log('Preparing to post a reply to tweet ID:', props.parentTweetId)
         }
-        
+
         await postTweet.mutateAsync(tweetData)
 
         content.value = ''

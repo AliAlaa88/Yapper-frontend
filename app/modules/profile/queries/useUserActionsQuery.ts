@@ -10,6 +10,26 @@ interface TweetsQueryData {
     pageParams: string[]
 }
 
+const filterTweetsFromPage = (page: TweetsPage, userIdToRemove: string): TweetsPage => ({
+    ...page,
+    data: page.data.filter((tweet) => tweet.user.id !== userIdToRemove),
+})
+
+const updateTimelineQueryData = (
+    queryClient: ReturnType<typeof useNuxtApp>['$queryClient'],
+    timelineKey: string,
+    userIdToRemove: string,
+) => {
+    queryClient.setQueryData<TweetsQueryData>(['tweets', timelineKey], (oldData) => {
+        if (!oldData) return oldData
+
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page) => filterTweetsFromPage(page, userIdToRemove)),
+        }
+    })
+}
+
 const removeTweetsFromUserInCache = (
     queryClient: ReturnType<typeof useNuxtApp>['$queryClient'],
     userIdToRemove: string,
@@ -17,17 +37,7 @@ const removeTweetsFromUserInCache = (
     const timelineKeys = ['/timeline/for-you', '/timeline/following']
 
     timelineKeys.forEach((timelineKey) => {
-        queryClient.setQueryData<TweetsQueryData>(['tweets', timelineKey], (oldData) => {
-            if (!oldData) return oldData
-
-            return {
-                ...oldData,
-                pages: oldData.pages.map((page) => ({
-                    ...page,
-                    data: page.data.filter((tweet) => tweet.user.id !== userIdToRemove),
-                })),
-            }
-        })
+        updateTimelineQueryData(queryClient, timelineKey, userIdToRemove)
     })
 }
 

@@ -3,7 +3,7 @@ import { useNuxtApp } from 'nuxt/app'
 import type { TweetBody } from '../types/tweetBody'
 import type { TweetsPage } from '~/modules/tweets/types/tweet'
 import { useUserStore } from '~/modules/auth/stores/userStore'
-
+import { cacheInvalidation } from '~/modules/Common/queries'
 export function usePostTweet() {
     const { $timelineService, $queryClient } = useNuxtApp()
     const userStore = useUserStore()
@@ -70,6 +70,7 @@ export function usePostTweet() {
                     }
                 },
             )
+            cacheInvalidation.onTweetCreate($queryClient, String(userStore.getUser()?.user_id))
         },
         onError: (error) => {
             console.log('post tweet error =======>', error)

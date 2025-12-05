@@ -1,13 +1,16 @@
 import type { QueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './queryKeys'
-import { query } from 'happy-dom/lib/PropertySymbol.js'
 
 export const cacheInvalidation = {
     // ==================== Tweet Mutations ====================
     /**
      * Call after creating a new tweet
      */
-
+    onTweetCreate: (queryClient: QueryClient, userId: string) => {
+        console.log('Invalidating caches for new tweet by user:', userId)
+        console.log('Invalidated caches for new tweet by user:', queryClient)
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(`/users/${userId}/posts`) })
+    },
     /**
      * Call after deleting a tweet
      */
@@ -20,19 +23,17 @@ export const cacheInvalidation = {
      */
     onTweetLikeChange: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
-        //  TODO: add the cache invalidation for profile tabs (likes tab)
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list('/users/me/liked-posts') })
-        console.log('Invalidated like cache for tweet:', tweetId)   
+        console.log('Invalidated like cache for tweet:', tweetId)
     },
 
     /**
      * Call after reposting/unreposting a tweet
      */
-    onTweetRepostChange: (queryClient: QueryClient, tweetId: string,path:string) => {
+    onTweetRepostChange: (queryClient: QueryClient, tweetId: string, path: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
-        //  TODO: add the cache invalidation for profile tabs (posts tab)
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(path) })
-        console.log('Invalidated repost cache for tweet:', tweetId ,path)
+        console.log('Invalidated repost cache for tweet:', tweetId, path)
     },
 
     /**

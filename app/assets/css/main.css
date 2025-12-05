@@ -127,6 +127,7 @@
         --color-x-hover-alternate: #ebebeb;
         --color-x-tooltip-bg: #cfd9de;
         --color-x-popup-bg: #999999;
+        --color-x-popup-auth-bg: #0000001A;
     }
 
     :root.dark {
@@ -146,6 +147,7 @@
         --color-x-hover-alternate: #2f3336;
         --color-x-hover-dark: #16181c;
         --color-x-popup-bg: #242d34;
+        --color-x-popup-auth-bg: #FFFFFF1A;
     }
 }
 
@@ -315,6 +317,10 @@
 
     .bg-popup {
         background-color: var(--color-x-popup-bg);
+    }
+
+    .bg-auth-popup {
+        background-color: var(--color-x-popup-auth-bg);
     }
 
     /* Border colors */

@@ -53,6 +53,7 @@ import { getTweetUrl } from '../../../../utils/navigation'
 import { formatDate } from '../../../../utils/lib'
 import { handleImageError } from '~/utils/helpers'
 import { Play } from 'lucide-vue-next'
+import { useTweetTransitionStore } from '~/modules/tweets/stores/tweetTransition'
 
 const props = defineProps<{
     tweet: Tweet
@@ -68,10 +69,11 @@ const hasMedia = computed(() =>
 )
 
 const formattedDate = computed(() => formatDate(props.tweet.created_at))
-
+const tweetTransitionStore = useTweetTransitionStore()
 const navigateToQuotedTweet = () => {
     const url = getTweetUrl(props.tweet)
     if (url !== '#') {
+        tweetTransitionStore.setTransitionTweet(props.tweet)
         navigateTo(url)
     }
 }

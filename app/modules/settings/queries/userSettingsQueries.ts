@@ -2,7 +2,6 @@ import { useQuery, useMutation } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
 import type { OtherUser } from '~/modules/profile/types/user'
-import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
 export function userSettingsQueries() {
     const { $settingsService, $queryClient } = useNuxtApp()

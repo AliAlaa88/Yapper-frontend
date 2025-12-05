@@ -2,8 +2,10 @@ import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
 import { useNuxtApp } from '#app'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 export default defineNuxtPlugin(() => {
+    const userStore = useUserStore()
     const config = useRuntimeConfig()
     const isMockApi = config.public.mockApi.toString() === 'true'
     const apiBase = isMockApi ? 'http://localhost:3001' : (config.public.apiUrl as string)
@@ -37,6 +39,11 @@ export default defineNuxtPlugin(() => {
         (response) => response,
         async (error) => {
             const requestUrl = error.config?.url
+            if (requestUrl == `${apiBase}/auth/refresh`) {
+                userStore.logout()
+                window.location.href = '/auth/login'
+                return Promise.reject(error)
+            }
             if (error.response?.status === 401) {
                 if (process.client && window.location.pathname !== '/auth/login' && requestUrl !== `${apiBase}/auth/refresh`) {
                     const nuxtApp = useNuxtApp()

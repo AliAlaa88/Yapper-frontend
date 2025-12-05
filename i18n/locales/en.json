@@ -60,7 +60,9 @@
             "password": "Password",
             "resendCode": "Resend code",
             "selectedSuffix": "selected",
-            "neededMoreSuffix": "more needed"
+            "neededMoreSuffix": "more needed",
+            "loading": "Loading...",
+            "redirecting": "Taking you to your feed..."
         },
         "home": {
             "happeningNow": "Happening now",
@@ -339,6 +341,9 @@
                 }
             }
         },
+        "privacy": {
+            "likesPrivate": "Your likes are private. Only you can see them."
+        },
         "months": {
             "january": "January",
             "february": "February",
@@ -449,7 +454,7 @@
         },
         "loading": {
             "tweets": "Loading tweets...",
-            "tweetDetails": "Loading tweet details...", 
+            "tweetDetails": "Loading tweet details...",
             "replies": "Loading replies..."
         },
         "empty": {
