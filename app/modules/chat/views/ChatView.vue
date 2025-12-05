@@ -28,7 +28,8 @@
                         {{ $t('chat.selectMessageDescription') }}
                     </p>
                     <button
-                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors"
+                        id="new-chat-button-empty-state"
+                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors cursor-pointer"
                     >
                         {{ $t('chat.newMessage') }}
                     </button>

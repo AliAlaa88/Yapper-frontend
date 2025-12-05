@@ -41,6 +41,7 @@
                         <p>Your browser does not support the video tag.</p>
                     </video>
                     <button
+                        id="remove-media-button"
                         type="button"
                         class="absolute top-2 right-2 w-8 h-8 bg-alternate hover:bg-hover-alternate rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                         @click="removeMedia(index)"
@@ -59,6 +60,7 @@
 
             <div class="relative">
                 <button
+                    id="add-gif-button"
                     type="button"
                     :disabled="mediaUrls.length >= 4"
                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -76,6 +78,7 @@
 
             <div class="relative">
                 <button
+                    id="add-emoji-button"
                     type="button"
                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
                     @click="toggleEmojiPicker"
@@ -92,6 +95,7 @@
 
             <div class="flex-1 min-w-0">
                 <textarea
+                    id="message-textarea"
                     ref="textareaRef"
                     v-model="content"
                     placeholder="Type a message..."
@@ -102,6 +106,7 @@
             </div>
 
             <button
+                id="send-button"
                 type="button"
                 :disabled="disableSendButton"
                 class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

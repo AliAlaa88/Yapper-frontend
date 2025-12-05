@@ -13,7 +13,10 @@
                     {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
                 </span>
             </div>
-            <button class="p-2 hover:bg-hover rounded-full cursor-pointer transition-colors">
+            <button
+                id="new-chat-button"
+                class="p-2 hover:bg-hover rounded-full cursor-pointer transition-colors"
+            >
                 <MessageSquarePlus class="w-5 h-5 text-primary" />
             </button>
         </div>

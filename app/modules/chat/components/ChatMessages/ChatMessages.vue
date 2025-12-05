@@ -6,6 +6,7 @@
         >
             <div class="flex items-center gap-3">
                 <button
+                    id="back-to-messages-button"
                     class="md:hidden p-2 hover:bg-hover rounded-full cursor-pointer transition-colors"
                     @click="router.push('/messages')"
                     aria-label="Back to messages"
@@ -17,6 +18,7 @@
                     :src="participant.avatar_url"
                     :alt="participant?.username"
                     class="w-10 h-10 rounded-full object-cover"
+                    :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant?.name)}'`"
                 />
                 <img
                     v-else
@@ -52,7 +54,6 @@
 
             <!-- Messages -->
             <template v-else>
-                <!-- Sentinel for infinite scroll (at top for loading older messages) -->
                 <div v-if="hasNextPage && !isFetchingNextPage" ref="sentinelRef" class="h-1" />
 
                 <div v-if="isFetchingNextPage" class="flex justify-center py-4">
@@ -85,14 +86,14 @@ import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.v
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useMessagesQuery } from '../../queries/useMessagesQuery'
 import { storeToRefs } from 'pinia'
-import type { participant } from '~/modules/chat/types'
+import type { participant as participantType } from '~/modules/chat/types'
 import { useIntersectionObserver } from '@vueuse/core'
 
 const router = useRouter()
 
 const props = defineProps<{
     conversationId?: string
-    participant?: participant
+    participant?: participantType
 }>()
 
 const userStore = useUserStore()
