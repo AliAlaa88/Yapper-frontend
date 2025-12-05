@@ -15,7 +15,7 @@
                     v-for="(item, index) in suggestionsData.suggested_queries"
                     :key="index"
                     class="px-4 py-2 hover:bg-hover transition-colors cursor-pointer"
-                    @click="$emit('handleSearchSubmit', item.query, 'typeahead_click')"
+                    @click="handleQueryClick(item.query)"
                 >
                     <div class="flex items-center gap-3">
                         <Search :size="24" class="text-primary/50 shrink-0 font-bold mx-2" />
@@ -37,6 +37,7 @@
                     v-for="user in suggestionsData.suggested_users"
                     :key="user.user_id"
                     class="px-4 py-2 hover:bg-hover transition-colors cursor-pointer"
+                    @click="handleUserClick(user)"
                 >
                     <div class="flex items-center gap-3">
                         <img
@@ -45,7 +46,7 @@
                             class="w-10 h-10 rounded-full object-cover shrink-0"
                         />
                         <div class="flex-1 min-w-0">
-                            <div class="text-primary font-semibold text-[15px] truncate font-bold">
+                            <div class="text-primary font-bold text-[15px] truncate">
                                 {{ user.name }}
                             </div>
                             <div class="text-secondary text-[13px] truncate">
@@ -87,6 +88,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { Search, UserRound } from 'lucide-vue-next'
 import { useSearchSuggestionsQuery } from '../queries/useSearchSuggestionsQuery'
 
@@ -98,6 +100,7 @@ const emits = defineEmits<{
     handleSearchSubmit: [query: string, src: 'typeahead_click']
 }>()
 
+const router = useRouter()
 const trimmedQuery = computed(() => props.searchQuery.trim())
 const isEnabled = computed(() => trimmedQuery.value.length > 0)
 
@@ -106,4 +109,44 @@ const {
     isLoading,
     isError,
 } = useSearchSuggestionsQuery(trimmedQuery.value, isEnabled)
+
+// Handle query click (from suggestions)
+const handleQueryClick = (query: string) => {
+    emits('handleSearchSubmit', query, 'typeahead_click')
+}
+
+// Handle user click (from suggestions)
+const handleUserClick = (user: any) => {
+    const STORAGE_KEY = 'yapper-search-history'
+
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY)
+        let searchHistory = stored ? JSON.parse(stored) : []
+
+        // Remove duplicate if exists
+        const existingIndex = searchHistory.findIndex((item: any) =>
+            item.type === 'user' && item.user_id === user.user_id
+        )
+        if (existingIndex !== -1) {
+            searchHistory.splice(existingIndex, 1)
+        }
+
+        // Add user to top of history
+        searchHistory.unshift({
+            type: 'user',
+            user_id: user.user_id,
+            name: user.name,
+            username: user.username,
+            avatar_url: user.avatar_url,
+            timestamp: Date.now()
+        })
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory))
+        console.log('Saved user to history:', user)
+        router.push(`/${user.username}`)
+    } catch (error) {
+        console.error('Failed to save user to history:', error)
+        router.push(`/${user.username}`)
+    }
+}
 </script>

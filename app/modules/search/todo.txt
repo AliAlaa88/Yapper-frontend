@@ -1,5 +1,3 @@
-users in history and sugg.
 integrate with explore
 hide searchbar in sidebar when on explore tab
-
-
+specific user search token

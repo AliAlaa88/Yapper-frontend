@@ -25,7 +25,7 @@ const response = {
                 is_follower: false,
             },
             {
-                user_id: '0c059899-f706-4c8f-97d7-ba2e9fc22d6d',
+                user_id: '0c059899-f706-4c8f-97d7-ba2e9fc2',
                 name: 'Alia Mohamed',
                 username: 'alyaa#222',
                 avatar_url: 'https://cdn.app.com/profiles/u877.jpg',

@@ -544,6 +544,12 @@
             "people": "People",
             "media": "Media",
             "lists": "Lists"
+        },
+        "emptyState": {
+            "noUsers": {
+                "title": "No people found",
+                "description": "Try adjusting your search to find what you're looking for"
+            }
         }
     },
     "timeline": {

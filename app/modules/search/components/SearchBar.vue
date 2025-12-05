@@ -93,12 +93,16 @@ const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click
         const stored = localStorage.getItem(STORAGE_KEY)
         let searchHistory = stored ? JSON.parse(stored) : []
 
-        const existingIndex = searchHistory.findIndex((item: any) => item.query === searchQuery.value)
+        const existingIndex = searchHistory.findIndex((item: any) => item.type === 'query' && item.query === searchQuery.value)
         if (existingIndex !== -1) {
             searchHistory.splice(existingIndex, 1)
         }
 
-        searchHistory.unshift({ query: searchQuery.value })
+        searchHistory.unshift({
+            type: 'query',
+            query: searchQuery.value,
+            timestamp: Date.now()
+        })
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory))
         router.push({
