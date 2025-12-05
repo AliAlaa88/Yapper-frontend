@@ -13,9 +13,9 @@
                         <ProfileEditButton />
                     </div>
                     <div v-else class="flex flex-wrap gap-2">
-                        <ProfileMessageButton />
+                        <ProfileMessageButton v-if="user?.user_id" />
                         <ProfileActions v-if="user?.user_id" :is-tweet="false" />
-                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" />
+                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" :username="user.username" />
                         <ProfileBlockedAction />
                     </div>
                 </div>

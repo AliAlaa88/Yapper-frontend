@@ -4,14 +4,12 @@
         class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
         @click="navigateToTweet"
     >
-        <div
-            v-if="
-                tweet.type === 'repost'
-            "
-            class="flex items-center gap-2 mb-2 text-secondary"
-        >
+        <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
             <Repeat2 :size="16" />
-            <span class="text-sm"> {{ repostedUsername }} {{ $t('tweets.reposted') }} </span>
+            <span class="text-sm">
+                {{ repostedUsername }}
+                {{ $t('tweets.reposted') }}
+            </span>
         </div>
 
         <div class="flex gap-3">
@@ -31,7 +29,7 @@
                                 @error="(event) => handleImageError(user.name, event)"
                             />
                         </template>
-                        <template #content>
+                        <template #content="{ isOpen }">
                             <UserCard
                                 :id="user.id"
                                 :name="user.name"
@@ -41,6 +39,7 @@
                                 :followers-count="user.followers"
                                 :following-count="user.following"
                                 :is_following="user.is_following"
+                                :is-open="isOpen"
                             />
                         </template>
                     </CustomToolTip>
@@ -65,7 +64,15 @@
                             <MoreHorizontal :size="16" />
                         </button>
 
+                        <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                        <MyTweetActionsMenu
+                            v-if="showActionsMenu && isOwnTweet"
+                            :tweet-id="tweet.tweet_id"
+                            @edit="onEdit"
+                            @delete="onDelete"
+                        />
                         <ProfileActionsMenu
+                            v-else-if="showActionsMenu"
                             :userid="user.id"
                             :is-tweet="true"
                             @user-action="handleUserAction"
@@ -86,6 +93,16 @@
         @close="showQuoteModal = false"
         @success="handleQuoteSuccess"
     />
+
+    <!-- Edit Tweet Modal -->
+    <EditTweetModal
+        :is-open="showEditModal"
+        :tweet-id="tweet.tweet_id"
+        :initial-content="tweet.content"
+        :is-loading="isUpdateLoading"
+        @close="handleCloseEditModal"
+        @save="handleSaveEdit"
+    />
 </template>
 
 <script setup lang="ts">
@@ -95,6 +112,8 @@ import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
 import QuoteModal from '../QuoteModal/QuoteModal.vue'
+import EditTweetModal from '../EditTweetModal/EditTweetModal.vue'
+import MyTweetActionsMenu from './subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed, nextTick, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
@@ -104,13 +123,33 @@ import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useQueryClient } from '@tanstack/vue-query'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { handleImageError } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { useTweetActions } from '../../composables/useTweetActions'
+
 const props = defineProps<{
     tweet: TweetType
 }>()
-
+const userStore = useUserStore()
+const currentUser = computed(() => userStore.getUser())
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
 provide('show-list', showActionsMenu)
+
+// Tweet actions composable
+const tweetId = computed(() => props.tweet.tweet_id)
+const {
+    handleDeleteWithConfirmation,
+    handleEdit,
+    handleSaveEdit,
+    handleCloseEditModal,
+    showEditModal,
+    isUpdateLoading,
+} = useTweetActions(tweetId)
+
+// Check if the tweet belongs to the current user
+const isOwnTweet = computed(() => {
+    return currentUser.value?.user_id === props.tweet.user.id
+})
 
 const toggleActionsMenu = () => {
     showActionsMenu.value = !showActionsMenu.value
@@ -125,6 +164,10 @@ const handleQuoteSuccess = () => {
 }
 
 const queryClient = useQueryClient()
+
+// Handlers for own tweet actions
+const onEdit = () => handleEdit(showActionsMenu)
+const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
 
 const handleUserAction = (action: 'mute' | 'block' | 'unmute' | 'unblock') => {
     // Remove tweets from this user when muted or blocked
@@ -151,13 +194,22 @@ const removeTweetsFromUser = (userId: string) => {
 const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
-const repostedUsername = computed(() => props.tweet.reposted_by?.name || '')
+const repostedUsername = computed(() => {
+    return currentUser.value?.id === props.tweet.reposted_by?.id
+        ? 'You'
+        : props.tweet.reposted_by === undefined
+            ? 'You'
+            : props.tweet.reposted_by.name
+})
 // Transform content string to Content object
 const content = computed(() => ({
     text: props.tweet.content,
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
-    parentTweet: props.tweet.type === 'quote' ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet) : undefined,
+    parentTweet:
+        props.tweet.type === 'quote'
+            ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet)
+            : undefined,
 }))
 
 // Transform user to include avatar property

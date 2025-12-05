@@ -28,7 +28,7 @@
                 <Circle v-else class="opacity-40" :size="20" />
             </button>
             <Button
-                id="next-button"
+                id="next-language-button"
                 button-class="w-full cursor-pointer bg-alternate text-alternate
                 font-semibold mt-60 mb-4 py-3 rounded-full"
                 :is-loading="useChangeLanguage.isPending.value"
@@ -44,7 +44,7 @@
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { Circle, CheckCircle2 } from 'lucide-vue-next'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import { useI18n } from 'vue-i18n'
 import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
 const { t, locale } = useI18n()

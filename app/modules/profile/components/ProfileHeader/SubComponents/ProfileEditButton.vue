@@ -1,6 +1,6 @@
 <template>
     <button
-        class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200 bg-transparent border border-[#536471] text-primary px-4 py-1.5 h-9 hover:bg-[#181818]"
+        class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200 bg-transparent border border-[#536471] text-primary px-4 py-1.5 h-9 hover:bg-[#181818] mb-3"
         @click="handleEditProfile"
     >
         {{ $t('profile.editProfile') }}

@@ -132,3 +132,75 @@ export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean)
         },
     })
 }
+
+export function useDeleteTweetMutation(tweetId: string) {
+    const { $queryClient } = useNuxtApp()
+
+    return useMutation({
+        mutationKey: ['deleteTweet', tweetId],
+        mutationFn: () => {
+            const { $tweetService } = useNuxtApp()
+            return ($tweetService as any).deleteTweet(tweetId)
+        },
+        onSuccess: () => {
+            // Remove tweet from all cached tweet queries
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => ({
+                        ...page,
+                        data: page.data.filter((tweet: Tweet) => tweet.tweet_id !== tweetId),
+                    })),
+                }
+            })
+            // Invalidate tweet details cache
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweetId] })
+        },
+        onError: (error) => {
+            console.error('Error deleting tweet:', tweetId, error)
+        },
+    })
+}
+
+export function useUpdateTweetMutation(tweetId: string) {
+    const { $queryClient } = useNuxtApp()
+
+    return useMutation({
+        mutationKey: ['updateTweet', tweetId],
+        mutationFn: (content: string) => {
+            const { $tweetService } = useNuxtApp()
+            return ($tweetService as any).updateTweet(tweetId, content)
+        },
+        onSuccess: (_data, content) => {
+            // Update tweet content in all cached tweet queries
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => ({
+                        ...page,
+                        data: page.data.map((tweet: Tweet) =>
+                            tweet.tweet_id === tweetId
+                                ? { ...tweet, content }
+                                : tweet,
+                        ),
+                    })),
+                }
+            })
+            // Also update tweet details cache if it exists
+            $queryClient.setQueryData(['tweetDetails', tweetId], (oldData: TweetDetails | null) => {
+                if (!oldData) return oldData
+                return {
+                    ...oldData,
+                    tweet: { ...oldData.tweet, content },
+                }
+            })
+        },
+        onError: (error) => {
+            console.error('Error updating tweet:', tweetId, error)
+        },
+    })
+}

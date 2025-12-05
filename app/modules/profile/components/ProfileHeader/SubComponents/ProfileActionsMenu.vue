@@ -90,6 +90,7 @@ import { ref, onMounted, onBeforeUnmount, inject, computed } from 'vue'
 import type { Ref } from 'vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const props = defineProps<{
     userid?: string | null,
@@ -103,14 +104,16 @@ const emit = defineEmits<{
 const showList = inject<Ref<boolean>>('show-list')!
 
 const profileStore = useProfileStore()
+const userStore = useUserStore()
 const userId = computed(() => props.userid ? props.userid : profileStore.getProfileId() || '')
-const { isBlocked, isMuted, isFollower, username,isFollowing } = useUserInfo(userId)
+const meId = computed(() => userStore.getUser()?.user_id)
+const { isBlocked, isMuted, isFollower, username, isFollowing } = useUserInfo(userId)
 const dropdownRef = ref<HTMLElement | null>(null)
 
-const userInteractions = useUserInteractions(userId)
+const userInteractions = useUserInteractions(userId, username, meId)
 const {
     handleBlockWithConfirmation,
-    handleMuteWithSnackbar,
+    handleMuteWithSnackbarWithAction,
     handleRemoveFollowerWithConfirmation,
     handleUnmuteWithSnackbar,
     handleUnblockWithConfirmation,
@@ -124,10 +127,10 @@ const {
 
 async function handleMuteAndUnmute() {
     if (isMuted.value) {
-        await handleUnmuteWithSnackbar(showList)
+        await handleUnmuteWithSnackbar(false, showList)
         emit('user-action', 'unmute')
     } else {
-        await handleMuteWithSnackbar(showList)
+        await handleMuteWithSnackbarWithAction()
         emit('user-action', 'mute')
     }
 }

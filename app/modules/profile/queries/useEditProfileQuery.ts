@@ -10,7 +10,6 @@ export function useEditProfileMutation(userId: string, username: string) {
         mutationFn: (updates: Partial<Me>) => $userInfoService.updateUserProfile(userId, updates),
         onSuccess: (data, variables) => {
             console.log('profile updated successfully', data)
-            // Check if username was changed
             console.log('username changed', variables)
             if (variables.username && variables.username !== username) {
                 cacheInvalidation.onUsernameChange($queryClient, username)

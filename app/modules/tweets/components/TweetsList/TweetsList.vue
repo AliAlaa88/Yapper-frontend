@@ -92,13 +92,20 @@ const loadTweets = () => {
 }
 
 const loadMoreTrigger = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
 
 watch(
     () => loadMoreTrigger.value,
     (el) => {
+        // Clean up previous observer
+        if (observer) {
+            observer.disconnect()
+            observer = null
+        }
+
         if (!el) return
 
-        const observer = new IntersectionObserver(
+        observer = new IntersectionObserver(
             (entries) => {
                 const entry = entries[0]
                 if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
@@ -113,11 +120,15 @@ watch(
         )
 
         observer.observe(el)
-
-        onUnmounted(() => observer.disconnect())
     },
     { immediate: true },
 )
+
+onUnmounted(() => {
+    if (observer) {
+        observer.disconnect()
+    }
+})
 
 const tweets = computed(() => {
     const pages = data.value?.pages
