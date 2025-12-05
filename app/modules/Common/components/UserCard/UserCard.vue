@@ -5,12 +5,15 @@
                 :src="user.avatar_url || '/default-avatar.png'"
                 :alt="user.name"
                 class="h-12 w-12 rounded-full object-cover"
-            >
+            />
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
                     <div class="min-w-0 flex-1">
                         <p class="font-bold text-primary truncate">{{ user.name }}</p>
-                        <p class="text-sm text-muted truncate">@{{ user.username }}</p>
+                        <p class="text-sm text-muted truncate">
+                            @{{ user.username }}
+                            <span v-if="user.is_follower" class="ml-1 text-xs bg-gray-200 dark:bg-gray-700 text-muted px-1.5 py-0.5 rounded">Follows you</span>
+                        </p>
                     </div>
 
                     <!-- <div class="flex items-center gap-2">
@@ -32,7 +35,7 @@
             </div>
         </NuxtLink>
         <div @click.stop>
-            <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" />
+            <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" :username="user.username" />
         </div>
     </div>
 </template>
@@ -45,6 +48,6 @@ import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubC
 
 defineProps<{
     user: FollowUser
-    showTooltip?: boolean
+    showTooltip?: boolean | null
 }>()
 </script>

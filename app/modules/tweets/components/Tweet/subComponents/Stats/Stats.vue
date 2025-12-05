@@ -169,7 +169,7 @@ import {
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
 import {useUserStore} from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
-const {user_id} = toRefs(userStore.getUser())
+const user_id = computed(() => userStore.getUser()?.user_id)
 const {$queryClient} = useNuxtApp()
 
 const props = defineProps<{
@@ -180,17 +180,16 @@ const emit = defineEmits<{
     (e: 'quote'): void
 }>()
 
-const {
-    likes,
-    replies,
-    retweets,
-    views,
-    is_liked,
-    tweet_id,
-    is_reposted,
-    is_bookmarked,
-    username,
-} = toRefs(props.stats)
+const likes = computed(() => props.stats.likes)
+const replies = computed(() => props.stats.replies)
+const retweets = computed(() => props.stats.retweets)
+const views = computed(() => props.stats.views)
+const is_liked = computed(() => props.stats.is_liked)
+const tweet_id = computed(() => props.stats.tweet_id)
+const is_reposted = computed(() => props.stats.is_reposted)
+const is_bookmarked = computed(() => props.stats.is_bookmarked)
+const username = computed(() => props.stats.username)
+
 const localIsLiked = ref(is_liked.value)
 const localLikesCount = ref(likes.value)
 const isAnimating = ref(false)

@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 interface FormData {
@@ -127,6 +127,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     'update:modelValue': [value: FormData]
+    'update:isBirthDateValid': [value: boolean]
 }>()
 
 const { t, locale } = useI18n()
@@ -209,4 +210,31 @@ const updateBirthDate = (part: 'month' | 'day' | 'year', value: string) => {
         updateField('birth_date', birthDate)
     }
 }
+
+const MIN_AGE_YEARS = 6
+
+const isBirthDateValid = computed(() => {
+    if (!props.modelValue.birth_date) return true // Allow empty birth date
+
+    const birthDate = new Date(props.modelValue.birth_date)
+    const today = new Date()
+
+    // Calculate age
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--
+    }
+
+    return age >= MIN_AGE_YEARS
+})
+
+watch(
+    isBirthDateValid,
+    (isValid) => {
+        emit('update:isBirthDateValid', isValid)
+    },
+    { immediate: true }
+)
 </script>

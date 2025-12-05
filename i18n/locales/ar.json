@@ -33,7 +33,8 @@
         "home": "الرئيسية",
         "profile": "الملف الشخصي",
         "settings": "الإعدادات",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "back": "عودة"
     },
     "months": {
         "january": "يناير",
@@ -243,6 +244,12 @@
             "media": "الوسائط",
             "likes": "الإعجابات"
         },
+        "counts": {
+            "posts": "{count} منشور",
+            "replies": "{count} رد",
+            "media": "{count} وسائط",
+            "likes": "{count} إعجاب"
+        },
         "emptyState": {
             "noPosts": {
                 "title": "لا توجد منشورات بعد",
@@ -339,9 +346,14 @@
                 "noFollowing": {
                     "title": "لا يتابع أحدًا بعد",
                     "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
+                },
+                "noMutualFollowers": {
+                    "title": "لا يوجد متابعون مشتركون",
+                    "description": "أنت لا تتابع أي من متابعي هذا الحساب."
                 }
             }
         },
+        "followersYouFollow": "متابعون تتابعهم",
         "privacy": {
             "likesPrivate": "إعجاباتك خاصة. يمكنك أنت فقط رؤيتها."
         }
@@ -473,6 +485,12 @@
     "tweets": {
         "reposted": "أعاد النشر",
         "moreActions": "المزيد من الإجراءات",
+        "editTweet": "تعديل",
+        "deleteTweet": "حذف",
+        "tweetDeleted": "تم حذف منشورك",
+        "tweetUpdated": "تم تحديث منشورك",
+        "confirmDelete": "حذف المنشور؟",
+        "confirmDeleteDescription": "لا يمكن التراجع عن هذا الإجراء وسيتم إزالته من ملفك الشخصي، والخط الزمني لأي حسابات تتابعك، ومن نتائج البحث.",
         "actions": {
             "reply": "رد",
             "retweet": "إعادة نشر",

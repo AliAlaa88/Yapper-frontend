@@ -16,8 +16,13 @@
             </span>
         </div>
         <TweetsList
-            v-if="!isBlocked && userId && (currentTab !== 'likes' || isMyProfile)"
+            v-if="!isBlocked && userId && (currentTab === 'likes' && isMyProfile || currentTab === 'posts' || currentTab === 'replies')"
             :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
+            class="min-h-[650px] w-full"
+        />
+        <MediaGrid
+            v-if="!isBlocked && userId && currentTab === 'media'"
+            :fetching-source="`/users/${userId}/media`"
             class="min-h-[650px] w-full"
         />
         <ProfileBlockedContent v-if="isBlocked" :username="username" />
@@ -36,7 +41,7 @@ import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useProfileStore } from '../../stores/profileStore'
 import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
-
+import MediaGrid from '~/modules/Common/components/MediaGrid/MediaGrid.vue'
 
 const { t } = useI18n()
 const route = useRoute()
