@@ -106,7 +106,7 @@
                 >
                     <template #trigger>
                         <button
-                            id="sidebar-post-btn"
+                            id="sidebar-post-btn_collapsed"
                             class="w-full aspect-square bg-alternate rounded-full flex items-center justify-center transition-all duration-200 hover:opacity-90"
                             @click="handleOpen"
                         >
@@ -122,7 +122,7 @@
 
                 <button
                     v-else
-                    id="sidebar-post-btn"
+                    id="sidebar-post-btn_expanded"
                     class="w-full py-3 px-6 bg-alternate rounded-full text-[17px] text-alternate font-bold transition-all duration-200 hover:opacity-90"
                     @click="handleOpen"
                 >
