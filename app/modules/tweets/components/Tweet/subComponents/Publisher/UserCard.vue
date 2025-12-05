@@ -13,7 +13,7 @@
                 />
                 <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse" />
             </NuxtLink>
-            <ProfileFollowAction :userId="id" :username="username" />
+            <ProfileFollowAction :userId="id" :username="username" :enabled="isOpen" />
         </div>
 
         <!-- Name and Username -->
@@ -48,10 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import { getProfileUrl } from '../../../../utils/navigation'
 import { handleImageError } from '~/utils/helpers'
-import { useUserActionsQuery } from '~/modules/profile/queries/useUserActionsQuery'
 import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue';
 const props = defineProps<{
     id: string
@@ -62,20 +61,11 @@ const props = defineProps<{
     followersCount: number | null
     followingCount: number | null
     is_following?: boolean
+    isOpen?: boolean
 }>()
 
 const avatarSrc = ref(props.avatar)
 const isLoading = ref(true)
-
-const { followMutation, unfollowMutation, userQuery } = useUserActionsQuery(toRef(props.id))
-
-// Use the query data if available, otherwise use prop as fallback
-const localeIsFollowing = computed(() => {
-    if (userQuery.data.value?.is_following !== undefined) {
-        return userQuery.data.value.is_following
-    }
-    return !!props.is_following
-})
 
 const profileLink = computed(() =>
     getProfileUrl({
@@ -93,24 +83,6 @@ const formatNumber = (num?: number | null): string => {
         return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'
     }
     return num.toString()
-}
-
-const handleFollowToggle = async () => {
-    if (localeIsFollowing.value) {
-        localeIsFollowing.value = false
-        try {
-            await unfollowMutation.mutateAsync()
-        } catch {
-            localeIsFollowing.value = true
-        }
-    } else {
-        localeIsFollowing.value = true
-        try {
-            await followMutation.mutateAsync()
-        } catch {
-            localeIsFollowing.value = false
-        }
-    }
 }
 
 // Preload image before mount

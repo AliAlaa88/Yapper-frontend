@@ -16,30 +16,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { useUserStore } from '~/modules/auth/stores/userStore'
+import {useUserStore} from '~/modules/auth/stores/userStore'
+const userStore = useUserStore()
+const me = userStore.getUser()
 
 const props = defineProps<{
     userId: string
-    username: string
-}>()
+    username: string    
+    enabled?: boolean
 
-const userStore = useUserStore()
-const me = userStore.getUser()
+}>()
 
 const userId = computed(() => props.userId)
 const username = computed(() => props.username)
 const meId = computed(() => me?.user_id)
-console.log('ProfileFollowAction props:', me)
-const { isBlocked, isFollowing } = useUserInfo(userId)
+const enabledRef = toRef(() => props.enabled ?? true)
+const { isBlocked, isFollowing } = useUserInfo(userId, enabledRef)
 
-const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId)
-console.log('ProfileFollowAction isFollowing:', userId.value, username.value, me?.user_id)
-const userInteractions = useUserInteractions(userId, username, meId)
+const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId, enabledRef)
+const userInteractions = useUserInteractions(userId, username, meId, enabledRef)
 const { handleFollowAction, handleUnfollowWithConfirmation, isFollowLoading } = userInteractions
 
 async function handleClick() {

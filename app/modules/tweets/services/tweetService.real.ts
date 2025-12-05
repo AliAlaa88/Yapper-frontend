@@ -77,4 +77,12 @@ export const tweetServiceReal = {
         const { $axios } = useNuxtApp()
         await $axios.delete(`/tweets/${tweetId}/bookmark`)
     },
+    async deleteTweet(tweetId: string): Promise<void> {
+        const { $axios } = useNuxtApp()
+        await $axios.delete(`/tweets/${tweetId}`)
+    },
+    async updateTweet(tweetId: string, content: string): Promise<void> {
+        const { $axios } = useNuxtApp()
+        await $axios.patch(`/tweets/${tweetId}`, { content })
+    },
 }

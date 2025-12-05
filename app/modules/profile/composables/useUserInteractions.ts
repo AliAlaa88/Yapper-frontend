@@ -2,17 +2,17 @@ import { useUserActions } from './useUserActions'
 import type { useConfirmation } from './useConfirmation'
 import type { useSnackbar } from './useSnackbar'
 import { useUserInfo } from './useUserInfo'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export function useUserInteractions(userId: Ref<string | undefined>, userName: Ref<string | undefined>, meId: Ref<string | undefined>) {
+export function useUserInteractions(userId: Ref<string | undefined>, userName: Ref<string | undefined>, meId: Ref<string | undefined>, enabled: Ref<boolean> = ref(true)) {
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
         typeof useSnackbar
     >
     const { showConfirmation, handleShowConfirmation } = inject('confirmation') as ReturnType<
         typeof useConfirmation
     >
-    const { id, username } = useUserInfo(userId, userName, meId)
+    const { id, username } = useUserInfo(userId, userName, meId, enabled)
     const {
         handleUnfollow,
         handleUnmute,
@@ -28,7 +28,7 @@ export function useUserInteractions(userId: Ref<string | undefined>, userName: R
         isUnmuteLoading,
         isRemoveFollowerLoading,
         isFollowLoading,
-    } = useUserActions(id, username, meId)
+    } = useUserActions(id, username, meId, enabled)
     const { t } = useI18n()
 
     function handleBlockWithConfirmation(showList?: Ref<boolean>, onSuccess?: () => void) {

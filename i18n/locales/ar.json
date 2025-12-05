@@ -33,7 +33,8 @@
         "home": "الرئيسية",
         "profile": "الملف الشخصي",
         "settings": "الإعدادات",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "back": "عودة"
     },
     "months": {
         "january": "يناير",
@@ -421,6 +422,12 @@
     "tweets": {
         "reposted": "أعاد النشر",
         "moreActions": "المزيد من الإجراءات",
+        "editTweet": "تعديل",
+        "deleteTweet": "حذف",
+        "tweetDeleted": "تم حذف منشورك",
+        "tweetUpdated": "تم تحديث منشورك",
+        "confirmDelete": "حذف المنشور؟",
+        "confirmDeleteDescription": "لا يمكن التراجع عن هذا الإجراء وسيتم إزالته من ملفك الشخصي، والخط الزمني لأي حسابات تتابعك، ومن نتائج البحث.",
         "actions": {
             "reply": "رد",
             "retweet": "إعادة نشر",
