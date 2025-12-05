@@ -52,15 +52,11 @@
 
             <!-- Messages -->
             <template v-else>
-                <!-- Load More Button -->
-                <div v-if="hasNextPage" class="flex justify-center py-4">
-                    <button
-                        class="text-accent hover:underline text-sm"
-                        :disabled="isFetchingNextPage"
-                        @click="() => fetchNextPage()"
-                    >
-                        {{ isFetchingNextPage ? $t('chat.loading') : $t('chat.loadOlderMessages') }}
-                    </button>
+                <!-- Sentinel for infinite scroll (at top for loading older messages) -->
+                <div v-if="hasNextPage && !isFetchingNextPage" ref="sentinelRef" class="h-1" />
+
+                <div v-if="isFetchingNextPage" class="flex justify-center py-4">
+                    <LoadingSpinner />
                 </div>
 
                 <Message v-for="message in messages" :key="message.id" :message="message" />
@@ -90,6 +86,7 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useMessagesQuery } from '../../queries/useMessagesQuery'
 import { storeToRefs } from 'pinia'
 import type { participant } from '~/modules/chat/types'
+import { useIntersectionObserver } from '@vueuse/core'
 
 const router = useRouter()
 
@@ -102,6 +99,9 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
 const messagesContainerRef = ref<HTMLElement | null>(null)
+const sentinelRef = ref<HTMLElement | null>(null)
+const hasScrolledInitially = ref(false)
+const previousScrollHeight = ref(0)
 
 const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useMessagesQuery(computed(() => props.conversationId))
@@ -121,13 +121,60 @@ const scrollToBottom = () => {
     }
 }
 
+useIntersectionObserver(
+    sentinelRef,
+    ([entry]) => {
+        if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
+            if (messagesContainerRef.value) {
+                previousScrollHeight.value = messagesContainerRef.value.scrollHeight
+            }
+            fetchNextPage()
+        }
+    },
+    {
+        root: messagesContainerRef,
+        rootMargin: '100px',
+    },
+)
+
+watch(isFetchingNextPage, (isFetching, wasFetching) => {
+    if (
+        wasFetching &&
+        !isFetching &&
+        messagesContainerRef.value &&
+        previousScrollHeight.value > 0
+    ) {
+        nextTick(() => {
+            if (messagesContainerRef.value) {
+                const newScrollHeight = messagesContainerRef.value.scrollHeight
+                const scrollDifference = newScrollHeight - previousScrollHeight.value
+
+                messagesContainerRef.value.scrollTop += scrollDifference
+                previousScrollHeight.value = 0
+            }
+        })
+    }
+})
+
 watch(
     () => messages.value.length,
     (newLength, oldLength) => {
-        if (newLength > oldLength && !isFetchingNextPage.value) {
-            nextTick(() => {
-                scrollToBottom()
-            })
+        if (newLength > oldLength && !isFetchingNextPage.value && messagesContainerRef.value) {
+            if (!hasScrolledInitially.value) {
+                nextTick(() => {
+                    scrollToBottom()
+                })
+            } else {
+                const container = messagesContainerRef.value
+                const isNearBottom =
+                    container.scrollHeight - container.scrollTop - container.clientHeight < 200
+
+                if (isNearBottom) {
+                    nextTick(() => {
+                        scrollToBottom()
+                    })
+                }
+            }
         }
     },
 )
@@ -135,6 +182,7 @@ watch(
 onMounted(() => {
     nextTick(() => {
         scrollToBottom()
+        hasScrolledInitially.value = true
     })
 })
 </script>
