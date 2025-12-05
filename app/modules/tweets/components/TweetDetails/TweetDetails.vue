@@ -22,7 +22,15 @@
                         <MoreHorizontal :size="16" />
                     </button>
 
+                    <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                    <MyTweetActionsMenu
+                        v-if="showActionsMenu && isOwnTweet"
+                        :tweet-id="tweetDetails.tweet_id"
+                        @edit="handleEdit"
+                        @delete="handleDelete"
+                    />
                     <ProfileActionsMenu
+                        v-else-if="showActionsMenu"
                         :userid="tweetDetails.user.id"
                         :is-tweet="true"
                         @user-action="handleUserAction"
@@ -30,31 +38,37 @@
                 </div>
             </div>
 
-            <Content
-                :content="mainTweetContent"
-            />
+            <Content :content="mainTweetContent" />
             <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
                 <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
                 </time>
             </div>
-            <Stats
-                :stats="mainTweetStats"
-                @quote="handleQuote"
+            <Stats :stats="mainTweetStats" @quote="handleQuote" />
+            <!-- Edit Tweet Modal -->
+            <EditTweetModal
+                :is-open="showEditModal"
+                :tweet-id="tweetDetails.tweet_id"
+                :initial-content="tweetDetails.content"
+                :is-loading="isUpdateLoading"
+                @close="showEditModal = false"
+                @save="handleSaveEdit"
             />
         </div>
 
         <!-- Replies Section -->
         <div v-if="tweetDetails && !isLoading && !error">
             <!-- Post Reply Form -->
-            <ReplyForm 
+            <ReplyForm
                 :parent-tweet-id="tweetDetails.tweet_id"
                 :replying-to-username="tweetDetails.user.username"
             />
 
             <!-- Loading Replies State -->
             <div v-if="isFetchingReplies" class="p-8 text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+                <div
+                    class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"
+                />
                 <p class="text-secondary">{{ $t('tweets.loading.replies') }}</p>
             </div>
 
@@ -67,24 +81,22 @@
 
             <!-- Replies List -->
             <div v-else>
-                <Reply
-                    v-for="reply in replies"
-                    :key="reply.tweet_id"
-                    :reply="reply"
-                />
+                <Reply v-for="reply in replies" :key="reply.tweet_id" :reply="reply" />
             </div>
         </div>
 
         <!-- Loading State -->
         <div v-if="isLoading" class="p-8 text-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4"/>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue mx-auto mb-4" />
             <p class="text-secondary">{{ $t('tweets.loading.tweetDetails') }}</p>
         </div>
 
         <!-- Tweet Not Found State (when data is null but no error) -->
         <div v-if="!isLoading && !error && !tweetDetails" class="p-8 text-center">
             <MessageCircle class="w-16 h-16 text-secondary mx-auto mb-4" :stroke-width="1" />
-            <p class="text-primary text-lg font-semibold mb-2">{{ $t('tweets.errors.tweetNotFound') }}</p>
+            <p class="text-primary text-lg font-semibold mb-2">
+                {{ $t('tweets.errors.tweetNotFound') }}
+            </p>
             <p class="text-secondary text-sm">{{ $t('tweets.errors.tweetNotFoundDescription') }}</p>
             <button
                 class="mt-4 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue/90 transition-colors duration-200"
@@ -133,12 +145,42 @@ import { MessageCircle, AlertTriangle, MoreHorizontal } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { useQueryClient } from '@tanstack/vue-query'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import MyTweetActionsMenu from '../Tweet/subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
+import { useTweetActions } from '../../composables/useTweetActions'
+import EditTweetModal from '../EditTweetModal/EditTweetModal.vue'
 
 // Get tweet ID and username from route params
 const route = useRoute()
 const router = useRouter()
 const tweetId = computed(() => route.params.tweetId)
 const { locale } = useI18n()
+const userStore = useUserStore()
+const isOwnTweet = computed(() => {
+    if (!tweetDetails.value) return false
+    return tweetDetails.value.user.id === userStore.getUser()?.user_id
+})
+const {
+    handleDeleteWithConfirmation,
+    handleUpdateWithSnackbar,
+    isUpdateLoading,
+} = useTweetActions(tweetId)
+
+const showEditModal = ref(false)
+
+const handleEdit = () => {
+    showActionsMenu.value = false
+    showEditModal.value = true
+}
+
+const handleSaveEdit = async (content) => {
+    await handleUpdateWithSnackbar(content)
+    showEditModal.value = false
+}
+
+const handleDelete = () => {
+    handleDeleteWithConfirmation(showActionsMenu)
+}
 
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
@@ -172,20 +214,17 @@ const handleUserAction = (action) => {
 
 const removeTweetsFromUser = (userId) => {
     // Update all tweet queries in the cache
-    queryClient.setQueriesData(
-        { queryKey: ['tweets'] },
-        (oldData) => {
-            if (!oldData) return oldData
+    queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData) => {
+        if (!oldData) return oldData
 
-            return {
-                ...oldData,
-                pages: oldData.pages.map((page) => ({
-                    ...page,
-                    data: page.data.filter((tweet) => tweet.user.id !== userId),
-                })),
-            }
-        },
-    )
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+                ...page,
+                data: page.data.filter((tweet) => tweet.user.id !== userId),
+            })),
+        }
+    })
 }
 
 // Get the transition store
@@ -212,7 +251,8 @@ const mainTweetContent = computed(() => {
         text: tweetDetails.value.content,
         images: tweetDetails.value.images || [],
         videos: tweetDetails.value.videos || [],
-        parentTweet: tweetDetails.value.type === 'quote' ? tweetDetails.value.parent_tweet : undefined,
+        parentTweet:
+            tweetDetails.value.type === 'quote' ? tweetDetails.value.parent_tweet : undefined,
     }
 })
 
