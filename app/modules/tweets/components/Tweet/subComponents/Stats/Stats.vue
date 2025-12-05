@@ -156,7 +156,7 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject, isReactive, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark, Quote } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
@@ -180,6 +180,8 @@ const emit = defineEmits<{
     (e: 'quote'): void
 }>()
 
+// Ensure stats is always a reactive object for toRefs
+const statsReactive = isReactive(props.stats) ? props.stats : reactive(props.stats)
 const {
     likes,
     replies,
@@ -190,7 +192,7 @@ const {
     is_reposted,
     is_bookmarked,
     username,
-} = toRefs(props.stats)
+} = toRefs(statsReactive)
 const localIsLiked = ref(is_liked.value)
 const localLikesCount = ref(likes.value)
 const isAnimating = ref(false)
