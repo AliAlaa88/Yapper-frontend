@@ -12,7 +12,7 @@ export default defineNuxtPlugin(() => {
         // Get token from cookie
         const tokenCookie = useCookie('access_token')
         const token = tokenCookie.value
-        socket = io(`${config.public.socketUrl as string}/messages`, {
+        socket = io(`${config.public.socketUrl as string}/`, {
             path: config.public.socketPath as string,
             autoConnect: false,
             transports: ['websocket', 'polling'],
