@@ -6,9 +6,7 @@ export const searchServiceReal = {
     async getSearchSuggestions(query: string): Promise<SearchSuggestion> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.get('/search/suggestions', {
-                params: { q: query },
-            })
+            const response = await $axios.get('/search/suggestions?query=' + encodeURIComponent(query))
             if (!response.data) {
                 throw new Error('Data not found')
             }

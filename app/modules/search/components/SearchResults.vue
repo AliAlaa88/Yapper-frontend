@@ -20,6 +20,41 @@
                 class="min-h-[650px] w-full"
             />
 
+            <UserList
+                v-if="currentTab === 'people' && searchQuery"
+                :fetching-source="`/search/users?query=${encodeURIComponent(searchQuery)}`"
+                query-key-prefix="search-users"
+                :loading-text="$t('messages.loading')"
+                :error-text="$t('messages.error')"
+                :retry-text="$t('messages.tryAgain')"
+                :empty-title="$t('search.emptyState.noUsers.title')"
+                :empty-description="$t('search.emptyState.noUsers.description')"
+                class="min-h-[650px] w-full"
+            >
+                <template #default="{ users }">
+                    <FollowListUserCard
+                        v-for="user in users as FollowUser[]"
+                        :key="user.user_id"
+                        :user="user"
+                        :show-tooltip="false"
+                    />
+                </template>
+
+                <template #empty>
+                    <EmptyState
+                        icon="👤"
+                        :title="$t('search.emptyState.noUsers.title')"
+                        :description="$t('search.emptyState.noUsers.description')"
+                    />
+                </template>
+            </UserList>
+
+            <MediaGrid
+                v-if="currentTab === 'media' && searchQuery"
+                :fetching-source="`/search/posts?query=${encodeURIComponent(searchQuery)}&has_media=true`"
+                class="min-h-[650px] w-full"
+            />
+
             <div v-if="!searchQuery" class="px-4 py-8 text-center text-secondary">
                 No results for {{ searchQuery }}
             </div>
@@ -34,6 +69,11 @@ import { useRoute, useRouter } from 'vue-router'
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 import SearchBar from './SearchBar.vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
+import { UserList } from '~/modules/Common/components/UserList'
+import EmptyState from '~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vue'
+import FollowListUserCard from '~/modules/Common/components/UserCard/UserCard.vue'
+import type { FollowUser } from '~/modules/profile/types/user'
+import MediaGrid from '~/modules/Common/components/MediaGrid/MediaGrid.vue'
 
 const { t } = useI18n()
 const route = useRoute()

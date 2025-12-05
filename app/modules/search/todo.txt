@@ -1,5 +1,4 @@
 users in history and sugg.
-add media grid and followers list in searchresults
 integrate with explore
 hide searchbar in sidebar when on explore tab
 

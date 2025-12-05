@@ -14,16 +14,16 @@
                 <li
                     v-for="(item, index) in suggestionsData.suggested_queries"
                     :key="index"
-                    class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer"
+                    class="px-4 py-2 hover:bg-hover transition-colors cursor-pointer"
                     @click="$emit('handleSearchSubmit', item.query, 'typeahead_click')"
                 >
                     <div class="flex items-center gap-3">
-                        <Search :size="20" class="text-primary/50 shrink-0" />
+                        <Search :size="24" class="text-primary/50 shrink-0 font-bold mx-2" />
                         <div class="flex-1 min-w-0">
-                            <div class="text-primary font-semibold text-[15px] truncate">
+                            <div class="text-primary text-md truncate">
                                 {{ item.query }}
                             </div>
-                            <div v-if="item.is_trending" class="text-primary/50 text-[13px]">
+                            <div v-if="item.is_trending" class="text-secondary text-md">
                                 {{ $t('search.trending') }}
                             </div>
                         </div>
@@ -36,24 +36,24 @@
                 <li
                     v-for="user in suggestionsData.suggested_users"
                     :key="user.user_id"
-                    class="px-2 py-2 hover:bg-hover transition-colors cursor-pointer"
+                    class="px-4 py-2 hover:bg-hover transition-colors cursor-pointer"
                 >
                     <div class="flex items-center gap-3">
                         <img
                             :src="user.avatar_url"
                             :alt="user.name"
-                            class="w-8 h-8 rounded-full object-cover shrink-0"
+                            class="w-10 h-10 rounded-full object-cover shrink-0"
                         />
                         <div class="flex-1 min-w-0">
-                            <div class="text-primary font-semibold text-[15px] truncate">
+                            <div class="text-primary font-semibold text-[15px] truncate font-bold">
                                 {{ user.name }}
                             </div>
-                            <div class="text-primary/50 text-[13px] truncate">
+                            <div class="text-secondary text-[13px] truncate">
                                 @{{ user.username }}
                             </div>
                             <div
                                 v-if="user.is_following || user.is_follower"
-                                class="text-primary/50 text-[13px] flex items-center gap-1"
+                                class="text-secondary text-[13px] flex items-center gap-1"
                             >
                                 <UserRound :size="12" />
                                 <span v-if="user.is_following && user.is_follower">
