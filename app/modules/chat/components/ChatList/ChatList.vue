@@ -44,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { MessageSquarePlus, Loader } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
+import { MessageSquarePlus } from 'lucide-vue-next'
 import type { Conversation } from '~/modules/chat/types'
 import ConversationItem from './subComponents/ConversationItem/ConversationItem.vue'
 import { useGetConversation } from '~/modules/chat/queries/useGetConversation'
