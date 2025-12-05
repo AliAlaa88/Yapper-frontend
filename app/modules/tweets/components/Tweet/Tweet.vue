@@ -204,11 +204,11 @@ const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
 const repostedUsername = computed(() => {
-    return currentUser.value?.user_id === props.tweet.reposted_by?.id
+    return currentUser.value?.id === props.tweet.reposted_by?.id
         ? 'You'
         : props.tweet.reposted_by === undefined
-          ? 'You'
-          : props.tweet.reposted_by.name
+            ? 'You'
+            : props.tweet.reposted_by.name
 })
 // Transform content string to Content object
 const content = computed(() => ({
