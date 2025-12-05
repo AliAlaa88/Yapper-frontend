@@ -2,43 +2,124 @@
     <!-- Tweet Details View - Name above username -->
     <div v-if="isDetail" class="mb-4">
         <div class="flex items-center gap-3 mb-4">
-            <img :src="avatar" :alt="name" class="w-12 h-12 rounded-full" />
+            <CustomToolTip
+                :delay-duration="300"
+                content-class="rounded-2xl shadow-xl border border-primary"
+            >
+                <template #trigger>
+                    <NuxtLink :id="`publisher-avatar-link-${id}`" :to="linkComputed">
+                        <img
+                            :id="`publisher-avatar-${id}`"
+                            :src="avatar_url === '' || !avatar_url ? 'https://ui-avatars.com/api/?name=' + name : avatar_url"
+                            :alt="name"
+                            class="w-12 h-12 rounded-full hover:opacity-90 transition-opacity"
+                            :onerror="(event: any) => handleImageError(name, event)"
+                        />
+                    </NuxtLink>
+                </template>
+                <template #content="{ isOpen }">
+                    <UserCard
+                        :id="id"
+                        :name="name"
+                        :username="username"
+                        :avatar="avatar_url"
+                        :bio="publisher.bio"
+                        :followers-count="publisher.followers"
+                        :following-count="publisher.following"
+                        :is_following="publisher.is_following"
+                        :is-open="isOpen"
+                    />
+                </template>
+            </CustomToolTip>
             <div class="flex flex-col">
-                <NuxtLink :to="linkComputed" class="font-bold text-[var(--color-x-black)] hover:underline text-[20px] leading-6">
-                    {{ name }}
-                </NuxtLink>
-                <span class="text-[var(--color-x-gray-dark)] text-[15px]">@{{ username }}</span>
+                <CustomToolTip
+                    :delay-duration="300"
+                    content-class="rounded-2xl shadow-xl border border-primary"
+                >
+                    <template #trigger>
+                        <NuxtLink
+                            :id="`publisher-name-link-${id}`"
+                            :to="linkComputed"
+                            class="font-bold text-primary hover:underline text-lg leading-6"
+                        >
+                            {{ name }}
+                        </NuxtLink>
+                    </template>
+                    <template #content="{ isOpen }">
+                        <UserCard
+                            :id="id"
+                            :name="name"
+                            :username="username"
+                            :avatar="avatar_url"
+                            :bio="publisher.bio"
+                            :followers-count="publisher.followers"
+                            :following-count="publisher.following"
+                            :is_following="publisher.is_following"
+                            :is-open="isOpen"
+                        />
+                    </template>
+                </CustomToolTip>
+                <span class="text-secondary text-sm">@{{ username }}</span>
             </div>
         </div>
     </div>
-    
+
     <!-- Timeline View - Name and username inline -->
     <div v-else class="flex items-center gap-1 mb-0.5">
-        <NuxtLink :to="linkComputed" class="font-bold text-[var(--color-x-black)] hover:underline text-[15px]">
-            {{ name }}
-        </NuxtLink>
-        <span class="text-[var(--color-x-gray-dark)] text-[15px]">@{{ username }}</span>
-        <span class="text-[var(--color-x-gray-dark)] text-[15px]">·</span>
-        <span class="text-[var(--color-x-gray-dark)] text-[15px] hover:underline cursor-pointer">
-            {{ formatDate(createdAt) }}
+        <CustomToolTip
+            :delay-duration="300"
+            content-class="rounded-2xl shadow-xl border border-primary"
+        >
+            <template #trigger>
+                <NuxtLink
+                    :id="`publisher-name-link-timeline-${id}`"
+                    :to="linkComputed"
+                    class="font-bold text-primary hover:underline text-sm truncate max-w-[200px] sm:max-w-[150px] xs:max-w-[100px]"
+                >
+                    {{ name }}
+                </NuxtLink>
+            </template>
+            <template #content="{ isOpen }">
+                <UserCard
+                    :id="id"
+                    :name="name"
+                    :username="username"
+                    :avatar="avatar_url"
+                    :bio="publisher.bio"
+                    :followers-count="publisher.followers"
+                    :following-count="publisher.following"
+                    :is_following="publisher.is_following"
+                    :is-open="isOpen"
+                />
+            </template>
+        </CustomToolTip>
+        <span
+            class="text-secondary text-sm truncate max-w-[200px] sm:max-w-[150px] xs:max-w-[100px]"
+            >@{{ username }}</span
+        >
+        <span class="text-secondary text-sm">·</span>
+        <span class="text-secondary text-sm hover:underline cursor-pointer">
+            {{ formatDate(createdAt, locale) }}
         </span>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
-import type { User as UserType } from '../../../../types'
+import type { User as UserType } from '../../../../../Common/types/user'
 import { formatDate } from '../../../../utils/lib'
 import { getProfileUrl } from '../../../../utils/navigation'
-
+import { CustomToolTip } from '~/modules/Common/components/Tooltip'
+import UserCard from './UserCard.vue'
+import { handleImageError } from '~/utils/helpers'
 const props = defineProps<{
     publisher: UserType
     createdAt: string
     isDetail?: boolean
 }>()
 
-const { id, name, username, avatar, link } = toRefs(props.publisher)
-
+const { id, name, username, avatar_url } = toRefs(props.publisher)
+const { locale } = useI18n()
 // Use the utility function for consistent profile URLs
 const linkComputed = computed(() => getProfileUrl(props.publisher))
 </script>

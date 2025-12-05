@@ -1,53 +1,41 @@
 <template>
-    <div class="border-b border-[#2f3336] bg-black">
-        <!-- Cover Image -->
+    <div class="border-b border-primary bg-primary">
         <CoverImage :cover-url="user?.cover_url ?? ''" />
 
-        <!-- Profile Info -->
         <div class="px-4">
-            <div class="-mt-[70px] mb-3 flex items-end justify-between">
-                <!-- Avatar -->
+            <div class="-mt-[42px] sm:-mt-[67px] mb-3 flex items-end justify-between">
                 <ProfileAvatar
                     :avatar-url="user?.avatar_url ?? ''"
                     :display-name="user?.name ?? ''"
                 />
-
-                <!-- Actions -->
-                <ProfileActions />
+                <div class="mt-3 flex gap-2">
+                    <div v-if="isMee" class="flex gap-2">
+                        <ProfileEditButton />
+                    </div>
+                    <div v-else class="flex flex-wrap gap-2">
+                        <ProfileActions v-if="user?.user_id" :is-tweet="false" />
+                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" />
+                        <ProfileBlockedAction />
+                    </div>
+                </div>
             </div>
 
-            <!-- User Details -->
-            <div class="pb-4">
-                <ProfileUserInfo
-                    :display-name="user?.name ?? ''"
-                    :username="user?.username ?? ''"
-                />
-                <ProfileBio :bio="user?.bio ?? ''" />
-                <ProfileCreatedAt :created-at="user?.created_at ?? ''" />
-                <ProfileStats
-                    :following-count="user?.following_count ?? 0"
-                    :followers-count="user?.followers_count ?? 0"
-                />
-            </div>
+            <ProfileInfo :user="user" :is-my-profile="isMee" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import CoverImage from './SubComponents/CoverImage.vue'
-import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
 import ProfileActions from './SubComponents/ProfileActions.vue'
-import ProfileUserInfo from './SubComponents/ProfileUserInfo.vue'
-import ProfileBio from './SubComponents/ProfileBio.vue'
-import ProfileCreatedAt from './SubComponents/ProfileCreatedAt.vue'
-import ProfileStats from './SubComponents/ProfileStats.vue'
+import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
+import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
+import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
+import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
+import ProfileInfo from './SubComponents/ProfileInfo.vue'
+import { useProfileStore } from '../../stores/profileStore'
+import { storeToRefs } from 'pinia'
 
-import { useUserInfoQuery } from '../../queries/useUserInfoQuery.js'
-
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const username = route.params.username as string
-
-const userQuery = useUserInfoQuery(username)
-const user = computed(() => userQuery.data.value)
+const profileStore = useProfileStore()
+const { profile: user, isMyProfile: isMee } = storeToRefs(profileStore)
 </script>

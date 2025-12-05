@@ -1,20 +1,33 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ===========================
+   🎨 THEME VARIABLES
+   =========================== */
 @theme {
-    /* X (Twitter) Color Palette */
+    /* Brand Colors */
     --color-x-blue: #1d9bf0;
     --color-x-blue-hover: #1a8cd8;
     --color-x-blue-dark: #1871a8;
 
+    /* Neutral / Grayscale Palette */
     --color-x-black: #0f1419;
     --color-x-dark: #14171a;
     --color-x-gray-dark: #536471;
     --color-x-gray: #71767b;
     --color-x-gray-light: #8b98a5;
     --color-x-gray-extra-light: #cfd9de;
+    --color-x-tooltip-bg: #cfd9de;
+
+    /* Borders & Surfaces */
     --color-x-border: #eff3f4;
     --color-x-background: #f7f9f9;
     --color-x-white: #ffffff;
+    --color-x-alternate: #0f1419;
+    --color-x-text-alternate: #ffffff;
+    --color-x-hover-alternate: #ebebeb;
 
+    /* Status Colors */
     --color-x-red: #f4212e;
     --color-x-red-hover: #e0152e;
     --color-x-green: #00ba7c;
@@ -22,14 +35,18 @@
     --color-x-yellow: #ffd400;
     --color-x-yellow-hover: #f7c600;
 
-    /* Dark Mode Colors */
+    /* Dark Mode Base */
     --color-x-bg-dark: #000000;
     --color-x-bg-dark-secondary: #16181c;
     --color-x-border-dark: #2f3336;
     --color-x-text-dark: #e7e9ea;
     --color-x-text-dark-secondary: #71767b;
+    --color-x-hover-dark: #2f3336;
 
-    /* Fonts */
+    --color-x-popup-bg: #242d34;
+    /* ===========================
+       🖋 FONT SETTINGS
+       =========================== */
     --font-family-sans:
         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-family-chirp:
@@ -51,32 +68,473 @@
     --font-weight-extrabold: 800;
 }
 
-/* Custom utility classes for X styling */
-@layer utilities {
-    .text-x-primary {
-        color: var(--color-x-black);
+/* ===========================
+   🎨 ACCENT COLOR SYSTEM
+   =========================== */
+@layer base {
+    /* Default accent color (orange) */
+    :root {
+        --accent-color: #ff7a00;
+        --accent-color-hover: #e66d00;
     }
 
-    .text-x-secondary {
-        color: var(--color-x-gray-dark);
+    /* Dynamic accent colors based on user selection */
+    [data-color='blue'] {
+        --accent-color: #1d9bf0;
+        --accent-color-hover: #1a8cd8;
     }
 
-    .bg-x-hover {
-        background-color: rgba(15, 20, 25, 0.1);
+    [data-color='yellow'] {
+        --accent-color: #ffd400;
+        --accent-color-hover: #f7c600;
     }
 
-    .border-x {
-        border-color: var(--color-x-border);
+    [data-color='pink'] {
+        --accent-color: #f91880;
+        --accent-color-hover: #e0156e;
+    }
+
+    [data-color='purple'] {
+        --accent-color: #7856ff;
+        --accent-color-hover: #6643e6;
+    }
+
+    [data-color='orange'] {
+        --accent-color: #ff7a00;
+        --accent-color-hover: #e66d00;
+    }
+
+    [data-color='green'] {
+        --accent-color: #00ba7c;
+        --accent-color-hover: #00a368;
     }
 }
 
-/* Dark mode preferences */
-@media (prefers-color-scheme: dark) {
+/* ===========================
+   🌓 DARK/LIGHT MODE OVERRIDES
+   =========================== */
+@layer base {
     :root {
-        --color-x-background: var(--color-x-bg-dark);
-        --color-x-white: var(--color-x-bg-dark-secondary);
-        --color-x-border: var(--color-x-border-dark);
-        --color-x-black: var(--color-x-text-dark);
-        --color-x-gray-dark: var(--color-x-text-dark-secondary);
+        color-scheme: light;
+        --color-x-black: #0f1419;
+        --color-x-gray-dark: #536471;
+        --color-x-background: #f7f9f9;
+        --color-x-white: #ffffff;
+        --color-x-border: #eff3f4;
+        --color-x-hover-dark: #ebebeb;
+        --color-x-alternate: #0f1419;
+        --color-x-text-alternate: #ffffff;
+        --color-x-hover-alternate: #ebebeb;
+        --color-x-tooltip-bg: #cfd9de;
+        --color-x-popup-bg: #999999;
+    }
+
+    :root.dark {
+        color-scheme: dark;
+        --color-x-black: #e7e9ea;
+        --color-x-dark: #e7e9ea;
+        --color-x-gray-dark: #71767b;
+        --color-x-gray: #8b98a5;
+        --color-x-gray-light: #cfd9de;
+        --color-x-gray-extra-light: #e7e9ea;
+        --color-x-tooltip-bg: #2f3336;
+        --color-x-border: #2f3336;
+        --color-x-background: #000000;
+        --color-x-white: #16181c;
+        --color-x-alternate: #ffffff;
+        --color-x-text-alternate: #0f1419;
+        --color-x-hover-alternate: #2f3336;
+        --color-x-hover-dark: #16181c;
+        --color-x-popup-bg: #242d34;
+    }
+}
+
+/* ===========================
+   ⚙️ CUSTOM UTILITIES
+   =========================== */
+@layer utilities {
+    /* ===========================
+       ACCENT COLOR UTILITIES
+       =========================== */
+    .text-accent {
+        color: var(--accent-color);
+    }
+
+    .bg-accent {
+        background-color: var(--accent-color);
+    }
+
+    .border-accent {
+        border-color: var(--accent-color);
+    }
+
+    .fill-accent {
+        fill: var(--accent-color);
+    }
+
+    /* Accent with opacity */
+    .bg-accent\/5 {
+        background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
+    }
+
+    .bg-accent\/10 {
+        background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    }
+
+    .bg-accent\/20 {
+        background-color: color-mix(in srgb, var(--accent-color) 20%, transparent);
+    }
+
+    .bg-accent\/60 {
+        background-color: color-mix(in srgb, var(--accent-color) 60%, transparent);
+    }
+
+    .bg-accent\/80 {
+        background-color: color-mix(in srgb, var(--accent-color) 80%, transparent);
+    }
+
+    .text-accent\/50 {
+        color: color-mix(in srgb, var(--accent-color) 50%, transparent);
+    }
+
+    /* Hover states for accent */
+    .hover\:text-accent:hover {
+        color: var(--accent-color);
+    }
+
+    .hover\:bg-accent:hover {
+        background-color: var(--accent-color-hover);
+    }
+
+    .hover\:bg-accent\/10:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    }
+
+    .hover\:border-accent:hover {
+        border-color: var(--accent-color);
+    }
+
+    .focus\:border-accent:focus {
+        border-color: var(--accent-color);
+    }
+
+    .peer:focus ~ .peer-focus\:text-accent {
+        color: var(--accent-color);
+    }
+
+    /* Ring utilities for accent */
+    .ring-accent {
+        --tw-ring-color: var(--accent-color);
+    }
+
+    .focus\:ring-accent:focus {
+        --tw-ring-color: var(--accent-color);
+    }
+
+    /* Text colors */
+    .text-primary {
+        color: var(--color-x-black);
+    }
+
+    .text-secondary {
+        color: var(--color-x-gray-dark);
+    }
+
+    .text-muted {
+        color: var(--color-x-gray);
+    }
+
+    .text-light {
+        color: var(--color-x-gray-light);
+    }
+
+    .text-white {
+        color: var(--color-x-white);
+    }
+
+    .text-alternate {
+        color: var(--color-x-text-alternate);
+    }
+
+    .text-blue {
+        color: var(--color-x-blue);
+    }
+
+    .text-green {
+        color: var(--color-x-green);
+    }
+
+    .text-red {
+        color: var(--color-x-red);
+    }
+
+    .text-yellow {
+        color: var(--color-x-yellow);
+    }
+
+    /* Background colors */
+    .bg-primary {
+        background-color: var(--color-x-background);
+    }
+
+    .bg-alternate {
+        background-color: var(--color-x-alternate);
+    }
+
+    .bg-hover {
+        background-color: var(--color-x-hover-dark);
+    }
+
+    .bg-hover-alternate {
+        background-color: var(--color-x-hover-alternate);
+    }
+
+    .bg-blue {
+        background-color: var(--color-x-blue);
+    }
+
+    .bg-green {
+        background-color: var(--color-x-green);
+    }
+
+    .bg-red {
+        background-color: var(--color-x-red);
+    }
+
+    .bg-yellow {
+        background-color: var(--color-x-yellow);
+    }
+
+    .bg-gray {
+        background-color: var(--color-x-gray);
+    }
+
+    .bg-tooltip {
+        background-color: var(--color-x-gray-light);
+    }
+
+    .bg-popup {
+        background-color: var(--color-x-popup-bg);
+    }
+
+    /* Border colors */
+    .border-primary {
+        border-color: var(--color-x-border);
+    }
+
+    .border-alternate {
+        border-color: var(--color-x-alternate);
+    }
+
+    .border-blue {
+        border-color: var(--color-x-blue);
+    }
+
+    .border-green {
+        border-color: var(--color-x-green);
+    }
+
+    .border-red {
+        border-color: var(--color-x-red);
+    }
+
+    .border-tooltip {
+        border-color: var(--color-x-gray-light);
+    }
+
+    .border-dark {
+        border-color: var(--color-x-border-dark);
+    }
+
+    /* Font families */
+    .font-chirp {
+        font-family: var(--font-family-chirp);
+    }
+
+    .font-sans {
+        font-family: var(--font-family-sans);
+    }
+
+    /* Font weights */
+    .font-normal {
+        font-weight: var(--font-weight-normal);
+    }
+
+    .font-medium {
+        font-weight: var(--font-weight-medium);
+    }
+
+    .font-semibold {
+        font-weight: var(--font-weight-semibold);
+    }
+
+    .font-bold {
+        font-weight: var(--font-weight-bold);
+    }
+
+    .font-extrabold {
+        font-weight: var(--font-weight-extrabold);
+    }
+
+    /* Font sizes */
+    .text-xs {
+        font-size: var(--font-size-xs);
+    }
+
+    .text-sm {
+        font-size: var(--font-size-sm);
+    }
+
+    .text-base {
+        font-size: var(--font-size-base);
+    }
+
+    .text-lg {
+        font-size: var(--font-size-lg);
+    }
+
+    .text-xl {
+        font-size: var(--font-size-xl);
+    }
+
+    .text-2xl {
+        font-size: var(--font-size-2xl);
+    }
+    /* Icon utilities */
+    .github-icon {
+        filter: invert(1);
+    }
+
+    .dark .github-icon {
+        filter: invert(0);
+    }
+
+    /* Hover utilities */
+    .hover\:bg-blue:hover {
+        background-color: var(--color-x-blue-hover);
+    }
+
+    .hover\:bg-red:hover {
+        background-color: var(--color-x-red-hover);
+    }
+
+    .hover\:bg-green:hover {
+        background-color: var(--color-x-green-hover);
+    }
+
+    .hover\:bg-yellow:hover {
+        background-color: var(--color-x-yellow-hover);
+    }
+
+    .hover\:bg-hover:hover {
+        background-color: var(--color-x-hover-dark);
+    }
+
+    .hover\:bg-hover-alternate:hover {
+        background-color: var(--color-x-gray-light);
+    }
+
+    .hover\:text-primary:hover {
+        color: var(--color-x-primary);
+    }
+
+    .hover\:text-muted:hover {
+        color: var(--color-x-muted);
+    }
+
+    .hover\:text-light:hover {
+        color: var(--color-x-light);
+    }
+
+    .hover\:text-white:hover {
+        color: var(--color-x-white);
+    }
+
+    .hover\:text-alternate:hover {
+        color: var(--color-x-alternate);
+    }
+
+    .hover\:text-blue:hover {
+        color: var(--color-x-blue);
+    }
+
+    .hover\:text-green:hover {
+        color: var(--color-x-green);
+    }
+
+    .hover\:text-red:hover {
+        color: var(--color-x-red);
+    }
+
+    .hover\:text-yellow:hover {
+        color: var(--color-x-yellow);
+    }
+
+    .hover\:text-gray:hover {
+        color: var(--color-x-gray);
+    }
+
+    .hover\:text-tooltip:hover {
+        color: var(--color-x-tooltip);
+    }
+
+    .hover\:text-border:hover {
+        color: var(--color-x-border);
+    }
+
+    .hover\:border-blue:hover {
+        border-color: var(--color-x-blue-hover);
+    }
+
+    .hover\:border-red:hover {
+        border-color: var(--color-x-red-hover);
+    }
+
+    /* Hover: github icon */
+    .button-hover-invert:hover .github-icon {
+        filter: invert(0);
+    }
+    .dark .button-hover-invert:hover .github-icon {
+        filter: invert(1);
+    }
+    /* Focus utilities */
+
+    .focus\:border-blue:focus {
+        border-color: var(--color-x-blue-hover);
+    }
+
+    .focus\:border-red:focus {
+        border-color: var(--color-x-red-hover);
+        /* Animation classes */
+        .animate-like {
+            animation: like 0.6s ease-in-out;
+        }
+    }
+}
+
+/* ===========================
+   🎬 ANIMATIONS
+   =========================== */
+@keyframes like {
+    0% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.3);
+    }
+    30% {
+        transform: scale(0.9);
+    }
+    45% {
+        transform: scale(1.15);
+    }
+    60% {
+        transform: scale(0.95);
+    }
+    75% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
     }
 }

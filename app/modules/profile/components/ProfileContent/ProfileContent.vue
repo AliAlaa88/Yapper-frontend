@@ -1,71 +1,78 @@
 <template>
-    <div class="bg-black">
-        <!-- Tabs Navigation -->
-        <ProfileTabs :tabs="tabs" />
-
-        <!-- Content Area - switches based on route -->
-        <div class="min-h-[400px]">
-            <!-- Posts Tab (default route) -->
-            <div v-if="currentTab === 'posts'" class="bg-black">
-                <EmptyState
-                    icon="📝"
-                    title="No posts yet"
-                    description="When this user posts, they'll show up here."
-                />
-            </div>
-
-            <!-- Replies Tab -->
-            <div v-else-if="currentTab === 'replies'" class="bg-black">
-                <EmptyState
-                    icon="💬"
-                    title="No replies yet"
-                    description="When this user replies to posts, they'll show up here."
-                />
-            </div>
-
-            <!-- Media Tab -->
-            <div v-else-if="currentTab === 'media'" class="bg-black">
-                <EmptyState
-                    icon="📷"
-                    title="No media yet"
-                    description="Photos and videos will appear here."
-                />
-            </div>
-
-            <!-- Likes Tab -->
-            <div v-else-if="currentTab === 'likes'" class="bg-black">
-                <EmptyState
-                    icon="❤️"
-                    title="No likes yet"
-                    description="When this user likes posts, they'll show up here."
-                />
-            </div>
-        </div>
+    <div class="bg-primary">
+        <Tabs
+            v-if="!isBlocked"
+            :tabs="tabsConfig"
+            :active-tab="currentTab"
+            :on-change="handleTabChange"
+        />
+        <TweetsList
+            v-if="!isBlocked && userId"
+            :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
+            class="min-h-[650px] w-full"
+        />
+        <ProfileBlockedContent v-if="isBlocked" :username="username" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import ProfileTabs from './SubComponents/ProfileTabs.vue'
-import EmptyState from './SubComponents/EmptyState.vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+
+import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
+
+import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
+import { useProfileStore } from '../../stores/profileStore'
+import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 
-const route = useRoute()
 
-// Determine current tab based on route path
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
+const profileStore = useProfileStore()
+const { profile, isMyProfile } = storeToRefs(profileStore)
+const userId = computed(() => profile.value?.user_id ?? '')
+const { isBlocked, username } = useUserInfo(userId)
+
 const currentTab = computed(() => {
     const path = route.path
     if (path.endsWith('/replies')) return 'replies'
     if (path.endsWith('/media')) return 'media'
     if (path.endsWith('/likes')) return 'likes'
-    return 'posts' // default
+    return 'posts'
 })
 
-const tabs = [
-    { id: 'posts', label: 'Posts', to: '' },
-    { id: 'replies', label: 'Replies', to: 'replies' },
-    { id: 'media', label: 'Media', to: 'media' },
-    { id: 'likes', label: 'Likes', to: 'likes' },
-]
+const tabsConfig = computed(() => {
+    const tabs = [
+        { label: t('profile.tabs.posts'), value: 'posts', test_id: 'tab-posts' },
+        { label: t('profile.tabs.replies'), value: 'replies', test_id: 'tab-replies' },
+        { label: t('profile.tabs.media'), value: 'media', test_id: 'tab-media' },
+    ]
+
+    if (isMyProfile.value) {
+        tabs.push({ label: t('profile.tabs.likes'), value: 'likes', test_id: 'tab-likes' })
+    }
+
+    return tabs
+})
+
+const handleTabChange = (tab: string) => {
+    const segments = route.path.split('/').filter(Boolean)
+    let basePath = ''
+
+    if (segments.length > 1) {
+        basePath = `/${segments.slice(0, 1).join('/')}`
+    } else {
+        basePath = '/' + segments[0]
+    }
+
+    if (tab !== 'posts') {
+        const newPath = `${basePath}/${tab}`
+        router.push(newPath)
+    } else {
+        router.push(basePath)
+    }
+}
 </script>

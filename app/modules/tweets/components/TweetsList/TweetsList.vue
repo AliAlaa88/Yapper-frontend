@@ -1,54 +1,63 @@
 <template>
-    <div class="max-w-[600px] mx-auto border-x border-x bg-[var(--color-x-white)] min-h-screen">
-        <!-- Header
-        <div v-if="fetchingSource !== `user`"
-            class="sticky top-0 z-10 bg-[var(--color-x-white)]/80 backdrop-blur-md border-b border-x px-4 py-3"
-        >
-            <h1 class="text-xl font-bold text-x-primary font-[var(--font-weight-bold)]">{{ title }}</h1>
-        </div> -->
-        
+    <div class="max-w-[600px] mx-auto bg-primary min-h-screen">
         <!-- Loading state -->
-        <div v-if="isLoading" class="p-6 text-center">
-            <div class="inline-flex items-center space-x-2 text-x-secondary">
-                <div class="animate-spin rounded-full h-5 w-5 border-2 border-[var(--color-x-blue)] border-t-transparent"></div>
-                <span class="text-sm font-[var(--font-weight-medium)]">Loading tweets...</span>
+        <div v-if="isPending" class="p-6 text-center">
+            <div class="inline-flex items-center space-x-2 text-secondary">
+                <div
+                    class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"
+                />
+                <span class="text-sm font-medium text-primary">{{
+                    $t('tweets.loading.tweets')
+                }}</span>
             </div>
         </div>
-        
+
         <!-- Error state -->
         <div v-else-if="error" class="p-6 text-center">
-            <div class="bg-[var(--color-x-background)] rounded-xl p-4 border border-x">
-                <div class="text-[var(--color-x-red)] text-sm font-[var(--font-weight-medium)] mb-3">
-                    {{ error }}
+            <div class="bg-primary rounded-xl p-4 border border-primary">
+                <div class="text-red text-sm font-medium mb-3">
+                    {{ $t('tweets.errors.loadFailed') }}
                 </div>
-                <button 
-                    @click="loadTweets" 
-                    class="inline-flex items-center px-4 py-2 bg-[var(--color-x-blue)] text-white text-sm font-[var(--font-weight-bold)] rounded-full hover:bg-[var(--color-x-blue-hover)] transition-colors duration-200"
+                <button
+                    id="tweets-list-retry-button"
+                    class="inline-flex items-center px-4 py-2 bg-blue text-white text-sm font-bold rounded-full hover:bg-blue transition-colors duration-200"
+                    @click="loadTweets"
                 >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Try again
+                    <RotateCw class="w-4 h-4 mr-2" />
+                    {{ $t('tweets.errors.tryAgain') }}
                 </button>
             </div>
         </div>
-        
+
         <!-- Tweets list -->
-        <div v-else-if="tweets && tweets.length > 0" class="divide-y divide-[var(--color-x-border)]">
-            <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" />
+        <div v-else-if="!isPending" class="divide-y divide-primary flex flex-col items-center">
+            <div class="w-full">
+                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" />
+            </div>
+
+            <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
+                <div
+                    class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"
+                />
+            </div>
+
+            <!-- Intersection observer target -->
+            <div ref="loadMoreTrigger" class="h-1 w-full" />
         </div>
-        
+
         <!-- Empty state -->
-        <div v-else class="p-8 text-center">
+        <div v-if="!isFetching && tweets.length === 0" class="p-8 text-center">
             <div class="max-w-sm mx-auto">
-                <div class="w-16 h-16 mx-auto mb-4 bg-[var(--color-x-background)] rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8 text-x-secondary" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
-                    </svg>
+                <div
+                    class="w-16 h-16 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center"
+                >
+                    <Logo class="w-8 h-8 text-secondary" />
                 </div>
-                <h3 class="text-lg font-[var(--font-weight-bold)] text-x-primary mb-2">No tweets yet</h3>
-                <p class="text-sm text-x-secondary leading-relaxed">
-                    When tweets are posted, they'll show up here. Check back later!
+                <h3 class="text-lg font-bold text-primary mb-2">
+                    {{ $t('tweets.empty.noTweets') }}
+                </h3>
+                <p class="text-sm text-secondary leading-relaxed">
+                    {{ $t('tweets.empty.noTweetsDescription') }}
                 </p>
             </div>
         </div>
@@ -59,7 +68,9 @@
 import { toRef, computed } from 'vue'
 import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
-
+import { RotateCw } from 'lucide-vue-next'
+import Logo from '~/modules/Common/components/Logo/Logo.vue'
+import type { Tweet as TweetType } from '../../types/tweet.ts'
 const props = defineProps<{
     fetchingSource?: string | null
 }>()
@@ -67,29 +78,68 @@ const props = defineProps<{
 // Convert prop to ref for reactivity
 const fetchingSourceRef = toRef(props, 'fetchingSource')
 
-// Use the query with the reactive fetchingSource
-const { data: tweets, isLoading, error, refetch } = useTweetsQuery(fetchingSourceRef)
-
-// Compute title based on fetchingSource
-const title = computed(() => {
-    const source = fetchingSourceRef.value
-    switch (source) {
-        case 'likes':
-            return 'Likes'
-        case 'media':
-            return 'Media'
-        case 'replies':
-            return 'Replies'
-        case 'user':
-            return 'Posts'
-        case 'home':
-        default:
-            return 'Home'
-    }
-})
-
+// Use the query with the reactive fetchingSource (provide default empty string)
+const {
+    data,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+} = useTweetsQuery(computed(() => fetchingSourceRef.value ?? ''))
 // Function to retry loading tweets
 const loadTweets = () => {
     refetch()
 }
+
+const loadMoreTrigger = ref<HTMLElement | null>(null)
+
+watch(
+    () => loadMoreTrigger.value,
+    (el) => {
+        if (!el) return
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0]
+                if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
+                    fetchNextPage()
+                }
+            },
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1,
+            },
+        )
+
+        observer.observe(el)
+
+        onUnmounted(() => observer.disconnect())
+    },
+    { immediate: true },
+)
+
+const tweets = computed(() => {
+    const pages = data.value?.pages
+
+    if (!pages) return []
+
+    return pages.flatMap((p) => p.data.map((tweet) => ({ ...tweet })))
+})
+
+const getTweetKey = (tweet: TweetType): string => {
+    const user = tweet.user
+    return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.likes_count}-${tweet.is_liked}-${tweet.is_reposted}-${tweet.is_bookmarked}`
+}
+
+watch(
+    tweets,
+    (newTweets) => {
+        console.log('tweets updated', newTweets)
+    },
+    { deep: true },
+)
 </script>

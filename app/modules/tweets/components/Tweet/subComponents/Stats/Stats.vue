@@ -1,137 +1,560 @@
 <template>
-    <div class="flex items-center justify-between max-w-[425px] mt-3">
+    <div class="flex items-center justify-between mt-3">
         <!-- Reply -->
-        <div class="group/tooltip relative">
-            <button
-                id="reply"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-blue)]/10 transition-colors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-reply-button"
+                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
+                    @click.stop
                 >
-                    <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] fill-current">
-                        <path
-                            d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"
-                        />
-                    </svg>
-                </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(replies) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Reply
-            </span>
-        </div>
-        <!-- Retweet -->
-        <div class="group/tooltip relative">
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                        <MessageCircle :size="18" />
+                    </div>
+                    <span class="text-xs min-w-5">{{ formatCount(localRepliesCount, locale) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">{{ $t('tweets.actions.reply') }}</div>
+            </template>
+        </CustomToolTip>
+
+        <!-- Retweet with dropdown -->
+        <div ref="repostContainerRef" class="relative">
             <button
-                id="retweet"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-green)] transition-colors"
-                @click.stop
+                id="tweet-retweet-button"
+                :class="[
+                    'group flex cursor-pointer items-center gap-1 transition-colors',
+                    localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
+                ]"
+                @click.stop="toggleRepostMenu"
             >
-                <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-green)]/10 transition-colors"
-                >
-                    <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] fill-current">
-                        <path
-                            d="M4.75 3.79l4.603 4.3-1.706 1.82L6 8.38v7.37c0 .97.784 1.75 1.75 1.75H13V20H7.75c-2.347 0-4.25-1.9-4.25-4.25V8.38L1.853 9.91.147 8.09l4.603-4.3zm11.5 2.71H11V4h5.25c2.347 0 4.25 1.9 4.25 4.25v7.37l1.647-1.53 1.706 1.82-4.603 4.3-4.603-4.3 1.706-1.82L18 15.62V8.25c0-.97-.784-1.75-1.75-1.75z"
-                        />
-                    </svg>
+                <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                    <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(retweets) }}</span>
+                <span class="text-xs min-w-5">{{
+                    formatCount(localRepostsCount, locale)
+                }}</span>
             </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+
+            <!-- Repost Dropdown Menu -->
+            <div
+                v-if="showRepostMenu"
+                class="absolute bottom-full left-0 mb-2 bg-primary border border-primary rounded-xl shadow-lg py-2 min-w-40 z-50"
             >
-                Retweet
-            </span>
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
+                    @click.stop="handleRepostAction"
+                >
+                    <Repeat2 :size="18" />
+                    <span class="font-semibold">{{ localIsReposted ? $t('tweets.actions.undoRetweet') : $t('tweets.actions.retweet') }}</span>
+                </button>
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
+                    @click.stop="handleQuoteClick"
+                >
+                    <Quote :size="18" />
+                    <span class="font-semibold">{{ $t('tweets.actions.quote') }}</span>
+                </button>
+            </div>
         </div>
 
         <!-- Like -->
-        <div class="group/tooltip relative">
-            <button
-                id="like"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-red)] transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-red)]/10 transition-colors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-like-button"
+                    :class="[
+                        'group flex cursor-pointer items-center gap-1 transition-colors',
+                        localIsLiked ? 'text-red' : 'text-secondary hover:text-red',
+                    ]"
+                    @click.stop="handleLikeClick"
                 >
-                    <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] fill-current">
-                        <path
-                            d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"
+                    <div class="p-2 rounded-full group-hover:bg-red/10 transition-colors relative">
+                        <Heart
+                            :size="18"
+                            :fill="localIsLiked ? 'currentColor' : 'none'"
+                            :class="{ 'animate-like': isAnimating }"
                         />
-                    </svg>
+                    </div>
+                    <span class="text-xs min-w-5">{{ formatCount(localLikesCount, locale) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">
+                    {{ localIsLiked ? $t('tweets.actions.unlike') : $t('tweets.actions.like') }}
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(likes) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Like
-            </span>
-        </div>
+            </template>
+        </CustomToolTip>
 
         <!-- Views -->
-        <div v-if="views" class="group/tooltip relative">
-            <button
-                id="views"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-blue)]/10 transition-colors"
+        <CustomToolTip v-if="views" side="bottom" align="start">
+            <template #trigger>
+                <button
+                    id="tweet-views-button"
+                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
+                    @click.stop
                 >
-                    <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] fill-current">
-                        <path
-                            d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"
-                        />
-                    </svg>
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                        <BarChart3 :size="18" />
+                    </div>
+                    <span class="text-xs min-w-5">{{ formatCount(views || 0, locale) }}</span>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">{{ $t('tweets.actions.views') }}</div>
+            </template>
+        </CustomToolTip>
+
+        <!-- Bookmark -->
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-bookmark-button"
+                    :class="[
+                        'group flex cursor-pointer items-center gap-1 transition-colors',
+                        localIsBookmarked ? 'text-blue' : 'text-secondary hover:text-blue',
+                    ]"
+                    @click.stop="handleBookmarkClick"
+                >
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                        <Bookmark :size="18" :fill="localIsBookmarked ? 'currentColor' : 'none'" />
+                    </div>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">
+                    {{
+                        localIsBookmarked
+                            ? $t('tweets.actions.removeBookmark')
+                            : $t('tweets.actions.bookmark')
+                    }}
                 </div>
-                <span class="text-[13px] min-w-[20px]">{{ formatCount(views || 0) }}</span>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Views
-            </span>
-        </div>
+            </template>
+        </CustomToolTip>
+
         <!-- Share -->
-        <div class="group/tooltip relative">
-            <button
-                id="share"
-                class="group flex cursor-pointer items-center gap-1 text-[var(--color-x-gray-dark)] hover:text-[var(--color-x-blue)] transition-colors"
-                @click.stop
-            >
-                <div
-                    class="p-2 rounded-full group-hover:bg-[var(--color-x-blue)]/10 transition-colors"
+        <CustomToolTip side="bottom" align="start" :delay-duration="300">
+            <template #trigger>
+                <button
+                    id="tweet-share-button"
+                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
+                    @click.stop="handleShareClick"
                 >
-                    <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] fill-current">
-                        <path
-                            d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"
-                        />
-                    </svg>
-                </div>
-            </button>
-            <span
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--color-x-gray-dark)] text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
-            >
-                Share
-            </span>
-        </div>
+                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                        <Share :size="18" />
+                    </div>
+                </button>
+            </template>
+            <template #content>
+                <div :class="contentClass">{{ shareTooltipText }}</div>
+            </template>
+        </CustomToolTip>
     </div>
 </template>
 
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs } from 'vue'
+import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark, Quote } from 'lucide-vue-next'
+import { CustomToolTip } from '~/modules/Common/components/Tooltip'
+import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
+import {
+    mutateTweetLikesQuery,
+    mutateTweetRepostsQuery,
+    mutateTweetBookmarkQuery,
+} from '../../../../queries/useTweetQueries'
+import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
+import {useUserStore} from '~/modules/auth/stores/userStore'
+const userStore = useUserStore()
+const {user_id} = toRefs(userStore.getUser())
+const {$queryClient} = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
 }>()
 
-const { likes, replies, retweets, views } = toRefs(props.stats)
+const emit = defineEmits<{
+    (e: 'quote'): void
+}>()
+
+const {
+    likes,
+    replies,
+    retweets,
+    views,
+    is_liked,
+    tweet_id,
+    is_reposted,
+    is_bookmarked,
+    username,
+} = toRefs(props.stats)
+const localIsLiked = ref(is_liked.value)
+const localLikesCount = ref(likes.value)
+const isAnimating = ref(false)
+const localIsReposted = ref(is_reposted.value)
+const localRepostsCount = ref(retweets.value)
+const localIsBookmarked = ref(is_bookmarked.value)
+const shareTooltipText = ref('')
+const localRepliesCount = ref(replies.value)
+const showRepostMenu = ref(false)
+const repostContainerRef = ref<HTMLElement | null>(null)
+const { t, locale } = useI18n()
+
+// Inject the global snackbar from layout
+const snackbar = inject<{
+    handleShowSnackbar: (
+        message: string,
+        username?: string,
+        action?: string,
+        handleClick?: () => void,
+    ) => void
+}>('snackbar')
+
+// Initialize share tooltip text
+onMounted(() => {
+    shareTooltipText.value = t('tweets.actions.share')
+    document.addEventListener('click', handleClickOutsideRepostMenu)
+})
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutsideRepostMenu)
+})
+
+const handleClickOutsideRepostMenu = (event: MouseEvent) => {
+    if (repostContainerRef.value && !repostContainerRef.value.contains(event.target as Node)) {
+        showRepostMenu.value = false
+    }
+}
+
+
+const tweetTransitionStore = useTweetTransitionStore()
+const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
+const { mutate: mutateRepost, isPending: isRepostPending } = mutateTweetRepostsQuery(
+    tweet_id.value,
+    localIsReposted.value,
+    `/users/${user_id.value}/posts`,
+)
+const { mutate: mutateBookmark, isPending: isBookmarkPending } = mutateTweetBookmarkQuery(
+    tweet_id.value,
+    localIsBookmarked.value,
+)
+
+const handleLikeClick = () => {
+    // Logic to handle like/unlike action can be added here
+    if (isPending.value) return // Prevent multiple clicks while mutation is in progress
+
+    const previousLikedState = localIsLiked.value
+    const previousLikesCount = localLikesCount.value
+
+    localIsLiked.value = !localIsLiked.value
+    if (localIsLiked.value) {
+        localLikesCount.value += 1
+        // Trigger animation
+        isAnimating.value = true
+        setTimeout(() => {
+            isAnimating.value = false
+        }, 600)
+    } else {
+        localLikesCount.value -= 1
+    }
+
+    // Update the transition store if this tweet is stored there
+    if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+        tweetTransitionStore.transitionTweet.is_liked = localIsLiked.value
+        tweetTransitionStore.transitionTweet.likes_count = localLikesCount.value
+    }
+
+    // Optimistically update all tweets queries (infinite queries)
+    // Using setQueriesData to update all matching queries
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData?.pages) return oldData
+
+        // Create completely new objects to ensure Vue reactivity detects changes
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => {
+                const updatedData = page.data.map((tweet: any) => {
+                    if (tweet.tweet_id === tweet_id.value) {
+                        // Create a new object reference
+                        return {
+                            ...tweet,
+                            is_liked: localIsLiked.value,
+                            likes_count: localLikesCount.value,
+                        }
+                    }
+                    return tweet
+                })
+
+                return {
+                    ...page,
+                    data: updatedData,
+                }
+            }),
+        }
+    })
+
+    //call mutation to update like status
+    mutateLike(localIsLiked.value, {
+        onSuccess: () => {
+            // Invalidate relevant queries to refetch data and confirm the optimistic update
+            console.log('Like mutation succeeded for tweet:', $queryClient, tweet_id.value)
+        },
+        onError: (error) => {
+            // Rollback on error
+            console.error('Error liking/unliking tweet:', error)
+            localIsLiked.value = previousLikedState
+            localLikesCount.value = previousLikesCount
+
+            // Rollback transition store as well
+            if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+                tweetTransitionStore.transitionTweet.is_liked = previousLikedState
+                tweetTransitionStore.transitionTweet.likes_count = previousLikesCount
+            }
+
+            // Rollback the cache update
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData?.pages) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => {
+                        const updatedData = page.data.map((tweet: any) => {
+                            if (tweet.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    is_liked: previousLikedState,
+                                    likes_count: previousLikesCount,
+                                }
+                            }
+                            return tweet
+                        })
+
+                        return {
+                            ...page,
+                            data: updatedData,
+                        }
+                    }),
+                }
+            })
+        },
+    })
+}
+
+const toggleRepostMenu = () => {
+    showRepostMenu.value = !showRepostMenu.value
+}
+
+const closeRepostMenu = () => {
+    showRepostMenu.value = false
+}
+
+const handleQuoteClick = () => {
+    showRepostMenu.value = false
+    emit('quote')
+}
+
+const handleRepostAction = () => {
+    showRepostMenu.value = false
+    // Logic to handle repost/unrepost action can be added here
+    if (isRepostPending.value) return // Prevent multiple clicks while mutation is in progress
+
+    const previousRepostedState = localIsReposted.value
+    const previousRepostsCount = localRepostsCount.value
+
+    localIsReposted.value = !localIsReposted.value
+    if (localIsReposted.value) {
+        localRepostsCount.value += 1
+    } else {
+        localRepostsCount.value -= 1
+    }
+    // Update the transition store if this tweet is stored there
+    if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+        tweetTransitionStore.transitionTweet.is_reposted = localIsReposted.value
+        tweetTransitionStore.transitionTweet.reposts_count = localRepostsCount.value
+    }
+
+    // Optimistically update all tweets queries (infinite queries)
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData?.pages) return oldData
+
+        // Create completely new objects to ensure Vue reactivity detects changes
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => {
+                const updatedData = page.data.map((tweet: any) => {
+                    if (tweet.tweet_id === tweet_id.value) {
+                        // Create a new object reference
+                        return {
+                            ...tweet,
+                            is_reposted: localIsReposted.value,
+                            reposts_count: localRepostsCount.value,
+                        }
+                    }
+                    return tweet
+                })
+
+                return {
+                    ...page,
+                    data: updatedData,
+                }
+            }),
+        }
+    })
+
+    //call mutation to update repost status
+    mutateRepost(localIsReposted.value, tweet_id.value, `/users/${user_id.value}/posts`)
+}
+
+const handleBookmarkClick = () => {
+    if (isBookmarkPending.value) return // Prevent multiple clicks while mutation is in progress
+
+    const previousBookmarkedState = localIsBookmarked.value
+
+    localIsBookmarked.value = !localIsBookmarked.value
+
+    // Update the transition store if this tweet is stored there
+    if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+        tweetTransitionStore.transitionTweet.is_bookmarked = localIsBookmarked.value
+    }
+
+    // Optimistically update all tweets queries (infinite queries)
+    $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+        if (!oldData?.pages) return oldData
+
+        return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => {
+                const updatedData = page.data.map((tweet: any) => {
+                    if (tweet.tweet_id === tweet_id.value) {
+                        return {
+                            ...tweet,
+                            is_bookmarked: localIsBookmarked.value,
+                        }
+                    }
+                    return tweet
+                })
+
+                return {
+                    ...page,
+                    data: updatedData,
+                }
+            }),
+        }
+    })
+
+    //call mutation to update bookmark status
+    mutateBookmark(localIsBookmarked.value, {
+        onSuccess: () => {
+            // Invalidate relevant queries to refetch data and confirm the optimistic update
+           $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+
+            snackbar?.handleShowSnackbar(
+                localIsBookmarked.value
+                    ? t('tweets.actions.bookmarkAdded')
+                    : t('tweets.actions.bookmarkRemoved'),
+            )
+        },
+        onError: (error) => {
+            // Rollback on error
+            console.error('Error bookmarking/unbookmarking tweet:', error)
+            localIsBookmarked.value = previousBookmarkedState
+
+            // Rollback transition store as well
+            if (tweetTransitionStore.transitionTweet?.tweet_id === tweet_id.value) {
+                tweetTransitionStore.transitionTweet.is_bookmarked = previousBookmarkedState
+            }
+
+            // Rollback the cache update
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData?.pages) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => {
+                        const updatedData = page.data.map((tweet: any) => {
+                            if (tweet.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    is_bookmarked: previousBookmarkedState,
+                                }
+                            }
+                            return tweet
+                        })
+
+                        return {
+                            ...page,
+                            data: updatedData,
+                        }
+                    }),
+                }
+            })
+        },
+    })
+}
+
+const handleShareClick = async () => {
+    try {
+        // Construct the tweet URL
+        const tweetUrl = `${window.location.origin}/${username.value}/status/${tweet_id.value}`
+
+        // Try to use the Web Share API if available (mobile devices)
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Share Tweet',
+                url: tweetUrl,
+            })
+        } else {
+            // Fallback to clipboard API
+            await navigator.clipboard.writeText(tweetUrl)
+
+            // Update tooltip to show feedback
+            shareTooltipText.value = t('tweets.actions.linkCopied')
+            setTimeout(() => {
+                shareTooltipText.value = t('tweets.actions.share')
+            }, 2000)
+        }
+
+        // Show snackbar for successful copy/share
+        snackbar?.handleShowSnackbar(t('tweets.actions.copiedToClipboard'))
+    } catch (error) {
+        // If user cancels share or permission denied, silently fail
+        console.log('Share cancelled or failed:', error)
+    }
+}
+
+watch(is_liked, (newVal) => {
+    localIsLiked.value = newVal
+})
+watch(likes, (newVal) => {
+    localLikesCount.value = newVal
+})
+watch(is_reposted, (newVal) => {
+    localIsReposted.value = newVal
+})
+watch(retweets, (newVal) => {
+    localRepostsCount.value = newVal
+})
+watch(is_bookmarked, (newVal) => {
+    localIsBookmarked.value = newVal
+})
+watch(replies, (newVal) => {
+    localRepliesCount.value = newVal
+})
+
+// Watch the entire stats prop for deep changes (when parent object is replaced)
+watch(
+    () => props.stats,
+    (newStats) => {
+        localIsLiked.value = newStats.is_liked
+        localLikesCount.value = newStats.likes
+        localIsReposted.value = newStats.is_reposted
+        localRepostsCount.value = newStats.retweets
+        localIsBookmarked.value = newStats.is_bookmarked
+        localRepliesCount.value = newStats.replies
+    },
+    { deep: true }
+)
 </script>
