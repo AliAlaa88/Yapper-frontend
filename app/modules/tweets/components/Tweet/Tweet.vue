@@ -64,9 +64,15 @@
                             <MoreHorizontal :size="16" />
                         </button>
 
-                        <!-- Only render when menu is open to avoid N+1 API calls -->
+                        <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                        <MyTweetActionsMenu
+                            v-if="showActionsMenu && isOwnTweet"
+                            :tweet-id="tweet.tweet_id"
+                            @edit="handleEdit"
+                            @delete="handleDelete"
+                        />
                         <ProfileActionsMenu
-                            v-if="showActionsMenu"
+                            v-else-if="showActionsMenu"
                             :userid="user.id"
                             :is-tweet="true"
                             @user-action="handleUserAction"
@@ -87,6 +93,16 @@
         @close="showQuoteModal = false"
         @success="handleQuoteSuccess"
     />
+
+    <!-- Edit Tweet Modal -->
+    <EditTweetModal
+        :is-open="showEditModal"
+        :tweet-id="tweet.tweet_id"
+        :initial-content="tweet.content"
+        :is-loading="isUpdateLoading"
+        @close="showEditModal = false"
+        @save="handleSaveEdit"
+    />
 </template>
 
 <script setup lang="ts">
@@ -96,6 +112,8 @@ import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
 import QuoteModal from '../QuoteModal/QuoteModal.vue'
+import EditTweetModal from '../EditTweetModal/EditTweetModal.vue'
+import MyTweetActionsMenu from './subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed, nextTick, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
@@ -106,6 +124,7 @@ import { useQueryClient } from '@tanstack/vue-query'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { handleImageError } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+import { useTweetActions } from '../../composables/useTweetActions'
 
 const props = defineProps<{
     tweet: TweetType
@@ -114,7 +133,21 @@ const userStore = useUserStore()
 const currentUser = computed(() => userStore.getUser())
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
+const showEditModal = ref(false)
 provide('show-list', showActionsMenu)
+
+// Tweet actions composable
+const tweetId = computed(() => props.tweet.tweet_id)
+const {
+    handleDeleteWithConfirmation,
+    handleUpdateWithSnackbar,
+    isUpdateLoading,
+} = useTweetActions(tweetId)
+
+// Check if the tweet belongs to the current user
+const isOwnTweet = computed(() => {
+    return currentUser.value?.user_id === props.tweet.user.id
+})
 
 const toggleActionsMenu = () => {
     showActionsMenu.value = !showActionsMenu.value
@@ -129,6 +162,21 @@ const handleQuoteSuccess = () => {
 }
 
 const queryClient = useQueryClient()
+
+// Handlers for own tweet actions
+const handleEdit = () => {
+    showActionsMenu.value = false
+    showEditModal.value = true
+}
+
+const handleSaveEdit = async (content: string) => {
+    await handleUpdateWithSnackbar(content)
+    showEditModal.value = false
+}
+
+const handleDelete = () => {
+    handleDeleteWithConfirmation(showActionsMenu)
+}
 
 const handleUserAction = (action: 'mute' | 'block' | 'unmute' | 'unblock') => {
     // Remove tweets from this user when muted or blocked
