@@ -33,7 +33,8 @@
         "home": "Home",
         "profile": "Profile",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "back": "Back"
     },
     "months": {
         "january": "January",
