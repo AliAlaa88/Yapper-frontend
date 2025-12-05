@@ -1,5 +1,5 @@
 <template>
-    <DetailedPanel title="Delete Account">
+    <DetailedPanel :title="$t('settings.deleteAccount.title')">
         <div class="w-full text-primary">
             <div class="flex items-start px-4 py-3 transition">
                 <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover">
@@ -13,19 +13,16 @@
             </div>
             <div class="space-y-4 border-b border-primary">
                 <h1 class="text-xl text-primary font-bold mt-3 ml-5">
-                    This will delete your account
+                    {{ $t('settings.deleteAccount.warningTitle') }}
                 </h1>
                 <p class="text-[13px] text-muted max-w-lg ml-5 mb-4">
-                    {{ `You’re about to start the process of deleting your
-                    Yapper account. Your display name, @${user?.username}, and
-                    public profile will no longer be viewable on Yapper.com,
-                    Yapper for iOS, or Yapper for Android.`}}
+                    {{ $t('settings.deleteAccount.description', '@' + { username: user?.username }) }}
                 </p>
             </div>
             <Button
                 id="delete-account-button"
                 button-class="w-full hover:bg-red-500/10 h-13 mt-2 text-red bg-primary"
-                button-text="Delete"
+                :button-text="$t('settings.deleteAccount.button')"
                 :is-loading="useDeleteAccount.isPending.value"
                 @click="handleDelete" />
         </div>

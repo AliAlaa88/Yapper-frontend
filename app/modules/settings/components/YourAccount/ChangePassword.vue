@@ -1,5 +1,5 @@
 <template>
-    <DetailedPanel title="Change your password">
+    <DetailedPanel :title="$t('settings.changePassword')">
         <form @submit.prevent="handleSubmit">
             <div class="relative w-full border-b border-primary space-y-4">
                 <div class="px-4 py-3">
@@ -7,7 +7,7 @@
                         id="current-password-input"
                         v-model="currentPassword"
                         type="password"
-                        placeholder="Current password"
+                        :placeholder="$t('settings.currentPassword')"
                         :disabled="useChangePassword.isPending.value"
                         class="w-full border border-primary py-3 px-3
                         transition text-muted bg-transparent focus:outline-none rounded-md
@@ -18,7 +18,7 @@
                         id="settings-forgot-password"
                         to="/auth/forgot-password"
                         class="mt-3 pl-1 text-accent hover:underline">
-                        Forgot Password?
+                        {{ $t('settings.forgot_password') }}
                     </NuxtLink>
                 </div>
                 <div class="w-full border-t border-b border-primary px-4 py-3 mb-2 space-y-4">
@@ -27,7 +27,7 @@
                             id="new-password-input"
                             v-model="newPassword"
                             type="password"
-                            placeholder="New password"
+                            :placeholder="$t('settings.newPassword')"
                             :disabled="useChangePassword.isPending.value"
                             class="w-full border border-primary py-3 px-3
                             transition text-muted bg-transparent focus:outline-none rounded-md
@@ -36,7 +36,7 @@
                             minlength="8"
                         >
                         <p v-if="newPassword && !isPasswordStrong" class="text-red text-xs mt-1 pl-1">
-                            Password must be at least 8 characters with uppercase, lowercase, number, and special character
+                            {{ $t('settings.passwordRequirements') }}
                         </p>
                     </div>
 
@@ -45,7 +45,7 @@
                             id="confirm-change-passowrd-input"
                             v-model="confirmPassword"
                             type="password"
-                            placeholder="Confirm password"
+                            :placeholder="$t('settings.confirmPassword')"
                             :disabled="useChangePassword.isPending.value"
                             class="w-full border border-primary py-3 px-3
                             transition text-muted bg-transparent focus:outline-none rounded-md
@@ -53,7 +53,7 @@
                             required
                         >
                         <p v-if="confirmPassword && !passwordsMatch" class="text-red text-xs mt-1 pl-1">
-                            Passwords do not match
+                            {{ $t('settings.passwordsDoNotMatch') }}
                         </p>
                     </div>
                 </div>
@@ -68,8 +68,7 @@
                     type="submit"
                     :disabled="!isFormValid || useChangePassword.isPending.value"
                     :is-loading="useChangePassword.isPending.value"
-                    loading-text="Saving..."
-                    button-text="Save"
+                    :button-text="$t('settings.accountInfo.save')"
                     button-class="bg-accent text-primary font-medium py-2 px-6 rounded-3xl
                     hover:bg-accent-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
                 />

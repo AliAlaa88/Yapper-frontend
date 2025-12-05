@@ -11,22 +11,22 @@
             div-class="flex justify-center mb-6"
         />
 
-        <h2 class="text-3xl font-bold mb-3">Change country?</h2>
+        <h2 class="text-3xl font-bold mb-3">{{ $t('settings.changeCountry.title') }}</h2>
         <p class="text-muted mb-9 text-xs">
-            This will customize your Yapper experience based on the country you live in.
+            {{ $t('settings.changeCountry.description') }}
         </p>
         <div>
             <Button
                 id="confirm-change-country-button"
                 button-class="w-full flex-1 bg-alternate text-alternate py-3 rounded-full
                 hover:bg-hover-alternate transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                button-text="Change"
+                :button-text="$t('settings.changeCountry.button')"
                 @click="$emit('confirm')" />
             <Button
                 id="cancel-change-country-button"
                 button-class="w-full flex-1 bg-transparent text-primary underline py-3 rounded-full
                 hover:bg-hover transition font-medium"
-                button-text="Cancel"
+                :button-text="$t('settings.changeCountry.cancel')"
                 @click="$emit('cancel')" />
         </div>
     </Popup>

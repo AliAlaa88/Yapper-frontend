@@ -37,11 +37,10 @@
             >
                 <div class="flex flex-col justify-center text-left px-10 py-[60px]">
                     <h1 class="m-0 mb-2 text-4xl font-extrabold text-primary max-w-[300px]">
-                        Muted accounts
+                        {{ $t('settings.mutedAccounts') }}
                     </h1>
                     <p class="m-0 max-w-[350px] text-[15px] leading-6 text-muted">
-                        Posts from muted accounts won’t show up in your Home
-                        timeline. Mute accounts directly from their profile or post.
+                        {{ $t('settings.muted_accounts_description') }}
                     </p>
                 </div>
             </div>

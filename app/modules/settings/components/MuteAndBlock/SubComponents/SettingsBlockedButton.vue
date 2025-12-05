@@ -30,7 +30,7 @@ const {
     isUnblockLoading,
 } = useUserInteractions(userIdRef)
 
-const buttonText = computed(() => isBlockedRef.value ? 'Blocked' : 'Block')
+const buttonText = computed(() => isBlockedRef.value ? $t('profile.blockedButton') : $t('profile.blockButton'))
 
 const buttonClass = computed(() => {
     if (isBlockedRef.value) {

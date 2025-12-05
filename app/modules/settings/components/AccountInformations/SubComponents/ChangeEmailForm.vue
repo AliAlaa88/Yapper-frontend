@@ -12,9 +12,9 @@
             div-class="flex justify-center mb-6"
         />
 
-        <h2 class="text-3xl font-bold mb-3">Change email</h2>
+        <h2 class="text-3xl font-bold mb-3">{{ $t('settings.accountInfo.change_email') }}</h2>
         <p class="text-muted mb-9 text-xs">
-            {{`Your current email is. What whould you like to update it to? Your email is not displayed in your public profile on Yapper.`}}
+            {{ $t('settings.accountInfo.change_email_description', { email: user?.email }) }}
         </p>
 
         <form @submit.prevent="handleNext">
@@ -22,7 +22,7 @@
                 id="input-new-email"
                 v-model="newEmail"
                 type="email"
-                placeholder="Email address"
+                :placeholder="$t('settings.accountInfo.email_address')"
                 :disabled="sendEmailOTPMutation.isPending.value"
                 required
                 class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-2
@@ -43,7 +43,7 @@
                     :is-loading="sendEmailOTPMutation.isPending.value"
                     button-class="w-full flex-1 bg-transparent border border-primary text-primary py-3 rounded-full
                     hover:bg-hover transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                    button-text="Cancel"
+                    :button-text="$t('settings.accountInfo.cancel')"
                     @click="handleClose"
                 />
                 <Button
@@ -53,7 +53,7 @@
                     :is-loading="sendEmailOTPMutation.isPending.value"
                     button-class="w-full flex-1 bg-alternate text-alternate py-3 rounded-full
                     hover:bg-hover-alternate transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                    button-text="Next"
+                    :button-text="$t('settings.languages.next')"
                 />
             </div>
         </form>
@@ -74,6 +74,10 @@ import Button from '~/modules/Common/components/Button/Button.vue'
 import VerifyEmailOTP from '~/modules/settings/components/AccountInformations/SubComponents/VerifyEmailOTP.vue'
 import { userSettingsQueries } from '../../../queries/userSettingsQueries'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 const router = useRouter()
 const errorMessage = ref('')

@@ -13,9 +13,9 @@
             div-class="flex justify-center mb-6"
         />
 
-        <h2 class="text-3xl font-bold mb-3">We sent you a code</h2>
+        <h2 class="text-3xl font-bold mb-3">{{ $t('settings.accountInfo.we_sent_code') }}</h2>
         <p class="text-muted mb-9 text-xs">
-            Enter it below to verify your email.
+            {{ $t('settings.accountInfo.enter_code_message') }}
         </p>
 
         <form @submit.prevent="handleVerify">
@@ -24,7 +24,7 @@
                 v-model="otp"
                 type="text"
                 maxlength="6"
-                placeholder="Verification code"
+                :placeholder="$t('settings.accountInfo.verification_code')"
                 :disabled="verifyEmailOTPMutation.isPending.value"
                 required
                 autofocus
@@ -35,7 +35,7 @@
             <Button
                 id="reset-otp-button"
                 button-class="text-accent text-sm hover:underline mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                button-text="Didn't receive code? Resend"
+                :button-text="$t('settings.accountInfo.didnt_receive')"
                 @click="handleResend"
             />
             <p v-if="errorMessage" class="text-red text-sm mb-4">
@@ -49,7 +49,7 @@
                     :disabled="otp.length === 0"
                     button-class="w-full flex-1 bg-alternate text-alternate py-3 rounded-full
                     hover:bg-hover-alternate transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                    button-text="Verify"
+                    :button-text="$t('settings.accountInfo.verify')"
                 />
             </div>
         </form>

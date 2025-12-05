@@ -1,5 +1,5 @@
 <template>
-    <DetailedPanel title="Change email">
+    <DetailedPanel :title="t('settings.accountInfo.change_email')">
         <div class="relative w-full border-b border-primary">
             <div class="px-4 py-3 mb-2">
                 <div class="relative w-full">
@@ -14,7 +14,7 @@
                         for="current-email"
                         class="absolute start-3 top-1 text-xs text-muted opacity-50
                         pointer-events-none px-1 py-1">
-                        Current
+                        {{ t('settings.accountInfo.current') }}
                     </label>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 id="update-email-address-link"
                 to="/settings/add_email"
             >
-                Update email address
+                {{ t('settings.accountInfo.update_email_address') }}
             </NuxtLink>
         </div>
     </DetailedPanel>
@@ -34,6 +34,9 @@
 import DetailedPanel from '../DetailedPanel.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)

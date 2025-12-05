@@ -37,11 +37,10 @@
             >
                 <div class="flex flex-col justify-center text-left px-10 py-[60px]">
                     <h1 class="m-0 mb-2 text-4xl font-extrabold text-primary max-w-[300px]">
-                        Block unwanted accounts
+                        {{ $t('settings.blockedAccounts') }}
                     </h1>
                     <p class="m-0 max-w-[350px] text-[15px] leading-6 text-muted">
-                        When you block someone, they won’t be able to follow or
-                        message you, and you won’t see notifications from them.
+                        {{ $t('settings.block_accounts_description') }}
                     </p>
                 </div>
             </div>

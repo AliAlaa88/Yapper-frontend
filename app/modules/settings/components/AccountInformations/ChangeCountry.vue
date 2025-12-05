@@ -1,5 +1,5 @@
 <template>
-    <DetailedPanel title="Change Country">
+    <DetailedPanel :title="t('settings.accountInfo.change_country')">
         <div class="mx-4 mt-9 relative">
             <select
                 id="countries-options"
@@ -12,12 +12,12 @@
                     :key="count"
                     :value="count"
                     class="bg-primary">
-                    {{ count }}
+                    {{ t(`countries.${count}`) }}
                 </option>
             </select>
             <label
                 class="peer-focus:text-accent absolute start-3 top-1 text-xs text-muted
-                        pointer-events-none px-1 py-1">Country</label>
+                        pointer-events-none px-1 py-1">{{t('settings.accountInfo.country')}}</label>
             <ChevronDown
                 :size="25"
                 class="absolute right-4 top-1/2 -translate-y-1/2 text-muted peer-focus:text-accent pointer-events-none" />
@@ -39,6 +39,9 @@ import { storeToRefs } from 'pinia'
 import ConfirmChangeCountry from './SubComponents/ConfirmChangeCountry.vue'
 import { useEditProfileMutation } from '~/modules/profile/queries/useEditProfileQuery'
 import { ChevronDown } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)

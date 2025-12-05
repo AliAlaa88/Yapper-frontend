@@ -1,5 +1,5 @@
 <template>
-    <DetailedPanel title="Change Username">
+    <DetailedPanel :title="t('settings.accountInfo.change_username')">
         <form @submit.prevent="handleSubmit">
             <div class="relative w-full space-y-4">
                 <div class="px-4 py-3">
@@ -7,7 +7,7 @@
                         id="username-input"
                         v-model="newUsername"
                         type="text"
-                        placeholder="Username"
+                        :placeholder="t('settings.accountInfo.username')"
                         :disabled="updateUsernameMutation.isPending.value"
                         class="w-full border py-3 px-3
                         transition text-muted bg-transparent focus:outline-none rounded-md
@@ -31,7 +31,7 @@
                 </div>
                 <div
                     class="w-full border-t border-b border-primary px-4 py-3 mb-2 space-y-4">
-                    <h1 class="font-bold text-xl pb-2">Suggestions</h1>
+                    <h1 class="font-bold text-xl pb-2">{{ t('settings.accountInfo.suggestions') }}</h1>
                     <div
                         v-if="usernameRecommendation.isLoading.value"
                         class="flex w-full justify-center items-center py-4">
@@ -53,7 +53,7 @@
                     type="submit"
                     :disabled="!canSubmit"
                     :is-loading="updateUsernameMutation.isPending.value"
-                    button-text="Save"
+                    :button-text="t('settings.accountInfo.save')"
                     button-class="bg-accent text-primary font-medium py-2 px-6 rounded-3xl
                     hover:bg-accent-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
                 />
@@ -69,7 +69,9 @@ import { storeToRefs } from 'pinia'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 const username = computed(() => user.value?.username)
