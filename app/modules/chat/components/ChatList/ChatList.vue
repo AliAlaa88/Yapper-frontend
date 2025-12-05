@@ -20,9 +20,10 @@
                 <MessageSquarePlus class="w-5 h-5 text-primary" />
             </button>
         </div>
-        <div ref="scrollContainerRef" class="overflow-y-auto flex-1">
+        <div id="chat-list-scroll-container" ref="scrollContainerRef" class="overflow-y-auto flex-1" >
             <ConversationItem
                 v-for="chat in conversations"
+                :id="`conversation-item-${chat.id}`"
                 :key="chat.id"
                 :conversation="chat"
                 :is-selected="selectedChatId === chat.id"
