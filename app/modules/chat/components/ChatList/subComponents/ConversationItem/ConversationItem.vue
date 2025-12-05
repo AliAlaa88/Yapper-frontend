@@ -9,12 +9,14 @@
                 :src="conversation.participant.avatar_url"
                 :alt="conversation.participant.username"
                 class="w-12 h-12 rounded-full object-cover"
+                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}'`"
             />
             <img
                 v-else
                 :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}`"
                 :alt="conversation.participant.username"
                 class="w-12 h-12 rounded-full object-cover"
+                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}'`"
             />
         </div>
         <div class="flex-1 min-w-0">
