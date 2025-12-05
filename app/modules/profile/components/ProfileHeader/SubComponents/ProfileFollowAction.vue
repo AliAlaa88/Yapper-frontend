@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isBlocked && me.user_id !== userId" class="pb-3">
+    <div v-if="!isBlocked && me?.user_id !== userId" class="pb-3">
         <Button
             id="follow-button"
             class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
@@ -21,19 +21,25 @@ import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import {useUserStore} from '~/modules/auth/stores/userStore'
-const userStore = useUserStore()
-const me = userStore.getUser()
-console.log("Current User ID in Follow Action:", me)
+import { useUserStore } from '~/modules/auth/stores/userStore'
+
 const props = defineProps<{
     userId: string
+    username: string
 }>()
 
+const userStore = useUserStore()
+const me = userStore.getUser()
+
 const userId = computed(() => props.userId)
+const username = computed(() => props.username)
+const meId = computed(() => me?.user_id)
+console.log('ProfileFollowAction props:', me)
 const { isBlocked, isFollowing } = useUserInfo(userId)
 
 const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId)
-const userInteractions = useUserInteractions(userId)
+console.log('ProfileFollowAction isFollowing:', userId.value, username.value, me?.user_id)
+const userInteractions = useUserInteractions(userId, username, meId)
 const { handleFollowAction, handleUnfollowWithConfirmation, isFollowLoading } = userInteractions
 
 async function handleClick() {

@@ -243,6 +243,12 @@
             "media": "Media",
             "likes": "Likes"
         },
+        "counts": {
+            "posts": "{count} Posts",
+            "replies": "{count} Replies",
+            "media": "{count} Media",
+            "likes": "{count} Likes"
+        },
         "emptyState": {
             "noPosts": {
                 "title": "No posts yet",
@@ -338,9 +344,14 @@
                 "noFollowing": {
                     "title": "Not following anyone yet",
                     "description": "When this account follows people, they'll show up here."
+                },
+                "noMutualFollowers": {
+                    "title": "No mutual followers",
+                    "description": "You don't follow any of this account's followers."
                 }
             }
         },
+        "followersYouFollow": "Followers you follow",
         "privacy": {
             "likesPrivate": "Your likes are private. Only you can see them."
         },

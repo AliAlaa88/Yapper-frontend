@@ -4,7 +4,7 @@
             <h1 class="text-xl font-bold text-primary">
                 {{ user?.name }}
             </h1>
-            <p class="text-sm text-secondary">@{{ user?.username }}</p>
+            <p class="text-lg text-secondary">@{{ user?.username }}</p>
         </div>
 
         <p v-if="user?.bio" class="mt-3 text-[15px] text-primary whitespace-pre-wrap break-words">
@@ -56,12 +56,15 @@
                     class="h-6 w-6 rounded-full border-2 border-primary"
                 >
             </div>
-            <span>
+            <NuxtLink
+                :to="`/${user?.username}/followers_you_follow`"
+                class="hover:underline"
+            >
                 {{ t('profile.mutualFollowers.followedBy') }}
                 <span class="font-semibold text-primary">
                     {{ formatMutualFollowers }}
                 </span>
-            </span>
+            </NuxtLink>
         </div>
 
         <ProfileMuteMessage />
@@ -77,7 +80,7 @@ import ProfileMuteMessage from './ProfileMuteMessage.vue'
 
 const props = defineProps<{
     user: Me | OtherUser | null
-    isMyProfile: boolean
+    isMyProfile: boolean | null
 }>()
 
 const { t, locale } = useI18n()
