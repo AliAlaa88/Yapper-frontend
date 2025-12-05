@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isBlocked && me?.id !== userId" class="pb-3">
+    <div v-if="!isBlocked && me?.user_id !== userId" class="pb-3">
         <Button
             id="follow-button"
             class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
