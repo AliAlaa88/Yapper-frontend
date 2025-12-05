@@ -80,7 +80,7 @@ import ProfileMuteMessage from './ProfileMuteMessage.vue'
 
 const props = defineProps<{
     user: Me | OtherUser | null
-    isMyProfile: boolean
+    isMyProfile: boolean | null
 }>()
 
 const { t, locale } = useI18n()

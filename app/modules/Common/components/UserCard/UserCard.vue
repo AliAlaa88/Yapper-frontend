@@ -35,7 +35,7 @@
             </div>
         </NuxtLink>
         <div @click.stop>
-            <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" />
+            <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" :username="user.username" />
         </div>
     </div>
 </template>

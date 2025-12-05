@@ -13,7 +13,7 @@ export interface AuthUser extends AbstractUser {
     google_id: string | null
 }
 export interface User extends AbstractUser {
-    id: string
+    user_id: string
     name: string
     username: string
     avatar_url: string

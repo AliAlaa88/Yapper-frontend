@@ -16,13 +16,16 @@ import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import { ref, watch, computed } from 'vue'
 import { useProfileStore } from '../../../stores/profileStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const profileStore = useProfileStore()
+const userStore = useUserStore()
 const userId = computed(() => profileStore.getProfileId() || '')
-const { isMuted } = useUserInfo(userId)
+const meId = computed(() => userStore.getUser()?.user_id)
+const { isMuted, username } = useUserInfo(userId)
 
 const showMuteMessage = ref(false)
-const userInteractions = useUserInteractions(userId)
+const userInteractions = useUserInteractions(userId, username, meId)
 const { handleUnmuteWithConfirmation } = userInteractions
 
 watch(

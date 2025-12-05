@@ -5,14 +5,14 @@ import { useUserInfo } from './useUserInfo'
 import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export function useUserInteractions(userId: Ref<string | undefined>) {
+export function useUserInteractions(userId: Ref<string | undefined>, userName: Ref<string | undefined>, meId: Ref<string | undefined>) {
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
         typeof useSnackbar
     >
     const { showConfirmation, handleShowConfirmation } = inject('confirmation') as ReturnType<
         typeof useConfirmation
     >
-    const { id, username } = useUserInfo(userId)
+    const { id, username } = useUserInfo(userId, userName, meId)
     const {
         handleUnfollow,
         handleUnmute,
@@ -28,7 +28,7 @@ export function useUserInteractions(userId: Ref<string | undefined>) {
         isUnmuteLoading,
         isRemoveFollowerLoading,
         isFollowLoading,
-    } = useUserActions(id)
+    } = useUserActions(id, username, meId)
     const { t } = useI18n()
 
     function handleBlockWithConfirmation(showList?: Ref<boolean>, onSuccess?: () => void) {
