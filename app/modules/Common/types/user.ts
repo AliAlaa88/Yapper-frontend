@@ -28,4 +28,5 @@ export interface User extends AbstractUser {
     created_at: string
     birth_date: string | null
     language: string | null
+    email: string
 }

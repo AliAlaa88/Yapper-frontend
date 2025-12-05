@@ -4,6 +4,6 @@
 
 
 <script setup lang="ts">
-import ChangeAge from '~/modules/settings/components/ChangeAge.vue'
+import ChangeAge from '~/modules/settings/components/AccountInformations/ChangeAge.vue'
 definePageMeta({ layout: 'settings' })
 </script>

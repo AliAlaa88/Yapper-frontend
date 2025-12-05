@@ -113,7 +113,7 @@ const dropdownRef = ref<HTMLElement | null>(null)
 const userInteractions = useUserInteractions(userId, username, meId)
 const {
     handleBlockWithConfirmation,
-    handleMuteWithSnackbar,
+    handleMuteWithSnackbarWithAction,
     handleRemoveFollowerWithConfirmation,
     handleUnmuteWithSnackbar,
     handleUnblockWithConfirmation,
@@ -127,10 +127,10 @@ const {
 
 async function handleMuteAndUnmute() {
     if (isMuted.value) {
-        await handleUnmuteWithSnackbar(showList)
+        await handleUnmuteWithSnackbar(false, showList)
         emit('user-action', 'unmute')
     } else {
-        await handleMuteWithSnackbar(showList)
+        await handleMuteWithSnackbarWithAction()
         emit('user-action', 'mute')
     }
 }
