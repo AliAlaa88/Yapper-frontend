@@ -44,15 +44,21 @@
                             <NuxtLink
                                 :id="`sidebar-link-${link.href}`"
                                 :to="link.href"
-                                class="inline-flex items-center justify-center group"
+                                class="inline-flex items-center justify-center group relative"
                             >
                                 <div
-                                    class="flex items-center justify-center p-3 rounded-full hover:bg-hover transition-colors duration-200 w-full"
+                                    class="flex items-center justify-center p-3 rounded-full hover:bg-hover transition-colors duration-200 w-full relative"
                                 >
                                     <component
                                         :is="link.icon"
                                         class="w-[26px] h-[26px] text-primary"
                                     />
+                                    <span
+                                        v-if="link.href === '/messages' && totalUnreadCount > 0"
+                                        class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
+                                    >
+                                        {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
+                                    </span>
                                 </div>
                             </NuxtLink>
                         </template>
@@ -67,12 +73,20 @@
                         v-else
                         :id="`sidebar-link-${link.href}`"
                         :to="link.href"
-                        class="inline-flex items-center justify-start group"
+                        class="inline-flex items-center justify-start group relative"
                     >
                         <div
-                            class="flex items-center gap-4 p-3 rounded-full hover:bg-hover transition-colors duration-200"
+                            class="flex items-center gap-4 p-3 rounded-full hover:bg-hover transition-colors duration-200 relative"
                         >
-                            <component :is="link.icon" class="w-[26px] h-[26px] text-primary" />
+                            <div class="relative">
+                                <component :is="link.icon" class="w-[26px] h-[26px] text-primary" />
+                                <span
+                                    v-if="link.href === '/messages' && totalUnreadCount > 0"
+                                    class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
+                                >
+                                    {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
+                                </span>
+                            </div>
                             <span class="text-[20px] text-primary font-normal">{{
                                 t(link.labelKey)
                             }}</span>
@@ -206,4 +220,7 @@ const handleOpen = () => {
 const handleClose = () => {
     isOpen.value = false
 }
+
+const { $chatSocketService } = useNuxtApp()
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
 </script>
