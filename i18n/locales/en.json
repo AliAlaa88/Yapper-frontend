@@ -425,6 +425,12 @@
     "tweets": {
         "reposted": "Reposted",
         "moreActions": "More actions",
+        "editTweet": "Edit",
+        "deleteTweet": "Delete",
+        "tweetDeleted": "Your post was deleted",
+        "tweetUpdated": "Your post was updated",
+        "confirmDelete": "Delete post?",
+        "confirmDeleteDescription": "This can't be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from search results.",
         "actions": {
             "reply": "Reply",
             "retweet": "Repost",
