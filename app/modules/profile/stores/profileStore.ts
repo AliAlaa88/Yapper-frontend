@@ -4,7 +4,7 @@ import type { Me, OtherUser } from '../types/user'
 
 export const useProfileStore = defineStore('profile', () => {
     const profile = ref<Me | OtherUser | null>(null)
-    const isMyProfile = ref(false)
+    const isMyProfile = ref<boolean | null>(null)
 
     const setProfile = (user: Me | OtherUser, isCurrentUser: boolean) => {
         profile.value = user

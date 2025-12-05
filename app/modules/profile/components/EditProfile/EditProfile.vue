@@ -27,7 +27,7 @@
                     @remove="handleAvatarRemove"
                 />
 
-                <EditProfileForm v-model="formData" />
+                <EditProfileForm v-model="formData" @update:is-birth-date-valid="isBirthDateValid = $event" />
 
                 <input
                     id="cover-file-input"
@@ -88,6 +88,7 @@ const formData = ref({
 
 const avatarUrl = ref<string | null>(null)
 const coverUrl = ref<string | null>(null)
+const isBirthDateValid = ref(true)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
 
@@ -105,7 +106,7 @@ onMounted(() => {
 })
 
 const isFormValid = computed(() => {
-    return formData.value.name.trim().length > 0
+    return formData.value.name.trim().length > 0 && isBirthDateValid.value
 })
 
 const closeModal = () => {
