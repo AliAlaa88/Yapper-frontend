@@ -9,8 +9,8 @@ export const tweetServiceReal = {
 
         return {
             data: page.data.filter((t: any) => t.tweet_id),
-            nextCursor: page.pagination.next_cursor,
-            hasMore: page.pagination.has_more,
+            nextCursor: page.pagination?.next_cursor ?? page.next_cursor,
+            hasMore: page.pagination?.has_more ?? page.has_more,
         }
     },
 
