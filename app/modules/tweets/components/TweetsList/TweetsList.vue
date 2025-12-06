@@ -61,13 +61,18 @@
 </template>
 
 <script setup lang="ts">
-import { toRef, computed } from 'vue'
+import { toRef, computed, ref, watch, onUnmounted, provide } from 'vue'
 import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw } from 'lucide-vue-next'
 import Logo from '~/modules/Common/components/Logo/Logo.vue'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import type { Tweet as TweetType } from '../../types/tweet.ts'
+
+// Shared state for active actions menu - only one can be open at a time
+const activeMenuTweetId = ref<string | null>(null)
+provide('activeMenuTweetId', activeMenuTweetId)
+
 const props = defineProps<{
     fetchingSource?: string | null
 }>()
