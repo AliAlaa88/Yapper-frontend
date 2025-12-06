@@ -44,7 +44,7 @@
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
                 </time>
             </div>
-            <Stats :stats="mainTweetStats" @quote="handleQuote" @reply="handleReply" />
+            <Stats :stats="mainTweetStats" @quote="handleQuote" @reply="handleReply" @viewQuotesAndReposts="handleViewQuotesAndReposts" />
             <!-- Edit Tweet Modal -->
             <EditTweetModal
                 :is-open="showEditModal"
@@ -198,6 +198,13 @@ const handleReply = () => {
 
 const handleQuoteSuccess = () => {
     // Quote posted successfully
+}
+
+const handleViewQuotesAndReposts = () => {
+    // Navigate to the quotes page for this tweet
+    if (tweetDetails.value) {
+        router.push(`/${tweetDetails.value.user.username}/status/${tweetDetails.value.tweet_id}/quotes`)
+    }
 }
 
 const queryClient = useQueryClient()
