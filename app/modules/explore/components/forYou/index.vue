@@ -1,12 +1,12 @@
 <template>
     <div class="w-full">
         <!-- Loading state -->
-        <div v-if="isLoading" class="flex justify-center py-8">
+        <div v-if="isLoading" class="flex justify-center py-8 min-h-[calc(100vh-60px)]">
             <LoadingSpinner size="xl" />
         </div>
 
         <!-- Error state -->
-        <div v-else-if="isError" class="px-4 py-8 text-center">
+        <div v-else-if="isError" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
             <Button 
                 @click="refetch" 
@@ -17,8 +17,8 @@
         </div>
 
         <!-- Empty state -->
-        <div v-else-if="!exploreData" class="px-4 py-8 text-center">
-            <p class="text-muted">{{ t('explore.noTrends') }}</p>
+        <div v-else-if="!exploreData.value" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
+            <p class="text-muted text-lg">{{ t('explore.noTrends') }}</p>
         </div>
 
         <!-- Content -->
@@ -109,11 +109,12 @@ import { handleImageError } from '~/utils/helpers';
 const { t } = useI18n();
 
 const exploreData = ref<any>(null);
-
+console.log("Explore Data:", exploreData.value);
 const { isLoading, isError, refetch } = useGetExploreQuery(
     true,
     (response: any) => {
-        exploreData.value = response.data || response;
+        exploreData.value = toRaw(response.data) || toRaw(response);
+        console.log("Fetched Explore Data:", toRaw(exploreData.value));
     },
     (error: any) => {
         console.error('Error fetching explore data:', error);

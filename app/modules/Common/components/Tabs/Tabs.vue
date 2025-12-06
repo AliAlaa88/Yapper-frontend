@@ -20,11 +20,11 @@
             class="overflow-x-auto overflow-y-hidden scrollbar-hide"
             @scroll="updateScrollState"
         >
-            <ul class="flex w-max min-w-full">
+            <ul class="flex w-full">
                 <li
                     v-for="tab in tabs"
                     :key="tab.value"
-                    class="flex-1 min-w-20 text-center cursor-pointer transition-all duration-200 hover:bg-hover"
+                    class="flex-1 text-center cursor-pointer transition-all duration-200 hover:bg-hover"
                     @click="handleChange(tab.value)"
                     :id="tab.test_id"
                 >

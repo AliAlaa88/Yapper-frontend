@@ -1,24 +1,24 @@
 <template>
     <div class="w-full">
         <!-- Loading state -->
-        <div v-if="isLoading" class="flex justify-center py-8">
+        <div v-if="isLoading" class="flex justify-center py-8 min-h-[calc(100vh-60px)]">
             <LoadingSpinner size="xl" />
         </div>
 
         <!-- Error state -->
-        <div v-else-if="isError" class="px-4 py-8 text-center">
+        <div v-else-if="isError" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
             <button 
                 @click="() => refetch()" 
-                class="mt-2 text-accent hover:underline"
+                class="text-accent hover:underline"
             >
                 {{ t('explore.tryAgain') }}
             </button>
         </div>
 
         <!-- Empty state -->
-        <div v-else-if="!trends?.length" class="px-4 py-8 text-center">
-            <p class="text-muted">{{ t('explore.noTrends') }}</p>
+        <div v-else-if="!trends?.length" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
+            <p class="text-muted text-lg">{{ t('explore.noTrends') }}</p>
         </div>
 
         <!-- Trends list -->
@@ -39,7 +39,6 @@ const trends = ref<any[]>([]);
 const props = defineProps<{
     category: string;
 }>();
-
 const { isLoading, isError, refetch } = useGetExploreCategoriesQuery(
     props.category,
     true,
