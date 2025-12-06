@@ -44,7 +44,7 @@
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
                 </time>
             </div>
-            <Stats :stats="mainTweetStats" @quote="handleQuote" />
+            <Stats :stats="mainTweetStats" @quote="handleQuote" @reply="handleReply" />
             <!-- Edit Tweet Modal -->
             <EditTweetModal
                 :is-open="showEditModal"
@@ -60,6 +60,7 @@
         <div v-if="tweetDetails && !isLoading && !error">
             <!-- Post Reply Form -->
             <ReplyForm
+                ref="replyFormRef"
                 :parent-tweet-id="tweetDetails.tweet_id"
                 :replying-to-username="tweetDetails.user.username"
             />
@@ -178,6 +179,7 @@ const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
 
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
+const replyFormRef = ref(null)
 provide('show-list', showActionsMenu)
 
 const toggleActionsMenu = () => {
@@ -186,6 +188,12 @@ const toggleActionsMenu = () => {
 
 const handleQuote = () => {
     showQuoteModal.value = true
+}
+
+const handleReply = () => {
+    if (replyFormRef.value) {
+        replyFormRef.value.focus()
+    }
 }
 
 const handleQuoteSuccess = () => {
