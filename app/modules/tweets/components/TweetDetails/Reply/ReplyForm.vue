@@ -66,6 +66,11 @@ const handleFocus = () => {
     isFocused.value = true
 }
 
+// Expose focus method for parent components
+defineExpose({
+    focus: handleFocus
+})
+
 const handleSuccess = () => {
     isFocused.value = false
     emit('success')

@@ -298,13 +298,13 @@
             "unfollow": {
                 "title": "إلغاء المتابعة",
                 "button": "إلغاء المتابعة",
-                "snackbar" : "لم تعد تتابع {username}.",
+                "snackbar": "لم تعد تتابع {username}.",
                 "description": "لن تظهر منشوراتهم في جدولك الزمني للمتابعة. لا يزال بإمكانك عرض ملفهم الشخصي، ما لم تكن منشوراتهم محمية."
             },
             "follow": {
-              "title" : "متابعة",
-              "button" : "متابعة",
-              "snackbar" : "{username} "
+                "title": "متابعة",
+                "button": "متابعة",
+                "snackbar": "{username} "
             },
             "mute": {
                 "snackbar": "تم كتم {username}.",
@@ -375,7 +375,7 @@
             "title": "معلومات الحساب",
             "username": "اسم المستخدم",
             "change_username": "تغيير اسم المستخدم",
-            "suggestions" : "الاقتراحات",
+            "suggestions": "الاقتراحات",
             "save": "حفظ",
             "email": "البريد الإلكتروني",
             "accountCreation": "تاريخ إنشاء الحساب",
@@ -405,7 +405,7 @@
             "age": "العمر",
             "age_desc_long": "إذا لم تُدخل تاريخ ميلادك، سنعرض لك نطاقًا للعمر بناءً على ملفك الشخصي ونشاطك في Yapper. تُستخدم معلومات العمر لتخصيص تجربتك.",
             "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى",
-            "age_notRight2" : "دون مشاركته بشكل عام.",
+            "age_notRight2": "دون مشاركته بشكل عام.",
             "profile": "الملف الشخصي"
         },
 
@@ -484,6 +484,7 @@
     },
     "tweets": {
         "reposted": "أعاد النشر",
+        "postEngagements": "تفاعلات المنشور",
         "moreActions": "المزيد من الإجراءات",
         "editTweet": "تعديل",
         "deleteTweet": "حذف",
@@ -496,6 +497,7 @@
             "retweet": "إعادة نشر",
             "undoRetweet": "التراجع عن إعادة النشر",
             "quote": "اقتباس",
+            "likes": "الإعجابات",
             "like": "إعجاب",
             "unlike": "إلغاء الإعجاب",
             "views": "المشاهدات",
@@ -505,7 +507,8 @@
             "linkCopied": "تم نسخ الرابط",
             "bookmarkAdded": "تمت الإضافة إلى مفضلتك",
             "bookmarkRemoved": "تمت الإزالة من مفضلتك",
-            "copiedToClipboard": "تم النسخ إلى الحافظة"
+            "copiedToClipboard": "تم النسخ إلى الحافظة",
+            "viewQuotes": "عرض الاقتباسات"
         },
         "loading": {
             "tweets": "جاري تحميل المنشورات...",
@@ -516,7 +519,13 @@
             "noTweets": "لا توجد منشورات بعد",
             "noTweetsDescription": "عندما يتم نشر منشورات، ستظهر هنا.",
             "noReplies": "لا توجد ردود بعد",
-            "noRepliesDescription": "عندما يرد الأشخاص على هذا المنشور، ستظهر هنا."
+            "noRepliesDescription": "عندما يرد الأشخاص على هذا المنشور، ستظهر هنا.",
+            "noQuotes": "لا توجد اقتباسات بعد",
+            "noQuotesDescription": "عندما يقتبس الأشخاص هذا المنشور، ستظهر هنا.",
+            "noReposts": "لا توجد إعادات نشر بعد",
+            "norepostsDescription": "عندما يعيد الأشخاص نشر هذا المنشور، ستظهر هنا.",
+            "noLikes": "لا توجد إعجابات بعد",
+            "noLikesDescription": "عندما يعجب الأشخاص بهذا المنشور، ستظهر هنا."
         },
         "errors": {
             "loadFailed": "فشل تحميل المنشورات",
@@ -551,7 +560,9 @@
             "posting": "جاري النشر...",
             "success": "تم إرسال منشورك.",
             "replySuccess": "تم إرسال ردك.",
-            "replying": "جاري الرد..."
+            "replying": "جاري الرد...",
+            "quoteSuccess": "تم إرسال منشور الاقتباس الخاص بك.",
+            "quoting": "جاري النشر..."
         },
         "banner": {
             "search": "البحث",
@@ -569,7 +580,20 @@
             "following": "المتابعون"
         }
     },
-    "countries" : {
+    "chat": {
+        "messages": "الرسائل",
+        "selectMessage": "اختر رسالة",
+        "selectMessageDescription": "اختر من محادثاتك الموجودة، أو ابدأ محادثة جديدة، أو استمتع بوقتك.",
+        "newMessage": "رسالة جديدة",
+        "noMessagesYet": "لا توجد رسائل بعد",
+        "noMessagesYetDescription": "ابدأ محادثة من صفحة شخص ما",
+        "noMessagesInChat": "لا توجد رسائل بعد. ابدأ المحادثة!",
+        "loading": "جاري التحميل...",
+        "loadOlderMessages": "تحميل الرسائل الأقدم",
+        "failedToLoad": "فشل تحميل الرسائل",
+        "backToMessages": "العودة إلى الرسائل"
+    },
+    "countries": {
         "Afghanistan": "أفغانستان",
         "Albania": "ألبانيا",
         "Algeria": "الجزائر",

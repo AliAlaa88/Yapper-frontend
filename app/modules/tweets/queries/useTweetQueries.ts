@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
-import { computed, unref, type MaybeRef } from 'vue'
-import type { Tweet, TweetDetails } from '../types'
+import { unref, type MaybeRef } from 'vue'
+import type { Tweet, TweetDetails, User } from '../types'
 import type { TweetsPage } from '../types/tweet'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
@@ -202,5 +202,31 @@ export function useUpdateTweetMutation(tweetId: string) {
         onError: (error) => {
             console.error('Error updating tweet:', tweetId, error)
         },
+    })
+}
+
+// Query for fetching quotes for a tweet
+export function useTweetQuotesQuery(tweetId: MaybeRef<string>) {
+    const { $tweetService } = useNuxtApp()
+
+    return useQuery<Tweet[]>({
+        queryKey: ['tweetQuotes', unref(tweetId)],
+        queryFn: () => ($tweetService as any).fetchtweetquotes(unref(tweetId)) as Promise<Tweet[]>,
+        enabled: () => !!unref(tweetId),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
+    })
+}
+
+// Query for fetching reposts for a tweet
+export function useTweetRepostsQuery(tweetId: MaybeRef<string>) {
+    const { $tweetService } = useNuxtApp()
+
+    return useQuery<User[]>({
+        queryKey: ['tweetReposts', unref(tweetId)],
+        queryFn: () => ($tweetService as any).fetchTweetReposts(unref(tweetId)) as Promise<User[]>,
+        enabled: () => !!unref(tweetId),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
     })
 }

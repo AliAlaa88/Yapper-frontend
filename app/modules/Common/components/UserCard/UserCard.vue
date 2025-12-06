@@ -1,8 +1,8 @@
 <template>
     <div class="flex items-start hover:bg-hover gap-3 p-4 transition-colors cursor-pointer">
         <NuxtLink :to="`/${user.username}`" class="flex items-start gap-3 flex-1 min-w-0">
-            <img
-                :src="user.avatar_url || '/default-avatar.png'"
+            <NuxtImg
+                :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name)"
                 :alt="user.name"
                 class="h-12 w-12 rounded-full object-cover"
             />

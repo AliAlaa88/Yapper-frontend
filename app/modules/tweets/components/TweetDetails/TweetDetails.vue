@@ -1,5 +1,19 @@
 <template>
     <div class="bg-primary min-h-screen">
+        <!-- Header with back button -->
+        <div
+            class="sticky top-0 z-2 bg-[#ffffff] dark:bg-x-bg-dark/80 dark:backdrop-blur-md px-4 py-3"
+        >
+            <div class="flex items-center gap-4">
+                <button
+                    @click="$router.back()"
+                    class="p-2 rounded-full hover:bg-hover transition-colors"
+                >
+                    <ArrowLeft :size="20" class="cursor-pointer text-primary" />
+                </button>
+                <h1 class="text-xl text-primary font-bold">{{ pageTitle }}</h1>
+            </div>
+        </div>
         <!-- Main Tweet -->
         <div v-if="tweetDetails && !isLoading && !error" class="p-4 border-b border-primary">
             <div class="flex items-start justify-between gap-2 mb-4">
@@ -44,7 +58,12 @@
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
                 </time>
             </div>
-            <Stats :stats="mainTweetStats" @quote="handleQuote" />
+            <Stats
+                :stats="mainTweetStats"
+                @quote="handleQuote"
+                @reply="handleReply"
+                @viewQuotesAndReposts="handleViewQuotesAndReposts"
+            />
             <!-- Edit Tweet Modal -->
             <EditTweetModal
                 :is-open="showEditModal"
@@ -60,6 +79,7 @@
         <div v-if="tweetDetails && !isLoading && !error">
             <!-- Post Reply Form -->
             <ReplyForm
+                ref="replyFormRef"
                 :parent-tweet-id="tweetDetails.tweet_id"
                 :replying-to-username="tweetDetails.user.username"
             />
@@ -152,6 +172,7 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 import MyTweetActionsMenu from '../Tweet/subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
 import { useTweetActions } from '../../composables/useTweetActions'
 import EditTweetModal from '../EditTweetModal/EditTweetModal.vue'
+import { ArrowLeft } from 'lucide-vue-next'
 
 // Get tweet ID and username from route params
 const route = useRoute()
@@ -172,12 +193,20 @@ const {
     isUpdateLoading,
 } = useTweetActions(tweetId)
 
+const pageTitle = computed(() => {
+    if (route.path.includes('quotes')) {
+        return 'Quotes & Reposts'
+    }
+    return 'Post'
+})
+
 // Handlers for own tweet actions
 const onEdit = () => handleEdit(showActionsMenu)
 const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
 
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
+const replyFormRef = ref(null)
 provide('show-list', showActionsMenu)
 
 const toggleActionsMenu = () => {
@@ -188,8 +217,23 @@ const handleQuote = () => {
     showQuoteModal.value = true
 }
 
+const handleReply = () => {
+    if (replyFormRef.value) {
+        replyFormRef.value.focus()
+    }
+}
+
 const handleQuoteSuccess = () => {
     // Quote posted successfully
+}
+
+const handleViewQuotesAndReposts = () => {
+    // Navigate to the quotes page for this tweet
+    if (tweetDetails.value) {
+        router.push({
+            path: `/${tweetDetails.value.user.username}/status/${tweetDetails.value.tweet_id}/quotes`,
+        })
+    }
 }
 
 const queryClient = useQueryClient()
