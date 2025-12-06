@@ -22,8 +22,13 @@
                 <!-- Query Item -->
                 <div v-if="item.type === 'query'" class="flex items-center gap-3">
                     <Search :size="20" class="text-primary/50 shrink-0" />
-                    <div class="flex-1 min-w-0 cursor-pointer" @click="handleQueryClick(item.query)">
-                        <div class="text-primary font-semibold text-[15px] truncate">{{ item.query }}</div>
+                    <div
+                        class="flex-1 min-w-0 cursor-pointer"
+                        @click="handleQueryClick(item.query)"
+                    >
+                        <div class="text-primary font-semibold text-[15px] truncate">
+                            {{ item.query }}
+                        </div>
                     </div>
                     <button
                         type="button"
@@ -36,14 +41,29 @@
                 </div>
 
                 <!-- User Item -->
-                <div v-else-if="item.type === 'user'" class="flex items-center gap-3 cursor-pointer" @click="handleUserClick(item)">
+                <div
+                    v-else-if="item.type === 'user'"
+                    class="flex items-center gap-3 cursor-pointer"
+                    @click="handleUserClick(item)"
+                >
                     <img
+                        v-if="item.avatar_url"
                         :src="item.avatar_url"
                         :alt="item.name"
                         class="w-10 h-10 rounded-full object-cover shrink-0"
+                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}'`"
+                    />
+                    <img
+                        v-else
+                        :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}`"
+                        :alt="item.name"
+                        class="w-10 h-10 rounded-full object-cover shrink-0"
+                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}'`"
                     />
                     <div class="flex-1 min-w-0">
-                        <div class="text-primary font-bold text-[15px] truncate">{{ item.name }}</div>
+                        <div class="text-primary font-bold text-[15px] truncate">
+                            {{ item.name }}
+                        </div>
                         <div class="text-secondary text-[13px] truncate">@{{ item.username }}</div>
                     </div>
                     <button
@@ -105,7 +125,7 @@ const loadSearchHistory = () => {
                     return {
                         type: 'query',
                         query: item.query,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
                     }
                 }
                 return item
@@ -126,7 +146,7 @@ const saveSearchHistory = () => {
 }
 
 const removeItem = (index: number) => {
-    const actualIndex = searchHistory.value.findIndex(item => item === sortedHistory.value[index])
+    const actualIndex = searchHistory.value.findIndex((item) => item === sortedHistory.value[index])
     if (actualIndex !== -1) {
         searchHistory.value.splice(actualIndex, 1)
         saveSearchHistory()
@@ -140,7 +160,7 @@ const clearAll = () => {
 
 const handleQueryClick = (query: string) => {
     // Move to top by updating timestamp
-    const item = searchHistory.value.find(item => item.type === 'query' && item.query === query)
+    const item = searchHistory.value.find((item) => item.type === 'query' && item.query === query)
     if (item) {
         item.timestamp = Date.now()
         saveSearchHistory()
@@ -150,8 +170,8 @@ const handleQueryClick = (query: string) => {
 
 const handleUserClick = (user: HistoryUser) => {
     // Move to top by updating timestamp
-    const item = searchHistory.value.find(item =>
-        item.type === 'user' && item.user_id === user.user_id
+    const item = searchHistory.value.find(
+        (item) => item.type === 'user' && item.user_id === user.user_id,
     )
     if (item) {
         item.timestamp = Date.now()

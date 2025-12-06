@@ -1,9 +1,11 @@
 <template>
-    <div class="sticky top-0 bg-primary/95 backdrop-blur-sm overflow-hidden">
+    <div class="sticky top-0 bg-primary/95 backdrop-blur-sm z-10">
         <div class="p-4">
             <SearchBar :has-arrow="true" />
         </div>
-        <tabsComponent :tabs="tabs" :active-tab="selectedTab" :on-change="onTabsChange" />
+        <div class="overflow-hidden">
+            <tabsComponent :tabs="tabs" :active-tab="selectedTab" :on-change="onTabsChange" />
+        </div>
     </div>
 </template>
 
