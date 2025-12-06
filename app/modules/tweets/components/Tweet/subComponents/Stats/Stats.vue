@@ -6,7 +6,7 @@
                 <button
                     id="tweet-reply-button"
                     class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
-                    @click.stop
+                    @click.stop="handleReplyClick"
                 >
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
@@ -178,6 +178,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'quote'): void
+    (e: 'reply'): void
 }>()
 
 const likes = computed(() => props.stats.likes)
@@ -353,6 +354,10 @@ const closeRepostMenu = () => {
 const handleQuoteClick = () => {
     showRepostMenu.value = false
     emit('quote')
+}
+
+const handleReplyClick = () => {
+    emit('reply')
 }
 
 const handleRepostAction = () => {
