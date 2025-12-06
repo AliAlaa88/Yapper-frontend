@@ -535,6 +535,32 @@
             "goBack": "Go back"
         }
     },
+    "search": {
+        "searchPlaceholder": "Search",
+        "recent": "Recent",
+        "clearAll": "Clear all",
+        "trending": "Trending",
+        "removeQuery": "Remove",
+        "noRecentQueries": "No recent searches",
+        "noSuggestions": "No Suggestions found",
+        "followEachOther": "You follow each other",
+        "youFollow": "You follow",
+        "followsYou": "Follows you",
+        "enterQuery": "Try searching for people, topics, or keywords",
+        "tabs": {
+            "top": "Top",
+            "latest": "Latest",
+            "people": "People",
+            "media": "Media",
+            "lists": "Lists"
+        },
+        "emptyState": {
+            "noUsers": {
+                "title": "No people found",
+                "description": "Try adjusting your search to find what you're looking for"
+            }
+        }
+    },
     "explore": {
         "trending": "Trending",
         "posts": "posts",

@@ -535,6 +535,32 @@
             "goBack": "العودة"
         }
     },
+    "search": {
+        "searchPlaceholder": "بحث",
+        "recent": "الأخيرة",
+        "clearAll": "مسح الكل",
+        "trending": "الترند",
+        "removeQuery": "إزالة",
+        "noRecentQueries": "لا توجد عمليات بحث حديثة",
+        "noSuggestions": "لم يتم العثور على اقتراحات",
+        "followEachOther": "تتابعون بعضكم البعض",
+        "youFollow": "أنت تتابع",
+        "followsYou": "يتابعك",
+        "enterQuery": "جرب البحث عن أشخاص أو مواضيع أو كلمات رئيسية",
+        "tabs": {
+            "top": "الأعلى",
+            "latest": "الأحدث",
+            "people": "أشخاص",
+            "media": "وسائط",
+            "lists": "قوائم"
+        },
+        "emptyState": {
+            "noUsers": {
+                "title": "لم يتم العثور على أشخاص",
+                "description": "حاول تعديل بحثك للعثور على ما تبحث عنه"
+            }
+        }
+    },
     "explore": {
         "trending": "الترند",
         "posts": "منشور",

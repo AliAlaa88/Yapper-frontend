@@ -1,17 +1,7 @@
 <template>
     <div class="w-full min-h-screen z-1 bg-primary flex flex-col gap-4 p-4">
         <!-- Search Bar -->
-        <div class="w-full">
-            <div class="relative">
-                <input
-                    type="text"
-                    :placeholder="t('timeline.banner.search')"
-                    id="right-banner-search-input"
-                    class="w-full px-4 py-3 pl-12 bg-primary border border-primary rounded-full text-primary placeholder:text-muted focus:outline-none focus:border-blue focus:bg-primary"
-                />
-                <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
-            </div>
-        </div>
+        <SearchBar v-if="!isSearch" />
 
         <!-- Trending Section -->
         <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
@@ -93,6 +83,11 @@
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
+import SearchBar from '~/modules/search/components/SearchBar.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const isSearch = computed(() => route.path.startsWith('/explore') || route.path.startsWith('/search'))
 const { t } = useI18n()
 </script>
