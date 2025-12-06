@@ -298,13 +298,13 @@
             "unfollow": {
                 "title": "إلغاء المتابعة",
                 "button": "إلغاء المتابعة",
-                "snackbar" : "لم تعد تتابع {username}.",
+                "snackbar": "لم تعد تتابع {username}.",
                 "description": "لن تظهر منشوراتهم في جدولك الزمني للمتابعة. لا يزال بإمكانك عرض ملفهم الشخصي، ما لم تكن منشوراتهم محمية."
             },
             "follow": {
-              "title" : "متابعة",
-              "button" : "متابعة",
-              "snackbar" : "{username} "
+                "title": "متابعة",
+                "button": "متابعة",
+                "snackbar": "{username} "
             },
             "mute": {
                 "snackbar": "تم كتم {username}.",
@@ -375,7 +375,7 @@
             "title": "معلومات الحساب",
             "username": "اسم المستخدم",
             "change_username": "تغيير اسم المستخدم",
-            "suggestions" : "الاقتراحات",
+            "suggestions": "الاقتراحات",
             "save": "حفظ",
             "email": "البريد الإلكتروني",
             "accountCreation": "تاريخ إنشاء الحساب",
@@ -405,7 +405,7 @@
             "age": "العمر",
             "age_desc_long": "إذا لم تُدخل تاريخ ميلادك، سنعرض لك نطاقًا للعمر بناءً على ملفك الشخصي ونشاطك في Yapper. تُستخدم معلومات العمر لتخصيص تجربتك.",
             "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى",
-            "age_notRight2" : "دون مشاركته بشكل عام.",
+            "age_notRight2": "دون مشاركته بشكل عام.",
             "profile": "الملف الشخصي"
         },
 
@@ -569,7 +569,20 @@
             "following": "المتابعون"
         }
     },
-    "countries" : {
+    "chat": {
+        "messages": "الرسائل",
+        "selectMessage": "اختر رسالة",
+        "selectMessageDescription": "اختر من محادثاتك الموجودة، أو ابدأ محادثة جديدة، أو استمتع بوقتك.",
+        "newMessage": "رسالة جديدة",
+        "noMessagesYet": "لا توجد رسائل بعد",
+        "noMessagesYetDescription": "ابدأ محادثة من صفحة شخص ما",
+        "noMessagesInChat": "لا توجد رسائل بعد. ابدأ المحادثة!",
+        "loading": "جاري التحميل...",
+        "loadOlderMessages": "تحميل الرسائل الأقدم",
+        "failedToLoad": "فشل تحميل الرسائل",
+        "backToMessages": "العودة إلى الرسائل"
+    },
+    "countries": {
         "Afghanistan": "أفغانستان",
         "Albania": "ألبانيا",
         "Algeria": "الجزائر",

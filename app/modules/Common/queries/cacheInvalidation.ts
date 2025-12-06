@@ -187,4 +187,13 @@ export const cacheInvalidation = {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         queryClient.invalidateQueries({ queryKey: queryKeys.auth.user() })
     },
+
+    // ==================== Chat/Conversation Mutations ====================
+
+    /**
+     * Call after creating a new conversation
+     */
+    onConversationCreate: (queryClient: QueryClient) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all })
+    },
 }
