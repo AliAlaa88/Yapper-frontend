@@ -36,17 +36,16 @@ export function useGetExploreQuery(
 }
 
 export function useGetTrendsQuery(
-    category: String,
-    country: String,
+    category?: String,
     enabled: Ref<boolean> | boolean = false,
     onSuccess?: (data: any) => void,
     onError?: (error: unknown) => void
 ) {
     const { $exploreService } = useNuxtApp();
-
+    
     const query= useQuery({
-        queryKey: ['getTrends', category, country],
-        queryFn: () => $exploreService.getTrending(category, country),
+        queryKey: ['getTrends', category],
+        queryFn: () => $exploreService.getTrending(category),
         enabled,
         retry: false,
         staleTime: 0,
@@ -72,7 +71,7 @@ export function useGetTrendsQuery(
 }
 
 export function useGetExploreCategoriesQuery(
-    category: String,
+    category?: String,
     enabled: Ref<boolean> | boolean = false,
     onSuccess?: (data: any) => void,
     onError?: (error: unknown) => void

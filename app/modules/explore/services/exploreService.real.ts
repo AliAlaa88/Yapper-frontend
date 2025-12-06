@@ -6,14 +6,17 @@ export const exploreServiceReal = () => {
     return {
         getExplore: async () => {
             const response = await $yapperApi.get(`${API_URL}/explore`);   
+            console.log("Explore Service Response:", response);
             return response.data;
         },
-        getTrending: async (category: String, country: String) => {
-            const response = await $yapperApi.get(`${API_URL}/explore/trending`, {params: {category, country}});   
+        getTrending: async (category?: String) => {
+            const params = category ? { category } : {};
+            const response = await $yapperApi.get(`${API_URL}/trend`, { params });   
             return response.data;
         },
-        getExploreCategories: async (category: String) => {
-            const response = await $yapperApi.get(`${API_URL}/explore/for-you`, {params: {category}});   
+        getExploreCategories: async (category?: String) => {
+            const params = category ? { category } : {};
+            const response = await $yapperApi.get(`${API_URL}/explore/for-you`, { params });   
             return response.data;
         },
         getExploreWhoToFollow: async () => {

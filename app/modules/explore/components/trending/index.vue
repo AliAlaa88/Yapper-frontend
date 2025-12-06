@@ -37,11 +37,9 @@ const { t } = useI18n();
 
 const trends = ref<any[]>([]);
 const category = ref('');
-const country = ref('eg');
 
 const { isLoading, isError, refetch } = useGetTrendsQuery(
     category.value,
-    country.value,
     true,
     (response: any) => {
         trends.value = response.data || response;
