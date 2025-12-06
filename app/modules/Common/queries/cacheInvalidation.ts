@@ -1,4 +1,5 @@
-import type { QueryClient } from '@tanstack/vue-query'
+import type { QueryClient, InfiniteData } from '@tanstack/vue-query'
+import type { MutedAndBlockedListsApiResponse } from '~/modules/settings/types/settings'
 import { queryKeys } from './queryKeys'
 
 export const cacheInvalidation = {
@@ -6,6 +7,51 @@ export const cacheInvalidation = {
     /**
      * Call after creating a new tweet
      */
+
+    toggleBlockedInCache: (queryClient: QueryClient, userId: string, isBlocked: boolean) => {
+        queryClient.setQueryData<InfiniteData<MutedAndBlockedListsApiResponse>>(
+            queryKeys.settings.blockedUsers(),
+            (oldData) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => ({
+                        ...page,
+                        data: {
+                            ...page.data,
+                            data: page.data.data.map((user) =>
+                                user.user_id === userId ? { ...user, is_blocked: isBlocked } : user,
+                            ),
+                        },
+                    })),
+                }
+            },
+        )
+    },
+
+    toggleMutedInCache: (queryClient: QueryClient, userId: string, isMuted: boolean) => {
+        queryClient.setQueryData<InfiniteData<MutedAndBlockedListsApiResponse>>(
+            queryKeys.settings.mutedUsers(),
+            (oldData) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => ({
+                        ...page,
+                        data: {
+                            ...page.data,
+                            data: page.data.data.map((user) =>
+                                user.user_id === userId ? { ...user, is_muted: isMuted } : user,
+                            ),
+                        },
+                    })),
+                }
+            },
+        )
+    },
+
     onTweetCreate: (queryClient: QueryClient, userId: string) => {
         console.log('Invalidating caches for new tweet by user:', userId)
         console.log('Invalidated caches for new tweet by user:', queryClient)
@@ -61,6 +107,7 @@ export const cacheInvalidation = {
         queryClient.removeQueries({ queryKey: queryKeys.users.profile(oldUsername) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
+        queryClient.invalidateQueries({ queryKey: queryKeys.settings.usernameRecommendation() })
     },
 
     /**
@@ -103,7 +150,7 @@ export const cacheInvalidation = {
      */
     onBlockChange: (queryClient: QueryClient, targetUserId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
+        // queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
         // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
@@ -112,7 +159,7 @@ export const cacheInvalidation = {
      */
     onMuteChange: (queryClient: QueryClient, targetUserId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
+        // queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
         // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 

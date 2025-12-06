@@ -17,7 +17,7 @@
                         />
                     </NuxtLink>
                 </template>
-                <template #content>
+                <template #content="{ isOpen }">
                     <UserCard
                         :id="id"
                         :name="name"
@@ -27,6 +27,7 @@
                         :followers-count="publisher.followers"
                         :following-count="publisher.following"
                         :is_following="publisher.is_following"
+                        :is-open="isOpen"
                     />
                 </template>
             </CustomToolTip>
@@ -44,7 +45,7 @@
                             {{ name }}
                         </NuxtLink>
                     </template>
-                    <template #content>
+                    <template #content="{ isOpen }">
                         <UserCard
                             :id="id"
                             :name="name"
@@ -54,6 +55,7 @@
                             :followers-count="publisher.followers"
                             :following-count="publisher.following"
                             :is_following="publisher.is_following"
+                            :is-open="isOpen"
                         />
                     </template>
                 </CustomToolTip>
@@ -77,7 +79,7 @@
                     {{ name }}
                 </NuxtLink>
             </template>
-            <template #content>
+            <template #content="{ isOpen }">
                 <UserCard
                     :id="id"
                     :name="name"
@@ -87,6 +89,7 @@
                     :followers-count="publisher.followers"
                     :following-count="publisher.following"
                     :is_following="publisher.is_following"
+                    :is-open="isOpen"
                 />
             </template>
         </CustomToolTip>
@@ -102,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
+import { computed } from 'vue'
 import type { User as UserType } from '../../../../../Common/types/user'
 import { formatDate } from '../../../../utils/lib'
 import { getProfileUrl } from '../../../../utils/navigation'
@@ -115,7 +118,12 @@ const props = defineProps<{
     isDetail?: boolean
 }>()
 
-const { id, name, username, avatar_url } = toRefs(props.publisher)
+// Direct access to props.publisher properties
+const id = computed(() => props.publisher.id)
+const name = computed(() => props.publisher.name)
+const username = computed(() => props.publisher.username)
+const avatar_url = computed(() => props.publisher.avatar_url)
+
 const { locale } = useI18n()
 // Use the utility function for consistent profile URLs
 const linkComputed = computed(() => getProfileUrl(props.publisher))

@@ -26,7 +26,7 @@
             ]"
             :style="contentStyle"
         >
-            <div class="sm:hidden block">
+            <div v-if="isHome" class="sm:hidden block">
                 <MobileSidebar />
             </div>
             <slot />
@@ -66,9 +66,12 @@ import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/
 import ConfirmationModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
 import { useSidebarState } from '~/modules/TimeLine/composables/useSidebarState'
+import { useRoute } from 'vue-router'
 
 useProfileProviders()
-
+const route = useRoute()
+console.log(route)
+const isHome = computed(() => route.path === '/')
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
 const { sidebarWidth } = useSidebarState()

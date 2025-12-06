@@ -1,21 +1,16 @@
 import axios from 'axios'
+import { useNuxtApp } from 'nuxt/app'
 import type {
     Me,
-    MeApiResponse,
     OtherUser,
-    OtherUserApiResponse,
-    ActionApiResponse,
-    ImageUploadApiResponse,
-    FollowUser,
-    FollowListApiResponse,
+    FollowUsersPage,
 } from '../types/user'
-import { useNuxtApp } from 'nuxt/app'
 
 export const userInfoServiceReal = {
     async getMe(): Promise<Me> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.get<MeApiResponse>('/users/me')
+            const response = await $axios.get('/users/me')
             if (!response.data || !response.data.data) {
                 throw new Error('User not found')
             }
@@ -35,7 +30,7 @@ export const userInfoServiceReal = {
     async getUserInfoByUsername(username: string): Promise<OtherUser> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.get<OtherUserApiResponse>(
+            const response = await $axios.get(
                 `/users/by/username/${username}`,
             )
             if (!response.data || !response.data.data) {
@@ -60,7 +55,7 @@ export const userInfoServiceReal = {
             throw new Error('User ID is required')
         }
         try {
-            const response = await $axios.get<OtherUserApiResponse>(`/users/${userId}`)
+            const response = await $axios.get(`/users/${userId}`)
             if (!response.data || !response.data.data) {
                 throw new Error('User not found')
             }
@@ -81,7 +76,7 @@ export const userInfoServiceReal = {
     async followUser(userId: string): Promise<void> {
         const { $axios } = useNuxtApp()
         try {
-            await $axios.post<ActionApiResponse>(`/users/${userId}/follow`)
+            await $axios.post(`/users/${userId}/follow`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -103,7 +98,7 @@ export const userInfoServiceReal = {
     async unfollowUser(userId: string): Promise<void> {
         const { $axios } = useNuxtApp()
         try {
-            await $axios.delete<ActionApiResponse>(`/users/${userId}/unfollow`)
+            await $axios.delete(`/users/${userId}/unfollow`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -120,7 +115,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.post<ActionApiResponse>(`/users/${userId}/block`)
+            await $axios.post(`/users/${userId}/block`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -141,7 +136,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.delete<ActionApiResponse>(`/users/${userId}/unblock`)
+            await $axios.delete(`/users/${userId}/unblock`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -158,7 +153,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.post<ActionApiResponse>(`/users/${userId}/mute`)
+            await $axios.post(`/users/${userId}/mute`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -179,7 +174,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.delete<ActionApiResponse>(`/users/${userId}/unmute`)
+            await $axios.delete(`/users/${userId}/unmute`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -196,7 +191,7 @@ export const userInfoServiceReal = {
         const { $axios } = useNuxtApp()
 
         try {
-            await $axios.delete<ActionApiResponse>(`/users/${userId}/remove-follower`)
+            await $axios.delete(`/users/${userId}/remove-follower`)
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 404) {
@@ -212,7 +207,7 @@ export const userInfoServiceReal = {
     async updateUserProfile(userId: string, updates: Partial<Me>): Promise<Me> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.patch<MeApiResponse>('/users/me', updates)
+            const response = await $axios.patch('/users/me', updates)
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to update profile')
             }
@@ -239,7 +234,7 @@ export const userInfoServiceReal = {
         formData.append('file', file)
 
         try {
-            const response = await $axios.post<ImageUploadApiResponse>(
+            const response = await $axios.post(
                 '/users/me/upload-avatar',
                 formData,
                 {
@@ -272,7 +267,7 @@ export const userInfoServiceReal = {
         formData.append('file', file)
 
         try {
-            const response = await $axios.post<ImageUploadApiResponse>(
+            const response = await $axios.post(
                 '/users/me/upload-cover',
                 formData,
                 {
@@ -293,50 +288,6 @@ export const userInfoServiceReal = {
                     throw new Error('Invalid or expired token')
                 } else if (error.response?.status === 400) {
                     throw new Error('Invalid file upload')
-                }
-            }
-            throw new Error('Something went wrong')
-        }
-    },
-
-    async getFollowers(userId: string): Promise<FollowUser[]> {
-        const { $axios } = useNuxtApp()
-        try {
-            const response = await $axios.get<FollowListApiResponse>(
-                `/users/${userId}/followers`,
-            )
-            if (!response.data || !response.data.data) {
-                throw new Error('Failed to fetch followers')
-            }
-            return response.data.data.data
-        } catch (error: unknown) {
-            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
-                if (error.response?.status === 404) {
-                    throw new Error('User not found')
-                } else if (error.response?.status === 401) {
-                    throw new Error('Invalid or expired token')
-                }
-            }
-            throw new Error('Something went wrong')
-        }
-    },
-
-    async getFollowing(userId: string): Promise<FollowUser[]> {
-        const { $axios } = useNuxtApp()
-        try {
-            const response = await $axios.get<FollowListApiResponse>(
-                `/users/${userId}/following`,
-            )
-            if (!response.data || !response.data.data) {
-                throw new Error('Failed to fetch following list')
-            }
-            return response.data.data.data
-        } catch (error: unknown) {
-            if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
-                if (error.response?.status === 404) {
-                    throw new Error('User not found')
-                } else if (error.response?.status === 401) {
-                    throw new Error('Invalid or expired token')
                 }
             }
             throw new Error('Something went wrong')
