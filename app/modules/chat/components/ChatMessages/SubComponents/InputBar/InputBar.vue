@@ -133,6 +133,7 @@ interface MediaItem {
 
 const props = defineProps<{
     conversationId: string
+    containerRef?: HTMLElement | null
 }>()
 
 const { $chatSocketService } = useNuxtApp()
@@ -248,6 +249,10 @@ const handleSubmit = () => {
         mediaUrl,
         messageType,
     })
+
+    if (props.containerRef) {
+        props.containerRef.scrollTop = props.containerRef.scrollHeight
+    }
 
     content.value = ''
     mediaUrls.value = []

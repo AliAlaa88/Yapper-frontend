@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full bg-primary">
+    <div class="flex flex-col h-full bg-primary relative">
         <!-- Header -->
         <div
             class="p-4 flex items-center justify-between sticky top-0 bg-primary/80 backdrop-blur-md z-10 border-b border-primary"
@@ -36,7 +36,7 @@
         </div>
 
         <!-- Messages List -->
-        <div ref="messagesContainerRef" class="flex-1 overflow-y-auto">
+        <div ref="messagesContainerRef" class="relative flex-1 overflow-y-auto">
             <!-- Loading State -->
             <div v-if="isLoading" class="flex items-center justify-center h-full">
                 <LoadingSpinner size="lg" />
@@ -69,16 +69,29 @@
                 :chat-id="conversationId"
                 :user-name="participant?.name"
             />
+            <!-- Scroll to Bottom Button -->
+            <button
+                v-if="showScrollButton"
+                class="sticky bottom-4 right-4 ml-auto mr-4 bg-alternate text-alternate p-2 rounded-full shadow-lg hover:bg-alternate/90 transition-colors z-20 flex items-center justify-center w-10 h-10"
+                @click="scrollToBottom"
+                aria-label="Scroll to bottom"
+            >
+                <ArrowDown class="w-5 h-5" />
+            </button>
         </div>
 
         <!-- Input Bar -->
-        <InputBar v-if="conversationId" :conversation-id="conversationId" />
+        <InputBar
+            v-if="conversationId"
+            :conversation-id="conversationId"
+            :containerRef="messagesContainerRef"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { ArrowLeft } from 'lucide-vue-next'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ArrowLeft, ArrowDown } from 'lucide-vue-next'
 import Message from './SubComponents/Message/Message.vue'
 import InputBar from './SubComponents/InputBar/InputBar.vue'
 import TypingIndicator from '../TypingIndicator/TypingIndicator.vue'
@@ -103,6 +116,7 @@ const messagesContainerRef = ref<HTMLElement | null>(null)
 const sentinelRef = ref<HTMLElement | null>(null)
 const hasScrolledInitially = ref(false)
 const previousScrollHeight = ref(0)
+const showScrollButton = ref(false)
 
 const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useMessagesQuery(computed(() => props.conversationId))
@@ -119,6 +133,15 @@ const messages = computed(() => {
 const scrollToBottom = () => {
     if (messagesContainerRef.value) {
         messagesContainerRef.value.scrollTop = messagesContainerRef.value.scrollHeight
+    }
+}
+
+const checkScrollPosition = () => {
+    if (messagesContainerRef.value) {
+        const container = messagesContainerRef.value
+        const isNearBottom =
+            container.scrollHeight - container.scrollTop - container.clientHeight < 100
+        showScrollButton.value = !isNearBottom
     }
 }
 
@@ -185,5 +208,15 @@ onMounted(() => {
         scrollToBottom()
         hasScrolledInitially.value = true
     })
+
+    if (messagesContainerRef.value) {
+        messagesContainerRef.value.addEventListener('scroll', checkScrollPosition)
+    }
+})
+
+onUnmounted(() => {
+    if (messagesContainerRef.value) {
+        messagesContainerRef.value.removeEventListener('scroll', checkScrollPosition)
+    }
 })
 </script>

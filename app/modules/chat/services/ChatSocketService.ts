@@ -471,11 +471,11 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 if (messageExists) return oldData
 
                 const newPages = [...oldData.pages]
-                const lastPageIndex = newPages.length - 1
-                const lastPage = newPages[lastPageIndex]
+                // const lastPageIndex = newPages.length - 1
+                const lastPage = newPages[0]
 
                 if (lastPage) {
-                    newPages[lastPageIndex] = {
+                    newPages[0] = {
                         ...lastPage,
                         messages: [...lastPage.messages, message],
                     }
