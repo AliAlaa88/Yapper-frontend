@@ -580,6 +580,19 @@
             "following": "المتابعون"
         }
     },
+    "chat": {
+        "messages": "الرسائل",
+        "selectMessage": "اختر رسالة",
+        "selectMessageDescription": "اختر من محادثاتك الموجودة، أو ابدأ محادثة جديدة، أو استمتع بوقتك.",
+        "newMessage": "رسالة جديدة",
+        "noMessagesYet": "لا توجد رسائل بعد",
+        "noMessagesYetDescription": "ابدأ محادثة من صفحة شخص ما",
+        "noMessagesInChat": "لا توجد رسائل بعد. ابدأ المحادثة!",
+        "loading": "جاري التحميل...",
+        "loadOlderMessages": "تحميل الرسائل الأقدم",
+        "failedToLoad": "فشل تحميل الرسائل",
+        "backToMessages": "العودة إلى الرسائل"
+    },
     "countries": {
         "Afghanistan": "أفغانستان",
         "Albania": "ألبانيا",

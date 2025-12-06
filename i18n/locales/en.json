@@ -580,6 +580,19 @@
             "following": "Following"
         }
     },
+    "chat": {
+        "messages": "Messages",
+        "selectMessage": "Select a message",
+        "selectMessageDescription": "Choose from your existing conversations, start a new one, or just keep swimming.",
+        "newMessage": "New message",
+        "noMessagesYet": "No messages yet",
+        "noMessagesYetDescription": "Start a conversation from someone's profile",
+        "noMessagesInChat": "No messages yet. Start the conversation!",
+        "loading": "Loading...",
+        "loadOlderMessages": "Load older messages",
+        "failedToLoad": "Failed to load messages",
+        "backToMessages": "Back to messages"
+    },
     "countries": {
         "Afghanistan": "Afghanistan",
         "Albania": "Albania",
