@@ -26,9 +26,11 @@ export function usePostTweet() {
             
             // If this is a reply, update the parent tweet's replies count
             if (variables.type === 'reply' && variables.parent_tweet_id) {
-                $queryClient.invalidateQueries({
-                    queryKey: ['tweetDetails', variables.parent_tweet_id],
-                })
+                cacheInvalidation.onReplyCreate(
+                    $queryClient,
+                    String(variables.parent_tweet_id),
+                    String(userStore.getUser()?.user_id),
+                )
                 return
             }
 

@@ -7,6 +7,7 @@ import { createSearchService } from '../modules/search/services'
 import { settingsService } from '~/modules/settings/services/settingsService'
 import { listService } from '~/modules/Common/services/listService'
 
+import { createChatService } from '../modules/chat/services'
 
 export const serviceFactories = {
     userInfoService: createUserInfoService,
@@ -16,6 +17,7 @@ export const serviceFactories = {
     timelineService: createTimelineService,
     settingsService: () => settingsService,
     searchService: createSearchService,
+    chatService: createChatService,
     listService: () => listService,
 }
 

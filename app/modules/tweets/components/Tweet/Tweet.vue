@@ -81,7 +81,7 @@
                 </div>
 
                 <Content :content="content" />
-                <Stats :stats="stats" @quote="handleQuote" />
+                <Stats :stats="stats" @quote="handleQuote" @reply="handleReply" />
             </div>
         </div>
     </article>
@@ -92,6 +92,14 @@
         :quoted-tweet="tweet"
         @close="showQuoteModal = false"
         @success="handleQuoteSuccess"
+    />
+
+    <!-- Reply Modal -->
+    <ReplyModal
+        :is-open="showReplyModal"
+        :parent-tweet="tweet"
+        @close="showReplyModal = false"
+        @success="handleReplySuccess"
     />
 
     <!-- Edit Tweet Modal -->
@@ -112,10 +120,11 @@ import Content from './subComponents/Content/Content.vue'
 import Stats from './subComponents/Stats/Stats.vue'
 import UserCard from './subComponents/Publisher/UserCard.vue'
 import QuoteModal from '../QuoteModal/QuoteModal.vue'
+import ReplyModal from '../ReplyModal/ReplyModal.vue'
 import EditTweetModal from '../EditTweetModal/EditTweetModal.vue'
 import MyTweetActionsMenu from './subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
-import { computed, nextTick, ref, provide } from 'vue'
+import { computed, nextTick, ref, provide, inject, type Ref } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
 import { Repeat2, MoreHorizontal } from 'lucide-vue-next'
@@ -131,8 +140,15 @@ const props = defineProps<{
 }>()
 const userStore = useUserStore()
 const currentUser = computed(() => userStore.getUser())
-const showActionsMenu = ref(false)
+
+// Inject shared active menu state from TweetsList (only one menu open at a time)
+const activeMenuTweetId = inject<Ref<string | null>>('activeMenuTweetId', ref(null))
+
+// Computed to check if this tweet's menu is the active one
+const showActionsMenu = computed(() => activeMenuTweetId.value === props.tweet.tweet_id)
+
 const showQuoteModal = ref(false)
+const showReplyModal = ref(false)
 provide('show-list', showActionsMenu)
 
 // Tweet actions composable
@@ -152,15 +168,28 @@ const isOwnTweet = computed(() => {
 })
 
 const toggleActionsMenu = () => {
-    showActionsMenu.value = !showActionsMenu.value
+    // Toggle: if this tweet's menu is open, close it; otherwise open it (closing any other)
+    if (activeMenuTweetId.value === props.tweet.tweet_id) {
+        activeMenuTweetId.value = null
+    } else {
+        activeMenuTweetId.value = props.tweet.tweet_id
+    }
 }
 
 const handleQuote = () => {
     showQuoteModal.value = true
 }
 
+const handleReply = () => {
+    showReplyModal.value = true
+}
+
 const handleQuoteSuccess = () => {
     // Quote posted successfully
+}
+
+const handleReplySuccess = () => {
+    // Reply posted successfully
 }
 
 const queryClient = useQueryClient()
@@ -195,7 +224,7 @@ const tweetTransitionStore = useTweetTransitionStore()
 // Use computed properties for reactive access to tweet properties
 const id = computed(() => props.tweet.tweet_id)
 const repostedUsername = computed(() => {
-    return currentUser.value?.id === props.tweet.reposted_by?.id
+    return currentUser.value?.user_id === props.tweet.reposted_by?.id
         ? 'You'
         : props.tweet.reposted_by === undefined
             ? 'You'

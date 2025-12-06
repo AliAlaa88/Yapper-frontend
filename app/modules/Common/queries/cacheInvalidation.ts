@@ -63,6 +63,10 @@ export const cacheInvalidation = {
     onTweetDelete: (queryClient: QueryClient, tweetId: string) => {
         queryClient.removeQueries({ queryKey: queryKeys.tweets.details(tweetId) })
     },
+    onReplyCreate: (queryClient: QueryClient, parentTweetId: string, userId: string) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(parentTweetId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(`/users/${userId}/replies`) })
+    },
 
     /**
      * Call after liking/unliking a tweet
@@ -99,7 +103,6 @@ export const cacheInvalidation = {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.profile(username) })
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
-
     /**
      * Call after updating username
      */
@@ -186,5 +189,14 @@ export const cacheInvalidation = {
     onLogin: (queryClient: QueryClient) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         queryClient.invalidateQueries({ queryKey: queryKeys.auth.user() })
+    },
+
+    // ==================== Chat/Conversation Mutations ====================
+
+    /**
+     * Call after creating a new conversation
+     */
+    onConversationCreate: (queryClient: QueryClient) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all })
     },
 }

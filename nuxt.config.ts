@@ -16,14 +16,17 @@ export default defineNuxtConfig({
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
             gifApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY,
             recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
+            socketUrl: process.env.NUXT_PUBLIC_SOCKET_URL,
+            socketPath: process.env.NUXT_PUBLIC_SOCKET_PATH,
         },
     },
 
     plugins: [
         './app/plugins/axios.ts',
         './app/plugins/vue-query.ts',
-        './app/plugins/services.ts',
+        './app/plugins/services.client.ts',
         './app/plugins/recaptcha.ts',
+        './app/plugins/socket.client.ts',
     ],
     i18n: {
         locales: [
