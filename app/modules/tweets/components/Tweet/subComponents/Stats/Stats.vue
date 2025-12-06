@@ -21,21 +21,33 @@
 
         <!-- Retweet with dropdown -->
         <div ref="repostContainerRef" class="relative">
-            <button
-                id="tweet-retweet-button"
-                :class="[
-                    'group flex cursor-pointer items-center gap-1 transition-colors',
-                    localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
-                ]"
-                @click.stop="toggleRepostMenu"
-            >
-                <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
-                    <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
-                </div>
-                <span class="text-xs min-w-5">{{
-                    formatCount(localRepostsCount, locale)
-                }}</span>
-            </button>
+            <div class="group flex items-center">
+                <button
+                    id="tweet-retweet-button"
+                    :class="[
+                        'flex cursor-pointer items-center gap-1 transition-colors',
+                        localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
+                    ]"
+                    @click.stop="toggleRepostMenu"
+                >
+                    <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                        <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
+                    </div>
+                </button>
+                <CustomToolTip side="bottom" align="start" :delay-duration="300">
+                    <template #trigger>
+                        <button
+                            class="text-xs min-w-5 text-secondary cursor-pointer hover:text-green transition-colors"
+                            @click.stop="handleViewQuotesAndReposts"
+                        >
+                            {{ formatCount(localRepostsCount, locale) }}
+                        </button>
+                    </template>
+                    <template #content>
+                        <div :class="contentClass">{{ $t('tweets.actions.viewQuotes') }}</div>
+                    </template>
+                </CustomToolTip>
+            </div>
 
             <!-- Repost Dropdown Menu -->
             <div
@@ -55,6 +67,13 @@
                 >
                     <Quote :size="18" />
                     <span class="font-semibold">{{ $t('tweets.actions.quote') }}</span>
+                </button>
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary border-t border-primary"
+                    @click.stop="handleViewQuotesAndRepostsFromMenu"
+                >
+                    <BarChart3 :size="18" />
+                    <span class="font-semibold">{{ $t('tweets.actions.viewQuotes') }}</span>
                 </button>
             </div>
         </div>
@@ -179,6 +198,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'quote'): void
     (e: 'reply'): void
+    (e: 'viewQuotesAndReposts'): void
 }>()
 
 const likes = computed(() => props.stats.likes)
@@ -358,6 +378,16 @@ const handleQuoteClick = () => {
 
 const handleReplyClick = () => {
     emit('reply')
+}
+
+const handleViewQuotesAndReposts = () => {
+    showRepostMenu.value = false
+    emit('viewQuotesAndReposts')
+}
+
+const handleViewQuotesAndRepostsFromMenu = () => {
+    showRepostMenu.value = false
+    emit('viewQuotesAndReposts')
 }
 
 const handleRepostAction = () => {
