@@ -11,7 +11,9 @@
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(localRepliesCount, locale) }}</span>
+                    <span class="text-xs min-w-5">{{
+                        formatCount(localRepliesCount, locale)
+                    }}</span>
                 </button>
             </template>
             <template #content>
@@ -59,7 +61,11 @@
                     @click.stop="handleRepostAction"
                 >
                     <Repeat2 :size="18" />
-                    <span class="font-semibold">{{ localIsReposted ? $t('tweets.actions.undoRetweet') : $t('tweets.actions.retweet') }}</span>
+                    <span class="font-semibold">{{
+                        localIsReposted
+                            ? $t('tweets.actions.undoRetweet')
+                            : $t('tweets.actions.retweet')
+                    }}</span>
                 </button>
                 <button
                     class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
@@ -69,6 +75,7 @@
                     <span class="font-semibold">{{ $t('tweets.actions.quote') }}</span>
                 </button>
                 <button
+                    v-if="isAppearViewQuotesAndReposts"
                     class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary border-t border-primary"
                     @click.stop="handleViewQuotesAndRepostsFromMenu"
                 >
@@ -186,10 +193,10 @@ import {
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
-import {useUserStore} from '~/modules/auth/stores/userStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const user_id = computed(() => userStore.getUser()?.user_id)
-const {$queryClient} = useNuxtApp()
+const { $queryClient } = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
@@ -223,6 +230,9 @@ const showRepostMenu = ref(false)
 const repostContainerRef = ref<HTMLElement | null>(null)
 const { t, locale } = useI18n()
 
+const route = useRoute()
+const isAppearViewQuotesAndReposts = computed(() => route.path.includes('/status'))
+
 // Inject the global snackbar from layout
 const snackbar = inject<{
     handleShowSnackbar: (
@@ -248,7 +258,6 @@ const handleClickOutsideRepostMenu = (event: MouseEvent) => {
         showRepostMenu.value = false
     }
 }
-
 
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
@@ -483,7 +492,7 @@ const handleBookmarkClick = () => {
     mutateBookmark(localIsBookmarked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-           $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
 
             snackbar?.handleShowSnackbar(
                 localIsBookmarked.value
@@ -589,6 +598,6 @@ watch(
         localIsBookmarked.value = newStats.is_bookmarked
         localRepliesCount.value = newStats.replies
     },
-    { deep: true }
+    { deep: true },
 )
 </script>

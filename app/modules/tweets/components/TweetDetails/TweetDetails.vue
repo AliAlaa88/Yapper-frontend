@@ -1,7 +1,9 @@
 <template>
     <div class="bg-primary min-h-screen">
         <!-- Header with back button -->
-        <div class="sticky top-0 z-2 bg-[#ffffff] dark:bg-x-bg-dark/80 dark:backdrop-blur-md px-4 py-3">
+        <div
+            class="sticky top-0 z-2 bg-[#ffffff] dark:bg-x-bg-dark/80 dark:backdrop-blur-md px-4 py-3"
+        >
             <div class="flex items-center gap-4">
                 <button
                     @click="$router.back()"
@@ -191,7 +193,6 @@ const {
     isUpdateLoading,
 } = useTweetActions(tweetId)
 
-
 const pageTitle = computed(() => {
     if (route.path.includes('quotes')) {
         return 'Quotes & Reposts'
@@ -229,9 +230,9 @@ const handleQuoteSuccess = () => {
 const handleViewQuotesAndReposts = () => {
     // Navigate to the quotes page for this tweet
     if (tweetDetails.value) {
-        router.push(
-            `/${tweetDetails.value.user.username}/status/${tweetDetails.value.tweet_id}/quotes`,
-        )
+        router.push({
+            path: `/${tweetDetails.value.user.username}/status/${tweetDetails.value.tweet_id}/quotes`,
+        })
     }
 }
 
