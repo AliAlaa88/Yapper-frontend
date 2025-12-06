@@ -4,7 +4,7 @@
         v-if="images && images.length === 1 && (!videos || videos.length === 0)" 
         class="rounded-2xl overflow-hidden border border-primary max-h-[500px]"
     >
-        <img
+        <LazyNuxtImg
             :src="images[0]"
             alt="Tweet image"
             class="w-full h-full object-cover cursor-pointer"
@@ -23,7 +23,7 @@
             v-for="(image, index) in images"
             :key="index"
         >
-            <img
+            <LazyNuxtImg
                 :src="image"
                 :alt="`Tweet image ${index + 1}`"
                 class="w-full h-full object-cover cursor-pointer"
