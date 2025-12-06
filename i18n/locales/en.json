@@ -505,7 +505,8 @@
             "linkCopied": "Link copied",
             "bookmarkAdded": "Added to your Bookmarks",
             "bookmarkRemoved": "Removed from your Bookmarks",
-            "copiedToClipboard": "Copied to clipboard"
+            "copiedToClipboard": "Copied to clipboard",
+            "viewQuotes": "View quotes and reposts"
         },
         "loading": {
             "tweets": "Loading tweets...",
@@ -516,7 +517,11 @@
             "noTweets": "No tweets yet",
             "noTweetsDescription": "When tweets are posted, they'll show up here.",
             "noReplies": "No replies yet",
-            "noRepliesDescription": "When people reply to this tweet, they'll show up here."
+            "noRepliesDescription": "When people reply to this tweet, they'll show up here.",
+            "noQuotes": "No quotes yet",
+            "noQuotesDescription": "When people quote this tweet, they'll show up here.",
+            "noReposts": "No reposts yet",
+            "norepostsDescription": "When people repost this tweet, they'll show up here."
         },
         "errors": {
             "loadFailed": "Failed to load tweets",
