@@ -16,6 +16,7 @@
             >
                 <Search :size="18" class="text-secondary" />
                 <input
+                    ref="inputRef"
                     type="text"
                     class="bg-transparent outline-none ml-2 text-primary flex-1"
                     :placeholder="$t('search.searchPlaceholder')"
@@ -54,6 +55,7 @@ const route = useRoute()
 const router = useRouter()
 const isFocused = ref(false)
 const searchQuery = ref('')
+const inputRef = ref<HTMLInputElement | null>(null)
 const STORAGE_KEY = 'yapper-search-history'
 const initialQuery = history.state.user as string || ''
 
@@ -89,6 +91,10 @@ const handleBack = () => {
 const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click' | 'recent_search_click' = 'typed_query') => {
     if (!query.trim()) return
     searchQuery.value = query
+
+    if (inputRef.value) {
+        inputRef.value.blur()
+    }
 
     try {
         const stored = localStorage.getItem(STORAGE_KEY)

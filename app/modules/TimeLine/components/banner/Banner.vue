@@ -1,7 +1,7 @@
 <template>
     <div class="w-full min-h-screen z-1 bg-primary flex flex-col gap-4 p-4">
         <!-- Search Bar -->
-        <SearchBar />
+        <SearchBar v-if="!isSearch" />
 
         <!-- Trending Section -->
         <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
@@ -84,6 +84,10 @@
 import { Search } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import SearchBar from '~/modules/search/components/SearchBar.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const isSearch = computed(() => route.path.startsWith('/explore') || route.path.startsWith('/search'))
 const { t } = useI18n()
 </script>

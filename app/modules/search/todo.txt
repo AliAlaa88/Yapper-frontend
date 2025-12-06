@@ -1,3 +1,0 @@
-integrate with explore
-hide searchbar in sidebar when on explore tab
-after submit non focus issue
