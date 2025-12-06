@@ -22,12 +22,18 @@ export const queryKeys = {
 
     // Settings related keys
     settings: {
-        mutedUsers: () => ['myMutedUsers'] as const,
-        blockedUsers: () => ['myBlockedUsers'] as const,
+        mutedUsers: () => ['muted-users'] as const,
+        blockedUsers: () => ['blocked-users'] as const,
+        usernameRecommendation: () => ['username-recommendation'] as const,
     },
 
     // Auth related keys
     auth: {
         user: () => ['getUser'] as const,
+    },
+
+    // Chat/Conversation related keys
+    conversations: {
+        all: ['conversations'] as const,
     },
 } as const

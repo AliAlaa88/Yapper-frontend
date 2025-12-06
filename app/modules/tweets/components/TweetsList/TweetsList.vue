@@ -61,13 +61,18 @@
 </template>
 
 <script setup lang="ts">
-import { toRef, computed } from 'vue'
+import { toRef, computed, ref, watch, onUnmounted, provide } from 'vue'
 import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw } from 'lucide-vue-next'
 import Logo from '~/modules/Common/components/Logo/Logo.vue'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import type { Tweet as TweetType } from '../../types/tweet.ts'
+
+// Shared state for active actions menu - only one can be open at a time
+const activeMenuTweetId = ref<string | null>(null)
+provide('activeMenuTweetId', activeMenuTweetId)
+
 const props = defineProps<{
     fetchingSource?: string | null
 }>()
@@ -91,14 +96,23 @@ const loadTweets = () => {
     refetch()
 }
 
+console.log('Tweets query error:', error, data)
+
 const loadMoreTrigger = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
 
 watch(
     () => loadMoreTrigger.value,
     (el) => {
+        // Clean up previous observer
+        if (observer) {
+            observer.disconnect()
+            observer = null
+        }
+
         if (!el) return
 
-        const observer = new IntersectionObserver(
+        observer = new IntersectionObserver(
             (entries) => {
                 const entry = entries[0]
                 if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
@@ -113,11 +127,15 @@ watch(
         )
 
         observer.observe(el)
-
-        onUnmounted(() => observer.disconnect())
     },
     { immediate: true },
 )
+
+onUnmounted(() => {
+    if (observer) {
+        observer.disconnect()
+    }
+})
 
 const tweets = computed(() => {
     const pages = data.value?.pages

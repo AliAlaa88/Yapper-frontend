@@ -86,9 +86,17 @@
                         :key="link.href"
                         :to="link.href"
                         @click="isOpen = false"
-                        class="flex items-center gap-4 px-4 py-3 hover:bg-muted transition-colors text-primary rounded-full"
+                        class="flex items-center gap-4 px-4 py-3 hover:bg-muted transition-colors text-primary rounded-full relative"
                     >
-                        <component :is="link.icon" class="w-6 h-6" />
+                        <div class="relative">
+                            <component :is="link.icon" class="w-6 h-6" />
+                            <span
+                                v-if="link.href === '/messages' && totalUnreadCount > 0"
+                                class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
+                            >
+                                {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
+                            </span>
+                        </div>
                         <span class="text-lg">{{ t(link.labelKey) }}</span>
                     </NuxtLink>
                 </div>
@@ -119,6 +127,10 @@ const isRTL = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)
     return currentLocaleObj?.dir === 'rtl'
 })
+
+// listen to unread chats summary
+const { $chatSocketService } = useNuxtApp()
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
 
 const navLinks = [
     {

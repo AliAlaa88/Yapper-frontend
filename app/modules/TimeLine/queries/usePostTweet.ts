@@ -21,14 +21,16 @@ export function usePostTweet() {
         onSuccess: (data, variables) => {
             const tweet = {
                 ...data.data,
-                user: userStore.getUser(),
+                user: {...userStore.getUser(), id: userStore.getUser()?.user_id},
             }
-
+            
             // If this is a reply, update the parent tweet's replies count
             if (variables.type === 'reply' && variables.parent_tweet_id) {
-                $queryClient.invalidateQueries({
-                    queryKey: ['tweetDetails', variables.parent_tweet_id],
-                })
+                cacheInvalidation.onReplyCreate(
+                    $queryClient,
+                    String(variables.parent_tweet_id),
+                    String(userStore.getUser()?.user_id),
+                )
                 return
             }
 

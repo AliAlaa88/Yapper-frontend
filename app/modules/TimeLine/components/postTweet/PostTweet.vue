@@ -9,14 +9,16 @@
                 v-if="user?.avatar_url"
                 :src="user.avatar_url"
                 :alt="user.name"
-                class="w-16 h-16 object-cover rounded-full"
+                :class="compact ? 'w-10 h-10' : 'w-16 h-16'"
+                class="object-cover rounded-full"
                 :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
             />
             <img
                 v-else
                 :src="`https://ui-avatars.com/api/?name=${user?.name}`"
                 :alt="user?.name"
-                class="w-14 h-14 object-cover rounded-full"
+                :class="compact ? 'w-10 h-10' : 'w-14 h-14'"
+                class="object-cover rounded-full"
             />
         </NuxtLink>
 
@@ -36,12 +38,7 @@
             <FormattedTextarea
                 id="post-tweet-textarea"
                 v-model="content"
-                :placeholder="
-                    placeholder ||
-                    (parentTweetId
-                        ? t('timeline.postTweet.replyPlaceholder')
-                        : t('timeline.postTweet.placeholder'))
-                "
+                :placeholder="computedPlaceholder"
                 :inlineborder="inlineborder"
             />
 
@@ -107,6 +104,9 @@
                 </div>
             </div>
 
+            <!-- Quoted Tweet Preview -->
+            <QuotedTweet v-if="quotedTweet" :tweet="quotedTweet" />
+
             <div class="flex flex-row justify-between items-center mt-4">
                 <ul class="flex flex-row gap-2 items-center">
                     <li class="relative inline-flex">
@@ -166,15 +166,9 @@
                     :disabled="disablePostButton"
                     id="post-tweet-post-btn"
                     button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    :button-text="
-                        parentTweetId ? t('timeline.postTweet.reply') : t('timeline.postTweet.post')
-                    "
+                    :button-text="buttonText"
                     @click="handleSubmit"
-                    :loading-text="
-                        parentTweetId
-                            ? t('timeline.postTweet.replying')
-                            : t('timeline.postTweet.posting')
-                    "
+                    :loading-text="loadingText"
                     :is-loading="postTweet.isPending.value"
                 />
             </div>
@@ -189,6 +183,7 @@ import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import the new component
+import QuotedTweet from '~/modules/tweets/components/Tweet/subComponents/QuotedTweet/QuotedTweet.vue'
 import { handleImageError } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
@@ -199,6 +194,7 @@ import { useI18n } from 'vue-i18n'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 import type { TweetBody } from '../../types/tweetBody'
+import type { Tweet } from '~/modules/tweets/types/tweet'
 
 const props = withDefaults(
     defineProps<{
@@ -207,6 +203,8 @@ const props = withDefaults(
         parentTweetId?: string
         replyingToUsername?: string
         placeholder?: string
+        quotedTweet?: Tweet
+        compact?: boolean
     }>(),
     {
         border: true,
@@ -214,6 +212,8 @@ const props = withDefaults(
         replyingToUsername: undefined,
         placeholder: undefined,
         inlineborder: true,
+        quotedTweet: undefined,
+        compact: false,
     },
 )
 
@@ -254,6 +254,25 @@ const disablePostButton = computed(() => {
     return content.value.trim().length === 0 && mediaUrls.value.length === 0
 })
 
+const computedPlaceholder = computed(() => {
+    if (props.placeholder) return props.placeholder
+    if (props.quotedTweet) return t('timeline.postTweet.quotePlaceholder')
+    if (props.parentTweetId) return t('timeline.postTweet.replyPlaceholder')
+    return t('timeline.postTweet.placeholder')
+})
+
+const buttonText = computed(() => {
+    if (props.quotedTweet) return t('timeline.postTweet.post')
+    if (props.parentTweetId) return t('timeline.postTweet.reply')
+    return t('timeline.postTweet.post')
+})
+
+const loadingText = computed(() => {
+    if (props.quotedTweet) return t('timeline.postTweet.posting')
+    if (props.parentTweetId) return t('timeline.postTweet.replying')
+    return t('timeline.postTweet.posting')
+})
+
 const handleSubmit = async () => {
     try {
         const tweetData: TweetBody = {
@@ -266,8 +285,13 @@ const handleSubmit = async () => {
                 .map((media) => media.url),
         }
 
+        // Add quote fields if this is a quote tweet
+        if (props.quotedTweet) {
+            tweetData.parent_tweet_id = props.quotedTweet.tweet_id
+            tweetData.type = 'quote'
+        }
         // Add reply fields if this is a reply
-        if (props.parentTweetId) {
+        else if (props.parentTweetId) {
             tweetData.parent_tweet_id = props.parentTweetId
             tweetData.type = 'reply'
             console.log('Preparing to post a reply to tweet ID:', props.parentTweetId)
@@ -279,9 +303,14 @@ const handleSubmit = async () => {
         mediaUrls.value = []
 
         // Show success snackbar
-        const successMessage = props.parentTweetId
-            ? t('timeline.postTweet.replySuccess')
-            : t('timeline.postTweet.success')
+        let successMessage: string
+        if (props.quotedTweet) {
+            successMessage = t('timeline.postTweet.quoteSuccess')
+        } else if (props.parentTweetId) {
+            successMessage = t('timeline.postTweet.replySuccess')
+        } else {
+            successMessage = t('timeline.postTweet.success')
+        }
         snackbar?.handleShowSnackbar(successMessage)
 
         // Emit success event for parent components

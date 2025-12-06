@@ -1,3 +1,8 @@
+import dayjs from 'dayjs'
+import isToday from 'dayjs/plugin/isToday'
+
+dayjs.extend(isToday)
+
 export const formatDate = (date: string) => {
     const now = new Date()
     const tweetDate = new Date(date)
@@ -9,6 +14,36 @@ export const formatDate = (date: string) => {
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`
 
     return tweetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+export const formatConversationDate = (date: string) => {
+    if (!date) return ''
+    const now = dayjs()
+    const conversationDate = dayjs(date)
+    const diffInSeconds = now.diff(conversationDate, 'second')
+
+    if (diffInSeconds < 60) return 'now'
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`
+
+    return conversationDate.format('MMM D')
+}
+
+export const formatMessageDate = (date: string) => {
+    const messageDate = dayjs(date)
+    const now = dayjs()
+
+    if (messageDate.isToday()) {
+        return messageDate.format('h:mm A')
+    }
+
+    const daysDiff = now.diff(messageDate, 'day')
+    if (daysDiff < 7) {
+        return messageDate.format('dddd h:mm A')
+    }
+
+    return messageDate.format('MMM D, YYYY h:mm A')
 }
 
 /**
@@ -57,4 +92,11 @@ export function parseTextWithTags(text: string): string {
 export const handleImageError = (userName: string, event: Event) => {
     const target = event.target as HTMLImageElement
     target.src = `https://ui-avatars.com/api/?name=${userName}`
+}
+
+export function shorterName(name: string, maxLength: number = 15): string {
+    if (name.length > maxLength) {
+        return name.slice(0, maxLength) + '...'
+    }
+    return name
 }

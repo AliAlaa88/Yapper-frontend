@@ -23,11 +23,15 @@ import { useUserInteractions } from '../../../composables/useUserInteractions'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProfileStore } from '../../../stores/profileStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const profileStore = useProfileStore()
+const userStore = useUserStore()
 const userId = computed(() => profileStore.getProfileId() || '')
+const meId = computed(() => userStore.getUser()?.user_id)
 const {
     isBlocked,
+    username,
 } = useUserInfo(userId)
 const hover = ref(false)
 const { t } = useI18n()
@@ -36,7 +40,7 @@ const buttonText = computed(() => {
     else return t('profile.blockedButton')
 })
 
-const userInteractions = useUserInteractions(userId)
+const userInteractions = useUserInteractions(userId, username, meId)
 const {
     handleUnblockWithConfirmation,
 } = userInteractions

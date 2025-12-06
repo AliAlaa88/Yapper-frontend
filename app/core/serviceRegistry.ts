@@ -3,8 +3,12 @@ import { createTweetService } from '../modules/tweets/services'
 import { createAuthService } from '../modules/auth/services'
 import { createMediaService } from '../modules/Common/services'
 import { createTimelineService } from '../modules/TimeLine/services'
-import { settingsService } from '~/modules/settings/services/settingsService.real'
 import { exploreService } from "~/modules/explore/services";
+import { settingsService } from '~/modules/settings/services/settingsService'
+import { listService } from '~/modules/Common/services/listService'
+
+import { createChatService } from '../modules/chat/services'
+
 export const serviceFactories = {
     userInfoService: createUserInfoService,
     tweetService: createTweetService,
@@ -13,6 +17,8 @@ export const serviceFactories = {
     timelineService: createTimelineService,
     settingsService: () => settingsService,
     exploreService: exploreService,
+    chatService: createChatService,
+    listService: () => listService,
 }
 
 export type Services = {

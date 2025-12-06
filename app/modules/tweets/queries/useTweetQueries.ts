@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
-import { computed, unref, type MaybeRef } from 'vue'
-import type { Tweet, TweetDetails } from '../types'
+import { unref, type MaybeRef } from 'vue'
+import type { Tweet, TweetDetails, User } from '../types'
 import type { TweetsPage } from '../types/tweet'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
@@ -130,5 +130,103 @@ export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean)
                 ? ($tweetService as any).bookmarkTweet(tweetId)
                 : ($tweetService as any).unbookmarkTweet(tweetId)
         },
+    })
+}
+
+export function useDeleteTweetMutation(tweetId: string) {
+    const { $queryClient } = useNuxtApp()
+
+    return useMutation({
+        mutationKey: ['deleteTweet', tweetId],
+        mutationFn: () => {
+            const { $tweetService } = useNuxtApp()
+            return ($tweetService as any).deleteTweet(tweetId)
+        },
+        onSuccess: () => {
+            // Remove tweet from all cached tweet queries
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => ({
+                        ...page,
+                        data: page.data.filter((tweet: Tweet) => tweet.tweet_id !== tweetId),
+                    })),
+                }
+            })
+            // Invalidate tweet details cache
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweetId] })
+        },
+        onError: (error) => {
+            console.error('Error deleting tweet:', tweetId, error)
+        },
+    })
+}
+
+export function useUpdateTweetMutation(tweetId: string) {
+    const { $queryClient } = useNuxtApp()
+
+    return useMutation({
+        mutationKey: ['updateTweet', tweetId],
+        mutationFn: (content: string) => {
+            const { $tweetService } = useNuxtApp()
+            return ($tweetService as any).updateTweet(tweetId, content)
+        },
+        onSuccess: (_data, content) => {
+            // Update tweet content in all cached tweet queries
+            $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+                if (!oldData) return oldData
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page: any) => ({
+                        ...page,
+                        data: page.data.map((tweet: Tweet) =>
+                            tweet.tweet_id === tweetId
+                                ? { ...tweet, content }
+                                : tweet,
+                        ),
+                    })),
+                }
+            })
+            // Also update tweet details cache if it exists
+            $queryClient.setQueryData(['tweetDetails', tweetId], (oldData: TweetDetails | null) => {
+                if (!oldData) return oldData
+                return {
+                    ...oldData,
+                    tweet: { ...oldData.tweet, content },
+                }
+            })
+        },
+        onError: (error) => {
+            console.error('Error updating tweet:', tweetId, error)
+        },
+    })
+}
+
+// Query for fetching quotes for a tweet
+export function useTweetQuotesQuery(tweetId: MaybeRef<string>) {
+    const { $tweetService } = useNuxtApp()
+
+    return useQuery<Tweet[]>({
+        queryKey: ['tweetQuotes', unref(tweetId)],
+        queryFn: () => ($tweetService as any).fetchtweetquotes(unref(tweetId)) as Promise<Tweet[]>,
+        enabled: () => !!unref(tweetId),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
+    })
+}
+
+// Query for fetching reposts for a tweet
+export function useTweetRepostsQuery(tweetId: MaybeRef<string>) {
+    const { $tweetService } = useNuxtApp()
+
+    return useQuery<User[]>({
+        queryKey: ['tweetReposts', unref(tweetId)],
+        queryFn: () => ($tweetService as any).fetchTweetReposts(unref(tweetId)) as Promise<User[]>,
+        enabled: () => !!unref(tweetId),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
     })
 }
