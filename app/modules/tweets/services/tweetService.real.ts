@@ -1,12 +1,10 @@
-import type { Tweet, TweetDetails,TweetsPage } from '../types'
+import type { Tweet, TweetDetails, TweetsPage } from '../types'
 
 export const tweetServiceReal = {
     async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
         const { $axios } = useNuxtApp()
 
-        const response = await $axios.get(
-            `${path}` + (nextCursor ? `?cursor=${nextCursor}` : '')
-        )
+        const response = await $axios.get(`${path}` + (nextCursor ? `?cursor=${nextCursor}` : ''))
         const page = response.data.data
 
         return {
@@ -21,30 +19,54 @@ export const tweetServiceReal = {
     },
 
     async fetchTweetDetails(tweetId: string): Promise<Tweet | null> {
-        const {$axios} = useNuxtApp()
+        const { $axios } = useNuxtApp()
         try {
             const response = await $axios.get(`/tweets/${tweetId}`)
 
             if (response.data && response.data.data) {
                 return response.data.data
             }
-            
+
             return null
         } catch (error: any) {
             return null
         }
     },
     async fetchtweetreplies(tweetId: string): Promise<Tweet[]> {
-       const { $axios } = useNuxtApp()
-         try {
-              const response = await $axios.get(`/tweets/${tweetId}/replies`)
-                if (response.data && response.data.data) {
-                    return response.data.data
-                }
-                return []
-         } catch (error: any) {
-             return []
-         }
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get(`/tweets/${tweetId}/replies`)
+            if (response.data && response.data.data) {
+                return response.data.data
+            }
+            return []
+        } catch (error: any) {
+            return []
+        }
+    },
+    async fetchtweetquotes(tweetId: string): Promise<Tweet[]> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get(`/tweets/${tweetId}/quotes`)
+            // API shape: { data: { data: [...], count, parent, next_cursor, has_more }, ... }
+            const payload = response.data?.data
+            if (payload?.data) return payload.data
+            return []
+        } catch (error: any) {
+            return []
+        }
+    },
+    async fetchTweetReposts(tweetId: string): Promise<Tweet[]> {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get(`/tweets/${tweetId}/reposts`)
+            const payload = response.data?.data
+            console.log('Reposts payload:', payload.data)
+            if (payload?.data) return payload.data
+            return []
+        } catch (error: any) {
+            return []
+        }
     },
     async fetchUserTweets(userId: string): Promise<Tweet[]> {
         throw new Error(`tweetServiceReal.fetchUserTweets not implemented yet: ${userId}`)
