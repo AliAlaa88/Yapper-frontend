@@ -6,18 +6,21 @@
         </div>
 
         <!-- Error state -->
-        <div v-else-if="isError" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
+        <div
+            v-else-if="isError"
+            class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary"
+        >
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
-            <button 
-                @click="() => refetch()" 
-                class="mt-2 text-accent hover:underline"
-            >
+            <button @click="() => refetch()" class="mt-2 text-accent hover:underline">
                 {{ t('explore.tryAgain') }}
             </button>
         </div>
 
         <!-- Empty state -->
-        <div v-else-if="!trends?.length" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
+        <div
+            v-else-if="!trends.length"
+            class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary"
+        >
             <p class="text-muted text-lg">{{ t('explore.noTrends') }}</p>
         </div>
 
@@ -27,25 +30,18 @@
 </template>
 
 <script setup lang="ts">
-import { useGetTrendsQuery } from '../../queries/useGetExploreQuery';
-import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue';
-import TrendsList from '../common/TrendsList.vue';
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { useGetTrendsQuery } from '../../queries/useGetExploreQuery'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
+import TrendsList from '../common/TrendsList.vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
-const trends = ref<any[]>([]);
-const category = ref('');
+const category = ref('')
 
-const { isLoading, isError, refetch } = useGetTrendsQuery(
-    category.value,
-    true,
-    (response: any) => {
-        trends.value = response.data || response;
-    },
-    (error: any) => {
-        console.error('Error fetching trends:', error);
-    }
-);
+const trendsQuery = useGetTrendsQuery(category.value, true)
+const isLoading = computed(() => trendsQuery.isLoading.value)
+const isError = computed(() => trendsQuery.isError.value)
+const trends = computed(() => trendsQuery.data.value || [])
 </script>

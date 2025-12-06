@@ -471,6 +471,7 @@
         "errorLoading": "Failed to load trends",
         "tryAgain": "Try again",
         "noTrends": "No trends available right now",
+        "noCategoriesFound": "No categories available right now",
         "tabs": {
             "forYou": "For you",
             "trending": "Trending",
@@ -490,7 +491,7 @@
             "settings": "Settings",
             "post": "Post",
             "postTweet": "Post a tweet",
-            "explore" : "Explore"
+            "explore": "Explore"
         },
         "postTweet": {
             "placeholder": "What's happening?",

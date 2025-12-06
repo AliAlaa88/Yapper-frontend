@@ -1,55 +1,64 @@
 <template>
     <div class="w-full">
-        <div 
-            v-for="(trend, index) in trends" 
+        <div
+            v-for="(trend, index) in trends"
             :key="trend.reference_id || index"
-            class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer"
+            class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer group"
         >
-            <div class="flex justify-between items-start">
-                <div class="flex-1">
-                    <p class="text-muted text-sm">
-                        <template v-if="showRank">{{ index + 1 }} · </template>
-                        <template v-if="trend.category && trend.category !== 'none'">{{ capitalizeFirst(trend.category) }} · </template>
-                        {{ t('explore.trending') }}
-                    </p>
-                    <p class="text-primary font-bold mt-1">{{ trend.text }}</p>
-                    <p class="text-muted text-sm mt-1">
-                        {{ formatCount(trend.posts_count) }} {{ t('explore.posts') }}
-                    </p>
+            <div class="flex flex-col gap-0.5">
+                <div class="flex items-center gap-1 text-muted text-xs">
+                    <template v-if="showRank">
+                        <span class="font-medium">{{ index + 1 }}</span>
+                        <span class="text-muted/60">·</span>
+                    </template>
+                    <template v-if="trend.category && trend.category !== 'none'">
+                        <span class="capitalize">{{ trend.category }}</span>
+                        <span class="text-muted/60">·</span>
+                    </template>
+                    <span>{{ t('explore.trending') }}</span>
                 </div>
+
+                <p
+                    class="text-primary font-bold text-[15px] leading-5 mt-0.5 group-hover:underline"
+                >
+                    {{ trend.text }}
+                </p>
+
+                <p class="text-muted text-xs mt-1">
+                    {{ formatCount(trend.posts_count) }} {{ t('explore.posts') }}
+                </p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-import { MoreHorizontal } from 'lucide-vue-next';
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 interface Trend {
-    text: string;
-    posts_count: number;
-    reference_id?: string;
-    category?: string;
+    text: string
+    posts_count: number
+    reference_id?: string
+    category?: string
 }
 
 defineProps<{
-    trends: Trend[];
-    showRank?: boolean;
-}>();
+    trends: Trend[]
+    showRank?: boolean
+}>()
 
 const formatCount = (count: number) => {
     if (count >= 1000000) {
-        return (count / 1000000).toFixed(1) + 'M';
+        return (count / 1000000).toFixed(1) + 'M'
     } else if (count >= 1000) {
-        return (count / 1000).toFixed(1) + 'K';
+        return (count / 1000).toFixed(1) + 'K'
     }
-    return count?.toString() || '0';
-};
+    return count?.toString() || '0'
+}
 
-const capitalizeFirst = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-};
+function onClickTrend(trend: Trend) {
+    console.log('trend', trend)
+}
 </script>

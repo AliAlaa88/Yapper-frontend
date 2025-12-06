@@ -451,6 +451,7 @@
         "errorLoading": "فشل تحميل الترند",
         "tryAgain": "حاول مرة أخرى",
         "noTrends": "لا توجد ترندات حالياً",
+        "noCategoriesFound": "لا توجد فئات حالياً",
         "tabs": {
             "forYou": "من أجلك",
             "trending": "الترند",
