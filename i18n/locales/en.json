@@ -608,11 +608,12 @@
         },
         "banner": {
             "search": "Search",
-            "trending": "Trending",
+            "trending": "What's happening",
             "trendingIn": "Trending in {location}",
             "posts": "posts",
             "sportsTrending": "Sports · Trending",
             "technology": "Technology",
+            "error": "Failed to load trends",
             "showMore": "Show more",
             "whoToFollow": "Who to follow",
             "follow": "Follow"

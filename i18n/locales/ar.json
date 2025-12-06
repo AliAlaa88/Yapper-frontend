@@ -608,7 +608,8 @@
         },
         "banner": {
             "search": "البحث",
-            "trending": "الترند",
+            "trending": "ما الذي يحدث",
+            "error": "فشل تحميل الترند",
             "trendingIn": "الترند في {location}",
             "posts": "منشور",
             "sportsTrending": "الرياضة · الترند",

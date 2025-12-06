@@ -42,12 +42,16 @@ export function useGetExploreQuery(
     return query
 }
 
-export function useGetTrendsQuery(category?: String, enabled: Ref<boolean> | boolean = false) {
+export function useGetTrendsQuery(
+    category?: String,
+    enabled: Ref<boolean> | boolean = false,
+    limit?: number,
+) {
     const { $exploreService } = useNuxtApp()
 
     const query = useQuery({
         queryKey: ['getTrends', category],
-        queryFn: () => $exploreService.getTrending(category),
+        queryFn: () => $exploreService.getTrending(category, limit),
         enabled,
         retry: false,
         staleTime: 0,
