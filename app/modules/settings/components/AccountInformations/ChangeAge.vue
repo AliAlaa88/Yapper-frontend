@@ -12,14 +12,14 @@
             </div>
             <div class="relative w-full pb-2 px-5 pt-2">
                 <p class="text-muted text-[14px] mt-0.5">
-                    Not right? You can add your date of birth to your
+                    {{ t('settings.accountInfo.age_notRight') }}
                     <NuxtLink
                         id="profile-link"
                         :to="profileRoute"
                         class="text-accent hover:underline">
-                        profile
+                        {{ t('settings.accountInfo.profile') }}
                     </NuxtLink>
-                    without sharing it publicly.
+                    {{ t('settings.accountInfo.age_notRight2') }}
                 </p>
             </div>
         </div>
@@ -27,11 +27,10 @@
 </template>
 
 <script setup lang="ts">
-import DetailedPanel from './DetailedPanel.vue'
-import type { User } from '~/modules/Common/types/user'
+import DetailedPanel from '../DetailedPanel.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { storeToRefs } from 'pinia'
-import { calculateAge } from '../utils/calculations'
+import { calculateAge } from '../../utils/calculations'
 import { useI18n } from 'vue-i18n'
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
