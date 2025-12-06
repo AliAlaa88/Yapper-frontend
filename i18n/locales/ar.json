@@ -484,6 +484,7 @@
     },
     "tweets": {
         "reposted": "أعاد النشر",
+        "postEngagements": "تفاعلات المنشور",
         "moreActions": "المزيد من الإجراءات",
         "editTweet": "تعديل",
         "deleteTweet": "حذف",

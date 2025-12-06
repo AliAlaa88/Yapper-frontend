@@ -96,6 +96,8 @@ const loadTweets = () => {
     refetch()
 }
 
+console.log('Tweets query error:', error, data)
+
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
 

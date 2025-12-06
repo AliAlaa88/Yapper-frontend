@@ -484,6 +484,7 @@
     },
     "tweets": {
         "reposted": "Reposted",
+        "postEngagements": "Post engagements",
         "moreActions": "More actions",
         "editTweet": "Edit",
         "deleteTweet": "Delete",
