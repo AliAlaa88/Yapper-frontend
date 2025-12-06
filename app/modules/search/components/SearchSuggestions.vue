@@ -8,9 +8,9 @@
             {{ $t('messages.error') }}
         </div>
 
-        <div v-else>
+        <div v-else-if="suggestionsData">
             <!-- Suggested Queries -->
-            <ul v-if="suggestionsData?.suggested_queries?.length">
+            <ul v-if="suggestionsData.suggested_queries?.length">
                 <li
                     v-for="(item, index) in suggestionsData.suggested_queries"
                     :key="index"
@@ -32,7 +32,7 @@
             </ul>
 
             <!-- Suggested Users -->
-            <ul v-if="suggestionsData?.suggested_users?.length">
+            <ul v-if="suggestionsData.suggested_users?.length">
                 <li
                     v-for="user in suggestionsData.suggested_users"
                     :key="user.user_id"
@@ -75,8 +75,8 @@
             <!-- Empty State -->
             <div
                 v-if="
-                    !suggestionsData?.suggested_queries?.length &&
-                    !suggestionsData?.suggested_users?.length
+                    !suggestionsData.suggested_queries?.length &&
+                    !suggestionsData.suggested_users?.length
                 "
                 class="px-4 py-3 text-secondary text-sm"
             >
@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, UserRound } from 'lucide-vue-next'
 import { useSearchSuggestionsQuery } from '../queries/useSearchSuggestionsQuery'
@@ -108,7 +108,11 @@ const {
     data: suggestionsData,
     isLoading,
     isError,
-} = useSearchSuggestionsQuery(trimmedQuery.value, isEnabled)
+} = useSearchSuggestionsQuery(trimmedQuery, isEnabled)
+
+watch(suggestionsData, (newData) => {
+    console.log('Search suggestions data:', newData)
+})
 
 // Handle query click (from suggestions)
 const handleQueryClick = (query: string) => {
@@ -124,8 +128,8 @@ const handleUserClick = (user: any) => {
         let searchHistory = stored ? JSON.parse(stored) : []
 
         // Remove duplicate if exists
-        const existingIndex = searchHistory.findIndex((item: any) =>
-            item.type === 'user' && item.user_id === user.user_id
+        const existingIndex = searchHistory.findIndex(
+            (item: any) => item.type === 'user' && item.user_id === user.user_id,
         )
         if (existingIndex !== -1) {
             searchHistory.splice(existingIndex, 1)
@@ -138,7 +142,7 @@ const handleUserClick = (user: any) => {
             name: user.name,
             username: user.username,
             avatar_url: user.avatar_url,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         })
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory))

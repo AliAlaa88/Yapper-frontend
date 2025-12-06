@@ -10,7 +10,7 @@ export const searchServiceReal = {
             if (!response.data) {
                 throw new Error('Data not found')
             }
-            return response.data
+            return response.data.data
         } catch (error: unknown) {
             if (axios.isAxiosError<{ error?: { message: string } }>(error)) {
                 if (error.response?.status === 401) {
