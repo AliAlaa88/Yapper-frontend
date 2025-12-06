@@ -1,16 +1,18 @@
 <template>
-    <div class="sticky top-0 bg-primary/95 backdrop-blur-sm z-10 overflow-hidden">
-
-        <!-- Tabs -->
+    <div class="sticky top-0 bg-primary/95 backdrop-blur-sm overflow-hidden">
+        <div class="p-4">
+            <SearchBar :has-arrow="true" />
+        </div>
         <tabsComponent :tabs="tabs" :active-tab="selectedTab" :on-change="onTabsChange" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { tabs } from '../constants'
-import tabsComponent from "../../Common/components/Tabs";
+import tabsComponent from '../../Common/components/Tabs'
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import SearchBar from '~/modules/search/components/SearchBar.vue'
 const router = useRouter()
 const route = useRoute()
 const selectedTab = computed(() => {
