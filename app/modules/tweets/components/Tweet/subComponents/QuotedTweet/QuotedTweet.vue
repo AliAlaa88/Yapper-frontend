@@ -40,6 +40,7 @@
                     class="rounded-xl overflow-hidden"
                 >
                     <VideoPlayer
+                        ref="videoPlayerRef"
                         :src="tweet.videos[0]"
                         :controls="true"
                         :playback-rates="[0.5, 0.75, 1, 1.25, 1.5, 2]"
@@ -55,7 +56,7 @@
 
 <script setup lang="ts">
 import type { Tweet } from '../../../../types/tweet'
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { navigateTo } from '#app'
 import { getTweetUrl } from '../../../../utils/navigation'
 import { formatDate } from '../../../../utils/lib'
@@ -68,6 +69,8 @@ import 'video.js/dist/video-js.css'
 const props = defineProps<{
     tweet: Tweet
 }>()
+
+const videoPlayerRef = ref<InstanceType<typeof VideoPlayer> | null>(null)
 
 const userAvatar = computed(() =>
     props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`,
@@ -87,6 +90,24 @@ const navigateToQuotedTweet = () => {
         navigateTo(url)
     }
 }
+
+// Pause video when tab loses focus
+const handleVisibilityChange = () => {
+    if (document.hidden && videoPlayerRef.value) {
+        const player = videoPlayerRef.value as any
+        if (player.player && typeof player.player.pause === 'function') {
+            player.player.pause()
+        }
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+})
 </script>
 
 <style scoped>
