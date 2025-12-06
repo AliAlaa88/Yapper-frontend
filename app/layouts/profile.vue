@@ -1,7 +1,39 @@
 <template>
     <MainLayout>
         <ProfileDataProvider :key="username" :username="username">
-            <ProfileHeader />
+            <div
+                class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md transition-all duration-200"
+            >
+                <div class="flex items-center justify-between px-4 py-1">
+                    <div class="flex items-center gap-8">
+                        <button
+                            type="button"
+                            class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors"
+                            :aria-label="$t('navigation.back')"
+                            @click="router.back()"
+                        >
+                            <ArrowLeft :size="20" class="text-primary" />
+                        </button>
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-bold text-primary">
+                                {{ profile?.name }}
+                            </h2>
+                            <ProfileCountDisplay />
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors"
+                            :aria-label="$t('timeline.banner.search')"
+                        >
+                            <Search :size="24" class="text-primary" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <ProfileHeader ref="profileHeaderRef" />
             <NuxtPage :key="username" />
         </ProfileDataProvider>
 
@@ -11,15 +43,29 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onBeforeMount } from 'vue'
+import { ArrowLeft, Search } from 'lucide-vue-next'
 import ProfileHeader from '../modules/profile/components/ProfileHeader/ProfileHeader.vue'
 import ProfileDataProvider from '../modules/profile/components/ProfileDataProvider.vue'
+import ProfileCountDisplay from '../modules/profile/components/ProfileCountDisplay.vue'
 import SnackBar from '../modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmtionModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+import { useProfileStore } from '~/modules/profile/stores/profileStore'
 import MainLayout from './main-layout.vue'
+import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 
 useProfileProviders()
 
 const route = useRoute()
+const router = useRouter()
 const username = computed(() => route.params.username as string)
+
+const profileStore = useProfileStore()
+const { profile, isMyProfile } = storeToRefs(profileStore)
+
+onBeforeMount(() => {
+    profileStore.clearProfile()
+})
 </script>

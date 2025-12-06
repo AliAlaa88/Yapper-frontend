@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isBlocked && me.user_id !== userId" class="pb-3">
+    <div v-if="!isBlocked && me?.user_id !== userId" class="pb-3">
         <Button
             id="follow-button"
             class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
@@ -24,18 +24,22 @@ import Button from '~/modules/Common/components/Button/Button.vue'
 import {useUserStore} from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const me = userStore.getUser()
-console.log('Current User ID in Follow Action:', me)
+
 const props = defineProps<{
     userId: string
+    username: string    
     enabled?: boolean
+
 }>()
 
 const userId = computed(() => props.userId)
+const username = computed(() => props.username)
+const meId = computed(() => me?.user_id)
 const enabledRef = toRef(() => props.enabled ?? true)
 const { isBlocked, isFollowing } = useUserInfo(userId, enabledRef)
 
 const { buttonClass, buttonText, handleMouseOut, handleMouseOver } = useFollow(userId, enabledRef)
-const userInteractions = useUserInteractions(userId, enabledRef)
+const userInteractions = useUserInteractions(userId, username, meId, enabledRef)
 const { handleFollowAction, handleUnfollowWithConfirmation, isFollowLoading } = userInteractions
 
 async function handleClick() {

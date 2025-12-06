@@ -2,6 +2,20 @@ import { useMutation } from '@tanstack/vue-query'
 import { useNuxtApp } from "#app";
 import type { RegisterPayload,verifyAccountPayload,finalizeRegisterPayload } from '../types/register';
 
+export function checkIdentifier(
+    onSuccess?: (data: any) => void,
+    onError?: (error: unknown) => void
+) {
+    const { $authService } = useNuxtApp();
+    return useMutation({
+        mutationKey: ['checkIdentifier'],
+        mutationFn: (identifier: string) => $authService.checkIdentifierAvailability(identifier),
+        retry: false,
+        onSuccess: (data) => onSuccess?.(data),
+        onError: (error) => onError?.(error),
+    });
+}
+
 export function useRegisterS1Query(
     onSuccess?: (data: any) => void,
     onError?: (error: unknown) => void

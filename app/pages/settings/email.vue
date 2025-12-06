@@ -4,6 +4,6 @@
 
 
 <script setup lang="ts">
-import ChangeEmail from '~/modules/settings/components/ChangeEmail.vue'
+import ChangeEmail from '~/modules/settings/components/AccountInformations/ChangeEmail.vue'
 definePageMeta({ layout: 'settings' })
 </script>

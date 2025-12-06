@@ -11,7 +11,9 @@
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(localRepliesCount, locale) }}</span>
+                    <span class="text-xs min-w-5">{{
+                        formatCount(localRepliesCount, locale)
+                    }}</span>
                 </button>
             </template>
             <template #content>
@@ -32,9 +34,7 @@
                 <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
                     <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
                 </div>
-                <span class="text-xs min-w-5">{{
-                    formatCount(localRepostsCount, locale)
-                }}</span>
+                <span class="text-xs min-w-5">{{ formatCount(localRepostsCount, locale) }}</span>
             </button>
 
             <!-- Repost Dropdown Menu -->
@@ -47,7 +47,11 @@
                     @click.stop="handleRepostAction"
                 >
                     <Repeat2 :size="18" />
-                    <span class="font-semibold">{{ localIsReposted ? $t('tweets.actions.undoRetweet') : $t('tweets.actions.retweet') }}</span>
+                    <span class="font-semibold">{{
+                        localIsReposted
+                            ? $t('tweets.actions.undoRetweet')
+                            : $t('tweets.actions.retweet')
+                    }}</span>
                 </button>
                 <button
                     class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
@@ -167,10 +171,10 @@ import {
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
-import {useUserStore} from '~/modules/auth/stores/userStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
-const {user_id} = toRefs(userStore.getUser())
-const {$queryClient} = useNuxtApp()
+const user_id = computed(() => userStore.getUser()?.user_id)
+const { $queryClient } = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
@@ -230,7 +234,6 @@ const handleClickOutsideRepostMenu = (event: MouseEvent) => {
         showRepostMenu.value = false
     }
 }
-
 
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
@@ -451,7 +454,7 @@ const handleBookmarkClick = () => {
     mutateBookmark(localIsBookmarked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-           $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
 
             snackbar?.handleShowSnackbar(
                 localIsBookmarked.value
@@ -557,6 +560,6 @@ watch(
         localIsBookmarked.value = newStats.is_bookmarked
         localRepliesCount.value = newStats.replies
     },
-    { deep: true }
+    { deep: true },
 )
 </script>

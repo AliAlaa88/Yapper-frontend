@@ -27,7 +27,7 @@
                     : 'md:ml-[275px] lg:mr-[250px] xl:mr-[300px]',
             ]"
         >
-            <div class="md:hidden block">
+            <div v-if="isHome" class="md:hidden block">
                 <MobileSidebar />
             </div>
             <slot />
@@ -67,10 +67,13 @@ import Banner from '~/modules/TimeLine/components/banner/Banner.vue'
 import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmationModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+import { useRoute } from 'vue-router'
 
 // Provide snackbar and confirmation globally
 useProfileProviders()
-
+const route = useRoute()
+console.log(route)
+const isHome = computed(() => route.path === '/')
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
 

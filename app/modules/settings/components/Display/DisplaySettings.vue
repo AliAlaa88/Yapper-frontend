@@ -127,7 +127,7 @@
 import { useDisplaySettings } from '../../composables/useDisplaySettings'
 import DetailedPanel from '../DetailedPanel.vue'
 import { Check } from 'lucide-vue-next'
-import SlideBar from './SlideBar.vue'
+import SlideBar from './SubComponents/SlideBar.vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 

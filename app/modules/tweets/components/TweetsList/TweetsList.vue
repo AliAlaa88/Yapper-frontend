@@ -3,9 +3,7 @@
         <!-- Loading state -->
         <div v-if="isPending" class="p-6 text-center">
             <div class="inline-flex items-center space-x-2 text-secondary">
-                <div
-                    class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"
-                />
+                <LoadingSpinner size="md" color="blue" />
                 <span class="text-sm font-medium text-primary">{{
                     $t('tweets.loading.tweets')
                 }}</span>
@@ -36,9 +34,7 @@
             </div>
 
             <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
-                <div
-                    class="animate-spin rounded-full h-5 w-5 border-2 border-blue border-t-transparent"
-                />
+                <LoadingSpinner size="md" color="blue" />
             </div>
 
             <!-- Intersection observer target -->
@@ -70,6 +66,7 @@ import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw } from 'lucide-vue-next'
 import Logo from '~/modules/Common/components/Logo/Logo.vue'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import type { Tweet as TweetType } from '../../types/tweet.ts'
 const props = defineProps<{
     fetchingSource?: string | null
@@ -95,13 +92,20 @@ const loadTweets = () => {
 }
 
 const loadMoreTrigger = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
 
 watch(
     () => loadMoreTrigger.value,
     (el) => {
+        // Clean up previous observer
+        if (observer) {
+            observer.disconnect()
+            observer = null
+        }
+
         if (!el) return
 
-        const observer = new IntersectionObserver(
+        observer = new IntersectionObserver(
             (entries) => {
                 const entry = entries[0]
                 if (entry?.isIntersecting && hasNextPage.value && !isFetchingNextPage.value) {
@@ -116,11 +120,15 @@ watch(
         )
 
         observer.observe(el)
-
-        onUnmounted(() => observer.disconnect())
     },
     { immediate: true },
 )
+
+onUnmounted(() => {
+    if (observer) {
+        observer.disconnect()
+    }
+})
 
 const tweets = computed(() => {
     const pages = data.value?.pages

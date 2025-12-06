@@ -13,7 +13,7 @@
                 />
                 <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse" />
             </NuxtLink>
-            <ProfileFollowAction :userId="id" :enabled="isOpen" />
+            <ProfileFollowAction :userId="id" :username="username" :enabled="isOpen" />
         </div>
 
         <!-- Name and Username -->
