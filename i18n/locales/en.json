@@ -561,6 +561,21 @@
             }
         }
     },
+    "explore": {
+        "trending": "Trending",
+        "posts": "posts",
+        "errorLoading": "Failed to load trends",
+        "tryAgain": "Try again",
+        "noTrends": "No trends available right now",
+        "noCategoriesFound": "No categories available right now",
+        "tabs": {
+            "forYou": "For you",
+            "trending": "Trending",
+            "news": "News",
+            "sports": "Sports",
+            "entertainment": "Entertainment"
+        }
+    },
     "timeline": {
         "sidebar": {
             "home": "Home",
@@ -571,7 +586,8 @@
             "bookmarks": "Bookmarks",
             "settings": "Settings",
             "post": "Post",
-            "postTweet": "Post a tweet"
+            "postTweet": "Post a tweet",
+            "explore": "Explore"
         },
         "postTweet": {
             "placeholder": "What's happening?",
