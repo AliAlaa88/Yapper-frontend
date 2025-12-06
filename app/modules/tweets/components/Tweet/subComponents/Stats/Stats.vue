@@ -182,7 +182,7 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject, isReactive, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark, Quote } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
@@ -208,16 +208,19 @@ const emit = defineEmits<{
     (e: 'viewQuotesAndReposts'): void
 }>()
 
-const likes = computed(() => props.stats.likes)
-const replies = computed(() => props.stats.replies)
-const retweets = computed(() => props.stats.retweets)
-const views = computed(() => props.stats.views)
-const is_liked = computed(() => props.stats.is_liked)
-const tweet_id = computed(() => props.stats.tweet_id)
-const is_reposted = computed(() => props.stats.is_reposted)
-const is_bookmarked = computed(() => props.stats.is_bookmarked)
-const username = computed(() => props.stats.username)
-
+// Ensure stats is always a reactive object for toRefs
+const statsReactive = isReactive(props.stats) ? props.stats : reactive(props.stats)
+const {
+    likes,
+    replies,
+    retweets,
+    views,
+    is_liked,
+    tweet_id,
+    is_reposted,
+    is_bookmarked,
+    username,
+} = toRefs(statsReactive)
 const localIsLiked = ref(is_liked.value)
 const localLikesCount = ref(likes.value)
 const isAnimating = ref(false)

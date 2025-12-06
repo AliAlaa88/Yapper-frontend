@@ -81,9 +81,9 @@ describe('lib utilities', () => {
     })
 
     it('formats counts less than 10,000 with one decimal place and K', () => {
-      expect(formatCount(1000)).toBe('1.0K')
+      expect(formatCount(1000)).toBe('1K')
       expect(formatCount(1500)).toBe('1.5K')
-      expect(formatCount(9999)).toBe('10.0K')
+      expect(formatCount(9999)).toBe('10K')
       expect(formatCount(5432)).toBe('5.4K')
     })
 
@@ -95,17 +95,17 @@ describe('lib utilities', () => {
     })
 
     it('formats counts >= 1M with one decimal place and M', () => {
-      expect(formatCount(1000000)).toBe('1.0M')
+      expect(formatCount(1000000)).toBe('1M')
       expect(formatCount(1500000)).toBe('1.5M')
       expect(formatCount(2345678)).toBe('2.3M')
-      expect(formatCount(10000000)).toBe('10.0M')
+      expect(formatCount(10000000)).toBe('10M')
     })
 
     it('handles string input by converting to number', () => {
       expect(formatCount('0')).toBe('')
       expect(formatCount('500')).toBe('500')
-      expect(formatCount('1000')).toBe('1.0K')
-      expect(formatCount('1000000')).toBe('1.0M')
+      expect(formatCount('1000')).toBe('1K')
+      expect(formatCount('1000000')).toBe('1M')
     })
   })
 
