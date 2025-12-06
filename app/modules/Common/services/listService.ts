@@ -11,8 +11,8 @@ export const listService = {
 
         return {
             data: page.data,
-            nextCursor: page.pagination.next_cursor,
-            hasMore: page.pagination.has_more,
+            nextCursor: page.pagination?.next_cursor ?? page.next_cursor,
+            hasMore: page.pagination?.has_more ?? page.has_more,
         }
     },
 }

@@ -24,21 +24,30 @@
             </p>
 
             <!-- Media preview (single thumbnail) -->
-            <div
-                v-if="hasMedia"
-                class="mt-2 rounded-xl overflow-hidden max-h-[200px]"
-            >
-                <img
+            <div v-if="hasMedia" class="mt-2">
+                <div
                     v-if="tweet.images && tweet.images.length > 0"
-                    :src="tweet.images[0]"
-                    alt="Quoted tweet media"
-                    class="w-full h-full object-cover"
+                    class="rounded-xl overflow-hidden max-h-[200px]"
                 >
+                    <img
+                        :src="tweet.images[0]"
+                        alt="Quoted tweet media"
+                        class="w-full h-full object-cover"
+                    >
+                </div>
                 <div
                     v-else-if="tweet.videos && tweet.videos.length > 0"
-                    class="relative bg-black/10 h-[150px] flex items-center justify-center"
+                    class="rounded-xl overflow-hidden"
                 >
-                    <Play class="w-12 h-12 text-primary opacity-70" />
+                    <VideoPlayer
+                        ref="videoPlayerRef"
+                        :src="tweet.videos[0]"
+                        :controls="true"
+                        :playback-rates="[0.5, 0.75, 1, 1.25, 1.5, 2]"
+                        :fluid="true"
+                        class="video-js vjs-big-play-centered"
+                        @click.stop
+                    />
                 </div>
             </div>
         </div>
@@ -47,17 +56,21 @@
 
 <script setup lang="ts">
 import type { Tweet } from '../../../../types/tweet'
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { navigateTo } from '#app'
 import { getTweetUrl } from '../../../../utils/navigation'
 import { formatDate } from '../../../../utils/lib'
 import { handleImageError } from '~/utils/helpers'
-import { Play } from 'lucide-vue-next'
+import { VideoPlayer } from '@videojs-player/vue'
 import { useTweetTransitionStore } from '~/modules/tweets/stores/tweetTransition'
+
+import 'video.js/dist/video-js.css'
 
 const props = defineProps<{
     tweet: Tweet
 }>()
+
+const videoPlayerRef = ref<InstanceType<typeof VideoPlayer> | null>(null)
 
 const userAvatar = computed(() =>
     props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`,
@@ -77,6 +90,24 @@ const navigateToQuotedTweet = () => {
         navigateTo(url)
     }
 }
+
+// Pause video when tab loses focus
+const handleVisibilityChange = () => {
+    if (document.hidden && videoPlayerRef.value) {
+        const player = videoPlayerRef.value as any
+        if (player.player && typeof player.player.pause === 'function') {
+            player.player.pause()
+        }
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+})
 </script>
 
 <style scoped>

@@ -6,12 +6,14 @@
                 <button
                     id="tweet-reply-button"
                     class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
-                    @click.stop
+                    @click.stop="handleReplyClick"
                 >
                     <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
-                    <span class="text-xs min-w-5">{{ formatCount(localRepliesCount, locale) }}</span>
+                    <span class="text-xs min-w-5">{{
+                        formatCount(localRepliesCount, locale)
+                    }}</span>
                 </button>
             </template>
             <template #content>
@@ -21,21 +23,33 @@
 
         <!-- Retweet with dropdown -->
         <div ref="repostContainerRef" class="relative">
-            <button
-                id="tweet-retweet-button"
-                :class="[
-                    'group flex cursor-pointer items-center gap-1 transition-colors',
-                    localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
-                ]"
-                @click.stop="toggleRepostMenu"
-            >
-                <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
-                    <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
-                </div>
-                <span class="text-xs min-w-5">{{
-                    formatCount(localRepostsCount, locale)
-                }}</span>
-            </button>
+            <div class="group flex items-center">
+                <button
+                    id="tweet-retweet-button"
+                    :class="[
+                        'flex cursor-pointer items-center gap-1 transition-colors',
+                        localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
+                    ]"
+                    @click.stop="toggleRepostMenu"
+                >
+                    <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                        <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
+                    </div>
+                </button>
+                <CustomToolTip side="bottom" align="start" :delay-duration="300">
+                    <template #trigger>
+                        <button
+                            class="text-xs min-w-5 text-secondary cursor-pointer hover:text-green transition-colors"
+                            @click.stop="handleViewQuotesAndReposts"
+                        >
+                            {{ formatCount(localRepostsCount, locale) }}
+                        </button>
+                    </template>
+                    <template #content>
+                        <div :class="contentClass">{{ $t('tweets.actions.viewQuotes') }}</div>
+                    </template>
+                </CustomToolTip>
+            </div>
 
             <!-- Repost Dropdown Menu -->
             <div
@@ -47,7 +61,11 @@
                     @click.stop="handleRepostAction"
                 >
                     <Repeat2 :size="18" />
-                    <span class="font-semibold">{{ localIsReposted ? $t('tweets.actions.undoRetweet') : $t('tweets.actions.retweet') }}</span>
+                    <span class="font-semibold">{{
+                        localIsReposted
+                            ? $t('tweets.actions.undoRetweet')
+                            : $t('tweets.actions.retweet')
+                    }}</span>
                 </button>
                 <button
                     class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary"
@@ -55,6 +73,14 @@
                 >
                     <Quote :size="18" />
                     <span class="font-semibold">{{ $t('tweets.actions.quote') }}</span>
+                </button>
+                <button
+                    v-if="isAppearViewQuotesAndReposts"
+                    class="w-full flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors text-primary border-t border-primary"
+                    @click.stop="handleViewQuotesAndRepostsFromMenu"
+                >
+                    <BarChart3 :size="18" />
+                    <span class="font-semibold">{{ $t('tweets.actions.viewQuotes') }}</span>
                 </button>
             </div>
         </div>
@@ -167,10 +193,10 @@ import {
     mutateTweetBookmarkQuery,
 } from '../../../../queries/useTweetQueries'
 import { useTweetTransitionStore } from '../../../../stores/tweetTransition'
-import {useUserStore} from '~/modules/auth/stores/userStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const user_id = computed(() => userStore.getUser()?.user_id)
-const {$queryClient} = useNuxtApp()
+const { $queryClient } = useNuxtApp()
 
 const props = defineProps<{
     stats: StatsType
@@ -178,6 +204,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'quote'): void
+    (e: 'reply'): void
+    (e: 'viewQuotesAndReposts'): void
 }>()
 
 const likes = computed(() => props.stats.likes)
@@ -201,6 +229,9 @@ const localRepliesCount = ref(replies.value)
 const showRepostMenu = ref(false)
 const repostContainerRef = ref<HTMLElement | null>(null)
 const { t, locale } = useI18n()
+
+const route = useRoute()
+const isAppearViewQuotesAndReposts = computed(() => route.path.includes('/status'))
 
 // Inject the global snackbar from layout
 const snackbar = inject<{
@@ -227,7 +258,6 @@ const handleClickOutsideRepostMenu = (event: MouseEvent) => {
         showRepostMenu.value = false
     }
 }
-
 
 const tweetTransitionStore = useTweetTransitionStore()
 const { mutate: mutateLike, isPending } = mutateTweetLikesQuery(tweet_id.value, localIsLiked.value)
@@ -355,6 +385,20 @@ const handleQuoteClick = () => {
     emit('quote')
 }
 
+const handleReplyClick = () => {
+    emit('reply')
+}
+
+const handleViewQuotesAndReposts = () => {
+    showRepostMenu.value = false
+    emit('viewQuotesAndReposts')
+}
+
+const handleViewQuotesAndRepostsFromMenu = () => {
+    showRepostMenu.value = false
+    emit('viewQuotesAndReposts')
+}
+
 const handleRepostAction = () => {
     showRepostMenu.value = false
     // Logic to handle repost/unrepost action can be added here
@@ -448,7 +492,7 @@ const handleBookmarkClick = () => {
     mutateBookmark(localIsBookmarked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-           $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
+            $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweet_id.value] })
 
             snackbar?.handleShowSnackbar(
                 localIsBookmarked.value
@@ -554,6 +598,6 @@ watch(
         localIsBookmarked.value = newStats.is_bookmarked
         localRepliesCount.value = newStats.replies
     },
-    { deep: true }
+    { deep: true },
 )
 </script>
