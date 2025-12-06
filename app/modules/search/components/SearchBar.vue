@@ -88,7 +88,7 @@ const handleBack = () => {
     isFocused.value = false
 }
 
-const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click' | 'recent_search_click' = 'typed_query') => {
+const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click' | 'recent_search_click' | 'trend_click' = 'typed_query') => {
     if (!query.trim()) return
     searchQuery.value = query
 
