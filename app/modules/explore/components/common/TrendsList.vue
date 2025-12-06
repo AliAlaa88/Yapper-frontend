@@ -5,7 +5,7 @@
             :key="trend.reference_id || index"
             class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer group"
         >
-            <div class="flex flex-col gap-0.5">
+            <div class="flex flex-col gap-0.5" @click="onClickTrend(trend)">
                 <div class="flex items-center gap-1 text-muted text-xs">
                     <template v-if="showRank">
                         <span class="font-medium">{{ index + 1 }}</span>
@@ -36,7 +36,7 @@
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-
+const router = useRouter()
 interface Trend {
     text: string
     posts_count: number
@@ -59,6 +59,7 @@ const formatCount = (count: number) => {
 }
 
 function onClickTrend(trend: Trend) {
-    console.log('trend', trend)
+    const text = trend.text.toLowerCase()
+    router.push(`/search?q=${encodeURIComponent(text)}&src="trend_click"`)
 }
 </script>

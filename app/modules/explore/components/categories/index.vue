@@ -24,7 +24,6 @@
             <p class="text-muted text-lg">{{ t('explore.noCategoriesFound') }}</p>
         </div>
 
-        <!-- Trends list -->
         <div v-else class="min-h-[calc(100vh-60px)]">
             <TrendsList :trends="trends" :show-rank="true" />
         </div>
