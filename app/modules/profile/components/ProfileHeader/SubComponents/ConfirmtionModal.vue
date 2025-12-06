@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 interface ConfirmationState {
     username?: string

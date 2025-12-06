@@ -1,18 +1,7 @@
-import type { User } from '~/modules/auth/types/user'
-import Cookie from 'js-cookie';
-export function isLoggedIn(): boolean {
-    const user = localStorage.getItem('user')
-    const token = Cookie.get('access_token')
-    if (user && token) {
-        return true
-    }
-    return false
-}
+import dayjs from 'dayjs'
+import isToday from 'dayjs/plugin/isToday'
 
-export function getUser(): User {
-    const user = localStorage.getItem('user')
-    return JSON.parse(user as string) as User
-}
+dayjs.extend(isToday)
 
 export const formatDate = (date: string) => {
     const now = new Date()
@@ -25,6 +14,36 @@ export const formatDate = (date: string) => {
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`
 
     return tweetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+export const formatConversationDate = (date: string) => {
+    if (!date) return ''
+    const now = dayjs()
+    const conversationDate = dayjs(date)
+    const diffInSeconds = now.diff(conversationDate, 'second')
+
+    if (diffInSeconds < 60) return 'now'
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`
+
+    return conversationDate.format('MMM D')
+}
+
+export const formatMessageDate = (date: string) => {
+    const messageDate = dayjs(date)
+    const now = dayjs()
+
+    if (messageDate.isToday()) {
+        return messageDate.format('h:mm A')
+    }
+
+    const daysDiff = now.diff(messageDate, 'day')
+    if (daysDiff < 7) {
+        return messageDate.format('dddd h:mm A')
+    }
+
+    return messageDate.format('MMM D, YYYY h:mm A')
 }
 
 /**
@@ -66,7 +85,18 @@ export function parseTextWithTags(text: string): string {
 
     // 4. Handle line breaks for display
     // Note: We don't replace \n with <br> here because the CSS white-space: pre-wrap
-    // handles that better for synchronization with textarea
+    // handles that better for synchronization with textareas
 
     return result
+}
+export const handleImageError = (userName: string, event: Event) => {
+    const target = event.target as HTMLImageElement
+    target.src = `https://ui-avatars.com/api/?name=${userName}`
+}
+
+export function shorterName(name: string, maxLength: number = 15): string {
+    if (name.length > maxLength) {
+        return name.slice(0, maxLength) + '...'
+    }
+    return name
 }

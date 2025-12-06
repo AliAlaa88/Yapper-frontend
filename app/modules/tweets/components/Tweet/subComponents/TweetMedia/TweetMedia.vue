@@ -4,7 +4,7 @@
         v-if="images && images.length === 1 && (!videos || videos.length === 0)" 
         class="rounded-2xl overflow-hidden border border-primary max-h-[500px]"
     >
-        <img
+        <LazyNuxtImg
             :src="images[0]"
             alt="Tweet image"
             class="w-full h-full object-cover cursor-pointer"
@@ -23,7 +23,7 @@
             v-for="(image, index) in images"
             :key="index"
         >
-            <img
+            <LazyNuxtImg
                 :src="image"
                 :alt="`Tweet image ${index + 1}`"
                 class="w-full h-full object-cover cursor-pointer"
@@ -41,6 +41,7 @@
         <VideoPlayer
             v-for="(video, index) in videos"
             :key="index"
+            ref="videoPlayersRef"
             :src="video"
             :controls="true"
             :playback-rates="[0.5, 0.75, 1, 1.25, 1.5, 2]"
@@ -60,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import VueEasyLightbox from 'vue-easy-lightbox'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination } from 'swiper/modules'
@@ -82,10 +83,33 @@ const props = defineProps<{
 const lightboxVisible = ref(false)
 const lightboxIndex = ref(0)
 
+// Video players ref
+const videoPlayersRef = ref<InstanceType<typeof VideoPlayer>[]>([])
+
 function openLightbox(index: number) {
     lightboxIndex.value = index
     lightboxVisible.value = true
 }
+
+// Pause videos when tab loses focus
+const handleVisibilityChange = () => {
+    if (document.hidden && videoPlayersRef.value.length > 0) {
+        videoPlayersRef.value.forEach((playerRef) => {
+            const player = playerRef as any
+            if (player.player && typeof player.player.pause === 'function') {
+                player.player.pause()
+            }
+        })
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+})
 </script>
 
 <style scoped>

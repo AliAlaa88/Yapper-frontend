@@ -13,12 +13,12 @@
 
             <!-- Title -->
             <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.profilePicture.info') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.info') }}</p>
 
             <!-- Profile Picture Preview -->
             <div class="flex justify-center mb-6">
                 <div
-                    class="relative w-32 h-32 rounded-full bg-hover border-2 border-primary overflow-hidden shadow-md"
+                    class="relative w-32 h-32 rounded-full bg-hover border border-primary overflow-hidden shadow-md"
                 >
                     <img
                         v-if="previewImage"
@@ -62,23 +62,25 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-profile-picture"
                 v-if="previewImage"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate cursor-pointer font-semibold rounded-full py-2 transition duration-200 mb-3"
+                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
+                :loading-text="$t('auth.common.loading')"
+                :is-loading="loading"
                 @click="onNext"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
 
             <!-- Skip Button -->
-            <button
+            <Button
                 id="button-skip-profile-picture"
-                class="w-full text-primary cursor-pointer hover:text-blue transition duration-200"
+                class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}
-            </button>
+            </Button>
     </Popup>
 </template>
 
@@ -88,8 +90,8 @@ import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
-import { useUpdateProfilePictureMutation } from '../../../queries/useCompleteProfileQuery'
-
+import { useUpdateProfilePictureMutation, useUpdateProfileMutation } from '../../../queries/useCompleteProfileQuery'
+import Button from '~/modules/Common/components/Button/Button.vue'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
@@ -100,6 +102,7 @@ const previewImage = ref<string | null>(profilePicture.value)
 const selectedFile = ref<File | null>(null)
 const errorMessage = ref('')
 const isUploading = ref(false)
+const loading = ref(false)
 
 // Sync preview with model
 watch(profilePicture, (newVal) => {
@@ -145,15 +148,39 @@ const onFileChange = (event: Event) => {
     }
 }
 
-const uploadMutation = useUpdateProfilePictureMutation(
+const updateProfileMutation = useUpdateProfileMutation(
     (data) => {
+        console.log("updating profile pic");
         isUploading.value = false
         errorMessage.value = ''
-        emit('next', data.avatar_url || previewImage.value)
+        emit('next', data.data?.avatar_url || previewImage.value)
+    },
+    (error) => {
+        isUploading.value = false
+        loading.value = false
+        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update profile'
+        errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
+    }
+)
+
+const uploadMutation = useUpdateProfilePictureMutation(
+    (data) => {
+        const avatarUrl = data.data?.image_url || data.image_url
+        console.log(avatarUrl);
+        if (avatarUrl) {
+            updateProfileMutation.mutate({
+                    image_url: avatarUrl
+            })
+        } else {
+            isUploading.value = false
+            loading.value = false
+            errorMessage.value = 'Failed to get avatar URL from upload response'
+        }
     },
     (error) => {
         console.error('Profile picture upload error:', error)
         isUploading.value = false
+        loading.value = false
         const errorMsg = error?.response?.data?.message || error?.message || 'Failed to upload profile picture'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
     }
@@ -162,6 +189,7 @@ const uploadMutation = useUpdateProfilePictureMutation(
 const onNext = () => {
     if (selectedFile.value && !isUploading.value) {
         isUploading.value = true
+        loading.value = true
         uploadMutation.mutate({ profilePicture: selectedFile.value })
     } else if (previewImage.value && !selectedFile.value) {
         // Already uploaded or using existing image

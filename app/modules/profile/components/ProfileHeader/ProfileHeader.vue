@@ -13,8 +13,9 @@
                         <ProfileEditButton />
                     </div>
                     <div v-else class="flex flex-wrap gap-2">
+                        <ProfileMessageButton v-if="user?.user_id" />
                         <ProfileActions v-if="user?.user_id" :is-tweet="false" />
-                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" />
+                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" :username="user.username" />
                         <ProfileBlockedAction />
                     </div>
                 </div>
@@ -32,6 +33,7 @@ import ProfileAvatar from './SubComponents/ProfileAvatar.vue'
 import ProfileBlockedAction from './SubComponents/ProfileBlockedAction.vue'
 import ProfileEditButton from './SubComponents/ProfileEditButton.vue'
 import ProfileFollowAction from './SubComponents/ProfileFollowAction.vue'
+import ProfileMessageButton from './SubComponents/ProfileMessageButton.vue'
 import ProfileInfo from './SubComponents/ProfileInfo.vue'
 import { useProfileStore } from '../../stores/profileStore'
 import { storeToRefs } from 'pinia'

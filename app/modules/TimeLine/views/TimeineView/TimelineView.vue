@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col w-full">
         <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
-        <PostTweet :border="true" />
+        <PostTweet :border="true" :inlineborder="true" />
         <TweetsList
             :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/following'}`"
             class="w-full"
@@ -12,16 +12,17 @@
 <script setup lang="ts">
 import Tabs from '~/modules/Common/components/Tabs'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
-import { isLoggedIn } from '~/utils/helpers'
 import { onMounted, computed } from 'vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 import { useI18n } from 'vue-i18n'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const { t } = useI18n()
 const router = useRouter()
+const userStore = useUserStore()
 
 onMounted(() => {
-    if (!isLoggedIn()) {
+    if (!userStore.isLoggedIn) {
         router.push('/auth')
     }
 })

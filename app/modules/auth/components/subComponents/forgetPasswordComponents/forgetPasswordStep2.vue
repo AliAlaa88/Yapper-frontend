@@ -3,12 +3,13 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="false"
+        @back="$emit('back')"
+        :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
-        <backButton @close="$emit('back')" />
 
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -29,7 +30,7 @@
                     @input="handleOtpInput"
                     @blur="validateOtpField"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
+                        'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
                         otpError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -46,13 +47,15 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-forgot-password-s2"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
+                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
+                :loading-text="t('auth.common.loading')"
+                :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>
@@ -65,15 +68,16 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validateOtp } from '../../../utils/validators'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 const { locale, t } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
-// Use v-model for otp
 const otp = defineModel<string>('otp', { default: '' })
 
 const errorMessage = ref('')
 const otpError = ref('')
+const loading = ref(false)
 
 const props = defineProps<{
     identifier: string
@@ -88,6 +92,7 @@ const emit = defineEmits<{
 const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
     (data: any) => {
         errorMessage.value = ''
+        loading.value = false
         emit('next', data.data.reset_token)
     },
     (error: any) => {
@@ -95,11 +100,13 @@ const verifyOTPMutation = useVerifyForgotPasswordOTPQuery(
         const errorMsg = error?.response?.data?.message || 'An error occurred. Please try again.'
         if (Array.isArray(errorMsg)) errorMessage.value = errorMsg[0]
         else errorMessage.value = errorMsg
+        loading.value = false
     },
 )
 
 const handleOtpInput = (event: Event) => {
     const target = event.target as HTMLInputElement
+    // Allow only alphanumeric characters and limit to 6 characters
     otp.value = target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6)
     otpError.value = ''
     errorMessage.value = ''
@@ -116,6 +123,7 @@ const onNext = () => {
         return
     }
     errorMessage.value = '' // Clear previous errors
+    loading.value = true
     verifyOTPMutation.mutate({ identifier: props.identifier, token: otp.value })
 }
 </script>

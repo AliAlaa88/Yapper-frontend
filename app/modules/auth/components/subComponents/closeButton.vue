@@ -1,5 +1,5 @@
 <template>
-      <button
+      <button 
         id="button-close"
         :class="[
           'absolute top-4 bg-white text-primary hover:bg-hover rounded-full p-2 transition duration-200',
@@ -8,7 +8,7 @@
         @click="$emit('close')"
       >
         <X name="x" class="w-5 h-5" />
-      </button>
+</button>
 </template>
 
 <script setup lang="ts">

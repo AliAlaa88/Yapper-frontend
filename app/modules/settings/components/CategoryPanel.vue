@@ -12,6 +12,7 @@
         <div class="pt-2">
             <NuxtLink
                 v-for="category in item.categories"
+                id="category-link"
                 :key="category.href"
                 :to="category.href"
                 class="block relative px-5 py-3 rounded hover:bg-hover

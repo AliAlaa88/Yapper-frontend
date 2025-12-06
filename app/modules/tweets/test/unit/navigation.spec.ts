@@ -26,7 +26,7 @@ describe('navigation utilities', () => {
         verified:false,
       }
 
-      expect(getProfileUrl(user)).toBe('/profile/johndoe')
+      expect(getProfileUrl(user)).toBe('/johndoe')
     })
 
     it('returns # as fallback when user has no link and no username', () => {
@@ -51,7 +51,7 @@ describe('navigation utilities', () => {
         verified:false,
       }
 
-      expect(getProfileUrl(user)).toBe('/profile/johndoe')
+      expect(getProfileUrl(user)).toBe('/johndoe')
     })
 
     it('prioritizes custom link over username', () => {

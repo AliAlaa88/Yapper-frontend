@@ -213,36 +213,4 @@ export const userInfoServiceMock = {
 
         return updatedUser.data
     },
-
-    async getFollowers(_userId: string): Promise<FollowUser[]> {
-        const { $axios } = useNuxtApp()
-        const response = await $axios.get<UserAction[]>('/users')
-        return response.data.slice(0, 5).map((user) => ({
-            user_id: user.user_id,
-            name: user.name,
-            username: user.username,
-            bio: user.bio || '',
-            avatar_url: user.avatar_url || '',
-            is_following: user.is_following,
-            is_follower: user.is_follower,
-            is_muted: user.is_muted,
-            is_blocked: user.is_blocked || false,
-        }))
-    },
-
-    async getFollowing(_userId: string): Promise<FollowUser[]> {
-        const { $axios } = useNuxtApp()
-        const response = await $axios.get<UserAction[]>('/users')
-        return response.data.slice(0, 5).map((user) => ({
-            user_id: user.user_id,
-            name: user.name,
-            username: user.username,
-            bio: user.bio || '',
-            avatar_url: user.avatar_url || '',
-            is_following: user.is_following,
-            is_follower: user.is_follower,
-            is_muted: user.is_muted,
-            is_blocked: user.is_blocked || false,
-        }))
-    },
 }

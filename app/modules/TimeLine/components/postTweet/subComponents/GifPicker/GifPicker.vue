@@ -1,7 +1,8 @@
 <template>
     <div
         v-if="isOpen"
-        class="absolute z-[60] mt-2 w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
+        class="absolute z-[60] w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
+        :class="position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'"
     >
         <div class="p-2 border-b border-primary flex gap-2" id="gif-picker-container">
             <input
@@ -57,9 +58,12 @@ interface Gif {
 
 interface Props {
     isOpen: boolean
+    position?: 'top' | 'bottom'
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+    position: 'bottom'
+})
 const emit = defineEmits(['select', 'close'])
 
 const config = useRuntimeConfig()

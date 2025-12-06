@@ -33,7 +33,8 @@
         "home": "الرئيسية",
         "profile": "الملف الشخصي",
         "settings": "الإعدادات",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "back": "عودة"
     },
     "months": {
         "january": "يناير",
@@ -60,7 +61,9 @@
             "password": "كلمة المرور",
             "resendCode": "إعادة إرسال الرمز",
             "selectedSuffix": "مختار",
-            "neededMoreSuffix": "مطلوب أكثر"
+            "neededMoreSuffix": "مطلوب أكثر",
+            "loading": "جاري التحميل...",
+            "redirecting": "جارٍ نقلك إلى صفحتك الرئيسية..."
         },
         "home": {
             "happeningNow": "يحدث الآن",
@@ -69,7 +72,7 @@
             "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
         },
         "login": {
-            "title": "سجّل الدخول إلى X",
+            "title": "سجّل الدخول إلى Yapper",
             "identifierPlaceholder": "رقم الهاتف أو البريد الإلكتروني أو اسم المستخدم",
             "forgotPassword": "هل نسيت كلمة المرور؟",
             "switchPrompt": "ليس لديك حساب؟"
@@ -88,10 +91,10 @@
         },
         "username": {
             "title": "ماذا يجب أن نسميك؟",
-            "info": "اسم المستخدم الخاص بك فريد. يمكنك دائماً تغييره لاحقاً.",
+            "info": "اسم المستخدم الخاص بك فريد. يمكنك دائماً تغييره لاحقاً",
             "placeholder": "اسم المستخدم",
             "available": "متاح!",
-            "recommendations": "أسماء المستخدمين الموصى بها:"
+            "recommendations": "أسماء المستخدمين الموصى بها"
         },
         "profilePicture": {
             "title": "اختر صورة ملفك الشخصي",
@@ -124,17 +127,17 @@
         },
         "verifyOtp": {
             "title": "أرسلنا لك رمزاً",
-            "info": "أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني.",
+            "info": "أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني",
             "otpPlaceholder": "أدخل الرمز",
             "resendPrompt": "لم تستلم الرمز؟",
-            "resendSuccess": "تم إعادة إرسال الرمز بنجاح.",
-            "invalidOtp": "رمز غير صالح. حاول مرة أخرى."
+            "resendSuccess": "تم إعادة إرسال الرمز بنجاح",
+            "invalidOtp": "رمز غير صالح. حاول مرة أخرى"
         },
         "finalRegister": {
             "title": "أدخل كلمة مرور",
-            "info": "يرجى إدخال كلمة مرور قوية.",
+            "info": "يرجى إدخال كلمة مرور قوية",
             "passwordPlaceholder": "أدخل كلمة المرور",
-            "passwordHint": "تأكد أن كلمة المرور قوية وآمنة.",
+            "passwordHint": "تأكد أن كلمة المرور قوية وآمنة",
             "signUpButton": "تسجيل"
         },
         "forgotPassword": {
@@ -152,11 +155,11 @@
         },
         "language": {
             "title": "اختر لغتك",
-            "info": "سيساعدنا ذلك على تخصيص تجربتك في Yapper."
+            "info": "سيساعدنا ذلك على تخصيص تجربتك في Yapper"
         },
         "interests": {
             "title": "ما المجالات التي تهمك؟",
-            "info": "اختر 3 اهتمامات على الأقل لمساعدتنا في تخصيص محتواك."
+            "info": "اختر 3 اهتمامات على الأقل لمساعدتنا في تخصيص محتواك"
         },
         "validation": {
             "emailRequired": "البريد الإلكتروني مطلوب",
@@ -241,6 +244,12 @@
             "media": "الوسائط",
             "likes": "الإعجابات"
         },
+        "counts": {
+            "posts": "{count} منشور",
+            "replies": "{count} رد",
+            "media": "{count} وسائط",
+            "likes": "{count} إعجاب"
+        },
         "emptyState": {
             "noPosts": {
                 "title": "لا توجد منشورات بعد",
@@ -283,12 +292,19 @@
             "unblock": {
                 "title": "إلغاء الحظر",
                 "button": "إلغاء الحظر",
-                "description": "سيتمكنون من متابعتك والتفاعل مع منشوراتك العامة."
+                "description": "سيتمكنون من متابعتك والتفاعل مع منشوراتك العامة.",
+                "snackbar": "تم إلغاء الحظر بنجاح."
             },
             "unfollow": {
                 "title": "إلغاء المتابعة",
                 "button": "إلغاء المتابعة",
+                "snackbar": "لم تعد تتابع {username}.",
                 "description": "لن تظهر منشوراتهم في جدولك الزمني للمتابعة. لا يزال بإمكانك عرض ملفهم الشخصي، ما لم تكن منشوراتهم محمية."
+            },
+            "follow": {
+                "title": "متابعة",
+                "button": "متابعة",
+                "snackbar": "{username} "
             },
             "mute": {
                 "snackbar": "تم كتم {username}.",
@@ -330,8 +346,16 @@
                 "noFollowing": {
                     "title": "لا يتابع أحدًا بعد",
                     "description": "عندما يتابع هذا الحساب أشخاصًا، سيظهرون هنا."
+                },
+                "noMutualFollowers": {
+                    "title": "لا يوجد متابعون مشتركون",
+                    "description": "أنت لا تتابع أي من متابعي هذا الحساب."
                 }
             }
+        },
+        "followersYouFollow": "متابعون تتابعهم",
+        "privacy": {
+            "likesPrivate": "إعجاباتك خاصة. يمكنك أنت فقط رؤيتها."
         }
     },
     "settings": {
@@ -350,8 +374,26 @@
         "accountInfo": {
             "title": "معلومات الحساب",
             "username": "اسم المستخدم",
+            "change_username": "تغيير اسم المستخدم",
+            "suggestions": "الاقتراحات",
+            "save": "حفظ",
             "email": "البريد الإلكتروني",
             "accountCreation": "تاريخ إنشاء الحساب",
+            "change_email": "تغيير البريد الإلكتروني",
+            "current": "الحالي",
+            "update_email_address": "تحديث عنوان البريد الإلكتروني",
+            "change_email_title": "تغيير البريد الإلكتروني",
+            "change_email_description": "بريدك الإلكتروني الحالي هو. ماذا تريد أن تغيره؟ لن يظهر بريدك الإلكتروني في ملفك الشخصي العام على Yapper.",
+            "email_address": "عنوان البريد الإلكتروني",
+            "cancel": "إلغاء",
+
+            "we_sent_code": "لقد أرسلنا لك رمزًا",
+            "enter_code_message": "أدخل الرمز أدناه للتحقق من بريدك الإلكتروني.",
+            "verification_code": "رمز التحقق",
+            "didnt_receive": "لم تستلم الرمز؟ إعادة الإرسال",
+            "verify": "تحقق",
+
+            "change_country": "تغيير الدولة",
             "country": "الدولة",
 
             "languages": "اللغات",
@@ -362,7 +404,9 @@
 
             "age": "العمر",
             "age_desc_long": "إذا لم تُدخل تاريخ ميلادك، سنعرض لك نطاقًا للعمر بناءً على ملفك الشخصي ونشاطك في Yapper. تُستخدم معلومات العمر لتخصيص تجربتك.",
-            "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى ملفك الشخصي دون مشاركته بشكل عام."
+            "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى",
+            "age_notRight2": "دون مشاركته بشكل عام.",
+            "profile": "الملف الشخصي"
         },
 
         "languages": {
@@ -372,6 +416,35 @@
             "selectAppLanguage": "اختر لغة التطبيق",
             "selectAppLanguage_desc": "ستكون هذه هي اللغة الافتراضية في التطبيق. سترى أيضًا محتوى نقترحه بناءً على اللغات الأخرى التي اخترتها.",
             "next": "التالي"
+        },
+
+        "changeCountry": {
+            "title": "تغيير البلد؟",
+            "description": "سيؤدي هذا إلى تخصيص تجربة Yapper الخاصة بك بناءً على البلد الذي تعيش فيه.",
+            "button": "تغيير",
+            "cancel": "إلغاء"
+        },
+
+        "confirm_password": "تأكيد كلمة المرور",
+        "enter_password_message": "يرجى إدخال كلمة المرور للمتابعة.",
+        "password": "كلمة المرور",
+        "forgot_password": "هل نسيت كلمة المرور؟",
+        "confirm": "تأكيد",
+        "search_settings": "البحث في الإعدادات",
+        "noPasswordSetTitle": "لا يوجد كلمة مرور مُسجّلة",
+        "noPasswordSetDescription": "لا يحتوي حسابك على كلمة مرور. يحدث هذا عادةً عندما تقوم بالتسجيل باستخدام مزوّد خارجي مثل Google أو GitHub.",
+        "setUpPassword": "إعداد كلمة مرور →",
+        "passwordRequirements": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وتشمل حرفًا كبيرًا وحرفًا صغيرًا ورقمًا ورمزًا خاصًا",
+        "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور",
+
+        "deleteAccount": {
+            "title": "حذف الحساب",
+            "warningTitle": "سيتم حذف حسابك",
+            "description": "أنت على وشك بدء عملية حذف حسابك في Yapper. لن يكون اسم العرض الخاص بك، {username}، وملفك الشخصي العام مرئيين بعد الآن على Yapper.com أو Yapper لنظام iOS أو Yapper لنظام Android.",
+            "button": "حذف"
         },
 
         "privacyAndSafety": "الخصوصية والأمان",
@@ -386,6 +459,11 @@
         "mutedAccounts": "الحسابات المكتومة",
         "mutedAccounts_desc": "هنا ستجد جميع من قمت بكتمهم. يمكنك إضافة أو إزالة الحسابات من هذه القائمة.",
 
+        "block_accounts_title": "حظر الحسابات غير المرغوب فيها",
+        "block_accounts_description": "عند حظر شخص ما، لن يتمكن من متابعتك أو مراسلتك، ولن تظهر لك الإشعارات منه.",
+
+        "muted_accounts_title": "الحسابات المكتومة",
+        "muted_accounts_description": "المنشورات من الحسابات المكتومة لن تظهر في الخط الزمني الرئيسي. يمكنك كتم الحسابات من ملفها الشخصي أو من منشورها.",
         "displayAndLanguages": "العرض واللغات",
         "displayAndLanguages_desc": "إدارة كيفية عرض محتوى Yapper لك.",
 
@@ -396,6 +474,8 @@
         "fontSize": "حجم الخط",
         "color": "اللون",
         "background": "الخلفية",
+        "default": "افتراضي",
+        "lights_out": "الوضع المظلم",
 
         "useSystemSetting": "استخدام إعداد النظام",
         "useSystemSetting_desc": "سيتم تغيير السمة تلقائيًا بناءً على إعدادات جهازك.",
@@ -404,17 +484,31 @@
     },
     "tweets": {
         "reposted": "أعاد النشر",
+        "postEngagements": "تفاعلات المنشور",
         "moreActions": "المزيد من الإجراءات",
+        "editTweet": "تعديل",
+        "deleteTweet": "حذف",
+        "tweetDeleted": "تم حذف منشورك",
+        "tweetUpdated": "تم تحديث منشورك",
+        "confirmDelete": "حذف المنشور؟",
+        "confirmDeleteDescription": "لا يمكن التراجع عن هذا الإجراء وسيتم إزالته من ملفك الشخصي، والخط الزمني لأي حسابات تتابعك، ومن نتائج البحث.",
         "actions": {
             "reply": "رد",
             "retweet": "إعادة نشر",
             "undoRetweet": "التراجع عن إعادة النشر",
+            "quote": "اقتباس",
+            "likes": "الإعجابات",
             "like": "إعجاب",
             "unlike": "إلغاء الإعجاب",
             "views": "المشاهدات",
             "bookmark": "إضافة إلى المفضلة",
             "removeBookmark": "إزالة من المفضلة",
-            "share": "مشاركة المنشور"
+            "share": "مشاركة المنشور",
+            "linkCopied": "تم نسخ الرابط",
+            "bookmarkAdded": "تمت الإضافة إلى مفضلتك",
+            "bookmarkRemoved": "تمت الإزالة من مفضلتك",
+            "copiedToClipboard": "تم النسخ إلى الحافظة",
+            "viewQuotes": "عرض الاقتباسات"
         },
         "loading": {
             "tweets": "جاري تحميل المنشورات...",
@@ -425,7 +519,13 @@
             "noTweets": "لا توجد منشورات بعد",
             "noTweetsDescription": "عندما يتم نشر منشورات، ستظهر هنا.",
             "noReplies": "لا توجد ردود بعد",
-            "noRepliesDescription": "عندما يرد الأشخاص على هذا المنشور، ستظهر هنا."
+            "noRepliesDescription": "عندما يرد الأشخاص على هذا المنشور، ستظهر هنا.",
+            "noQuotes": "لا توجد اقتباسات بعد",
+            "noQuotesDescription": "عندما يقتبس الأشخاص هذا المنشور، ستظهر هنا.",
+            "noReposts": "لا توجد إعادات نشر بعد",
+            "norepostsDescription": "عندما يعيد الأشخاص نشر هذا المنشور، ستظهر هنا.",
+            "noLikes": "لا توجد إعجابات بعد",
+            "noLikesDescription": "عندما يعجب الأشخاص بهذا المنشور، ستظهر هنا."
         },
         "errors": {
             "loadFailed": "فشل تحميل المنشورات",
@@ -449,10 +549,20 @@
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
+            "replyPlaceholder": "انشر ردك",
+            "quotePlaceholder": "أضف تعليقاً",
+            "replyingTo": "رد على",
             "gifs": "صور GIF",
             "emoji": "الرموز التعبيرية",
             "post": "نشر",
-            "uploadedMedia": "وسائط مرفوعة {index}"
+            "reply": "رد",
+            "uploadedMedia": "وسائط مرفوعة {index}",
+            "posting": "جاري النشر...",
+            "success": "تم إرسال منشورك.",
+            "replySuccess": "تم إرسال ردك.",
+            "replying": "جاري الرد...",
+            "quoteSuccess": "تم إرسال منشور الاقتباس الخاص بك.",
+            "quoting": "جاري النشر..."
         },
         "banner": {
             "search": "البحث",
@@ -469,5 +579,210 @@
             "forYou": "من أجلك",
             "following": "المتابعون"
         }
+    },
+    "chat": {
+        "messages": "الرسائل",
+        "selectMessage": "اختر رسالة",
+        "selectMessageDescription": "اختر من محادثاتك الموجودة، أو ابدأ محادثة جديدة، أو استمتع بوقتك.",
+        "newMessage": "رسالة جديدة",
+        "noMessagesYet": "لا توجد رسائل بعد",
+        "noMessagesYetDescription": "ابدأ محادثة من صفحة شخص ما",
+        "noMessagesInChat": "لا توجد رسائل بعد. ابدأ المحادثة!",
+        "loading": "جاري التحميل...",
+        "loadOlderMessages": "تحميل الرسائل الأقدم",
+        "failedToLoad": "فشل تحميل الرسائل",
+        "backToMessages": "العودة إلى الرسائل"
+    },
+    "countries": {
+        "Afghanistan": "أفغانستان",
+        "Albania": "ألبانيا",
+        "Algeria": "الجزائر",
+        "Andorra": "أندورا",
+        "Angola": "أنغولا",
+        "Argentina": "الأرجنتين",
+        "Armenia": "أرمينيا",
+        "Australia": "أستراليا",
+        "Austria": "النمسا",
+        "Azerbaijan": "أذربيجان",
+        "Bahamas": "جزر البهاما",
+        "Bahrain": "البحرين",
+        "Bangladesh": "بنغلاديش",
+        "Barbados": "باربادوس",
+        "Belarus": "بيلاروسيا",
+        "Belgium": "بلجيكا",
+        "Belize": "بليز",
+        "Benin": "بنين",
+        "Bhutan": "بوتان",
+        "Bolivia": "بوليفيا",
+        "Bosnia_and_Herzegovina": "البوسنة والهرسك",
+        "Botswana": "بوتسوانا",
+        "Brazil": "البرازيل",
+        "Brunei": "بروناي",
+        "Bulgaria": "بلغاريا",
+        "Burkina_Faso": "بوركينا فاسو",
+        "Burundi": "بوروندي",
+        "Cabo_Verde": "الرأس الأخضر",
+        "Cambodia": "كمبوديا",
+        "Cameroon": "الكاميرون",
+        "Canada": "كندا",
+        "Central_African_Republic": "جمهورية أفريقيا الوسطى",
+        "Chad": "تشاد",
+        "Chile": "تشيلي",
+        "China": "الصين",
+        "Colombia": "كولومبيا",
+        "Comoros": "جزر القمر",
+        "Costa_Rica": "كوستاريكا",
+        "Croatia": "كرواتيا",
+        "Cuba": "كوبا",
+        "Cyprus": "قبرص",
+        "Czechia": "التشيك",
+        "Democratic_Republic_of_the_Congo": "جمهورية الكونغو الديمقراطية",
+        "Denmark": "الدنمارك",
+        "Djibouti": "جيبوتي",
+        "Dominica": "دومينيكا",
+        "Dominican_Republic": "جمهورية الدومينيكان",
+        "Ecuador": "الإكوادور",
+        "Egypt": "مصر",
+        "El_Salvador": "السلفادور",
+        "Equatorial_Guinea": "غينيا الاستوائية",
+        "Eritrea": "إريتريا",
+        "Estonia": "إستونيا",
+        "Eswatini": "إسواتيني",
+        "Ethiopia": "إثيوبيا",
+        "Fiji": "فيجي",
+        "Finland": "فنلندا",
+        "France": "فرنسا",
+        "Gabon": "الغابون",
+        "Gambia": "غامبيا",
+        "Georgia": "جورجيا",
+        "Germany": "ألمانيا",
+        "Ghana": "غانا",
+        "Greece": "اليونان",
+        "Grenada": "غرينادا",
+        "Guatemala": "غواتيمالا",
+        "Guinea": "غينيا",
+        "Guinea_Bissau": "غينيا بيساو",
+        "Guyana": "غيانا",
+        "Haiti": "هايتي",
+        "Honduras": "هندوراس",
+        "Hungary": "المجر",
+        "Iceland": "آيسلندا",
+        "India": "الهند",
+        "Indonesia": "إندونيسيا",
+        "Iran": "إيران",
+        "Iraq": "العراق",
+        "Ireland": "إيرلندا",
+        "Italy": "إيطاليا",
+        "Jamaica": "جامايكا",
+        "Japan": "اليابان",
+        "Jordan": "الأردن",
+        "Kazakhstan": "كازاخستان",
+        "Kenya": "كينيا",
+        "Kiribati": "كيريباتي",
+        "Kuwait": "الكويت",
+        "Kyrgyzstan": "قيرغيزستان",
+        "Laos": "لاوس",
+        "Latvia": "لاتفيا",
+        "Lebanon": "لبنان",
+        "Lesotho": "ليسوتو",
+        "Liberia": "ليبيريا",
+        "Libya": "ليبيا",
+        "Liechtenstein": "ليختنشتاين",
+        "Lithuania": "ليتوانيا",
+        "Luxembourg": "لوكسمبورغ",
+        "Madagascar": "مدغشقر",
+        "Malawi": "مالاوي",
+        "Malaysia": "ماليزيا",
+        "Maldives": "المالديف",
+        "Mali": "مالي",
+        "Malta": "مالطا",
+        "Mauritania": "موريتانيا",
+        "Mauritius": "موريشيوس",
+        "Mexico": "المكسيك",
+        "Micronesia": "ميكرونيزيا",
+        "Moldova": "مولدوفا",
+        "Monaco": "موناكو",
+        "Mongolia": "منغوليا",
+        "Montenegro": "الجبل الأسود",
+        "Morocco": "المغرب",
+        "Mozambique": "موزمبيق",
+        "Myanmar": "ميانمار",
+        "Namibia": "ناميبيا",
+        "Nauru": "ناورو",
+        "Nepal": "نيبال",
+        "Netherlands": "هولندا",
+        "New_Zealand": "نيوزيلندا",
+        "Nicaragua": "نيكاراغوا",
+        "Niger": "النيجر",
+        "Nigeria": "نيجيريا",
+        "North_Korea": "كوريا الشمالية",
+        "North_Macedonia": "مقدونيا الشمالية",
+        "Norway": "النرويج",
+        "Oman": "عُمان",
+        "Pakistan": "باكستان",
+        "Palau": "بالاو",
+        "Palestine": "فلسطين",
+        "Panama": "بنما",
+        "Papua_New_Guinea": "بابوا غينيا الجديدة",
+        "Paraguay": "باراغواي",
+        "Peru": "بيرو",
+        "Philippines": "الفلبين",
+        "Poland": "بولندا",
+        "Portugal": "البرتغال",
+        "Qatar": "قطر",
+        "Romania": "رومانيا",
+        "Russia": "روسيا",
+        "Rwanda": "رواندا",
+        "Saint_Kitts_and_Nevis": "سانت كيتس ونيفيس",
+        "Saint_Lucia": "سانت لوسيا",
+        "Saint_Vincent_and_the_Grenadines": "سانت فنسنت والغرينادين",
+        "Samoa": "ساموا",
+        "San_Marino": "سان مارينو",
+        "Saudi_Arabia": "السعودية",
+        "Senegal": "السنغال",
+        "Serbia": "صربيا",
+        "Seychelles": "سيشل",
+        "Sierra_Leone": "سيراليون",
+        "Singapore": "سنغافورة",
+        "Slovakia": "سلوفاكيا",
+        "Slovenia": "سلوفينيا",
+        "Solomon_Islands": "جزر سليمان",
+        "Somalia": "الصومال",
+        "South_Africa": "جنوب أفريقيا",
+        "South_Korea": "كوريا الجنوبية",
+        "South_Sudan": "جنوب السودان",
+        "Spain": "إسبانيا",
+        "Sri_Lanka": "سريلانكا",
+        "Sudan": "السودان",
+        "Suriname": "سورينام",
+        "Sweden": "السويد",
+        "Switzerland": "سويسرا",
+        "Syria": "سوريا",
+        "Taiwan": "تايوان",
+        "Tajikistan": "طاجيكستان",
+        "Tanzania": "تنزانيا",
+        "Thailand": "تايلاند",
+        "Timor_Leste": "تيمور الشرقية",
+        "Togo": "توغو",
+        "Tonga": "تونغا",
+        "Trinidad_and_Tobago": "ترينيداد وتوباغو",
+        "Tunisia": "تونس",
+        "Turkey": "تركيا",
+        "Turkmenistan": "تركمانستان",
+        "Tuvalu": "توفالو",
+        "Uganda": "أوغندا",
+        "Ukraine": "أوكرانيا",
+        "United_Arab_Emirates": "الإمارات العربية المتحدة",
+        "United_Kingdom": "المملكة المتحدة",
+        "United_States": "الولايات المتحدة",
+        "Uruguay": "أوروغواي",
+        "Uzbekistan": "أوزبكستان",
+        "Vanuatu": "فانواتو",
+        "Vatican_City": "مدينة الفاتيكان",
+        "Venezuela": "فنزويلا",
+        "Vietnam": "فيتنام",
+        "Yemen": "اليمن",
+        "Zambia": "زامبيا",
+        "Zimbabwe": "زيمبابوي"
     }
 }

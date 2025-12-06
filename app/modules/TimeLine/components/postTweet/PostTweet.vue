@@ -4,15 +4,42 @@
         :class="border ? 'border-b border-primary' : ''"
         @submit.prevent="handleSubmit"
     >
-        <NuxtLink :to="`/profile/${user.username}`">
-            <img :src="user.avatar_url" :alt="user.name" class="w-10 h-10 rounded-full" />
+        <NuxtLink :to="`/${user?.username}`">
+            <img
+                v-if="user?.avatar_url"
+                :src="user.avatar_url"
+                :alt="user.name"
+                :class="compact ? 'w-10 h-10' : 'w-16 h-16'"
+                class="object-cover rounded-full"
+                :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
+            />
+            <img
+                v-else
+                :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                :alt="user?.name"
+                :class="compact ? 'w-10 h-10' : 'w-14 h-14'"
+                class="object-cover rounded-full"
+            />
         </NuxtLink>
 
         <div class="flex-1">
+            <!-- Replying to indicator -->
+            <div v-if="replyingToUsername" class="text-secondary text-sm mb-2">
+                {{ t('timeline.postTweet.replyingTo') }}
+                <NuxtLink
+                    :to="`/${replyingToUsername}`"
+                    class="text-accent hover:underline"
+                    @click.stop
+                >
+                    @{{ replyingToUsername }}
+                </NuxtLink>
+            </div>
+
             <FormattedTextarea
-                v-model="content"
-                :placeholder="t('timeline.postTweet.placeholder')"
                 id="post-tweet-textarea"
+                v-model="content"
+                :placeholder="computedPlaceholder"
+                :inlineborder="inlineborder"
             />
 
             <div
@@ -54,11 +81,22 @@
                             :src="media.url"
                             class="w-full h-full object-cover"
                             controls
-                        />
+                            :aria-label="
+                                t('timeline.postTweet.uploadedMedia', { index: index + 1 })
+                            "
+                        >
+                            <track
+                                kind="subtitles"
+                                :src="`${media.url}.vtt`"
+                                srclang="en"
+                                label="English"
+                            />
+                            <p>{{ t('timeline.postTweet.videoNotSupported') }}</p>
+                        </video>
                         <button
                             type="button"
-                            @click="removeMedia(index)"
                             class="absolute top-2 right-2 w-8 h-8 bg-alternate hover:bg-hover-alternate rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                            @click="removeMedia(index)"
                         >
                             <X class="w-5 h-5 text-alternate" />
                         </button>
@@ -66,23 +104,26 @@
                 </div>
             </div>
 
+            <!-- Quoted Tweet Preview -->
+            <QuotedTweet v-if="quotedTweet" :tweet="quotedTweet" />
+
             <div class="flex flex-row justify-between items-center mt-4">
                 <ul class="flex flex-row gap-2 items-center">
                     <li class="relative inline-flex">
                         <MediaUpload
-                            @select="handleSelectMedia"
                             :disabled="mediaUrls.length >= 4"
+                            @select="handleSelectMedia"
                         />
                     </li>
                     <li class="relative inline-flex">
                         <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
-                                    type="button"
-                                    @click="toggleGifPicker"
                                     id="post-tweet-gif-picker-btn"
+                                    type="button"
                                     :disabled="mediaUrls.length >= 4"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    @click="toggleGifPicker"
                                 >
                                     <ImagePlay class="w-5 h-5 text-accent" />
                                 </button>
@@ -102,10 +143,10 @@
                         <CustomToolTip side="bottom">
                             <template #trigger>
                                 <button
-                                    type="button"
-                                    @click="toggleEmojiPicker"
                                     id="post-tweet-emoji-picker-btn"
+                                    type="button"
                                     class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
+                                    @click="toggleEmojiPicker"
                                 >
                                     <Smile class="w-5 h-5 text-accent" />
                                 </button>
@@ -121,44 +162,71 @@
                         />
                     </li>
                 </ul>
-                <button
-                    type="submit"
+                <Button
                     :disabled="disablePostButton"
                     id="post-tweet-post-btn"
-                    class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {{ t('timeline.postTweet.post') }}
-                </button>
+                    button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    :button-text="buttonText"
+                    @click="handleSubmit"
+                    :loading-text="loadingText"
+                    :is-loading="postTweet.isPending.value"
+                />
             </div>
         </div>
     </form>
 </template>
 
 <script setup lang="ts">
-import { Smile, ImagePlay, X } from 'lucide-vue-next'
+import { Smile, ImagePlay, X, User } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from './subComponents/EmojiPicker'
 import { FormattedTextarea } from './subComponents/FormattedTextarea' // Import the new component
-import { getUser } from '~/utils/helpers'
-import type { User as UserType } from '~/modules/Common/types/user'
+import QuotedTweet from '~/modules/tweets/components/Tweet/subComponents/QuotedTweet/QuotedTweet.vue'
+import { handleImageError } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 import { useUploadMedia } from '../../queries/useUploadMedia'
 import { usePostTweet } from '../../queries/usePostTweet'
 import { useI18n } from 'vue-i18n'
+import Button from '~/modules/Common/components/Button/Button.vue'
+import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import type { TweetBody } from '../../types/tweetBody'
+import type { Tweet } from '~/modules/tweets/types/tweet'
 
 const props = withDefaults(
     defineProps<{
-        border: boolean
+        border?: boolean
+        inlineborder?: boolean
+        parentTweetId?: string
+        replyingToUsername?: string
+        placeholder?: string
+        quotedTweet?: Tweet
+        compact?: boolean
     }>(),
     {
         border: true,
+        parentTweetId: undefined,
+        replyingToUsername: undefined,
+        placeholder: undefined,
+        inlineborder: true,
+        quotedTweet: undefined,
+        compact: false,
     },
 )
 
+const emit = defineEmits<{
+    (e: 'success'): void
+}>()
+
 const { t } = useI18n()
-const user = getUser() as UserType
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+
+// Inject snackbar from parent layout
+const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
 
 interface MediaItem {
     url: string
@@ -186,9 +254,28 @@ const disablePostButton = computed(() => {
     return content.value.trim().length === 0 && mediaUrls.value.length === 0
 })
 
+const computedPlaceholder = computed(() => {
+    if (props.placeholder) return props.placeholder
+    if (props.quotedTweet) return t('timeline.postTweet.quotePlaceholder')
+    if (props.parentTweetId) return t('timeline.postTweet.replyPlaceholder')
+    return t('timeline.postTweet.placeholder')
+})
+
+const buttonText = computed(() => {
+    if (props.quotedTweet) return t('timeline.postTweet.post')
+    if (props.parentTweetId) return t('timeline.postTweet.reply')
+    return t('timeline.postTweet.post')
+})
+
+const loadingText = computed(() => {
+    if (props.quotedTweet) return t('timeline.postTweet.posting')
+    if (props.parentTweetId) return t('timeline.postTweet.replying')
+    return t('timeline.postTweet.posting')
+})
+
 const handleSubmit = async () => {
     try {
-        await postTweet.mutateAsync({
+        const tweetData: TweetBody = {
             content: content.value,
             videos: mediaUrls.value
                 .filter((media) => media.type === 'video')
@@ -196,10 +283,38 @@ const handleSubmit = async () => {
             images: mediaUrls.value
                 .filter((media) => media.type === 'image')
                 .map((media) => media.url),
-        })
+        }
+
+        // Add quote fields if this is a quote tweet
+        if (props.quotedTweet) {
+            tweetData.parent_tweet_id = props.quotedTweet.tweet_id
+            tweetData.type = 'quote'
+        }
+        // Add reply fields if this is a reply
+        else if (props.parentTweetId) {
+            tweetData.parent_tweet_id = props.parentTweetId
+            tweetData.type = 'reply'
+            console.log('Preparing to post a reply to tweet ID:', props.parentTweetId)
+        }
+
+        await postTweet.mutateAsync(tweetData)
 
         content.value = ''
         mediaUrls.value = []
+
+        // Show success snackbar
+        let successMessage: string
+        if (props.quotedTweet) {
+            successMessage = t('timeline.postTweet.quoteSuccess')
+        } else if (props.parentTweetId) {
+            successMessage = t('timeline.postTweet.replySuccess')
+        } else {
+            successMessage = t('timeline.postTweet.success')
+        }
+        snackbar?.handleShowSnackbar(successMessage)
+
+        // Emit success event for parent components
+        emit('success')
     } catch (error) {
         console.error('Failed to post tweet:', error)
     }

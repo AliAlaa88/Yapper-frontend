@@ -2,8 +2,8 @@ import { useUserInfo } from './useUserInfo'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export function useFollow(userId: Ref<string | undefined>) {
-    const { isFollower, isFollowing} = useUserInfo(userId)
+export function useFollow(userId: Ref<string | undefined>, enabled: Ref<boolean> = ref(true)) {
+    const { isFollower, isFollowing} = useUserInfo(userId, enabled)
     const hover = ref(false)
     const { t } = useI18n()
 
