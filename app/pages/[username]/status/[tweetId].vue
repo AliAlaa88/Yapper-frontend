@@ -11,18 +11,24 @@
                 >
                     <ArrowLeft :size="20" class="cursor-pointer text-primary" />
                 </button>
-                <h1 class="text-xl text-primary font-bold">Post</h1>
+                <h1 class="text-xl text-primary font-bold">{{ pageTitle }}</h1>
             </div>
         </div>
 
-        <!-- Tweet Details Component -->
-        <TweetDetails />
+        <!-- Slot for child routes or default content -->
+        <NuxtPage v-slot="{ Component }">
+            <component :is="Component" />
+        </NuxtPage>
+
+        <!-- Tweet Details Component (shown when no child route) -->
+        <TweetDetails v-if="!hasChildRoute" />
     </div>
 </template>
 
 <script setup lang="ts">
 import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
 import { ArrowLeft } from 'lucide-vue-next'
+import { computed } from 'vue'
 
 definePageMeta({
     layout: 'main-layout',
@@ -31,12 +37,24 @@ definePageMeta({
 
 // Set page metadata
 const route = useRoute()
-const username = route.params.username as string
-const tweetId = route.params.tweetId as string
+const username = computed(() => route.params.username as string)
+const tweetId = computed(() => route.params.tweetId as string)
+
+// Determine if this is a child route (like /quotes)
+const hasChildRoute = computed(() => {
+    return route.matched.length > 1 && route.matched[route.matched.length - 1].path.includes('/')
+})
+
+const pageTitle = computed(() => {
+    if (route.path.includes('quotes')) {
+        return 'Quotes & Reposts'
+    }
+    return 'Post'
+})
 
 // Set dynamic head for SEO
 useHead({
-    title: `Tweet by @${username}`,
-    meta: [{ name: 'description', content: `View tweet by @${username}` }],
+    title: `Tweet by @${username.value}`,
+    meta: [{ name: 'description', content: `View tweet by @${username.value}` }],
 })
 </script>
