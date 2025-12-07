@@ -4,33 +4,39 @@
         <SearchBar v-if="!isSearch" />
 
         <!-- Trending Section -->
-        <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
-            <h2 class="px-4 py-3 text-xl font-bold text-primary">{{ t('timeline.banner.trending') }}</h2>
-            <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">{{ t('timeline.banner.trendingIn', { location: 'Egypt' }) }}</p>
-                <p class="text-primary font-bold mt-1">#YapperTrending</p>
-                <p class="text-muted text-sm">1,234 {{ t('timeline.banner.posts') }}</p>
+        <div
+            v-if="!isSearch"
+            class="bg-primary rounded-2xl border border-primary overflow-hidden min-h-[350px] flex flex-col justify-between"
+        >
+            <h2 class="px-4 py-3 text-xl font-bold text-primary">
+                {{ t('timeline.banner.trending') }}
+            </h2>
+
+            <div v-if="isLoading" class="flex justify-center items-center">
+                <LoadingSpinner />
             </div>
-            <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">{{ t('timeline.banner.sportsTrending') }}</p>
-                <p class="text-primary font-bold mt-1">Football News</p>
-                <p class="text-muted text-sm">10.2K {{ t('timeline.banner.posts') }}</p>
+            <TrendsList v-else-if="trends.length > 0" :trends="trends" :show-rank="true" />
+
+            <div v-else-if="isError" class="px-4 py-3">
+                <p class="text-red-500">{{ t('timeline.banner.error') }}</p>
             </div>
-            <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">{{ t('timeline.banner.technology') }}</p>
-                <p class="text-primary font-bold mt-1">AI Updates</p>
-                <p class="text-muted text-sm">8.7K {{ t('timeline.banner.posts') }}</p>
+            <div v-else-if="trends.length === 0" class="px-4 py-3">
+                <p class="text-muted">{{ t('timeline.banner.noTrends') }}</p>
             </div>
-            <button
+
+            <NuxtLink
+                to="/explore/tabs/trending"
                 class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
                 {{ t('timeline.banner.showMore') }}
-            </button>
+            </NuxtLink>
         </div>
 
         <!-- Who to Follow Section -->
         <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
-            <h2 class="px-4 py-3 text-xl font-bold text-primary">{{ t('timeline.banner.whoToFollow') }}</h2>
+            <h2 class="px-4 py-3 text-xl font-bold text-primary">
+                {{ t('timeline.banner.whoToFollow') }}
+            </h2>
             <div
                 class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
             >
@@ -86,8 +92,21 @@ import { useI18n } from 'vue-i18n'
 import SearchBar from '~/modules/search/components/SearchBar.vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import TrendsList from '~/modules/explore/components/common/TrendsList.vue'
+import { useGetTrendsQuery } from '~/modules/explore/queries/useGetExploreQuery'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 
+/////////////////////////////////////////////////
+
+const trendsQuery = useGetTrendsQuery('', true, 3)
+const trends = computed(() => trendsQuery.data.value || [])
+const isLoading = computed(() => trendsQuery.isLoading.value)
+const isError = computed(() => trendsQuery.isError.value)
+
+/////////////////////////////////////////////////////////
 const route = useRoute()
-const isSearch = computed(() => route.path.startsWith('/explore') || route.path.startsWith('/search'))
+const isSearch = computed(
+    () => route.path.startsWith('/explore') || route.path.startsWith('/search'),
+)
 const { t } = useI18n()
 </script>

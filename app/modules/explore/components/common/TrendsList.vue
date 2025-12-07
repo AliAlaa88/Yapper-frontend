@@ -60,6 +60,6 @@ const formatCount = (count: number) => {
 
 function onClickTrend(trend: Trend) {
     const text = trend.text.toLowerCase()
-    router.push(`/search?q=${encodeURIComponent(text)}&src="trend_click"`)
+    router.push(`/search?q=${encodeURIComponent(text)}&src=trend_click`)
 }
 </script>

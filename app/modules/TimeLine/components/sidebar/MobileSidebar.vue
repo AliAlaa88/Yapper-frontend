@@ -156,7 +156,7 @@ const navLinks = [
     {
         labelKey: 'timeline.sidebar.profile',
         icon: User,
-        href: user ? `/${user.username}` : '/profile',
+        href: user.value ? `/${user.value.username}` : '/profile',
     },
     {
         labelKey: 'timeline.sidebar.bookmarks',
