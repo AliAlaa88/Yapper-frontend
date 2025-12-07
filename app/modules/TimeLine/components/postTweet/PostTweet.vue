@@ -205,6 +205,7 @@ const props = withDefaults(
         placeholder?: string
         quotedTweet?: Tweet
         compact?: boolean
+        handleClose?: () => void
     }>(),
     {
         border: true,
@@ -214,6 +215,7 @@ const props = withDefaults(
         inlineborder: true,
         quotedTweet: undefined,
         compact: false,
+        handleClose: undefined,
     },
 )
 
@@ -315,6 +317,7 @@ const handleSubmit = async () => {
 
         // Emit success event for parent components
         emit('success')
+        props.handleClose?.()
     } catch (error) {
         console.error('Failed to post tweet:', error)
     }

@@ -142,8 +142,9 @@
             :title="t('timeline.sidebar.postTweet')"
             @close="handleClose"
             bgColor="bg-popup/20"
+            :slotClass="'w-full'"
         >
-            <PostTweet :border="false" />
+            <PostTweet :border="false" :handleClose="handleClose" />
         </Popup>
     </aside>
 </template>
