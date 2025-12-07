@@ -139,9 +139,9 @@ const navLinks = [
         href: '/',
     },
     {
-        labelKey: 'timeline.sidebar.search',
+        labelKey: 'timeline.sidebar.explore',
         icon: Search,
-        href: '/search',
+        href: '/explore',
     },
     {
         labelKey: 'timeline.sidebar.notifications',
@@ -156,7 +156,7 @@ const navLinks = [
     {
         labelKey: 'timeline.sidebar.profile',
         icon: User,
-        href: user ? `/${user.username}` : '/profile',
+        href: user.value ? `/${user.value.username}` : '/profile',
     },
     {
         labelKey: 'timeline.sidebar.bookmarks',
