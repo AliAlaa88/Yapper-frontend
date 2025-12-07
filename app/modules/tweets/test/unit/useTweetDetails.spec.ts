@@ -29,16 +29,17 @@ describe('useTweetDetails composable', () => {
   it('returns replies from tweetDetails when present', async () => {
     const replies = [{ id: 'r1' }, { id: 'r2' }]
     const { useTweetDetailsQuery } = await import('../../queries/useTweetQueries')
+    // The composable expects replies to be an object with a `data` array
     vi.mocked(useTweetDetailsQuery).mockReturnValue({
-      data: ref({ 
-        tweet: { 
-          id: 't1', 
-          user: {}, 
-          content: { text: '' }, 
-          createdAt: '', 
-          stats: {} 
-        }, 
-        replies 
+      data: ref({
+        tweet: {
+          id: 't1',
+          user: {},
+          content: { text: '' },
+          createdAt: '',
+          stats: {},
+        },
+        replies: { data: replies },
       } as any),
       isLoading: ref(false),
       error: ref(null),
@@ -94,15 +95,15 @@ describe('useTweetDetails composable', () => {
     const result = useTweetDetails('t1')
     expect(result.replies.value).toEqual([])
 
-    dataRef.value = { 
-      tweet: { 
+    dataRef.value = {
+      tweet: {
         id: 't1',
         user: {},
         content: { text: '' },
         createdAt: '',
-        stats: {}
-      }, 
-      replies: [{ id: 'r1' }] 
+        stats: {},
+      },
+      replies: { data: [{ id: 'r1' }] },
     }
     await nextTick()
     expect(result.replies.value).toEqual([{ id: 'r1' }])

@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
-    modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/test-utils/module'],
+    modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/test-utils/module', '@nuxt/image'],
     ssr: false,
     css: ['~/assets/css/main.css'],
 
@@ -37,14 +37,18 @@ export default defineNuxtConfig({
             mockApi: process.env.NUXT_PUBLIC_MOCK_API || 'false',
             gifApiKey: process.env.NUXT_PUBLIC_GIF_API_KEY,
             recaptcha: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
+            etest: process.env.NUXT_PUBLIC_ETEST || 'false',
+            socketUrl: process.env.NUXT_PUBLIC_SOCKET_URL,
+            socketPath: process.env.NUXT_PUBLIC_SOCKET_PATH,
         },
     },
 
     plugins: [
         './app/plugins/axios.ts',
         './app/plugins/vue-query.ts',
-        './app/plugins/services.ts',
+        './app/plugins/services.client.ts',
         './app/plugins/recaptcha.ts',
+        './app/plugins/socket.client.ts',
     ],
     i18n: {
         locales: [

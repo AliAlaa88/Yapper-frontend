@@ -19,7 +19,6 @@ const onFinish = () => {
 }
 
 definePageMeta({
-    middleware: ['auth'],
     requiresAuth: false,
 })
 </script>

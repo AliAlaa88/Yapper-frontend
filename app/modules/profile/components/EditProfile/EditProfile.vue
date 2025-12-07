@@ -27,7 +27,7 @@
                     @remove="handleAvatarRemove"
                 />
 
-                <EditProfileForm v-model="formData" />
+                <EditProfileForm v-model="formData" @update:is-birth-date-valid="isBirthDateValid = $event" />
 
                 <input
                     id="cover-file-input"
@@ -36,7 +36,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleCoverFileChange"
-                >
+                />
                 <input
                     id="avatar-file-input"
                     ref="avatarFileInput"
@@ -44,7 +44,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleAvatarFileChange"
-                >
+                />
             </div>
         </div>
     </div>
@@ -60,16 +60,17 @@ import EditProfileHeader from './SubComponents/EditProfileHeader.vue'
 import EditProfileCover from './SubComponents/EditProfileCover.vue'
 import EditProfileAvatar from './SubComponents/EditProfileAvatar.vue'
 import EditProfileForm from './SubComponents/EditProfileForm.vue'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
+const userStore = useUserStore()
+const { user: storeUser } = storeToRefs(userStore)
 const router = useRouter()
 const profileStore = useProfileStore()
 const { profile: user } = storeToRefs(profileStore)
 const userId = computed(() => user.value?.user_id || '')
-const {
-    editProfileMutation,
-    uploadCoverPhotoMutation,
-    uploadAvatarMutation,
-} = useEditProfileMutation(userId.value)
+const username = computed(() => user.value?.username || '')
+const { editProfileMutation, uploadCoverPhotoMutation, uploadAvatarMutation } =
+    useEditProfileMutation(userId.value, username.value)
 
 const isSaving = computed(
     () =>
@@ -77,7 +78,6 @@ const isSaving = computed(
         uploadCoverPhotoMutation.isPending.value ||
         uploadAvatarMutation.isPending.value,
 )
-
 
 const formData = ref({
     name: '',
@@ -88,9 +88,9 @@ const formData = ref({
 
 const avatarUrl = ref<string | null>(null)
 const coverUrl = ref<string | null>(null)
+const isBirthDateValid = ref(true)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
-
 
 onMounted(() => {
     if (user.value) {
@@ -106,7 +106,7 @@ onMounted(() => {
 })
 
 const isFormValid = computed(() => {
-    return formData.value.name.trim().length > 0
+    return formData.value.name.trim().length > 0 && isBirthDateValid.value
 })
 
 const closeModal = () => {
@@ -189,12 +189,16 @@ const handleSave = async () => {
 
     try {
         await editProfileMutation.mutateAsync(updates)
-        localStorage.setItem('user',
-                             JSON.stringify({
-                                 ...user.value,
-                                 ...updates,
-                             }),
-        )
+        // Update the userStore with partial updates
+        if (storeUser.value && user.value?.user_id) {
+            userStore.updateUser({
+                name: updates.name,
+                bio: updates.bio,
+                country: updates.country,
+                birth_date: updates.birth_date,
+                avatar_url: updates.avatar_url ?? undefined,
+            })
+        }
         closeModal()
     } catch (error) {
         console.error('Failed to save profile:', error)

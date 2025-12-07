@@ -17,7 +17,7 @@ const showNotFound = ref(false)
 const profileStore = useProfileStore()
 
 const { error } = useProfile(props.username)
-
+console.log('ProfileDataProvider error:')
 watch(
     error,
     (newError) => {
@@ -31,6 +31,6 @@ watch(
 )
 
 onBeforeUnmount(() => {
-    profileStore.clearProfile()
+    // profileStore.clearProfile()
 })
 </script>

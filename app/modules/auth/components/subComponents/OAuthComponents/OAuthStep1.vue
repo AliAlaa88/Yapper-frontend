@@ -3,6 +3,7 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="true"
+        container-class="bg-auth-popup"
         contentClass="max-w-lg sm:max-w-xl w-full"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
@@ -23,7 +24,7 @@
                     <select
                         id="select-month-oauth-s1"
                         v-model="month"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
+                        class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.month') }}</option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
@@ -42,7 +43,7 @@
                     <select
                         id="select-day-oauth-s1"
                         v-model="day"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
+                        class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
@@ -59,7 +60,7 @@
                     <select
                         id="select-year-oauth-s1"
                         v-model="year"
-                        class="w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
+                        class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors cursor-pointer"
                     >
                         <option value="" disabled selected>{{ $t('auth.oauth.year') }}</option>
                         <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
@@ -82,13 +83,15 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-signup-oauth-s1"
-                class="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
+                buttonClass="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
+                :loading-text="$t('auth.common.loading')"
+                :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>
@@ -101,6 +104,7 @@ import Logo from '~/modules/Common/components/Logo'
 import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery'
 import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore';
 const userStore = useUserStore()
 const { locale } = useI18n()
@@ -111,6 +115,7 @@ const day = ref('')
 const year = ref('')
 const errorMessage = ref('')
 const recommendations = ref<string[]>([])
+const loading = ref(false)
 // Month options
 const months = [
     { value: '1', label: 'January' },
@@ -160,6 +165,7 @@ const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
 
         if (Array.isArray(errorMsg)) errorMessage.value = errorMsg[0]
         else errorMessage.value = errorMsg
+        loading.value = false
     },
 )
 
@@ -167,6 +173,7 @@ const oauthCompleteStep2Mutation = useOAuthCompleteStep2Query(
     (data: any) => {
         userStore.setAuth(data.data)
         errorMessage.value = ''
+        loading.value = false
         recommendations.value = recommendations.value.splice(1)
         emit('finish', recommendations.value)
     },
@@ -177,6 +184,7 @@ const oauthCompleteStep2Mutation = useOAuthCompleteStep2Query(
             error?.response?.data?.error ||
             error?.message ||
             'An unexpected error occurred. Please try again.'
+        loading.value = false
     },
 )
 
@@ -192,6 +200,7 @@ const onNext = async () => {
         return
     }
 
+    loading.value = true
     oauthCompleteStep1Mutation.mutate({
         OAuth_session_token: props.OAuth_session_token,
         Birth_date: dateOfBirth,

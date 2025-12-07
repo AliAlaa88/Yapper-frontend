@@ -4,7 +4,7 @@
 
 
 <script setup lang="ts">
-import ChangePassword from '~/modules/settings/components/ChangePassword.vue'
+import ChangePassword from '~/modules/settings/components/YourAccount/ChangePassword.vue'
 import { useSeo } from '~/modules/Common/composables/useSeo'
 
 const { t } = useI18n()

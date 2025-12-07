@@ -12,6 +12,10 @@ export interface Me {
     birth_date: string
     followers_count: number
     following_count: number
+    num_posts?: number
+    num_replies?: number
+    num_media?: number
+    num_likes?: number
 }
 
 export interface OtherUser {
@@ -32,48 +36,10 @@ export interface OtherUser {
     birth_date?: string
     top_mutual_followers: User[]
     mutual_followers_count: string
-}
-
-export interface MeApiResponse {
-    data: Me
-    count: number
-    message: string
-}
-
-export interface OtherUserApiResponse {
-    data: OtherUser
-    count: number
-    message: string
-}
-
-export interface ActionApiResponse {
-    count: number
-    message: string
-}
-
-export interface ApiErrorResponse {
-    message: string
-    error: string
-    statusCode: number
-}
-
-export interface ApiResponse<T> {
-    data?: T
-    count?: number
-    message: string
-    error?: string
-    statusCode: number
-}
-
-export interface ImageUploadResponse {
-    image_url: string
-    image_name: string
-}
-
-export interface ImageUploadApiResponse {
-    data: ImageUploadResponse
-    count: number
-    message: string
+    num_posts?: number
+    num_replies?: number
+    num_media?: number
+    num_likes?: number
 }
 
 export interface FollowUser {
@@ -87,13 +53,8 @@ export interface FollowUser {
     is_muted: boolean
     is_blocked: boolean
 }
-
-export interface Data {
+export interface FollowUsersPage {
     data: FollowUser[]
-}
-
-export interface FollowListApiResponse {
-    data: Data
-    count: number
-    message: string
+    nextCursor?: string
+    hasMore?: boolean
 }
