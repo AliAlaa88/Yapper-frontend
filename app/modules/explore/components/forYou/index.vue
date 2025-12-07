@@ -9,24 +9,24 @@
         <div v-else-if="isError" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
             <Button 
-                @click="refetch" 
-                class="mt-2 text-accent hover:underline"
+                @click="exploreQuery.refetch()" 
+                class="text-accent hover:underline"
             >
                 {{ t('explore.tryAgain') }}
             </Button>
         </div>
 
         <!-- Empty state -->
-        <div v-else-if="!exploreData.value" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
+        <div v-else-if="!exploreData || (!exploreData.trending?.data?.length && !exploreData.who_to_follow?.length && !exploreData.for_you?.length)" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
             <p class="text-muted text-lg">{{ t('explore.noTrends') }}</p>
         </div>
 
         <!-- Content -->
-        <div v-else>
+        <div v-else >
             <!-- Trending Section -->
             <TrendsList 
-                v-if="exploreData.trending?.length" 
-                :trends="exploreData.trending" 
+                v-if="exploreData.trending?.data?.length" 
+                :trends="exploreData.trending.data" 
             />
 
             <!-- Who to Follow Section -->
@@ -71,9 +71,9 @@
             </div>
 
             <!-- For You Posts by Category -->
-            <div v-if="exploreData.for_you_posts?.length">
+            <div v-if="exploreData.for_you?.length">
                 <div 
-                    v-for="categoryGroup in exploreData.for_you_posts" 
+                    v-for="categoryGroup in exploreData.for_you" 
                     :key="categoryGroup.category.id"
                     class="border-t border-primary"
                 >
@@ -85,7 +85,7 @@
                     
                     <!-- Posts in this category -->
                     <Tweet 
-                        v-for="post in categoryGroup.posts" 
+                        v-for="post in categoryGroup.tweets" 
                         :key="post.tweet_id"
                         :tweet="post"
                     />
@@ -108,18 +108,13 @@ import { handleImageError } from '~/utils/helpers';
 
 const { t } = useI18n();
 
-const exploreData = ref<any>(null);
-console.log("Explore Data:", exploreData.value);
-const { isLoading, isError, refetch } = useGetExploreQuery(
-    true,
-    (response: any) => {
-        exploreData.value = toRaw(response.data) || toRaw(response);
-        console.log("Fetched Explore Data:", toRaw(exploreData.value));
-    },
-    (error: any) => {
-        console.error('Error fetching explore data:', error);
-    }
-);
 
-
+const exploreQuery = useGetExploreQuery( true );
+const isLoading = computed(() => exploreQuery.isLoading.value);
+const isError = computed(() => exploreQuery.isError.value);
+const exploreData = computed(() => {
+    const rawData = exploreQuery.data.value;
+    // API returns {data: {...}, count, message}, extract the nested data object
+    return rawData?.data || {};
+});
 </script>
