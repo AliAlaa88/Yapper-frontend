@@ -21,7 +21,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
             userStore.setAuth(response.data)
             isAuthenticated = true
         } catch (error) {
-            // Refresh token failed, consider user as not authenticated
+            userStore.logout()
             isAuthenticated = false
         }
     }
