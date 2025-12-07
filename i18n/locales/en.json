@@ -719,6 +719,41 @@
             "description": "Reset your Yapper password.",
             "keywords": "yapper, forgot password, reset password, recovery"
         },
+        "search": {
+            "title": "Search / Yapper",
+            "description": "Search for people, topics, and keywords on Yapper",
+            "keywords": "yapper, search, find, users, topics, hashtags"
+        },
+        "explore": {
+            "title": "Explore / Yapper",
+            "description": "Discover trending topics, popular content, and what's happening on Yapper",
+            "keywords": "yapper, explore, trending, discover, popular"
+        },
+        "messages": {
+            "title": "Messages / Yapper",
+            "description": "Private messages and conversations on Yapper",
+            "keywords": "yapper, messages, chat, DM, direct messages, conversations"
+        },
+        "tweetDetails": {
+            "title": "Post by {username} / Yapper",
+            "description": "{content}",
+            "keywords": "yapper, post, tweet, {username}, social media"
+        },
+        "tweetLikes": {
+            "title": "People who liked this post / Yapper",
+            "description": "See who liked this post on Yapper",
+            "keywords": "yapper, likes, engagement, post, reactions"
+        },
+        "tweetRetweets": {
+            "title": "People who reposted this / Yapper",
+            "description": "See who reposted this tweet on Yapper",
+            "keywords": "yapper, retweets, reposts, engagement, shares"
+        },
+        "tweetQuotes": {
+            "title": "Quotes of this post / Yapper",
+            "description": "See quote tweets and comments on Yapper",
+            "keywords": "yapper, quotes, comments, tweet, engagement"
+        },
         "default": {
             "title": "Yapper. It's what's happening",
             "description": "From breaking news and entertainment to sports and politics, get the full story with all the live commentary.",
