@@ -60,8 +60,7 @@
                 id="button-forgot-password-login"
                 class="w-full border border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
                 @click="onForgotPassword"
-                :is-loading="loading"
-                :loading-text="t('auth.common.loading')"
+                :is-loading="false"
             >
                 {{ $t('auth.login.forgotPassword') }}
             </Button>

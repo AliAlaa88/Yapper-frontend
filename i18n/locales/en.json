@@ -535,6 +535,47 @@
             "goBack": "Go back"
         }
     },
+    "search": {
+        "searchPlaceholder": "Search",
+        "recent": "Recent",
+        "clearAll": "Clear all",
+        "trending": "Trending",
+        "removeQuery": "Remove",
+        "noRecentQueries": "No recent searches",
+        "noSuggestions": "No Suggestions found",
+        "followEachOther": "You follow each other",
+        "youFollow": "You follow",
+        "followsYou": "Follows you",
+        "enterQuery": "Try searching for people, topics, or keywords",
+        "tabs": {
+            "top": "Top",
+            "latest": "Latest",
+            "people": "People",
+            "media": "Media",
+            "lists": "Lists"
+        },
+        "emptyState": {
+            "noUsers": {
+                "title": "No people found",
+                "description": "Try adjusting your search to find what you're looking for"
+            }
+        }
+    },
+    "explore": {
+        "trending": "Trending",
+        "posts": "posts",
+        "errorLoading": "Failed to load trends",
+        "tryAgain": "Try again",
+        "noTrends": "No trends available right now",
+        "noCategoriesFound": "No categories available right now",
+        "tabs": {
+            "forYou": "For you",
+            "trending": "Trending",
+            "news": "News",
+            "sports": "Sports",
+            "entertainment": "Entertainment"
+        }
+    },
     "timeline": {
         "sidebar": {
             "home": "Home",
@@ -545,7 +586,8 @@
             "bookmarks": "Bookmarks",
             "settings": "Settings",
             "post": "Post",
-            "postTweet": "Post a tweet"
+            "postTweet": "Post a tweet",
+            "explore": "Explore"
         },
         "postTweet": {
             "placeholder": "What's happening?",
@@ -566,11 +608,12 @@
         },
         "banner": {
             "search": "Search",
-            "trending": "Trending",
+            "trending": "What's happening",
             "trendingIn": "Trending in {location}",
             "posts": "posts",
             "sportsTrending": "Sports · Trending",
             "technology": "Technology",
+            "error": "Failed to load trends",
             "showMore": "Show more",
             "whoToFollow": "Who to follow",
             "follow": "Follow"
