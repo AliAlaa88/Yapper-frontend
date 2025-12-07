@@ -75,6 +75,7 @@ provide('activeMenuTweetId', activeMenuTweetId)
 
 const props = defineProps<{
     fetchingSource?: string | null
+    quotes?: boolean
 }>()
 
 // Convert prop to ref for reactivity
@@ -141,8 +142,20 @@ const tweets = computed(() => {
     const pages = data.value?.pages
 
     if (!pages) return []
+    console.log(pages)
+    let newPages = pages.flatMap((p) => p.data.map((tweet) => ({ ...tweet })))
+    if (props?.quotes) {
+        newPages = newPages.map((tweet) => {
+            const parentTweet = pages.find((p) => p.parent)?.parent
 
-    return pages.flatMap((p) => p.data.map((tweet) => ({ ...tweet })))
+            console.log(parentTweet)
+            return {
+                ...tweet,
+                parent_tweet: parentTweet || tweet.parent_tweet,
+            }
+        })
+    }
+    return newPages
 })
 
 const getTweetKey = (tweet: TweetType): string => {

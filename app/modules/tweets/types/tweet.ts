@@ -32,6 +32,7 @@ type TweetsPage = {
     data: Tweet[]
     nextCursor?: string
     hasMore?: boolean
+    parent?:boolean
 }
 
 export type { Tweet, TweetsPage }
