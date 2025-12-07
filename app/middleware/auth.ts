@@ -11,8 +11,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     // If token exists but user store is not initialized, try to initialize it by sending refresh request
     const userStore = useUserStore()
-    console.log('Auth Middleware: isToken=', isToken, ' userStore.isLoggedIn=', userStore.isLoggedIn)
-    if (!isToken) {
+    if (!isToken && userStore.isLoggedIn) {
         try {
             const { $authService } = useNuxtApp()
             const response = await $authService.GetAccessToken()
