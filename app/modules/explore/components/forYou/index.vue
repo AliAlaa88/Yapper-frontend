@@ -34,36 +34,9 @@
                 <h2 class="px-4 py-3 text-xl font-bold text-primary">
                     {{ t('timeline.banner.whoToFollow') }}
                 </h2>
-                <div 
-                    v-for="user in exploreData.who_to_follow" 
-                    :key="user.id"
-                    class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
-                >
-                    <div class="flex items-center gap-3">
-                        <img 
-                            :src="user.avatar_url" 
-                            :alt="user.name"
-                            class="w-10 h-10 rounded-full object-cover"
-                            @error="(e) => handleImageError(user.name, e)"
-                        />
-                        <div class="min-w-0">
-                            <div class="flex items-center gap-1">
-                                <p class="text-primary font-bold truncate">{{ user.name }}</p>
-                                <BadgeCheck v-if="user.verified" class="w-4 h-4 text-accent shrink-0" />
-                            </div>
-                            <p class="text-muted text-sm truncate">@{{ user.username }}</p>
-                            <p v-if="user.bio" class="text-muted text-sm line-clamp-1 mt-0.5">{{ user.bio }}</p>
-                        </div>
-                    </div>
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        class="shrink-0"
-                    >
-                        {{ t('timeline.banner.follow') }}
-                    </Button>
-                </div>
+                <WhoToFollowList :users="exploreData.who_to_follow.slice(0, 3)" />
                 <button
+                    @click="router.push('/explore/who-to-follow')"
                     class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
                 >
                     {{ t('timeline.banner.showMore') }}
@@ -99,15 +72,14 @@
 import { useGetExploreQuery } from '../../queries/useGetExploreQuery';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { BadgeCheck, ChevronRight } from 'lucide-vue-next';
+import { ChevronRight } from 'lucide-vue-next';
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue';
-import Button from '~/modules/Common/components/Button/Button.vue';
 import Tweet from '~/modules/tweets/components/Tweet/Tweet.vue';
 import TrendsList from '../common/TrendsList.vue';
-import { handleImageError } from '~/utils/helpers';
+import WhoToFollowList from '../common/WhoToFollowList.vue';
 
 const { t } = useI18n();
-
+const router = useRouter();
 
 const exploreQuery = useGetExploreQuery( true );
 const isLoading = computed(() => exploreQuery.isLoading.value);

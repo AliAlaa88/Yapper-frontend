@@ -35,6 +35,21 @@ export function useGetTrendsQuery(
     return query
 }
 
+export function useGetWhoToFollowQuery(
+    enabled: Ref<boolean> | boolean = false,
+) {
+    const { $exploreService } = useNuxtApp()
+    const query = useQuery({
+        queryKey: ['who-to-follow'],
+        queryFn: () => $exploreService.getExploreWhoToFollow(),
+        enabled,
+        retry: false,
+        staleTime: 0,
+        refetchOnWindowFocus: true,
+    })
+    return query
+}
+
 export function useGetExploreCategoriesQuery(
     category?: String,
     enabled: Ref<boolean> | boolean = false,

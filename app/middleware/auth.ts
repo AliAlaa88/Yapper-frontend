@@ -12,7 +12,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     // If token exists but user store is not initialized, try to initialize it by sending refresh request
     const userStore = useUserStore()
     if (!isToken && userStore.isLoggedIn) {
-        try {
             const { $authService } = useNuxtApp()
             const response = await $authService.GetAccessToken()
             const access_token = response.data.access_token;
@@ -20,10 +19,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
             token.value = access_token;
             userStore.setAuth(response.data)
             isAuthenticated = true
-        } catch (error) {
-            userStore.logout()
-            isAuthenticated = false
-        }
     }
 
 

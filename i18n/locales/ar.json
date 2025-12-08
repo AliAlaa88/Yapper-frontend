@@ -616,7 +616,8 @@
             "technology": "التكنولوجيا",
             "showMore": "عرض المزيد",
             "whoToFollow": "من يمكن متابعته",
-            "follow": "متابعة"
+            "follow": "متابعة",
+            "following": "متابَع"
         },
         "timelineView": {
             "forYou": "من أجلك",
