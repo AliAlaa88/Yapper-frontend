@@ -5,6 +5,9 @@
 
 <script setup lang="ts">
 import TweetInteractions from '~/modules/tweets/components/TweetInteractions/TweetInteractions.vue'
+import { useTweetPageSeo } from '~/modules/tweets/composables/useTweetPageSeo'
+
+useTweetPageSeo('likes')
 
 definePageMeta({
     layout: 'main-layout',

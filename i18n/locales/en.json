@@ -623,6 +623,143 @@
             "following": "Following"
         }
     },
+    "seo": {
+        "home": {
+            "title": "Home / Yapper",
+            "description": "Yapper is what's happening and what people are talking about right now.",
+            "keywords": "yapper, social media, posts, timeline, trending"
+        },
+        "login": {
+            "title": "Log in to Yapper / Yapper",
+            "description": "Log in to Yapper to see what's happening in the world right now.",
+            "keywords": "yapper, login, sign in, social media"
+        },
+        "signup": {
+            "title": "Sign up for Yapper / Yapper",
+            "description": "Join Yapper today. Create an account to follow your interests, connect with friends, and join the conversation.",
+            "keywords": "yapper, signup, register, join, create account"
+        },
+        "profile": {
+            "title": "{name} ({username}) / Yapper",
+            "description": "{name} ({username}) on Yapper. {bio}",
+            "keywords": "yapper, profile, {username}, posts, social media"
+        },
+        "followers": {
+            "title": "People following {name} ({username}) / Yapper",
+            "description": "See who follows {name} on Yapper.",
+            "keywords": "yapper, followers, {username}"
+        },
+        "following": {
+            "title": "People followed by {name} ({username}) / Yapper",
+            "description": "See who {name} follows on Yapper.",
+            "keywords": "yapper, following, {username}"
+        },
+        "tweet": {
+            "title": "{name} on Yapper: \"{text}\" / Yapper",
+            "description": "{text}",
+            "keywords": "yapper, post, tweet, {username}"
+        },
+        "media": {
+            "title": "Media posts by {name} ({username}) / Yapper",
+            "description": "See photos and videos from {name} ({username}) on Yapper.",
+            "keywords": "yapper, media, photos, videos, {username}"
+        },
+        "likes": {
+            "title": "Posts liked by {name} ({username}) / Yapper",
+            "description": "See what {name} likes on Yapper.",
+            "keywords": "yapper, likes, favorites, {username}"
+        },
+        "replies": {
+            "title": "Replies by {name} ({username}) / Yapper",
+            "description": "See replies from {name} on Yapper.",
+            "keywords": "yapper, replies, conversations, {username}"
+        },
+        "settings": {
+            "title": "Settings / Yapper",
+            "description": "Manage your Yapper account settings and preferences.",
+            "keywords": "yapper, settings, preferences, account"
+        },
+        "settingsAccount": {
+            "title": "Account information / Yapper",
+            "description": "Manage your account information on Yapper.",
+            "keywords": "yapper, account, settings, information"
+        },
+        "settingsPassword": {
+            "title": "Change your password / Yapper",
+            "description": "Update your password to keep your Yapper account secure.",
+            "keywords": "yapper, password, security, change password"
+        },
+        "settingsDisplay": {
+            "title": "Display / Yapper",
+            "description": "Customize how Yapper looks to you.",
+            "keywords": "yapper, display, theme, appearance"
+        },
+        "settingsLanguages": {
+            "title": "Languages / Yapper",
+            "description": "Manage your language preferences on Yapper.",
+            "keywords": "yapper, languages, localization"
+        },
+        "settingsPrivacy": {
+            "title": "Privacy and safety / Yapper",
+            "description": "Manage what information you see and share on Yapper.",
+            "keywords": "yapper, privacy, safety, security"
+        },
+        "settingsMuted": {
+            "title": "Muted accounts / Yapper",
+            "description": "Manage accounts you've muted on Yapper.",
+            "keywords": "yapper, muted, accounts, settings"
+        },
+        "settingsBlocked": {
+            "title": "Blocked accounts / Yapper",
+            "description": "Manage accounts you've blocked on Yapper.",
+            "keywords": "yapper, blocked, accounts, settings"
+        },
+        "forgotPassword": {
+            "title": "Find your Yapper account / Yapper",
+            "description": "Reset your Yapper password.",
+            "keywords": "yapper, forgot password, reset password, recovery"
+        },
+        "search": {
+            "title": "Search / Yapper",
+            "description": "Search for people, topics, and keywords on Yapper",
+            "keywords": "yapper, search, find, users, topics, hashtags"
+        },
+        "explore": {
+            "title": "Explore / Yapper",
+            "description": "Discover trending topics, popular content, and what's happening on Yapper",
+            "keywords": "yapper, explore, trending, discover, popular"
+        },
+        "messages": {
+            "title": "Messages / Yapper",
+            "description": "Private messages and conversations on Yapper",
+            "keywords": "yapper, messages, chat, DM, direct messages, conversations"
+        },
+        "tweetDetails": {
+            "title": "Post by {username} / Yapper",
+            "description": "{content}",
+            "keywords": "yapper, post, tweet, {username}, social media"
+        },
+        "tweetLikes": {
+            "title": "People who liked this post / Yapper",
+            "description": "See who liked this post on Yapper",
+            "keywords": "yapper, likes, engagement, post, reactions"
+        },
+        "tweetRetweets": {
+            "title": "People who reposted this / Yapper",
+            "description": "See who reposted this tweet on Yapper",
+            "keywords": "yapper, retweets, reposts, engagement, shares"
+        },
+        "tweetQuotes": {
+            "title": "Quotes of this post / Yapper",
+            "description": "See quote tweets and comments on Yapper",
+            "keywords": "yapper, quotes, comments, tweet, engagement"
+        },
+        "default": {
+            "title": "Yapper. It's what's happening",
+            "description": "From breaking news and entertainment to sports and politics, get the full story with all the live commentary.",
+            "keywords": "yapper, social media, social network, posts, trending, news"
+        }
+    },
     "chat": {
         "messages": "Messages",
         "selectMessage": "Select a message",

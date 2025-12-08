@@ -5,6 +5,8 @@
 
 <script setup lang="ts">
 import FollowLists from '../../modules/profile/components/FollowLists/FollowLists.vue'
+import { useProfilePageSeo } from '~/modules/profile/composables/useProfilePageSeo'
+useProfilePageSeo('following')
 
 definePageMeta({
     layout: 'main-layout',
