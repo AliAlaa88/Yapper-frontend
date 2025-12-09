@@ -12,16 +12,18 @@
                 {{ t('timeline.banner.trending') }}
             </h2>
 
-            <div v-if="isLoading" class="flex justify-center items-center">
-                <LoadingSpinner />
-            </div>
-            <TrendsList v-else-if="trends.length > 0" :trends="trends" :show-rank="true" />
+            <div class="flex-1">
+                <div v-if="isLoading" class="flex justify-center items-center">
+                    <LoadingSpinner />
+                </div>
+                <TrendsList v-else-if="trends.length > 0" :trends="trends" :show-rank="true" />
 
-            <div v-else-if="isError" class="px-4 py-3">
-                <p class="text-red-500">{{ t('timeline.banner.error') }}</p>
-            </div>
-            <div v-else-if="trends.length === 0" class="px-4 py-3">
-                <p class="text-muted">{{ t('timeline.banner.noTrends') }}</p>
+                <div v-else-if="isError" class="px-4 py-3">
+                    <p class="text-red-500">{{ t('timeline.banner.error') }}</p>
+                </div>
+                <div v-else-if="trends.length === 0" class="px-4 py-3">
+                    <p class="text-muted">{{ t('timeline.banner.noTrends') }}</p>
+                </div>
             </div>
 
             <NuxtLink
@@ -42,7 +44,11 @@
                 <LoadingSpinner />
             </div>
 
-            <WhoToFollowList v-else-if="users.length > 0" :users="users.slice(0, userLimit)" :hide-bio="true" />
+            <WhoToFollowList
+                v-else-if="users.length > 0"
+                :users="users.slice(0, userLimit)"
+                :hide-bio="true"
+            />
 
             <div v-else-if="isErrorUsers" class="px-4 py-3">
                 <p class="text-red-500">{{ t('explore.errorLoading') }}</p>
@@ -70,7 +76,10 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import TrendsList from '~/modules/explore/components/common/TrendsList.vue'
 import WhoToFollowList from '~/modules/explore/components/common/WhoToFollowList.vue'
-import { useGetTrendsQuery, useGetWhoToFollowQuery } from '~/modules/explore/queries/useGetExploreQuery'
+import {
+    useGetTrendsQuery,
+    useGetWhoToFollowQuery,
+} from '~/modules/explore/queries/useGetExploreQuery'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 
 /////////////////////////////////////////////////
@@ -84,15 +93,13 @@ const whoToFollowQuery = useGetWhoToFollowQuery(true)
 const users = computed(() => whoToFollowQuery.data.value?.data || [])
 const isLoadingUsers = computed(() => whoToFollowQuery.isLoading.value)
 const isErrorUsers = computed(() => whoToFollowQuery.isError.value)
-const userLimit = 2;
+const userLimit = 2
 
 /////////////////////////////////////////////////////////
 const route = useRoute()
 const isSearch = computed(
     () => route.path.startsWith('/explore') || route.path.startsWith('/search'),
 )
-const isConnect = computed(
-    () => route.path.startsWith('/explore/who-to-follow'),
-)
+const isConnect = computed(() => route.path.startsWith('/explore/who-to-follow'))
 const { t } = useI18n()
 </script>
