@@ -1,12 +1,12 @@
 <template>
-    <div class="w-full border-b border-primary bg-primary">
+    <div class="w-full border-b border-primary bg-primary/50 backdrop-blur-xl top-0 sticky z-50">
         <ul class="flex">
             <li
                 v-for="tab in tabs"
-                :key="tab.value"
-                class="flex-1 text-center cursor-pointer transition-all duration-200 hover:bg-hover"
-                @click="handleChange(tab.value)"
                 :id="tab.test_id"
+                :key="tab.value"
+                class="flex-1 text-center cursor-pointer transition-all duration-200 hover:glass-light"
+                @click="handleChange(tab.value)"
             >
                 <button
                     class="relative w-full px-4 py-4 text-base font-medium transition-colors duration-200"

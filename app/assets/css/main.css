@@ -206,6 +206,17 @@
         color: var(--accent-color);
     }
 
+    .hover\:glass-light:hover {
+        background-color: rgba(0, 0, 0, 0.05); /* slight dark tint */
+        backdrop-filter: blur(4px); /* softer glass */
+    }
+
+    /* 🔹 DARK MODE glass hover */
+    .dark .hover\:glass-light:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* brighter tint */
+        backdrop-filter: blur(12px); /* strong glass */
+    }
+
     .hover\:bg-accent:hover {
         background-color: var(--accent-color-hover);
     }
@@ -280,6 +291,15 @@
     .bg-primary {
         background-color: var(--color-x-background);
     }
+
+    .bg-primary\/50 {
+        background-color: color-mix(in srgb, var(--color-x-background) 50%, transparent);
+    }
+
+    .bg-primary\/30 {
+        background-color: color-mix(in srgb, var(--color-x-background) 50%, transparent);
+    }
+
 
     .bg-alternate {
         background-color: var(--color-x-alternate);

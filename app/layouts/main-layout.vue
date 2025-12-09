@@ -21,7 +21,7 @@
         <!-- Main Content -->
         <div
             :class="[
-                'border-l border-r border-primary w-full md:max-w-[600px] transition-all duration-300 ease-in-out',
+                'border-l border-r border-primary w-full md:max-w-[600px] transition-all duration-300 ease-in-out z-5',
                 isRTL ? 'lg:ml-[250px] xl:ml-[300px]' : 'lg:mr-[250px] xl:mr-[300px]',
             ]"
             :style="contentStyle"
