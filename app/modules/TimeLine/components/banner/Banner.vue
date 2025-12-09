@@ -33,55 +33,31 @@
         </div>
 
         <!-- Who to Follow Section -->
-        <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
+        <div v-if="!isSearch" class="bg-primary rounded-2xl border border-primary overflow-hidden">
             <h2 class="px-4 py-3 text-xl font-bold text-primary">
                 {{ t('timeline.banner.whoToFollow') }}
             </h2>
-            <div
-                class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
-            >
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-12 h-12 bg-gray rounded-full flex items-center justify-center text-white font-bold"
-                    >
-                        A
-                    </div>
-                    <div>
-                        <p class="text-primary font-bold">User Name</p>
-                        <p class="text-muted text-sm">@username</p>
-                    </div>
-                </div>
-                <button
-                    class="px-4 py-2 bg-blue text-white rounded-full font-bold hover:bg-blue-dark transition-colors"
-                >
-                    {{ t('timeline.banner.follow') }}
-                </button>
+
+            <div v-if="isLoadingUsers" class="flex justify-center items-center py-8">
+                <LoadingSpinner />
             </div>
-            <div
-                class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
-            >
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-12 h-12 bg-gray rounded-full flex items-center justify-center text-white font-bold"
-                    >
-                        B
-                    </div>
-                    <div>
-                        <p class="text-primary font-bold">Another User</p>
-                        <p class="text-muted text-sm">@anotheruser</p>
-                    </div>
-                </div>
-                <button
-                    class="px-4 py-2 bg-blue text-white rounded-full font-bold hover:bg-blue-dark transition-colors"
-                >
-                    {{ t('timeline.banner.follow') }}
-                </button>
+
+            <WhoToFollowList v-else-if="users.length > 0" :users="users.slice(0, userLimit)" />
+
+            <div v-else-if="isErrorUsers" class="px-4 py-3">
+                <p class="text-red-500">{{ t('explore.errorLoading') }}</p>
             </div>
-            <button
-                class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
+
+            <div v-else-if="users.length === 0" class="px-4 py-3">
+                <p class="text-muted">{{ t('explore.noUsersFound') }}</p>
+            </div>
+
+            <NuxtLink
+                to="/explore/who-to-follow"
+                class="w-full px-4 py-3 text-start text-sm text-accent hover:bg-hover transition-colors block"
             >
                 {{ t('timeline.banner.showMore') }}
-            </button>
+            </NuxtLink>
         </div>
     </div>
 </template>
@@ -93,7 +69,8 @@ import SearchBar from '~/modules/search/components/SearchBar.vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import TrendsList from '~/modules/explore/components/common/TrendsList.vue'
-import { useGetTrendsQuery } from '~/modules/explore/queries/useGetExploreQuery'
+import WhoToFollowList from '~/modules/explore/components/common/WhoToFollowList.vue'
+import { useGetTrendsQuery, useGetWhoToFollowQuery } from '~/modules/explore/queries/useGetExploreQuery'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 
 /////////////////////////////////////////////////
@@ -102,6 +79,12 @@ const trendsQuery = useGetTrendsQuery('', true, 3)
 const trends = computed(() => trendsQuery.data.value || [])
 const isLoading = computed(() => trendsQuery.isLoading.value)
 const isError = computed(() => trendsQuery.isError.value)
+
+const whoToFollowQuery = useGetWhoToFollowQuery(true)
+const users = computed(() => whoToFollowQuery.data.value?.data || [])
+const isLoadingUsers = computed(() => whoToFollowQuery.isLoading.value)
+const isErrorUsers = computed(() => whoToFollowQuery.isError.value)
+const userLimit = 2;
 
 /////////////////////////////////////////////////////////
 const route = useRoute()
