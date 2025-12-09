@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`matches snapshot 1`] = `
+"<div class="flex items-center justify-between mt-3">
+  <!-- Reply -->
+  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Retweet with dropdown -->
+  <div class="relative"><button id="tweet-retweet-button" class="group flex cursor-pointer items-center gap-1 transition-colors text-secondary hover:text-green">
+      <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+        <anonymous-stub size="18" fill="none"></anonymous-stub>
+      </div><span class="text-xs min-w-5">3</span>
+    </button><!-- Repost Dropdown Menu -->
+    <!--v-if-->
+  </div><!-- Like -->
+  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Views -->
+  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Bookmark -->
+  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Share -->
+  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub>
+</div>"
+`;

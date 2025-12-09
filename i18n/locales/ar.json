@@ -535,6 +535,47 @@
             "goBack": "العودة"
         }
     },
+    "search": {
+        "searchPlaceholder": "بحث",
+        "recent": "الأخيرة",
+        "clearAll": "مسح الكل",
+        "trending": "الترند",
+        "removeQuery": "إزالة",
+        "noRecentQueries": "لا توجد عمليات بحث حديثة",
+        "noSuggestions": "لم يتم العثور على اقتراحات",
+        "followEachOther": "تتابعون بعضكم البعض",
+        "youFollow": "أنت تتابع",
+        "followsYou": "يتابعك",
+        "enterQuery": "جرب البحث عن أشخاص أو مواضيع أو كلمات رئيسية",
+        "tabs": {
+            "top": "الأعلى",
+            "latest": "الأحدث",
+            "people": "أشخاص",
+            "media": "وسائط",
+            "lists": "قوائم"
+        },
+        "emptyState": {
+            "noUsers": {
+                "title": "لم يتم العثور على أشخاص",
+                "description": "حاول تعديل بحثك للعثور على ما تبحث عنه"
+            }
+        }
+    },
+    "explore": {
+        "trending": "الترند",
+        "posts": "منشور",
+        "errorLoading": "فشل تحميل الترند",
+        "tryAgain": "حاول مرة أخرى",
+        "noTrends": "لا توجد ترندات حالياً",
+        "noCategoriesFound": "لا توجد فئات حالياً",
+        "tabs": {
+            "forYou": "من أجلك",
+            "trending": "الترند",
+            "news": "الأخبار",
+            "sports": "الرياضة",
+            "entertainment": "الترفيه"
+        }
+    },
     "timeline": {
         "sidebar": {
             "home": "الرئيسية",
@@ -545,7 +586,8 @@
             "bookmarks": "المفضلة",
             "settings": "الإعدادات",
             "post": "نشر",
-            "postTweet": "نشر منشور"
+            "postTweet": "نشر منشور",
+            "explore": "استكشف"
         },
         "postTweet": {
             "placeholder": "ماذا يحدث؟",
@@ -566,7 +608,8 @@
         },
         "banner": {
             "search": "البحث",
-            "trending": "الترند",
+            "trending": "ما الذي يحدث",
+            "error": "فشل تحميل الترند",
             "trendingIn": "الترند في {location}",
             "posts": "منشور",
             "sportsTrending": "الرياضة · الترند",

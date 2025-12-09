@@ -1,46 +1,42 @@
 <template>
     <div class="w-full min-h-screen z-1 bg-primary flex flex-col gap-4 p-4">
         <!-- Search Bar -->
-        <div class="w-full">
-            <div class="relative">
-                <input
-                    type="text"
-                    :placeholder="t('timeline.banner.search')"
-                    id="right-banner-search-input"
-                    class="w-full px-4 py-3 pl-12 bg-primary border border-primary rounded-full text-primary placeholder:text-muted focus:outline-none focus:border-blue focus:bg-primary"
-                />
-                <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
-            </div>
-        </div>
+        <SearchBar v-if="!isSearch" />
 
         <!-- Trending Section -->
-        <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
-            <h2 class="px-4 py-3 text-xl font-bold text-primary">{{ t('timeline.banner.trending') }}</h2>
-            <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">{{ t('timeline.banner.trendingIn', { location: 'Egypt' }) }}</p>
-                <p class="text-primary font-bold mt-1">#YapperTrending</p>
-                <p class="text-muted text-sm">1,234 {{ t('timeline.banner.posts') }}</p>
+        <div
+            v-if="!isSearch"
+            class="bg-primary rounded-2xl border border-primary overflow-hidden min-h-[350px] flex flex-col justify-between"
+        >
+            <h2 class="px-4 py-3 text-xl font-bold text-primary">
+                {{ t('timeline.banner.trending') }}
+            </h2>
+
+            <div v-if="isLoading" class="flex justify-center items-center">
+                <LoadingSpinner />
             </div>
-            <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">{{ t('timeline.banner.sportsTrending') }}</p>
-                <p class="text-primary font-bold mt-1">Football News</p>
-                <p class="text-muted text-sm">10.2K {{ t('timeline.banner.posts') }}</p>
+            <TrendsList v-else-if="trends.length > 0" :trends="trends" :show-rank="true" />
+
+            <div v-else-if="isError" class="px-4 py-3">
+                <p class="text-red-500">{{ t('timeline.banner.error') }}</p>
             </div>
-            <div class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer">
-                <p class="text-muted text-sm">{{ t('timeline.banner.technology') }}</p>
-                <p class="text-primary font-bold mt-1">AI Updates</p>
-                <p class="text-muted text-sm">8.7K {{ t('timeline.banner.posts') }}</p>
+            <div v-else-if="trends.length === 0" class="px-4 py-3">
+                <p class="text-muted">{{ t('timeline.banner.noTrends') }}</p>
             </div>
-            <button
+
+            <NuxtLink
+                to="/explore/tabs/trending"
                 class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
                 {{ t('timeline.banner.showMore') }}
-            </button>
+            </NuxtLink>
         </div>
 
         <!-- Who to Follow Section -->
         <div class="bg-primary rounded-2xl border border-primary overflow-hidden">
-            <h2 class="px-4 py-3 text-xl font-bold text-primary">{{ t('timeline.banner.whoToFollow') }}</h2>
+            <h2 class="px-4 py-3 text-xl font-bold text-primary">
+                {{ t('timeline.banner.whoToFollow') }}
+            </h2>
             <div
                 class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
             >
@@ -93,6 +89,24 @@
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
+import SearchBar from '~/modules/search/components/SearchBar.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import TrendsList from '~/modules/explore/components/common/TrendsList.vue'
+import { useGetTrendsQuery } from '~/modules/explore/queries/useGetExploreQuery'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 
+/////////////////////////////////////////////////
+
+const trendsQuery = useGetTrendsQuery('', true, 3)
+const trends = computed(() => trendsQuery.data.value || [])
+const isLoading = computed(() => trendsQuery.isLoading.value)
+const isError = computed(() => trendsQuery.isError.value)
+
+/////////////////////////////////////////////////////////
+const route = useRoute()
+const isSearch = computed(
+    () => route.path.startsWith('/explore') || route.path.startsWith('/search'),
+)
 const { t } = useI18n()
 </script>

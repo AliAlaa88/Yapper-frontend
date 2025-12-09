@@ -72,7 +72,7 @@
             <!-- Scroll to Bottom Button -->
             <button
                 v-if="showScrollButton"
-                class="sticky bottom-4 right-4 ml-auto mr-4 bg-alternate text-alternate p-2 rounded-full shadow-lg hover:bg-alternate/90 transition-colors z-20 flex items-center justify-center w-10 h-10"
+                class="sticky bottom-4 right-4 cursor-pointer ml-auto mr-4 bg-alternate text-alternate p-2 rounded-full shadow-lg hover:bg-alternate/90 transition-colors z-20 flex items-center justify-center w-10 h-10"
                 @click="scrollToBottom"
                 aria-label="Scroll to bottom"
             >
