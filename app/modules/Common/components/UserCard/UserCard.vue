@@ -1,13 +1,9 @@
 <template>
     <div class="flex items-start hover:bg-hover gap-3 p-4 transition-colors cursor-pointer">
         <NuxtLink :to="`/${user.username}`" class="flex items-start gap-3 flex-1 min-w-0">
-            <NuxtImg
-                :src="
-                    user?.avatar_url ||
-                    'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name)
-                "
-                :alt="user.name"
-                class="h-12 w-12 rounded-full object-cover"
+            <UserImage
+                :image-url="props.user?.avatar_url"
+                :name="props.user?.name"
             />
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
@@ -56,9 +52,11 @@
 // import Tooltip from '~/modules/Common/components/Tooltip/Tooltip.vue'
 import type { FollowUser } from '~/modules/profile/types/user'
 import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue'
+import UserImage from '../UserImage/UserImage.vue'
 
-defineProps<{
+const props = defineProps<{
     user: FollowUser
     showTooltip?: boolean | null
 }>()
+console.log('user card user:', props.user)
 </script>
