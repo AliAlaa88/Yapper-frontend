@@ -1,11 +1,9 @@
 <template>
     <div class="flex items-start hover:bg-hover gap-3 p-4 transition-colors cursor-pointer">
         <NuxtLink :to="`/${user.username}`" class="flex items-start gap-3 flex-1 min-w-0">
-            <img
-                :src="user?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`"
-                :alt="user.name"
-                @error="(e) => (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`"
-                class="h-12 w-12 rounded-full object-cover"
+            <UserImage
+                :image-url="props.user?.avatar_url"
+                :name="props.user?.name"
             />
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
@@ -13,7 +11,11 @@
                         <p class="font-bold text-primary truncate">{{ user.name }}</p>
                         <p class="text-sm text-muted truncate">
                             @{{ user.username }}
-                            <span v-if="user.is_follower" class="ml-1 text-xs bg-gray-200 dark:bg-gray-700 text-muted px-1.5 py-0.5 rounded">Follows you</span>
+                            <span
+                                v-if="user.is_follower"
+                                class="ml-1 text-xs bg-gray-200 dark:bg-gray-700 text-muted px-1.5 py-0.5 rounded"
+                                >Follows you</span
+                            >
                         </p>
                     </div>
 
@@ -36,7 +38,11 @@
             </div>
         </NuxtLink>
         <div @click.stop>
-            <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" :username="user.username" />
+            <ProfileFollowAction
+                v-if="user?.user_id || user?.id"
+                :user-id="user.user_id || user?.id"
+                :username="user.username"
+            />
         </div>
     </div>
 </template>
@@ -46,9 +52,11 @@
 // import Tooltip from '~/modules/Common/components/Tooltip/Tooltip.vue'
 import type { FollowUser } from '~/modules/profile/types/user'
 import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue'
+import UserImage from '../UserImage/UserImage.vue'
 
-defineProps<{
+const props = defineProps<{
     user: FollowUser
     showTooltip?: boolean | null
 }>()
+console.log('user card user:', props.user)
 </script>

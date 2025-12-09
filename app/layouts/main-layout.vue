@@ -1,30 +1,16 @@
 <template>
-    <main class="flex flex-row container mx-auto max-w-[1280px] relative">
-        <!-- Left Sidebar (LTR) / Right Sidebar (RTL) -->
+    <main class="flex flex-row justify-center container mx-auto relative">
+        <!-- Sidebar -->
         <aside
-            v-if="!isRTL"
-            class="hidden sm:block shrink-0 fixed top-0 h-screen z-5 transition-all duration-300 ease-in-out"
-            :style="{ ...leftStyle, width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
+            class="hidden sticky top-0 h-full sm:flex shrink-0 transition-all duration-300 ease-in-out order-1"
+            :style="{ width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
         >
             <Sidebar />
         </aside>
 
-        <!-- Right Banner (LTR) / Left Banner (RTL) -->
-        <aside
-            v-if="isRTL"
-            class="hidden md:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
-            :style="bannerLeftStyle"
-        >
-            <Banner />
-        </aside>
-
         <!-- Main Content -->
         <div
-            :class="[
-                'border-l border-r border-primary w-full md:max-w-[600px] transition-all duration-300 ease-in-out',
-                isRTL ? 'lg:ml-[250px] xl:ml-[300px]' : 'lg:mr-[250px] xl:mr-[300px]',
-            ]"
-            :style="contentStyle"
+            class="border-l border-r border-primary w-full md:w-[600px] md:min-w-[600px] md:max-w-[600px] transition-all duration-300 ease-in-out order-2"
         >
             <div v-if="isHome" class="sm:hidden block">
                 <MobileSidebar />
@@ -32,20 +18,9 @@
             <slot />
         </div>
 
-        <!-- Right Sidebar (RTL) -->
+        <!-- Banner -->
         <aside
-            v-if="isRTL"
-            class="hidden sm:block shrink-0 fixed top-0 h-screen z-5 transition-all duration-300 ease-in-out"
-            :style="{ ...rightStyle, width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
-        >
-            <Sidebar />
-        </aside>
-
-        <!-- Right Banner (LTR) -->
-        <aside
-            v-if="!isRTL"
-            class="hidden md:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
-            :style="rightStyle"
+            class="hidden sticky top-0 h-full xl:flex min-w-0 shrink-0 order-3"
         >
             <Banner />
         </aside>
@@ -79,58 +54,5 @@ const { sidebarWidth } = useSidebarState()
 const isRTL = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)
     return currentLocaleObj?.dir === 'rtl'
-})
-
-const leftStyle = computed(() => {
-    const viewportWidth = width.value
-    const containerWidth = Math.min(viewportWidth, 1280)
-    const containerLeft = (viewportWidth - containerWidth) / 2
-
-    return {
-        left: `${containerLeft}px`,
-    }
-})
-
-const rightStyle = computed(() => {
-    const viewportWidth = width.value
-    const containerWidth = Math.min(viewportWidth, 1280)
-    const containerLeft = (viewportWidth - containerWidth) / 2
-
-    if (isRTL.value) {
-        return {
-            right: `${containerLeft}px`,
-        }
-    } else {
-        const rightSidebarLeft = containerLeft + sidebarWidth.value + 600
-        return {
-            left: `${rightSidebarLeft}px`,
-        }
-    }
-})
-
-const contentStyle = computed(() => {
-    if (width.value < 800) {
-        return {}
-    }
-
-    if (isRTL.value) {
-        return {
-            marginRight: `${sidebarWidth.value}px`,
-        }
-    } else {
-        return {
-            marginLeft: `${sidebarWidth.value}px`,
-        }
-    }
-})
-
-const bannerLeftStyle = computed(() => {
-    const viewportWidth = width.value
-    const containerWidth = Math.min(viewportWidth, 1280)
-    const containerLeft = (viewportWidth - containerWidth) / 2
-
-    return {
-        left: `${containerLeft}px`,
-    }
 })
 </script>
