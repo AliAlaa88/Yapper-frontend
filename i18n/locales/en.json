@@ -968,5 +968,10 @@
         "Yemen": "Yemen",
         "Zambia": "Zambia",
         "Zimbabwe": "Zimbabwe"
+    },
+    "bookmarks": {
+        "title": "Bookmarks",
+        "noBookmarks": "No bookmarks yet",
+        "saveYourBookmarks": "Save posts for later by clicking the bookmark icon"
     }
 }
