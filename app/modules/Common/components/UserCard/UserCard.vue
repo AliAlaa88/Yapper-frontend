@@ -1,10 +1,7 @@
 <template>
     <div class="flex items-start hover:bg-hover gap-3 p-4 transition-colors cursor-pointer">
         <NuxtLink :to="`/${user.username}`" class="flex items-start gap-3 flex-1 min-w-0">
-            <UserImage
-                :image-url="props.user?.avatar_url"
-                :name="props.user?.name"
-            />
+            <UserImage :image-url="props.user?.avatar_url" :name="props.user?.name" :compact="true"/>
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
                     <div class="min-w-0 flex-1">
@@ -18,21 +15,8 @@
                             >
                         </p>
                     </div>
-
-                    <!-- <div class="flex items-center gap-2">
-                        <FollowActionButton :user-id="user.user_id" />
-                        <Tooltip v-if="showTooltip" :user-id="user.user_id">
-                            <button
-                            type="button"
-                            class="flex h-8 w-8 items-center justify-center rounded-full"
-                            :aria-label="$t('profile.actions.more')"
-                            >
-                            <MoreHorizontal :size="20" class="text-primary" />
-                        </button>
-                    </Tooltip>
-                </div> -->
                 </div>
-                <p v-if="user.bio" class="mt-1 text-sm text-primary line-clamp-2">
+                <p v-if="user.bio && !props.hideBio" class="mt-1 text-sm text-primary line-clamp-2">
                     {{ user.bio }}
                 </p>
             </div>
@@ -57,6 +41,9 @@ import UserImage from '../UserImage/UserImage.vue'
 const props = defineProps<{
     user: FollowUser
     showTooltip?: boolean | null
+    hideBio?: boolean | null
 }>()
+
+console.log('hide bio:', props.hideBio)
 console.log('user card user:', props.user)
 </script>

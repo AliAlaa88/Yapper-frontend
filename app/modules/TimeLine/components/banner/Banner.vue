@@ -1,11 +1,11 @@
 <template>
-    <div class="w-full h-full z-1 bg-primary flex flex-col gap-4 p-4 min-w-[18rem]">
+    <div class="w-full h-full z-1 bg-primary flex flex-col gap-4 p-4 min-w-[22rem] max-w-[22rem]">
         <!-- Search Bar -->
         <SearchBar v-if="!isSearch" />
 
         <!-- Trending Section -->
         <div
-            v-if="!isSearch"
+            v-if="!isSearch || isConnect"
             class="bg-primary rounded-2xl border border-primary overflow-hidden min-h-[350px] flex flex-col justify-between"
         >
             <h2 class="px-4 py-3 text-xl font-bold text-primary">
@@ -42,7 +42,7 @@
                 <LoadingSpinner />
             </div>
 
-            <WhoToFollowList v-else-if="users.length > 0" :users="users.slice(0, userLimit)" />
+            <WhoToFollowList v-else-if="users.length > 0" :users="users.slice(0, userLimit)" :hide-bio="true" />
 
             <div v-else-if="isErrorUsers" class="px-4 py-3">
                 <p class="text-red-500">{{ t('explore.errorLoading') }}</p>
@@ -90,6 +90,9 @@ const userLimit = 2;
 const route = useRoute()
 const isSearch = computed(
     () => route.path.startsWith('/explore') || route.path.startsWith('/search'),
+)
+const isConnect = computed(
+    () => route.path.startsWith('/explore/who-to-follow'),
 )
 const { t } = useI18n()
 </script>
