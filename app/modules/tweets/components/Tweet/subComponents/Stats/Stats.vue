@@ -234,7 +234,9 @@ const repostContainerRef = ref<HTMLElement | null>(null)
 const { t, locale } = useI18n()
 
 const route = useRoute()
-const isAppearViewQuotesAndReposts = computed(() => route.path.includes('/status'))
+const isAppearViewQuotesAndReposts = computed(
+    () => route.path.includes('/status') && !route.path.includes('quotes'),
+)
 
 // Inject the global snackbar from layout
 const snackbar = inject<{
