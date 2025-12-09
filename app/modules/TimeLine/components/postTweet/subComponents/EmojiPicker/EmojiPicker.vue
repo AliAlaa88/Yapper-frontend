@@ -1,8 +1,10 @@
 <template>
     <div
         v-if="isOpen"
-        class="absolute z-[60] bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
+        ref="emojiPickerRef"
+        class="absolute z-60 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
         :class="position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'"
+        @click.stop
     >
         <div class="p-2 border-b border-primary flex justify-between items-center">
             <span class="text-primary font-semibold text-sm">Emoji</span>
@@ -19,6 +21,7 @@
 </template>
 
 <script setup>
+import { ref, watch, nextTick, onBeforeUnmount } from 'vue'
 import EmojiPicker from 'vue3-emoji-picker'
 import 'vue3-emoji-picker/css'
 import { X } from 'lucide-vue-next'
@@ -34,6 +37,8 @@ const props = defineProps({
 
 const emit = defineEmits(['select', 'close'])
 
+const emojiPickerRef = ref(null)
+
 const emojiTheme = computed(() => {
     if (typeof window !== 'undefined') {
         return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
@@ -44,6 +49,30 @@ const emojiTheme = computed(() => {
 const onSelect = (emoji) => {
     emit('select', emoji)
 }
+
+const handleClickOutside = (event) => {
+    if (emojiPickerRef.value && !emojiPickerRef.value.contains(event.target)) {
+        emit('close')
+    }
+}
+
+watch(
+    () => props.isOpen,
+    async (newValue) => {
+        if (newValue) {
+            await nextTick()
+            setTimeout(() => {
+                document.addEventListener('click', handleClickOutside, true)
+            }, 0)
+        } else {
+            document.removeEventListener('click', handleClickOutside, true)
+        }
+    },
+)
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside, true)
+})
 </script>
 
 <style scoped>

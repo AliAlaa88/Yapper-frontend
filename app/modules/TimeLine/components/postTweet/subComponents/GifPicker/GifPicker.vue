@@ -1,8 +1,10 @@
 <template>
     <div
         v-if="isOpen"
-        class="absolute z-[60] w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
+        ref="gifPickerRef"
+        class="absolute z-60 w-72 h-80 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
         :class="position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'"
+        @click.stop
     >
         <div class="p-2 border-b border-primary flex gap-2" id="gif-picker-container">
             <input
@@ -40,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onBeforeUnmount, nextTick } from 'vue'
 import { X } from 'lucide-vue-next'
 
 interface Gif {
@@ -62,13 +64,14 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    position: 'bottom'
+    position: 'bottom',
 })
 const emit = defineEmits(['select', 'close'])
 
 const config = useRuntimeConfig()
 const gifs = ref<Gif[]>([])
 const query = ref('')
+const gifPickerRef = ref<HTMLElement | null>(null)
 
 // Your Giphy API Key
 const API_KEY = config.public.gifApiKey
@@ -102,12 +105,30 @@ const selectGif = (gif: Gif) => {
     emit('close')
 }
 
+const handleClickOutside = (event: MouseEvent) => {
+    if (gifPickerRef.value && !gifPickerRef.value.contains(event.target as Node)) {
+        emit('close')
+    }
+}
+
 watch(
     () => props.isOpen,
-    (newValue) => {
+    async (newValue) => {
         if (newValue && gifs.value.length === 0) {
             fetchTrending()
         }
+        if (newValue) {
+            await nextTick()
+            setTimeout(() => {
+                document.addEventListener('click', handleClickOutside, true)
+            }, 0)
+        } else {
+            document.removeEventListener('click', handleClickOutside, true)
+        }
     },
 )
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside, true)
+})
 </script>
