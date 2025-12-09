@@ -12,26 +12,18 @@
 
 <script setup lang="ts">
 import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
-import { computed } from 'vue'
+import { useTweetPageSeo } from '~/modules/tweets/composables/useTweetPageSeo'
 
 definePageMeta({
     layout: 'main-layout',
     middleware: ['auth'],
 })
 
-// Set page metadata
 const route = useRoute()
-const username = computed(() => route.params.username as string)
-const tweetId = computed(() => route.params.tweetId as string)
 
-// Determine if this is a child route (like /quotes)
 const hasChildRoute = computed(() => {
-    return route.matched.length > 1 && route.matched[route.matched.length - 1].path.includes('/')
+    return route.matched.length > 1 && route.matched[route.matched.length - 1]?.path.includes('/')
 })
 
-// Set dynamic head for SEO
-useHead({
-    title: `Tweet by @${username.value}`,
-    meta: [{ name: 'description', content: `View tweet by @${username.value}` }],
-})
+useTweetPageSeo()
 </script>
