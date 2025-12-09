@@ -37,7 +37,7 @@
                 <WhoToFollowList :users="exploreData.who_to_follow.slice(0, 3)" />
                 <button
                     @click="router.push('/explore/who-to-follow')"
-                    class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
+                    class="w-full px-4 py-3 text-start text-sm text-accent hover:bg-hover transition-colors"
                 >
                     {{ t('timeline.banner.showMore') }}
                 </button>

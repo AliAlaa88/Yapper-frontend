@@ -564,10 +564,13 @@
     "explore": {
         "trending": "الترند",
         "posts": "منشور",
-        "errorLoading": "فشل تحميل الترند",
+        "errorLoading": "فشل التحميل",
         "tryAgain": "حاول مرة أخرى",
         "noTrends": "لا توجد ترندات حالياً",
         "noCategoriesFound": "لا توجد فئات حالياً",
+        "noUsersFound": "لا يوجد مستخدمين للمتابعة حالياً",
+        "connect": "تواصل",
+        "suggestedForYou": "مقترح لك",
         "tabs": {
             "forYou": "من أجلك",
             "trending": "الترند",

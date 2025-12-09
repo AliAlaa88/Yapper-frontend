@@ -1,98 +1,48 @@
 <template>
     <div class="w-full">
-        <div 
-            v-for="user in users" 
-            :key="user.id"
-            class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors border-b border-primary"
-        >
-            <div 
-                class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
-                @click="onClickUser(user)"
-            >
-                <img 
-                    :src="user.avatar_url" 
-                    :alt="user.name"
-                    class="w-12 h-12 rounded-full object-cover"
-                    @error="(e) => handleImageError(user.name, e)"
-                />
-                <div class="min-w-0 flex-1">
-                    <div class="flex items-center gap-1">
-                        <p class="text-primary font-bold truncate">{{ user.name }}</p>
-                        <BadgeCheck v-if="user.verified" class="w-4 h-4 text-accent shrink-0" />
-                    </div>
-                    <p class="text-muted text-sm truncate">@{{ user.username }}</p>
-                    <p v-if="user.bio" class="text-primary text-sm line-clamp-2 mt-1">{{ user.bio }}</p>
-                </div>
-            </div>
-            <div @click.stop>
-                <Button
-                    :button-text="user.is_following ? t('timeline.banner.following') : t('timeline.banner.follow')"
-                    :button-class="user.is_following 
-                        ? 'px-4 py-1.5 rounded-full text-sm font-semibold border border-primary text-primary hover:bg-red-500/10 hover:text-red-500 hover:border-red-500 transition-colors' 
-                        : 'px-4 py-1.5 rounded-full text-sm font-semibold bg-accent text-white hover:bg-accent-hover transition-colors'"
-                    :is-loading="followingUserId === user.id"
-                    class="shrink-0 ml-3"
-                    @click="handleFollowToggle(user)"
-                />
-            </div>
-        </div>
+        <UserCard 
+            v-for="user in mappedUsers" 
+            :key="user.user_id"
+            :user="user"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import Button from '~/modules/Common/components/Button/Button.vue'
-import { BadgeCheck } from 'lucide-vue-next'
-import { handleImageError } from '~/utils/helpers'
-import { useNuxtApp } from '#app'
+import UserCard from '~/modules/Common/components/UserCard/UserCard.vue'
+import type { FollowUser } from '~/modules/profile/types/user'
 
-const { t } = useI18n()
-const router = useRouter()
-const { $userInfoService, $queryClient } = useNuxtApp()
-
-interface User {
+interface ApiUser {
     id: string
+    user_id?: string
     username: string
     name: string
     bio?: string
     avatar_url: string
     verified?: boolean
     is_following?: boolean
+    is_followed_by?: boolean
+    is_follower?: boolean
+    is_muted?: boolean
+    is_blocked?: boolean
 }
 
-defineProps<{
-    users: User[]
+const props = defineProps<{
+    users: ApiUser[]
 }>()
 
-const followingUserId = ref<string | null>(null)
-
-function onClickUser(user: User) {
-    router.push(`/${user.username}`)
-}
-
-async function handleFollowToggle(user: User) {
-    console.log('Follow toggle clicked for:', user.username)
-    followingUserId.value = user.id
-    
-    try {
-        if (user.is_following) {
-            console.log('Unfollowing user:', user.id)
-            await $userInfoService.unfollowUser(user.id)
-        } else {
-            console.log('Following user:', user.id)
-            await $userInfoService.followUser(user.id)
-        }
-        
-        // Invalidate queries to refresh the data
-        $queryClient.invalidateQueries({ queryKey: ['explore', 'who-to-follow'] })
-        $queryClient.invalidateQueries({ queryKey: ['getExplore'] })
-        $queryClient.invalidateQueries({ queryKey: ['user', user.id] })
-        
-        console.log('Follow action successful')
-    } catch (error) {
-        console.error('Failed to toggle follow:', error)
-    } finally {
-        followingUserId.value = null
-    }
-}
+// Map API response to FollowUser interface expected by UserCard
+const mappedUsers = computed<FollowUser[]>(() => {
+    return props.users.map(user => ({
+        user_id: user.user_id || user.id,
+        name: user.name,
+        username: user.username,
+        bio: user.bio || '',
+        avatar_url: user.avatar_url,
+        is_following: user.is_following || false,
+        is_follower: user.is_follower ?? user.is_followed_by ?? false,
+        is_muted: user.is_muted || false,
+        is_blocked: user.is_blocked || false,
+    }))
+})
 </script>

@@ -3,29 +3,24 @@
         <div class="w-full">
             <!-- Header with back button and title -->
             <div class="sticky top-0 bg-primary/95 backdrop-blur-sm z-10 border-b border-primary">
-                <div class="flex items-center gap-8 px-4 py-3">
+                <div class="flex items-center gap-8 px-4 py-3 rtl:flex-row-reverse">
                     <button @click="router.back()" class="hover:bg-hover rounded-full p-2 transition-colors">
-                        <ArrowLeft class="w-5 h-5 text-primary" />
+                        <ArrowLeft class="w-5 h-5 text-primary rtl:rotate-180" />
                     </button>
-                    <h1 class="text-xl font-bold text-primary">Connect</h1>
+                    <h1 class="text-xl font-bold text-primary">{{ t('explore.connect') }}</h1>
                 </div>
                 
                 <!-- Tabs -->
-                <div class="border-b border-primary bg-primary">
-                    <ul class="flex w-full">
-                        <li class="flex-1 text-center cursor-pointer transition-all duration-200 hover:bg-hover">
-                            <button class="relative w-full px-4 py-4 text-base font-medium transition-colors duration-200 whitespace-nowrap text-primary">
-                                {{ t('timeline.banner.whoToFollow') }}
-                                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-accent rounded-full" />
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                <Tabs 
+                    :tabs="[{ label: t('timeline.banner.whoToFollow'), value: 'who-to-follow' }]"
+                    active-tab="who-to-follow"
+                    :on-change="() => {}"
+                />
             </div>
             
             <!-- Subtitle -->
             <div class="px-4 py-3 border-b border-primary">
-                <h2 class="text-xl font-bold text-primary">Suggested for you</h2>
+                <h2 class="text-xl font-bold text-primary">{{ t('explore.suggestedForYou') }}</h2>
             </div>
 
             <!-- Loading state -->
@@ -61,6 +56,7 @@
 import { useGetWhoToFollowQuery } from '~/modules/explore/queries/useGetExploreQuery'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import WhoToFollowList from '~/modules/explore/components/common/WhoToFollowList.vue'
+import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 import { ArrowLeft } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 
