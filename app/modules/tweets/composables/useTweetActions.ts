@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n'
 import type { useConfirmation } from '~/modules/profile/composables/useConfirmation'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 import { useDeleteTweetMutation, useUpdateTweetMutation } from '../queries/useTweetQueries'
+import { useRouter } from 'vue-router'
 
 export function useTweetActions(tweetId: Ref<string | undefined>) {
     const { t } = useI18n()
@@ -13,7 +14,7 @@ export function useTweetActions(tweetId: Ref<string | undefined>) {
     const { showConfirmation, handleShowConfirmation } = inject('confirmation') as ReturnType<
         typeof useConfirmation
     >
-
+    const router = useRouter()
     // Use the mutation queries
     const tweetIdValue = computed(() => tweetId.value ?? '')
     const deleteMutation = useDeleteTweetMutation(tweetIdValue.value)
@@ -46,6 +47,7 @@ export function useTweetActions(tweetId: Ref<string | undefined>) {
         async function handleClick() {
             try {
                 await deleteMutation.mutateAsync()
+                router.replace('/')
                 handleShowSnackbar(t('tweets.tweetDeleted'))
             } catch (error) {
                 console.error('Failed to delete tweet:', error)
