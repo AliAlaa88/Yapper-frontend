@@ -2,13 +2,22 @@
 <template>
     <article
         :id="`tweet-reply-${id}`"
-        class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
+        :class="[
+            'px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer',
+            { 'border-b border-primary': !hasNestedReplies },
+        ]"
         @click="navigateToTweet"
     >
         <div class="flex gap-3">
-            <!-- Avatar column -->
-            <div class="shrink-0">
-                <NuxtLink :id="`reply-avatar-link-${id}`" @click.stop :to="profileUrl">
+            <!-- Avatar column with connecting line -->
+            <div class="shrink-0 relative">
+                <!-- Connecting line to nested replies -->
+                <div
+                    v-if="hasNestedReplies"
+                    class="absolute left-1/2 top-10 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600 -translate-x-1/2"
+                    style="height: calc(100% + 12px)"
+                />
+                <NuxtLink :id="`reply-avatar-link-${id}`" :to="profileUrl" @click.stop>
                     <CustomToolTip
                         :delay-duration="300"
                         content-class="rounded-2xl shadow-xl border border-primary"
@@ -18,7 +27,7 @@
                                 :id="`reply-avatar-${id}`"
                                 :src="user.avatar_url"
                                 :alt="user.name"
-                                class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                                class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all relative z-2"
                                 @error="handleImageError"
                             />
                         </template>
@@ -46,8 +55,17 @@
         </div>
 
         <!-- Reply form -->
-
     </article>
+
+    <!-- Nested Replies -->
+    <div v-if="hasNestedReplies">
+        <Reply
+            v-for="nestedReply in props.reply.replies"
+            :key="nestedReply.tweet_id"
+            :reply="nestedReply"
+            :depth="(depth || 0) + 1"
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -64,9 +82,13 @@ import { useTweetTransitionStore } from '../../../stores/tweetTransition'
 
 const props = defineProps<{
     reply: Tweet
+    depth?: number
 }>()
 
 const tweetTransitionStore = useTweetTransitionStore()
+
+// Computed to check if there are nested replies
+const hasNestedReplies = computed(() => props.reply.replies && props.reply.replies.length > 0)
 
 // Use computed properties for reactive access
 const id = computed(() => props.reply.tweet_id)
