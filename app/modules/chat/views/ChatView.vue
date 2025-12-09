@@ -29,7 +29,8 @@
                     </p>
                     <button
                         id="new-chat-button-empty-state"
-                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors cursor-pointer"
+                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors cursor-pointer hover:bg-accent/90"
+                        @click="openCreateConversation"
                     >
                         {{ $t('chat.newMessage') }}
                     </button>
@@ -44,6 +45,8 @@
                 :participant="selectedConversation.participant"
             />
         </div>
+
+        <CreateConversation :isOpen="isCreateConversationOpen" @close="closeCreateConversation" />
     </div>
 </template>
 
@@ -51,6 +54,7 @@
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
+import CreateConversation from '../components/CreateConversation/CreateConversation.vue'
 import { useGetConversation } from '../queries/useGetConversation'
 import type { Conversation } from '../types'
 
@@ -61,15 +65,22 @@ const props = defineProps<{
 const { $chatSocketService } = useNuxtApp()
 
 const selectedConversation = ref<Conversation | null>(null)
+const isCreateConversationOpen = ref(false)
 
-// Get conversations to find the one matching chatId
+const openCreateConversation = () => {
+    isCreateConversationOpen.value = true
+}
+
+const closeCreateConversation = () => {
+    isCreateConversationOpen.value = false
+}
+
 const { data: conversationsData } = useGetConversation()
 
 const conversations = computed(() => {
     return conversationsData.value?.pages.flatMap((page) => page.data) || []
 })
 
-// Find and select conversation based on chatId prop
 watch(
     [() => props.chatId, conversations],
     async ([newChatId, convos]) => {
