@@ -564,10 +564,13 @@
     "explore": {
         "trending": "Trending",
         "posts": "posts",
-        "errorLoading": "Failed to load trends",
+        "errorLoading": "Failed to load",
         "tryAgain": "Try again",
         "noTrends": "No trends available right now",
         "noCategoriesFound": "No categories available right now",
+        "noUsersFound": "No users to follow right now",
+        "connect": "Connect",
+        "suggestedForYou": "Suggested for you",
         "tabs": {
             "forYou": "For you",
             "trending": "Trending",
@@ -616,7 +619,8 @@
             "error": "Failed to load trends",
             "showMore": "Show more",
             "whoToFollow": "Who to follow",
-            "follow": "Follow"
+            "follow": "Follow",
+            "following": "Following"
         },
         "timelineView": {
             "forYou": "For You",
