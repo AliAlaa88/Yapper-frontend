@@ -5,6 +5,16 @@
 <script setup lang="ts">
 import CategoryPanel from '~/modules/settings/components/CategoryPanel.vue'
 import { MegaphoneOff } from 'lucide-vue-next'
+import { useSeo } from '~/modules/Common/composables/useSeo'
+
+const { t } = useI18n()
+
+useSeo({
+    title: t('seo.settingsPrivacy.title'),
+    description: t('seo.settingsPrivacy.description'),
+    keywords: t('seo.settingsPrivacy.keywords'),
+})
+
 definePageMeta({ layout: 'settings' })
 
 const panelItems = {

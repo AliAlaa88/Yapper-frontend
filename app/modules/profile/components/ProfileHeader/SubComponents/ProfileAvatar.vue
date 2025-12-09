@@ -9,6 +9,7 @@
                 :src="avatarUrl"
                 :alt="displayName"
                 class="h-full w-full rounded-full object-cover"
+                :onerror="`this.src='https://ui-avatars.com/api/?name=${displayName}'`"
             />
         </NuxtLink>
 

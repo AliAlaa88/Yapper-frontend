@@ -7,7 +7,16 @@
 <script setup lang="ts">
 import CategoryPanel from '~/modules/settings/components/CategoryPanel.vue'
 import { UserRound, KeyRound, ShieldMinus } from 'lucide-vue-next'
+import { useSeo } from '~/modules/Common/composables/useSeo'
 import PasswordProtectedContent from '~/modules/settings/components/YourAccount/PasswordProtectedContent.vue'
+
+const { t } = useI18n()
+
+useSeo({
+    title: t('seo.settingsAccount.title'),
+    description: t('seo.settingsAccount.description'),
+    keywords: t('seo.settingsAccount.keywords'),
+})
 definePageMeta({ layout: 'settings' })
 
 const panelItems = {
