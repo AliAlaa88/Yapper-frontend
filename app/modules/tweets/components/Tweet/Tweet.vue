@@ -227,8 +227,8 @@ const repostedUsername = computed(() => {
     return currentUser.value?.user_id === props.tweet.reposted_by?.id
         ? 'You'
         : props.tweet.reposted_by === undefined
-            ? 'You'
-            : props.tweet.reposted_by.name
+          ? 'You'
+          : props.tweet.reposted_by.name
 })
 // Transform content string to Content object
 const content = computed(() => ({
@@ -236,9 +236,9 @@ const content = computed(() => ({
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
     parentTweet:
-        props.tweet.type === 'quote'
-            ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet)
-            : undefined,
+        // props.tweet.type === 'quote'
+        props.tweet.parent_tweet ?? props.tweet.quoted_tweet,
+    // : undefined,
 }))
 
 // Transform user to include avatar property
