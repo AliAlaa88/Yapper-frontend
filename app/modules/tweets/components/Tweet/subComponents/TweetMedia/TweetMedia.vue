@@ -1,54 +1,27 @@
 <template>
-    <!-- Single Image (no need for Swiper) -->
-    <div 
-        v-if="images && images.length === 1 && (!videos || videos.length === 0)" 
-        class="rounded-2xl overflow-hidden border border-primary max-h-[500px]"
-    >
-        <LazyNuxtImg
-            :src="images[0]"
-            alt="Tweet image"
-            class="w-full h-full object-cover cursor-pointer"
-            @click="openLightbox(0)"
-        />
-    </div>
-
-    <!-- Multiple Images (use Swiper) -->
     <Swiper
-        v-else-if="images && images.length > 1"
         :modules="[Pagination]"
         :pagination="{ clickable: true }"
         class="rounded-2xl border border-primary tweet-media-swiper max-h-[500px]"
     >
-        <SwiperSlide
-            v-for="(image, index) in images"
-            :key="index"
-        >
+        <SwiperSlide v-for="(media, index) in mediaArray" :key="index">
             <LazyNuxtImg
-                :src="image"
+                v-if="media.type === 'image'"
+                :src="media.url"
                 :alt="`Tweet image ${index + 1}`"
                 class="w-full h-full object-cover cursor-pointer"
                 @click="openLightbox(index)"
             />
+            <VideoPlayer
+                v-else-if="media.type === 'video'"
+                :src="media.url"
+                :controls="true"
+                :playback-rates="[0.5, 0.75, 1, 1.25, 1.5, 2]"
+                :fluid="true"
+                class="mb-2 last:mb-0 video-js vjs-big-play-centered"
+            />
         </SwiperSlide>
     </Swiper>
-
-    <!-- Videos -->
-    <div
-        v-if="videos && videos.length > 0"
-        class="rounded-2xl overflow-hidden border border-primary"
-        :class="{ 'mt-2': images && images.length > 0 }"
-    >
-        <VideoPlayer
-            v-for="(video, index) in videos"
-            :key="index"
-            ref="videoPlayersRef"
-            :src="video"
-            :controls="true"
-            :playback-rates="[0.5, 0.75, 1, 1.25, 1.5, 2]"
-            :fluid="true"
-            class="mb-2 last:mb-0 video-js vjs-big-play-centered"
-        />
-    </div>
 
     <!-- Lightbox -->
     <VueEasyLightbox
@@ -82,6 +55,13 @@ const props = defineProps<{
 // Lightbox state
 const lightboxVisible = ref(false)
 const lightboxIndex = ref(0)
+const mediaArray = computed(() => {
+    // i want to add meta type to the media array
+    return [
+        ...(props.images || []).map((image) => ({ type: 'image', url: image })),
+        ...(props.videos || []).map((video) => ({ type: 'video', url: video })),
+    ]
+})
 
 // Video players ref
 const videoPlayersRef = ref<InstanceType<typeof VideoPlayer>[]>([])

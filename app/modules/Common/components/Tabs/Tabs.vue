@@ -1,6 +1,6 @@
 <template>
-    <div 
-        class="relative w-full max-w-full border-b border-primary bg-primary group"
+    <div
+        class="relative w-full max-w-full border-b border-primary bg-primary/80 group backdrop-blur-md"
         @mouseenter="isHovering = true"
         @mouseleave="isHovering = false"
     >
@@ -15,7 +15,7 @@
         </button>
 
         <!-- Tabs Container -->
-        <div 
+        <div
             ref="tabsContainer"
             class="overflow-x-auto overflow-y-hidden scrollbar-hide"
             @scroll="updateScrollState"
@@ -81,7 +81,7 @@ const isHovering = ref(false)
 
 const updateScrollState = () => {
     if (!tabsContainer.value) return
-    
+
     const { scrollLeft, scrollWidth, clientWidth } = tabsContainer.value
     canScrollLeft.value = scrollLeft > 0
     canScrollRight.value = scrollLeft + clientWidth < scrollWidth - 1

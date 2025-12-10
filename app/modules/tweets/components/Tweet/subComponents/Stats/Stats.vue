@@ -22,24 +22,41 @@
         </CustomToolTip>
 
         <!-- Retweet with dropdown -->
-        <div ref="repostContainerRef" class="relative">
-            <div class="group flex items-center">
+        <div
+            ref="repostContainerRef"
+            class="relative"
+            @mouseenter="handleRepostMouseEnter"
+            @mouseleave="handleRepostMouseLeave"
+        >
+            <div class="group flex items-center transition-colors">
                 <button
                     id="tweet-retweet-button"
                     :class="[
                         'flex cursor-pointer items-center gap-1 transition-colors',
-                        localIsReposted ? 'text-green' : 'text-secondary hover:text-green',
+                        localIsReposted || isRepostHovered ? 'text-green' : 'text-secondary',
                     ]"
                     @click.stop="toggleRepostMenu"
                 >
                     <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
-                        <Repeat2 :size="18" :fill="localIsReposted ? 'currentColor' : 'none'" />
+                        <Repeat2
+                            :size="18"
+                            :color="
+                                localIsReposted || isRepostHovered
+                                    ? 'currentColor'
+                                    : 'var(--color-x-gray-dark)'
+                            "
+                        />
                     </div>
                 </button>
                 <CustomToolTip side="bottom" align="start" :delay-duration="300">
                     <template #trigger>
                         <button
-                            class="text-xs min-w-5 text-secondary cursor-pointer hover:text-green transition-colors"
+                            :class="[
+                                'text-xs min-w-5 cursor-pointer transition-colors',
+                                localIsReposted || isRepostHovered
+                                    ? 'text-green'
+                                    : 'text-secondary',
+                            ]"
                             @click.stop="handleViewQuotesAndReposts"
                         >
                             {{ formatCount(localRepostsCount, locale) }}
@@ -231,10 +248,13 @@ const shareTooltipText = ref('')
 const localRepliesCount = ref(replies.value)
 const showRepostMenu = ref(false)
 const repostContainerRef = ref<HTMLElement | null>(null)
+const isRepostHovered = ref(false)
 const { t, locale } = useI18n()
 
 const route = useRoute()
-const isAppearViewQuotesAndReposts = computed(() => route.path.includes('/status'))
+const isAppearViewQuotesAndReposts = computed(
+    () => route.path.includes('/status') && !route.path.includes('quotes'),
+)
 
 // Inject the global snackbar from layout
 const snackbar = inject<{
@@ -260,6 +280,14 @@ const handleClickOutsideRepostMenu = (event: MouseEvent) => {
     if (repostContainerRef.value && !repostContainerRef.value.contains(event.target as Node)) {
         showRepostMenu.value = false
     }
+}
+
+const handleRepostMouseEnter = () => {
+    isRepostHovered.value = true
+}
+
+const handleRepostMouseLeave = () => {
+    isRepostHovered.value = false
 }
 
 const tweetTransitionStore = useTweetTransitionStore()

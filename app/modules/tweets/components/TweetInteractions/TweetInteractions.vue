@@ -23,6 +23,7 @@
             <TweetsList
                 v-if="currentTab === 'quotes' && tweetId"
                 :fetching-source="`tweets/${tweetId}/quotes`"
+                :quotes="true"
             />
             <UserList
                 v-else-if="currentTab === 'retweets' && tweetId"

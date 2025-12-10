@@ -2,7 +2,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 
 const SIDEBAR_STORAGE_KEY = 'sidebar-expanded-state'
-const AUTO_COLLAPSE_BREAKPOINT = 1100
+const AUTO_COLLAPSE_BREAKPOINT = 890
 const EXPANDED_WIDTH = 275
 const COLLAPSED_WIDTH = 70
 
