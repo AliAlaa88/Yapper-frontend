@@ -1,5 +1,7 @@
-import { useInfiniteQuery } from '@tanstack/vue-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from 'nuxt/app'
+import type { Ref } from 'vue'
+import { computed, unref, ref } from 'vue'
 import type { Conversation } from '../types'
 
 interface ConversationsPage {
@@ -38,5 +40,24 @@ export function useGetConversation(limit: number = 20) {
             return undefined
         },
         initialPageParam: null as string | null,
+    })
+}
+
+export function useGetConversationById(chatId: string | Ref<string> | (() => string)) {
+    const { $chatService } = useNuxtApp()
+    const chatIdRef =
+        typeof chatId === 'function'
+            ? computed(chatId)
+            : typeof chatId === 'string'
+              ? ref(chatId)
+              : chatId
+    const chatIdValue = computed(() => unref(chatIdRef))
+
+    return useQuery({
+        queryKey: computed(() => ['conversation', chatIdValue.value]),
+        queryFn: async () => {
+            return await ($chatService as any).getConversationById(chatIdValue.value)
+        },
+        enabled: computed(() => !!chatIdValue.value),
     })
 }

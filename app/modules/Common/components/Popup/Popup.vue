@@ -7,7 +7,7 @@
             @click="handleClose"
         >
             <div
-                class="bg-primary md:rounded-2xl p-0 overflow-hidden z-50 h-full md:h-auto w-full md:w-auto"
+                class="bg-primary md:rounded-2xl p-0 overflow-hidden z-50 h-full md:h-auto w-full"
                 :class="contentClass"
                 @click.stop
             >
@@ -16,7 +16,7 @@
                     class="flex justify-between relative p-1 items-center px-4 py-3"
                     :class="headerClass"
                 >
-                <!-- The close button, with larger size -->
+                    <!-- The close button, with larger size -->
                     <button
                         v-if="hasCloseButton"
                         class="cursor-pointer hover:bg-hover mx-4 mt-2 flex items-center justify-center border-none w-7 h-7 rounded-full transition"
@@ -50,9 +50,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { X, ArrowLeft } from 'lucide-vue-next'
-import {useI18n} from "vue-i18n";
-const { locale } = useI18n();
-const isArabic = computed(() => locale.value === 'ar');
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
+const isArabic = computed(() => locale.value === 'ar')
 type Position = 'start' | 'center' | 'end'
 interface Props {
     isOpen: boolean
@@ -76,7 +76,7 @@ const {
     xPosition = 'center',
     yPosition = 'center',
     containerClass = '',
-    contentClass = 'md:max-w-[600px] w-full md:w-auto',
+    contentClass = 'md:max-w-[600px] w-full md:min-w-[400px]',
     headerClass = 'border-b border-gray-700',
     slotClass = 'max-h-[calc(90vh-60px)]',
     bgColor = 'bg-popup',
