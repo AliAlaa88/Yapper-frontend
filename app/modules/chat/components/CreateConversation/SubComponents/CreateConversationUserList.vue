@@ -53,9 +53,9 @@
             class="sticky bottom-0 bg-primary border-t border-primary p-3 mt-auto shrink-0 -mx-4 px-4"
         >
             <Button
-                :button-text="'Next'"
+                :button-text="$t('chat.createConversation.next')"
                 :is-loading="isCreating"
-                :loading-text="'Creating...'"
+                :loading-text="$t('chat.createConversation.creating')"
                 button-class="w-full bg-accent text-white rounded-full py-2.5 px-4 font-semibold text-sm hover:bg-accent/90 transition-colors disabled:opacity-50"
                 @click="handleNext"
             />

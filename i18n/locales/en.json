@@ -776,7 +776,21 @@
         "loading": "Loading...",
         "loadOlderMessages": "Load older messages",
         "failedToLoad": "Failed to load messages",
-        "backToMessages": "Back to messages"
+        "backToMessages": "Back to messages",
+        "createConversation": {
+            "title": "Create Conversation",
+            "newMessage": "New Message",
+            "searchUsername": "Search username",
+            "startNewConversation": "Start a new conversation",
+            "startNewConversationDescription": "Search for a username to start messaging",
+            "next": "Next",
+            "creating": "Creating...",
+            "noUsersFound": "No users found",
+            "tryDifferentUsername": "Try searching for a different username",
+            "loading": "Loading...",
+            "failedToLoad": "Failed to load",
+            "tryAgain": "Try again"
+        }
     },
     "countries": {
         "Afghanistan": "Afghanistan",

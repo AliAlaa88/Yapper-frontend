@@ -775,7 +775,21 @@
         "loading": "جاري التحميل...",
         "loadOlderMessages": "تحميل الرسائل الأقدم",
         "failedToLoad": "فشل تحميل الرسائل",
-        "backToMessages": "العودة إلى الرسائل"
+        "backToMessages": "العودة إلى الرسائل",
+        "createConversation": {
+            "title": "إنشاء محادثة",
+            "newMessage": "رسالة جديدة",
+            "searchUsername": "ابحث عن اسم مستخدم",
+            "startNewConversation": "ابدأ محادثة جديدة",
+            "startNewConversationDescription": "ابحث عن اسم مستخدم لبدء المراسلة",
+            "next": "التالي",
+            "creating": "جاري الإنشاء...",
+            "noUsersFound": "لم يتم العثور على مستخدمين",
+            "tryDifferentUsername": "جرب البحث عن اسم مستخدم مختلف",
+            "loading": "جاري التحميل...",
+            "failedToLoad": "فشل التحميل",
+            "tryAgain": "حاول مرة أخرى"
+        }
     },
     "countries": {
         "Afghanistan": "أفغانستان",
