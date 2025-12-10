@@ -11,7 +11,7 @@
             :icon-color="notificationIconColor"
             :fill-color="notificationFillColor"
             :message="notificationMessage"
-            :created-at="formatDate(notification.created_at)"
+            :created-at="formatDateWithMonth(notification.created_at)"
             :link="notificationLink"
             :users="notificationUsers"
             :post-text="notificationPostText"
