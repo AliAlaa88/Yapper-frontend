@@ -48,15 +48,23 @@
 
         <CreateConversation :isOpen="isCreateConversationOpen" @close="closeCreateConversation" />
     </div>
+
+    <SnackBar />
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, provide } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
 import CreateConversation from '../components/CreateConversation/CreateConversation.vue'
 import { useGetConversationById } from '../queries/useGetConversation'
 import type { Conversation } from '../types'
+
+import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
+import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+
+const snackbar = useSnackbar()
+provide('snackbar', snackbar)
 
 const props = defineProps<{
     chatId?: string
