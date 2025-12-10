@@ -20,8 +20,8 @@ import {
     type UserTypingEvent,
     type UnreadChatSummaryItem,
 } from '../types/socketEvents'
-import type { Message, Conversation, MessageSender } from '../types'
-
+import type { Message, Conversation, MessageSender, participant as participantType } from '../types'
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 type SocketService = ReturnType<typeof createSocketService>
 
 const generateOptimisticId = (): string => {
@@ -80,7 +80,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         socketService.on(SOCKET_EVENTS.MESSAGE_DELETED, handleMessageDeleted)
         socketService.on(SOCKET_EVENTS.USER_TYPING, handleUserTyping)
         socketService.on(SOCKET_EVENTS.USER_STOPPED_TYPING, handleUserStoppedTyping)
-
+        socketService.on(SOCKET_EVENTS.FIRST_MESSAGE_SENT, handleFirstMessageSent)
         listenersInitialized = true
         console.log('[ChatSocket] Listeners initialized')
     }
@@ -94,7 +94,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         socketService.off(SOCKET_EVENTS.MESSAGE_DELETED)
         socketService.off(SOCKET_EVENTS.USER_TYPING)
         socketService.off(SOCKET_EVENTS.USER_STOPPED_TYPING)
-
+        socketService.off(SOCKET_EVENTS.FIRST_MESSAGE_SENT)
         listenersInitialized = false
         console.log('[ChatSocket] Listeners removed')
     }
@@ -196,10 +196,12 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
     // ============ Message Methods ============
     const sendMessage = (
         chatId: string,
+        participant: participantType,
         options: {
             content?: string
             mediaUrl?: string
             messageType: 'text' | 'image' | 'video'
+            messagesLength: number
         },
     ) => {
         if (!socketService.isConnected()) {
@@ -220,6 +222,8 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             return
         }
 
+        const isFirstMessage = options.messagesLength === 0
+
         const optimisticMessage: Message = {
             id: optimisticId,
             content: options.content || '',
@@ -238,6 +242,37 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         }
 
         addMessageToCache(chatId, optimisticMessage)
+
+        // If it's the first message, optimistically add conversation to cache FIRST
+        // This ensures the conversation exists before we try to update it
+        if (isFirstMessage) {
+            // Try to get conversation from cache (if it was just fetched)
+            const conversationData = queryClient.getQueryData<Conversation>([
+                'conversation',
+                chatId,
+            ])
+
+            if (conversationData) {
+                addConversationToCache(conversationData)
+            } else {
+                const optimisticConversation: Conversation = {
+                    id: chatId,
+                    participant: {
+                        id: participant.id,
+                        name: participant.name,
+                        username: participant.username,
+                        avatar_url: participant.avatar_url,
+                    },
+                    last_message: optimisticMessage,
+                    unread_count: 0,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                }
+                addConversationToCache(optimisticConversation)
+            }
+        }
+
+        // Update conversation last message (will sort it to top if it exists)
         updateConversationLastMessage(chatId, optimisticMessage)
 
         isSendingMessage.value = true
@@ -248,8 +283,10 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 content: options.content,
                 media_url: options.mediaUrl,
                 message_type: options.messageType,
+                is_first_message: isFirstMessage,
             },
         }
+        console.log('payload', payload)
 
         const timeout = setTimeout(() => {
             isSendingMessage.value = false
@@ -446,6 +483,11 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
     }
 
     // ============ Cache Helpers ============
+    const handleFirstMessageSent = () => {
+        console.log('[ChatSocket] First message sent')
+        cacheInvalidation.onFirstMessageSent(queryClient)
+    }
+
     const sortConversations = (conversations: Conversation[]): Conversation[] => {
         return [...conversations].sort((a, b) => {
             const aTime = a.last_message?.created_at
@@ -569,36 +611,45 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 if (!oldData) return oldData
 
                 if ('pages' in oldData) {
-                    const updatedPages = oldData.pages.map((page) => ({
-                        ...page,
-                        data: sortConversations(
-                            page.data.map((conv) => {
-                                if (conv.id === chatId) {
-                                    return {
-                                        ...conv,
-                                        last_message: message,
-                                        updated_at: new Date().toISOString(),
-                                    }
+                    // Update the conversation with new last message
+                    const updatedConversations = oldData.pages.flatMap((page) =>
+                        page.data.map((conv) => {
+                            if (conv.id === chatId) {
+                                return {
+                                    ...conv,
+                                    last_message: message,
+                                    updated_at: new Date().toISOString(),
                                 }
-                                return conv
-                            }),
-                        ),
-                    }))
+                            }
+                            return conv
+                        }),
+                    )
 
-                    const allConversations = updatedPages.flatMap((page) => page.data)
-                    const sortedConversations = sortConversations(allConversations)
+                    const sortedConversations = sortConversations(updatedConversations)
+
+                    const totalOldConversations = oldData.pages.reduce(
+                        (sum, page) => sum + page.data.length,
+                        0,
+                    )
+                    const conversationWasAdded = sortedConversations.length > totalOldConversations
 
                     let conversationIndex = 0
-                    const redistributedPages = oldData.pages.map((page) => {
-                        const pageSize = page.data.length
+                    const redistributedPages = oldData.pages.map((page, pageIndex) => {
+                        const basePageSize = page.data.length
+                        const pageSize =
+                            pageIndex === 0 && conversationWasAdded
+                                ? basePageSize + 1
+                                : basePageSize
                         const pageData = sortedConversations.slice(
                             conversationIndex,
                             conversationIndex + pageSize,
                         )
-                        conversationIndex += pageSize
+                        conversationIndex += pageData.length
                         return {
                             ...page,
                             data: pageData,
+                            nextCursor: page.nextCursor ?? null,
+                            hasMore: page.hasMore ?? false,
                         }
                     })
 
@@ -659,11 +710,9 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                         ),
                     }))
 
-                    // Sort across all pages: move updated conversation to first page if needed
                     const allConversations = updatedPages.flatMap((page) => page.data)
                     const sortedConversations = sortConversations(allConversations)
 
-                    // Redistribute sorted conversations back to pages
                     let conversationIndex = 0
                     const redistributedPages = oldData.pages.map((page) => {
                         const pageSize = page.data.length
@@ -768,6 +817,75 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 unread_count: 1,
                 last_message: { id: '', content: '', created_at: new Date().toISOString() },
             })
+        }
+    }
+
+    const addConversationToCache = (conversation: Conversation) => {
+        try {
+            queryClient.setQueryData<{
+                pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
+                pageParams: (string | null)[]
+            }>(['conversations'], (oldData) => {
+                if (!oldData) {
+                    // If no data exists, create initial structure with the conversation
+                    return {
+                        pages: [{ data: [conversation], nextCursor: null, hasMore: false }],
+                        pageParams: [null],
+                    }
+                }
+
+                if ('pages' in oldData && oldData.pages.length > 0) {
+                    const conversationExists = oldData.pages.some((page) =>
+                        page.data.some((conv) => conv.id === conversation.id),
+                    )
+
+                    if (conversationExists) {
+                        return oldData
+                    }
+
+                    const firstPage = oldData.pages[0]
+                    if (!firstPage) {
+                        return oldData
+                    }
+
+                    const updatedFirstPage = {
+                        ...firstPage,
+                        data: [conversation, ...firstPage.data],
+                    }
+
+                    const allConversations = updatedFirstPage.data.concat(
+                        ...oldData.pages.slice(1).flatMap((page) => page.data),
+                    )
+                    const sortedConversations = sortConversations(allConversations)
+
+                    let conversationIndex = 0
+                    const pageSize = firstPage.data.length
+                    const redistributedPages = oldData.pages.map((page, pageIndex) => {
+                        const currentPageSize = pageIndex === 0 ? pageSize + 1 : page.data.length
+                        const pageData = sortedConversations.slice(
+                            conversationIndex,
+                            conversationIndex + currentPageSize,
+                        )
+                        conversationIndex += pageData.length
+                        return {
+                            ...page,
+                            data: pageData,
+                        }
+                    })
+
+                    return {
+                        ...oldData,
+                        pages: redistributedPages,
+                    }
+                }
+
+                return {
+                    pages: [{ data: [conversation], nextCursor: null, hasMore: false }],
+                    pageParams: [null],
+                }
+            })
+        } catch (error) {
+            console.warn('[ChatSocket] Could not add conversation to cache:', error)
         }
     }
 

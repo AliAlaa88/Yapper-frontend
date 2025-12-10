@@ -14,10 +14,10 @@
 
         <div class="hidden md:flex flex-1 border-r border-primary w-full h-screen">
             <ChatMessages
-                v-if="selectedConversation"
+                v-if="props.chatId"
                 class="w-full h-full"
-                :conversation-id="selectedConversation.id"
-                :participant="selectedConversation.participant"
+                :conversation-id="props.chatId"
+                :participant="selectedConversation?.participant"
             />
             <div v-else class="flex-1 flex items-center justify-center">
                 <div class="text-center p-8 max-w-md">
@@ -38,11 +38,11 @@
             </div>
         </div>
 
-        <div v-if="selectedConversation" class="md:hidden flex-1 w-full h-screen">
+        <div v-if="props.chatId" class="md:hidden flex-1 w-full h-screen">
             <ChatMessages
                 class="w-full h-full"
-                :conversation-id="selectedConversation.id"
-                :participant="selectedConversation.participant"
+                :conversation-id="props.chatId"
+                :participant="selectedConversation?.participant"
             />
         </div>
 
@@ -51,11 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
 import CreateConversation from '../components/CreateConversation/CreateConversation.vue'
-import { useGetConversation } from '../queries/useGetConversation'
+import { useGetConversationById } from '../queries/useGetConversation'
 import type { Conversation } from '../types'
 
 const props = defineProps<{
@@ -75,26 +75,30 @@ const closeCreateConversation = () => {
     isCreateConversationOpen.value = false
 }
 
-const { data: conversationsData } = useGetConversation()
+const conversationIdForQuery = ref(props.chatId || '')
 
-const conversations = computed(() => {
-    return conversationsData.value?.pages.flatMap((page) => page.data) || []
-})
+const { data: conversationByIdData, isLoading: isConversationByIdLoading } =
+    useGetConversationById(conversationIdForQuery)
 
 watch(
-    [() => props.chatId, conversations],
-    async ([newChatId, convos]) => {
-        if (newChatId && convos.length > 0) {
-            const conversation = convos.find((c) => c.id === newChatId)
-            if (conversation) {
-                selectedConversation.value = conversation
-                try {
-                    await $chatSocketService.enterChat(newChatId)
-                } catch (error) {
-                    console.error('[ChatView] Failed to join chat from route:', error)
-                }
+    () => props.chatId,
+    (newChatId) => {
+        conversationIdForQuery.value = newChatId || ''
+    },
+    { immediate: true },
+)
+
+watch(
+    conversationByIdData,
+    async (conversation) => {
+        if (props.chatId && conversation) {
+            selectedConversation.value = conversation
+            try {
+                await $chatSocketService.enterChat(conversation.id)
+            } catch (error) {
+                console.error('[ChatView] Failed to join chat from route:', error)
             }
-        } else if (!newChatId) {
+        } else if (!props.chatId) {
             selectedConversation.value = null
         }
     },

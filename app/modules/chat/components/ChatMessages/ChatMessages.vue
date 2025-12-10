@@ -13,24 +13,35 @@
                 >
                     <ArrowLeft class="w-5 h-5 text-primary" />
                 </button>
-                <img
-                    v-if="participant?.avatar_url"
-                    :src="participant.avatar_url"
-                    :alt="participant?.username"
-                    class="w-10 h-10 rounded-full object-cover"
-                    :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant?.name)}'`"
-                />
-                <img
-                    v-else
-                    :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(participant?.name || 'User')}`"
-                    :alt="participant?.username"
-                    class="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                    <h2 class="font-bold text-primary">
-                        {{ participant?.name || 'Chat' }}
-                    </h2>
-                    <p class="text-sm text-secondary">@{{ participant?.username || '' }}</p>
+                <template
+                    v-if="!isConversationLoading && !isLoading && participant && conversationId"
+                >
+                    <img
+                        v-if="participant.avatar_url"
+                        :src="participant.avatar_url"
+                        :alt="participant.username"
+                        class="w-10 h-10 rounded-full object-cover"
+                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}'`"
+                    />
+                    <img
+                        v-else
+                        :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name || 'User')}`"
+                        :alt="participant.username"
+                        class="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                        <h2 class="font-bold text-primary">
+                            {{ participant.name || 'Chat' }}
+                        </h2>
+                        <p class="text-sm text-secondary">@{{ participant.username || '' }}</p>
+                    </div>
+                </template>
+                <div v-else class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-secondary animate-pulse" />
+                    <div>
+                        <div class="h-4 w-24 bg-secondary rounded animate-pulse mb-2" />
+                        <div class="h-3 w-16 bg-secondary rounded animate-pulse" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,7 +49,10 @@
         <!-- Messages List -->
         <div ref="messagesContainerRef" class="relative flex-1 overflow-y-auto">
             <!-- Loading State -->
-            <div v-if="isLoading" class="flex items-center justify-center h-full">
+            <div
+                v-if="isLoading || isConversationLoading"
+                class="flex items-center justify-center h-full"
+            >
                 <LoadingSpinner size="lg" />
             </div>
 
@@ -82,9 +96,11 @@
 
         <!-- Input Bar -->
         <InputBar
-            v-if="conversationId"
+            v-if="conversationId && participant && !isConversationLoading && !isLoading"
             :conversation-id="conversationId"
             :containerRef="messagesContainerRef"
+            :messagesLength="messages.length"
+            :participant="participant"
         />
     </div>
 </template>
@@ -120,6 +136,8 @@ const showScrollButton = ref(false)
 
 const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useMessagesQuery(computed(() => props.conversationId))
+
+const isConversationLoading = computed(() => !!props.conversationId && !props.participant)
 
 const messages = computed(() => {
     if (!data.value?.pages) return []
