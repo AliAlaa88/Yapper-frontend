@@ -38,24 +38,43 @@ export default defineNuxtPlugin(() => {
     yapperApi.interceptors.response.use(
         (response) => response,
         async (error) => {
-            const requestUrl = error.config?.url
-            if (requestUrl == `${apiBase}/auth/refresh`) {
-                userStore.logout()
-                window.location.href = '/auth/login'
+            const requestUrl = error.config?.url || ''
+            const isAuthEndpoint = requestUrl.includes('/auth/')
+            
+            if ((error.response?.status === 400 || error.response?.status === 401) && isAuthEndpoint) {
+                if (process.client) {
+                    useCookie('access_token').value = null
+                    useCookie('refresh_token').value = null
+                    userStore.logout()
+                    if (window.location.pathname !== '/auth/login') {
+                        navigateTo('/auth/login')
+                    }
+                }
                 return Promise.reject(error)
             }
-            if (error.response?.status === 401) {
-                if (process.client && window.location.pathname !== '/auth/login' && requestUrl !== `${apiBase}/auth/refresh`) {
-                    const nuxtApp = useNuxtApp()
-                    const authService = nuxtApp.$authService
-                    const response = await authService.GetAccessToken()
-                    const access_token = response.data.access_token;
-                    const token = useCookie('access_token')
-                    token.value = access_token;
-                    // Retry the original request with the new token
-                    const originalRequest = error.config;
-                    originalRequest.headers['Authorization'] = `Bearer ${access_token}`;
-                    return yapperApi(originalRequest);
+            
+            if (error.response?.status === 401 && !isAuthEndpoint) {
+                if (process.client && window.location.pathname !== '/auth/login' && !error.config?._retry) {
+                    error.config._retry = true
+                    
+                    try {
+                        const nuxtApp = useNuxtApp()
+                        const authService = nuxtApp.$authService
+                        const response = await authService.GetAccessToken()
+                        const access_token = response.data.access_token
+                        const token = useCookie('access_token')
+                        token.value = access_token
+                        // Retry the original request with the new token
+                        const originalRequest = error.config
+                        originalRequest.headers['Authorization'] = `Bearer ${access_token}`
+                        return yapperApi(originalRequest)
+                    } catch (refreshError) {
+                        // Refresh failed, clear access token and redirect
+                        useCookie('access_token').value = null
+                        userStore.logout()
+                        navigateTo('/auth/login')
+                        return Promise.reject(refreshError)
+                    }
                 }
             }
             return Promise.reject(error)
