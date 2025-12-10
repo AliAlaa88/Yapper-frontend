@@ -94,7 +94,7 @@
                 :stats="mainTweetStats"
                 @quote="handleQuote"
                 @reply="handleReply"
-                @viewQuotesAndReposts="handleViewQuotesAndReposts"
+                @view-quotes-and-reposts="handleViewQuotesAndReposts"
             />
             <!-- Edit Tweet Modal -->
             <EditTweetModal
