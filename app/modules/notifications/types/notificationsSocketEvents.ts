@@ -1,4 +1,4 @@
-export type NotificationType = 'follow' | 'like' | 'reply' | 'repost' | 'quote' | 'mention'
+export type NotificationType = 'follow' | 'like' | 'reply' | 'repost' | 'quote' | 'mention' | 'message'
 export type NotificationAction = 'add' | 'remove' | 'aggregate'
 
 export interface User {
@@ -46,7 +46,7 @@ export interface CountTweet extends BaseTweet {
     is_bookmarked: boolean
 }
 
-export interface QuoteTweet extends CountTweet {
+export interface QuoteTweet extends TweetComponent {
     parent_tweet?: {
         tweet_id: string
         type: string
@@ -66,6 +66,15 @@ export interface BaseEvent {
     type: NotificationType
     created_at: string
 }
+
+export interface MessageAddEvent extends BaseEvent {
+    type: 'message'
+    action: 'add'
+    sender: User
+    message_id: string
+    chat_id: string
+}
+export type MessageEvent = MessageAddEvent
 
 export interface FollowAddEvent extends BaseEvent {
     type: 'follow'
@@ -232,6 +241,7 @@ export type NotificationEvent =
     | RepostEvent
     | QuoteEvent
     | MentionEvent
+    | MessageEvent
 
 export type AddEvent =
     | FollowAddEvent
@@ -263,6 +273,7 @@ export const SOCKET_EVENTS = {
     QUOTE: 'quote',
     MENTION: 'mention',
     NEWEST_COUNT: 'newest_count',
+    MESSAGE: 'message',
 
     // client -> server
     MARK_SEEN: 'mark_seen',

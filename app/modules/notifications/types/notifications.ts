@@ -44,6 +44,14 @@ export interface MentionNotification {
     tweet_type: 'tweet' | 'quote' | 'reply'
 }
 
+export interface MessageNotification {
+    type: 'message'
+    created_at: string
+    sender: User
+    message_id: string
+    chat_id: string
+}
+
 export type ApiNotification =
     | FollowNotification
     | LikeNotification
@@ -51,6 +59,7 @@ export type ApiNotification =
     | RepostNotification
     | QuoteNotification
     | MentionNotification
+    | MessageNotification
 
 export interface NotificationsApiResponse {
     data: NotificationsApiData

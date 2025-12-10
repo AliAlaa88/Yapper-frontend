@@ -24,7 +24,7 @@
 import Tweet from '~/modules/tweets/components/Tweet/Tweet.vue'
 import NotificationCard from './NotificationCard.vue'
 import type { ApiNotification } from '../../types/notifications'
-import { Repeat2, Heart, UserRound } from 'lucide-vue-next'
+import { Repeat2, Heart, UserRound, MessageCircle } from 'lucide-vue-next'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { mapNotificationToTweet, shouldUseCardComponent, shouldUseTweetComponent } from '../../utils/notificationMapper'
 const props = defineProps<{
@@ -52,6 +52,8 @@ const notificationUsers = computed(() => {
             return notif.likers
         case 'repost':
             return notif.reposters
+        case 'message':
+            return [notif.sender]
         default:
             return []
     }
@@ -86,6 +88,8 @@ const notificationIcon = computed(() => {
             return Heart
         case 'repost':
             return Repeat2
+        case 'message':
+            return MessageCircle
         default:
             return null
     }
@@ -99,6 +103,8 @@ const notificationIconColor = computed(() => {
             return '#f91880'
         case 'repost':
             return '#00ba7c'
+        case 'message' :
+            return '#7856ff'
         default:
             return ''
     }
@@ -146,6 +152,9 @@ const notificationMessage = computed(() => {
 
             return t('notifications.repostedYourPost')
 
+        case 'message':
+            return t('notifications.sentYouAMessage')
+
         default:
             return ''
     }
@@ -178,6 +187,10 @@ const notificationLink = computed(() => {
 
     if (notif.type === 'follow' && notif.followers.length > 1) {
         return `/${user.value?.username}/followers`
+    }
+
+    if (notif.type === 'message') {
+        return `/messages/${notif.chat_id}`
     }
 
     return '#'

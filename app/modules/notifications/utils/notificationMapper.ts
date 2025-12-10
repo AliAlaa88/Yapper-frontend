@@ -135,10 +135,10 @@ export const mapParentTweet = (parent: QuoteTweet['parent_tweet']): Tweet | null
 }
 
 export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
-    const reply = mapAnyBaseTweetToTweet(n.reply_tweet, n.replier)
+    const reply = mapAnyBaseTweetToTweet(n.reply_tweet as TweetComponent, n.replier)
 
     if (n.original_tweet) {
-        reply.parent_tweet = mapAnyBaseTweetToTweet(n.original_tweet)
+        reply.parent_tweet = mapAnyBaseTweetToTweet(n.original_tweet as TweetComponent)
     }
 
     return reply
@@ -147,17 +147,16 @@ export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
 export const mapQuoteNotificationToTweet = (n: QuoteNotification): Tweet => {
     const quoteTweet = mapAnyBaseTweetToTweet(n.quote_tweet, n.quoter)
 
+    // Fix: parent_tweet exists inside quote_tweet
     if (n.quote_tweet.parent_tweet) {
-        const parent = mapParentTweet(n.quote_tweet.parent_tweet)
-        quoteTweet.parent_tweet = parent
-        ;(quoteTweet as any).quoted_tweet = parent
+        quoteTweet.parent_tweet = mapParentTweet(n.quote_tweet.parent_tweet)
     }
 
     return quoteTweet
 }
 
 export const mapMentionNotificationToTweet = (n: MentionNotification): Tweet => {
-    const tweet = mapAnyBaseTweetToTweet(n.tweet, n.mentioner)
+    const tweet = mapAnyBaseTweetToTweet(n.tweet as TweetComponent, n.mentioner)
 
     if (n.tweet_type === 'quote' && 'parent_tweet' in n.tweet) {
         const qt = n.tweet as QuoteTweet
@@ -188,5 +187,4 @@ export const shouldUseTweetComponent = (n: ApiNotification) =>
     ['reply', 'quote', 'mention'].includes(n.type)
 
 export const shouldUseCardComponent = (n: ApiNotification) =>
-    ['follow', 'like', 'repost'].includes(n.type)
-
+    ['follow', 'like', 'repost', 'message'].includes(n.type)
