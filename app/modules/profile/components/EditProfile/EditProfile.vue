@@ -1,10 +1,11 @@
 <template>
-    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" @click.self="closeModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm">
         <div
             class="relative w-full h-full flex items-start justify-center overflow-y-auto py-4 sm:py-8"
         >
             <div
                 id="edit-profile-modal"
+                ref="editProfileModalRef"
                 class="relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
                 @click.stop
             >
@@ -27,7 +28,10 @@
                     @remove="handleAvatarRemove"
                 />
 
-                <EditProfileForm v-model="formData" @update:is-birth-date-valid="isBirthDateValid = $event" />
+                <EditProfileForm
+                    v-model="formData"
+                    @update:is-birth-date-valid="isBirthDateValid = $event"
+                />
 
                 <input
                     id="cover-file-input"
@@ -51,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { useProfileStore } from '../../stores/profileStore'
 import { storeToRefs } from 'pinia'
@@ -91,6 +95,7 @@ const coverUrl = ref<string | null>(null)
 const isBirthDateValid = ref(true)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const avatarFileInput = ref<HTMLInputElement | null>(null)
+const editProfileModalRef = ref<HTMLElement | null>(null)
 
 onMounted(() => {
     if (user.value) {
@@ -119,12 +124,23 @@ const handleKeydown = (event: KeyboardEvent) => {
     }
 }
 
-onMounted(() => {
+const handleClickOutside = (event: MouseEvent) => {
+    if (editProfileModalRef.value && !editProfileModalRef.value.contains(event.target as Node)) {
+        closeModal()
+    }
+}
+
+onMounted(async () => {
     window.addEventListener('keydown', handleKeydown)
+    await nextTick()
+    setTimeout(() => {
+        document.addEventListener('click', handleClickOutside, true)
+    }, 0)
 })
 
 onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown)
+    document.removeEventListener('click', handleClickOutside, true)
 })
 
 const handleCoverUpload = () => {

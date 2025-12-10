@@ -84,9 +84,6 @@ const {
 } = defineProps<Props>()
 
 const containerPositionClasses = computed(() => {
-    // FIX 2: Corrected Logic for flex-col
-    // In flex-col: Cross Axis (Horizontal) = items-*, Main Axis (Vertical) = justify-*
-
     const xClasses = {
         start: 'items-start',
         center: 'items-center',
@@ -99,7 +96,6 @@ const containerPositionClasses = computed(() => {
         end: 'justify-end',
     }
 
-    // xPosition should control Horizontal (items), yPosition should control Vertical (justify)
     const classes = [xClasses[xPosition], yClasses[yPosition], containerClass].filter(Boolean)
 
     return classes.join(' ')

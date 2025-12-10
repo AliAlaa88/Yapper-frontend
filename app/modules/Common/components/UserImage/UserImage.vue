@@ -26,7 +26,8 @@ const props = defineProps<{
 
 function CheckImageUrl(url?: string) {
     if (!url || url.length === 0) {
-        return null
+        return false
     }
+    return true
 }
 </script>

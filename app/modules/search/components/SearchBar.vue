@@ -22,10 +22,10 @@
                     :placeholder="$t('search.searchPlaceholder')"
                     @focus="handleFocus"
                     @blur="handleBlur"
-                    v-model="searchQuery"
-                    @keydown.enter="handleSearchSubmit(searchQuery)"
+                    v-model="searchQueryInput"
+                    @keydown.enter="handleSearchSubmit(searchQueryInput)"
                 />
-                <CircleX v-if="isFocused && searchQuery !== ''" :size="20" @click="handleClearQuery" class="cursor-pointer" />
+                <CircleX v-if="isFocused && searchQueryInput !== ''" :size="20" @click="handleClearQuery" class="cursor-pointer" />
             </div>
         </div>
         <div
@@ -46,6 +46,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Search, CircleX } from 'lucide-vue-next'
 import SearchHistory from '~/modules/search/components/SearchHistory.vue'
 import SearchSuggestions from '~/modules/search/components/SearchSuggestions.vue'
+import { useDebounce } from '~/modules/Common/composables/useDebounce'
 
 const props = defineProps<{
     hasArrow?: boolean
@@ -54,21 +55,22 @@ const props = defineProps<{
 const route = useRoute()
 const router = useRouter()
 const isFocused = ref(false)
-const searchQuery = ref('')
+const searchQueryInput = ref('')
+const searchQuery = useDebounce(searchQueryInput, 300)
 const inputRef = ref<HTMLInputElement | null>(null)
 const STORAGE_KEY = 'yapper-search-history'
 const initialQuery = history.state.user as string || ''
 
 onMounted(() => {
-    searchQuery.value = (route.query.q as string) || (initialQuery ? `from:${initialQuery} ` : '') || ''
+    searchQueryInput.value = (route.query.q as string) || (initialQuery ? `from:${initialQuery} ` : '') || ''
 })
 
 watch(() => route.query.q, (newQuery) => {
-    searchQuery.value = (newQuery as string) || ''
+    searchQueryInput.value = (newQuery as string) || ''
 })
 
 const handleClearQuery = () => {
-    searchQuery.value = ''
+    searchQueryInput.value = ''
     isFocused.value = true
 }
 
@@ -90,7 +92,7 @@ const handleBack = () => {
 
 const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click' | 'recent_search_click' | 'trend_click' = 'typed_query') => {
     if (!query.trim()) return
-    searchQuery.value = query
+    searchQueryInput.value = query
 
     if (inputRef.value) {
         inputRef.value.blur()
@@ -100,14 +102,14 @@ const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click
         const stored = localStorage.getItem(STORAGE_KEY)
         let searchHistory = stored ? JSON.parse(stored) : []
 
-        const existingIndex = searchHistory.findIndex((item: any) => item.type === 'query' && item.query === searchQuery.value)
+        const existingIndex = searchHistory.findIndex((item: any) => item.type === 'query' && item.query === query)
         if (existingIndex !== -1) {
             searchHistory.splice(existingIndex, 1)
         }
 
         searchHistory.unshift({
             type: 'query',
-            query: searchQuery.value,
+            query: query,
             timestamp: Date.now()
         })
 
@@ -115,7 +117,7 @@ const handleSearchSubmit = (query: string, src: 'typed_query' | 'typeahead_click
         router.push({
             path: '/search',
             query: {
-                q: searchQuery.value,
+                q: query,
                 src,
             },
         })

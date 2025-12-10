@@ -1,9 +1,10 @@
 <template>
     <div class="w-full">
-        <UserCard 
-            v-for="user in mappedUsers" 
+        <UserCard
+            v-for="user in mappedUsers"
             :key="user.user_id"
             :user="user"
+            :hide-bio="hideBio"
         />
     </div>
 </template>
@@ -29,6 +30,7 @@ interface ApiUser {
 
 const props = defineProps<{
     users: ApiUser[]
+    hideBio?: boolean | null
 }>()
 
 // Map API response to FollowUser interface expected by UserCard

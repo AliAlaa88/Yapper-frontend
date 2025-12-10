@@ -119,13 +119,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, inject } from 'vue'
 import { Send, Smile, ImagePlay, X } from 'lucide-vue-next'
 import GifPicker from '~/modules/TimeLine/components/postTweet/subComponents/GifPicker/GifPicker.vue'
 import EmojiPicker from '~/modules/TimeLine/components/postTweet/subComponents/EmojiPicker/EmojiPicker.vue'
 import MediaUpload from '~/modules/TimeLine/components/postTweet/subComponents/MediaUpload/MediaUpload.vue'
 import { useUploadMedia } from '~/modules/TimeLine/queries/useUploadMedia'
 import type { participant as participantType } from '~/modules/chat/types'
+import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 
 interface MediaItem {
     url: string
@@ -140,6 +141,9 @@ const props = defineProps<{
 }>()
 
 const { $chatSocketService } = useNuxtApp()
+
+
+const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
 
 const content = ref('')
 const showGifPicker = ref(false)
@@ -211,7 +215,7 @@ const handleTextareaInput = (event: Event) => {
     $chatSocketService.handleTyping()
 }
 
-// Watch content changes to auto-resize (e.g., when emoji is added)
+
 watch(
     () => content.value,
     () => {
@@ -221,7 +225,7 @@ watch(
                 textareaRef.value.style.height = `${Math.min(textareaRef.value.scrollHeight, 128)}px`
             }
         })
-    },
+    },  
 )
 
 watch(content, () => {
@@ -235,6 +239,13 @@ watch(content, () => {
 
 const handleSubmit = () => {
     if (disableSendButton.value) return
+
+    if (content.value.trim() === '') return
+
+    if (content.value.length > 200) {
+        snackbar?.handleShowSnackbar('Message must be 200 characters or less')
+        return
+    }
 
     let messageType: 'text' | 'image' | 'video' = 'text'
     let mediaUrl: string | undefined
