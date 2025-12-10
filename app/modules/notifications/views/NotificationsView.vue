@@ -66,13 +66,52 @@ const {
 console.log('list data', listData)
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
+
+
+const hasScrolled = ref(false)
+
+const handleScroll = () => {
+    if (window.scrollY > 250 && !hasScrolled.value) {
+        hasScrolled.value = true
+        $notificationsSocketService.markNotificationsAsSeen()
+    }
+}
 
 onMounted(() => {
     if (!userStore.isLoggedIn) {
         router.push('/auth')
     }
-    $notificationsSocketService.markNotificationsAsSeen()
+    // $notificationsSocketService.markNotificationsAsSeen()
+
+    window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
+
+watch(() => route.path, (newPath) => {
+    if (newPath !== '/notifications') {
+        hasScrolled.value = false
+    }
+})
+
+onBeforeRouteLeave((to, from, next) => {
+    if (from.path === '/notifications' && to.path !== '/notifications') {
+        console.log('[Notifications] Leaving page → marking all as seen')
+        $notificationsSocketService.markNotificationsAsSeen()
+    }
+    next()
+})
+
+// browser back/forward
+watch(() => route.path, (newPath, oldPath) => {
+    if (oldPath === '/notifications' && newPath !== '/notifications') {
+        console.log('[Notifications] Route changed → marking as seen')
+        $notificationsSocketService.markNotificationsAsSeen()
+    }
 })
 
 watch(activeTab, () => {
