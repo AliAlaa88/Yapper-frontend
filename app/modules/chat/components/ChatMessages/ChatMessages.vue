@@ -15,10 +15,14 @@
                 </button>
                 <template
                     v-if="!isConversationLoading && !isLoading && participant && conversationId"
-                >
-                    <img
-                        v-if="participant.avatar_url"
-                        :src="participant.avatar_url"
+                    >
+                    <NuxtLink :to="`/${participant.username}`">
+                    <div class="flex items-center gap-2">
+
+
+                            <img
+                            v-if="participant.avatar_url"
+                            :src="participant.avatar_url"
                         :alt="participant.username"
                         class="w-10 h-10 rounded-full object-cover"
                         :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}'`"
@@ -29,11 +33,14 @@
                         :alt="participant.username"
                         class="w-10 h-10 rounded-full object-cover"
                     />
-                    <NuxtLink :to="`/${participant.username}`">
+                    <div>
+
                         <h2 class="font-bold text-primary">
                             {{ participant.name || 'Chat' }}
                         </h2>
                         <p class="text-sm text-secondary">@{{ participant.username || '' }}</p>
+                    </div>
+                    </div>
                     </NuxtLink>
                 </template>
                 <div v-else class="flex items-center gap-3">
