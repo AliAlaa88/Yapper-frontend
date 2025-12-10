@@ -20,10 +20,10 @@
                 <div class="shrink-0 flex flex-col items-center">
                     <NuxtLink :to="getProfileUrl(parentUser)" @click.stop>
                         <img
-                            :src="parentUser.avatar"
-                            :alt="parentUser.name"
+                            :src="parentUser?.avatar"
+                            :alt="parentUser?.name"
                             class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
-                            @error="(event) => handleImageError(parentUser.name, event)"
+                            @error="(event) => handleImageError(parentUser?.name, event)"
                         />
                     </NuxtLink>
                     <!-- Thread connecting line -->
