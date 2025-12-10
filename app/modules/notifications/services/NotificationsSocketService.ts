@@ -31,6 +31,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     const { socketService, queryClient } = deps
     let listenersInitialized = false
     const unreadCount = ref<number>(0)
+    const route = useRoute()
 
     const initializeListeners = () => {
         console.log('Initializing listeners...')
@@ -69,21 +70,23 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         unreadCount.value = count
     }
 
+    const isOnNotificationsPage = computed(() => {
+        return route.path === '/notifications'
+    })
+
+    const incrementUnreadCount = () => {
+        if (!isOnNotificationsPage.value) {
+            unreadCount.value += 1
+            console.log('Unread count incremented', unreadCount.value)
+        }
+    }
+
     const markNotificationsAsSeen = () => {
         if (!socketService.isConnected()) return
 
         console.log('sending mark_seen event to server')
         socketService.emit(SOCKET_EVENTS.MARK_SEEN, {})
         unreadCount.value = 0
-    }
-
-    const route = useRoute()
-    const incrementUnreadCount = () => {
-        console.log('route', route.path)
-        if (import.meta.client && route.path !== '/notifications') {
-            unreadCount.value += 1
-            console.log('Unread count incremented', unreadCount.value)
-        }
     }
 
     const handleWebSocketEvent = (event: NotificationEvent) => {
@@ -106,6 +109,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
             const apiNotification = convertWebSocketToApi(event)
             if (apiNotification) {
                 replaceNotificationInCache(['notifications'], apiNotification)
+                incrementUnreadCount()
             }
         }
     }

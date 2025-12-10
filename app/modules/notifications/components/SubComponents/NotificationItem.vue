@@ -181,7 +181,7 @@ onMounted(() => {
 
         setTimeout(() => {
             isNew.value = false
-        }, 40000)
+        }, 10000)
     }
 })
 
@@ -192,7 +192,7 @@ watch(() => props.notification.created_at, () => {
         isNew.value = true
         setTimeout(() => {
             isNew.value = false
-        }, 40000)
+        }, 10000)
     }
 })
 </script>
