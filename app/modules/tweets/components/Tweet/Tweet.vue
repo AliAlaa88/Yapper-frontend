@@ -12,7 +12,116 @@
             </span>
         </div>
 
-        <div class="flex gap-3">
+        <!-- Thread view for replies with parent_tweet -->
+        <template v-if="tweet.type === 'reply' && tweet.parent_tweet">
+            <!-- Parent Tweet -->
+            <div class="flex gap-3 mb-0">
+                <!-- Parent Avatar column with thread line -->
+                <div class="shrink-0 flex flex-col items-center">
+                    <NuxtLink :to="getProfileUrl(parentUser)" @click.stop>
+                        <img
+                            :src="parentUser.avatar"
+                            :alt="parentUser.name"
+                            class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                            @error="(event) => handleImageError(parentUser.name, event)"
+                        />
+                    </NuxtLink>
+                    <!-- Thread connecting line -->
+                    <div class="w-0.5 flex-1 bg-gray-600 mt-1 min-h-5" />
+                </div>
+
+                <!-- Parent Content column -->
+                <div class="flex-1 min-w-0 pb-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            <Publisher
+                                :publisher="parentUser"
+                                :created-at="tweet.parent_tweet.created_at"
+                            />
+                        </div>
+                    </div>
+                    <Content :content="parentContent" />
+                    <Stats :stats="parentStats" />
+                </div>
+            </div>
+
+            <!-- Reply Tweet (current tweet) -->
+            <div class="flex gap-3">
+                <!-- Reply Avatar column -->
+                <div class="shrink-0">
+                    <NuxtLink :id="`tweet-avatar-link-${id}`" :to="profileUrl" @click.stop>
+                        <CustomToolTip
+                            :delay-duration="300"
+                            content-class="rounded-2xl shadow-xl border border-primary"
+                        >
+                            <template #trigger>
+                                <img
+                                    :id="`tweet-avatar-${id}`"
+                                    :src="user.avatar"
+                                    :alt="user.name"
+                                    class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
+                                    @error="(event) => handleImageError(user.name, event)"
+                                />
+                            </template>
+                            <template #content="{ isOpen }">
+                                <UserCard
+                                    :id="user.id"
+                                    :name="user.name"
+                                    :username="user.username"
+                                    :avatar="user.avatar"
+                                    :bio="user.bio"
+                                    :followers-count="user.followers"
+                                    :following-count="user.following"
+                                    :is_following="user.is_following"
+                                    :is-open="isOpen"
+                                />
+                            </template>
+                        </CustomToolTip>
+                    </NuxtLink>
+                </div>
+
+                <!-- Reply Content column -->
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            <Publisher :publisher="user" :created-at="createdAt" />
+                        </div>
+
+                        <!-- Actions Menu Button -->
+                        <div class="relative">
+                            <button
+                                :id="`tweet-menu-button-${id}`"
+                                class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                                :aria-label="$t('tweets.moreActions')"
+                                @click.stop="toggleActionsMenu"
+                            >
+                                <MoreHorizontal :size="16" />
+                            </button>
+
+                            <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                            <MyTweetActionsMenu
+                                v-if="showActionsMenu && isOwnTweet"
+                                :tweet-id="tweet.tweet_id"
+                                @edit="onEdit"
+                                @delete="onDelete"
+                            />
+                            <ProfileActionsMenu
+                                v-else-if="showActionsMenu"
+                                :userid="user.id"
+                                :is-tweet="true"
+                                @user-action="handleUserAction"
+                            />
+                        </div>
+                    </div>
+
+                    <Content :content="content" />
+                    <Stats :stats="stats" @quote="handleQuote" @reply="handleReply" />
+                </div>
+            </div>
+        </template>
+
+        <!-- Standard tweet view (non-reply or reply without parent_tweet) -->
+        <div v-else class="flex gap-3">
             <!-- Avatar column -->
             <div class="shrink-0">
                 <NuxtLink :id="`tweet-avatar-link-${id}`" :to="profileUrl" @click.stop>
