@@ -4,8 +4,13 @@ import type { useConfirmation } from '~/modules/profile/composables/useConfirmat
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 import { useDeleteTweetMutation, useUpdateTweetMutation } from '../queries/useTweetQueries'
 import { useRouter } from 'vue-router'
+import { useQueryClient } from '@tanstack/vue-query'
+import { cacheInvalidation } from '~/modules/Common/queries'
 
-export function useTweetActions(tweetId: Ref<string | undefined>) {
+export function useTweetActions(
+    tweetId: Ref<string | undefined>,
+    parentTweetId?: Ref<string | undefined>,
+) {
     const { t } = useI18n()
 
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
@@ -15,6 +20,7 @@ export function useTweetActions(tweetId: Ref<string | undefined>) {
         typeof useConfirmation
     >
     const router = useRouter()
+    const queryClient = useQueryClient()
     // Use the mutation queries
     const tweetIdValue = computed(() => tweetId.value ?? '')
     const deleteMutation = useDeleteTweetMutation(tweetIdValue.value)
@@ -33,6 +39,16 @@ export function useTweetActions(tweetId: Ref<string | undefined>) {
     async function handleSaveEdit(content: string) {
         await handleUpdateWithSnackbar(content)
         showEditModal.value = false
+        // Refetch replies to show updated content
+        if (tweetId.value) {
+            console.log('Invalidating replies cache for tweet:', tweetId.value)
+            cacheInvalidation.onReplyCreate(queryClient, tweetId.value, '')
+        }
+        // Also invalidate parent tweet's replies if available
+        if (parentTweetId?.value) {
+            console.log('Invalidating parent tweet replies cache:', parentTweetId.value)
+            cacheInvalidation.onReplyCreate(queryClient, parentTweetId.value, '')
+        }
     }
 
     // Handle close edit modal
