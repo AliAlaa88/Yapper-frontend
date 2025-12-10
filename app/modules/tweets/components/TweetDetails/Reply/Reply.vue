@@ -75,10 +75,16 @@ import Content from '../../Tweet/subComponents/Content/Content.vue'
 import Stats from '../../Tweet/subComponents/Stats/Stats.vue'
 import UserCard from '../../Tweet/subComponents/Publisher/UserCard.vue'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
-import { computed } from 'vue'
+import { computed, ref, provide } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../../utils/navigation'
 import { navigateTo } from '#app'
 import { useTweetTransitionStore } from '../../../stores/tweetTransition'
+import { MoreHorizontal } from 'lucide-vue-next'
+import MyTweetActionsMenu from '../../Tweet/subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
+import ProfileActionsMenu from '../../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { useTweetActions } from '../../../composables/useTweetActions'
+import EditTweetModal from '../../EditTweetModal/EditTweetModal.vue'
 
 const props = defineProps<{
     reply: Tweet
@@ -86,6 +92,45 @@ const props = defineProps<{
 }>()
 
 const tweetTransitionStore = useTweetTransitionStore()
+const userStore = useUserStore()
+
+// Get parent tweet ID from route for cache invalidation
+const route = useRoute()
+const parentTweetId = computed(() => route.params.tweetId as string)
+
+// Actions menu state
+const showActionsMenu = ref(false)
+provide('show-list', showActionsMenu)
+
+// Check if this reply belongs to the current user
+const isOwnReply = computed(() => {
+    return props.reply.user.id === userStore.getUser()?.user_id
+})
+
+// Use tweet actions composable for edit/delete functionality
+const tweetId = computed(() => props.reply.tweet_id)
+const {
+    handleDeleteWithConfirmation,
+    handleEdit,
+    handleSaveEdit,
+    handleCloseEditModal,
+    showEditModal,
+    isUpdateLoading,
+} = useTweetActions(tweetId, parentTweetId)
+
+// Toggle actions menu
+const toggleActionsMenu = () => {
+    showActionsMenu.value = !showActionsMenu.value
+}
+
+// Handlers for own tweet actions
+const onEdit = () => handleEdit(showActionsMenu)
+const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
+
+// Handle user actions (mute/block)
+const handleUserAction = (_action: string) => {
+    showActionsMenu.value = false
+}
 
 // Computed to check if there are nested replies
 const hasNestedReplies = computed(() => props.reply.replies && props.reply.replies.length > 0)
