@@ -248,6 +248,57 @@ const user = computed(() => ({
         props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`,
 }))
 
+// Parent tweet user for thread view
+const parentUser = computed(() => {
+    if (!props.tweet.parent_tweet?.user) return null
+    return {
+        ...props.tweet.parent_tweet.user,
+        avatar:
+            props.tweet.parent_tweet.user.avatar_url ??
+            `https://ui-avatars.com/api/?name=${props.tweet.parent_tweet.user.name}`,
+    }
+})
+
+// Parent tweet content for thread view
+const parentContent = computed(() => {
+    if (!props.tweet.parent_tweet) {
+        return { text: '', images: [], videos: [] }
+    }
+    return {
+        text: props.tweet.parent_tweet.content,
+        images: props.tweet.parent_tweet.images || [],
+        videos: props.tweet.parent_tweet.videos || [],
+    }
+})
+
+const parentStats = computed(() => {
+    if (!props.tweet.parent_tweet) {
+        return {
+            tweet_id: '',
+            likes: 0,
+            replies: 0,
+            retweets: 0,
+            views: 0,
+            is_liked: false,
+            is_reposted: false,
+            is_bookmarked: false,
+            username: '',
+            user_id: '',
+        }
+    }
+    return {
+        tweet_id: props.tweet.parent_tweet.tweet_id,
+        likes: props.tweet.parent_tweet.likes_count,
+        replies: props.tweet.parent_tweet.replies_count,
+        retweets: props.tweet.parent_tweet.reposts_count,
+        views: props.tweet.parent_tweet.views_count,
+        is_liked: props.tweet.parent_tweet.is_liked,
+        is_reposted: props.tweet.parent_tweet.is_reposted,
+        is_bookmarked: props.tweet.parent_tweet.is_bookmarked,
+        username: props.tweet.parent_tweet.user.username,
+        user_id: props.tweet.parent_tweet.user.id,
+    }
+})
 // Transform stats to the expected format
 const stats = computed(() => ({
     tweet_id: props.tweet.tweet_id,
