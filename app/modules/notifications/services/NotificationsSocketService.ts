@@ -48,6 +48,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         socketService.on(SOCKET_EVENTS.REPLY, handleWebSocketEvent)
         socketService.on(SOCKET_EVENTS.REPOST, handleWebSocketEvent)
         socketService.on(SOCKET_EVENTS.MENTION, handleWebSocketEvent)
+        socketService.on(SOCKET_EVENTS.MESSAGE, handleWebSocketEvent)
         listenersInitialized = true
     }
 
@@ -163,6 +164,8 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                 return `quote_${notification.quote_tweet.tweet_id}`
             case 'mention':
                 return `mention_${notification.tweet.tweet_id}`
+            case 'message' :
+                return `message_${notification.message_id}`
             default:
                 return `notification_${(notification as { created_at?: string }).created_at ?? ''}`
         }
@@ -235,6 +238,17 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
     const convertWebSocketToApi = (event: NotificationEvent): ApiNotification | null => {
         console.log('Input event:', event)
+
+        if (event.type === 'message' && event.action === 'add') {
+            return {
+                type: 'message' as const,
+                created_at: event.created_at || new Date().toISOString(),
+                sender: event.sender,
+                message_id: event.message_id,
+                chat_id: event.chat_id,
+            }
+        }
+
         if (isFollowEvent(event) && event.action === 'add') {
             return {
                 type: 'follow',

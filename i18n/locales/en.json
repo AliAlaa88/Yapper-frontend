@@ -532,6 +532,8 @@
     "likedMany": "liked {count} of your posts",
 
     "repostedYourPost": "reposted your post",
-    "repostedMany": "reposted {count} of your posts"
+    "repostedMany": "reposted {count} of your posts",
+
+    "sentYouAMessage": "sent you a message",
   }
 }
