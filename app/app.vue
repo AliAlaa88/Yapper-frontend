@@ -16,31 +16,108 @@
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const userStore = useUserStore()
-const { $socketService, $chatSocketService } = useNuxtApp()
+const { $socketService, $chatSocketService, $notificationsSocketService } = useNuxtApp()
+const socketsInitialized = ref(false)
 
-onMounted(() => {
-    if (userStore.isLoggedIn) {
-        $socketService.connect()
-        $chatSocketService.initializeListeners()
-        console.log('socket connected on app mount')
+onMounted(async () => {
+    if (userStore.isLoggedIn && !socketsInitialized.value) {
+        await initializeSockets()
     }
 })
 
 watch(
     () => userStore.isLoggedIn,
-    (newVal) => {
-        if (newVal) {
-            $socketService.connect()
-            $chatSocketService.initializeListeners()
-            console.log('socket connected on watch')
-        } else {
-            $chatSocketService.removeListeners()
-            $chatSocketService.reset()
-            $socketService.disconnect()
-            console.log('socket disconnected on watch')
+    async (newVal) => {
+        if (newVal && !socketsInitialized.value) {
+            await initializeSockets()
+        } else if (!newVal && socketsInitialized.value) {
+            cleanupSockets()
         }
     },
 )
+
+const initializeSockets = async () => {
+    if (socketsInitialized.value) {
+        console.log('Sockets already initialized, skipping')
+        return
+    }
+
+    try {
+        $chatSocketService.initializeListeners()
+        $notificationsSocketService.initializeListeners()
+        $socketService.connect()
+        const connected = await waitForSocketConnection(9000) // 5 second timeout
+
+        if (!connected) {
+            console.error('Socket connection timeout')
+            return
+        }
+        console.log('Socket connected successfully')
+    } catch (error) {
+        console.log('Error during socket initialization:', error)
+    }
+
+}
+
+const waitForSocketConnection = (timeout: number = 5000): Promise<boolean> => {
+    return new Promise((resolve) => {
+        const startTime = Date.now()
+
+        const checkConnection = () => {
+            const isConnected = $socketService.isConnected()
+            const elapsed = Date.now() - startTime
+
+            console.log(`[App.vue] Connection check: ${isConnected ? '✅' : '❌'} (${elapsed}ms elapsed)`)
+
+            if (isConnected) {
+                resolve(true)
+            } else if (elapsed >= timeout) {
+                console.error(`[App.vue] Connection timeout after ${timeout}ms`)
+                resolve(false)
+            } else {
+                // Check again in 100ms
+                setTimeout(checkConnection, 100)
+            }
+        }
+
+        checkConnection()
+    })
+}
+
+const cleanupSockets = () => {
+    try {
+        $chatSocketService.removeListeners()
+        $notificationsSocketService.removeListeners()
+        $chatSocketService.reset()
+        $socketService.disconnect()
+        socketsInitialized.value = false
+    } catch (error) {
+        console.error('Error during socket cleanup:', error)
+    }
+
+    console.groupEnd()
+}
+
+if (import.meta.client) {
+    const handleVisibilityChange = async () => {
+        if (document.visibilityState === 'visible' && userStore.isLoggedIn) {
+            const isConnected = $socketService.isConnected()
+            if (!isConnected && !socketsInitialized.value) {
+                await initializeSockets()  // reconnect
+            }
+        }
+    }
+
+    onMounted(() => {
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+    })
+
+    onBeforeUnmount(() => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+        cleanupSockets()
+    })
+}
+
 
 const { locale, locales } = useI18n()
 
