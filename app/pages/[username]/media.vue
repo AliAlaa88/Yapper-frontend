@@ -5,6 +5,8 @@
 
 <script setup lang="ts">
 import ProfileContent from '../../modules/profile/components/ProfileContent/ProfileContent.vue'
+import { useProfilePageSeo } from '~/modules/profile/composables/useProfilePageSeo'
+useProfilePageSeo('media')
 
 definePageMeta({
     layout: 'profile',

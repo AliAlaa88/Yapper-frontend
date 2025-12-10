@@ -42,11 +42,22 @@ watch(
     },
 )
 
-const { locale, locales } = useI18n()
+const { locale, locales, t } = useI18n()
 
 const currentLocale = computed(() => locale.value)
 const currentDirection = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)
     return currentLocaleObj?.dir || 'ltr'
+})
+
+// Set default SEO for pages that don't have specific SEO
+useHead({
+    htmlAttrs: {
+        lang: currentLocale.value,
+        dir: currentDirection.value,
+    },
+    titleTemplate: (titleChunk) => {
+        return titleChunk ? titleChunk : t('seo.default.title')
+    },
 })
 </script>

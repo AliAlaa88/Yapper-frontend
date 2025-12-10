@@ -4,7 +4,8 @@ export const tweetServiceReal = {
     async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
         const { $axios } = useNuxtApp()
 
-        const response = await $axios.get(`${path}` + (nextCursor ? `?cursor=${nextCursor}` : ''))
+        const separator = path.includes('?') ? '&' : '?'
+        const response = await $axios.get(`${path}` + (nextCursor ? `${separator}cursor=${nextCursor}` : ''))
         const page = response.data.data
 
         return {
