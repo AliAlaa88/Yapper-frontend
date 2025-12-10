@@ -1,7 +1,6 @@
 import {
     SOCKET_EVENTS,
     type NotificationEvent,
-    type RemoveEvent,
 } from '../types/notificationsSocketEvents'
 import type { createSocketService } from '~/modules/Common/services/socketServices'
 import {
@@ -77,7 +76,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         if (!isOnNotificationsPage.value) {
             unreadCount.value += 1
             console.log('Unread count incremented', unreadCount.value)
-        }
+        } else markNotificationsAsSeen()
     }
 
     const markNotificationsAsSeen = () => {
@@ -116,39 +115,15 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     const handleRemoveNotification = (event: NotificationEvent) => {
         console.log('Remove event received:', event)
 
-        const eventType = detectRemoveEventType(event as RemoveEvent)
-        if (eventType === 'like' || eventType === 'repost' || eventType === 'follow') {
+        if (event.type === 'like' || event.type === 'repost' || event.type === 'follow') {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
         } else {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
 
-            if (eventType === 'reply' || eventType === 'mention') {
+            if (event.type === 'reply' || event.type === 'mention') {
                 queryClient.invalidateQueries({ queryKey: ['mentions'] })
             }
         }
-    }
-
-    const detectRemoveEventType = (event: RemoveEvent): string | null => {
-        // determine event type
-        if ('follower_id' in event && 'followed_id' in event) {
-            return 'follow'
-        }
-        if ('liked_by' in event && 'like_to' in event) {
-            return 'like'
-        }
-        if ('reply_tweet_id' in event && 'reply_to' in event) {
-            return 'reply'
-        }
-        if ('reposted_by' in event && 'repost_to' in event) {
-            return 'repost'
-        }
-        if ('quote_tweet_id' in event && 'quote_to' in event) {
-            return 'quote'
-        }
-        if ('tweet_id' in event && 'mentioned_by' in event) {
-            return 'mention'
-        }
-        return null
     }
 
     const addNotificationToCache = (queryKey: string[], notification: ApiNotification | null) => {
@@ -257,6 +232,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
             return { ...oldData, pages: newPages }
         })
     }
+
     const convertWebSocketToApi = (event: NotificationEvent): ApiNotification | null => {
         console.log('Input event:', event)
         if (isFollowEvent(event) && event.action === 'add') {
