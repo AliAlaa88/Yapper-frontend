@@ -235,10 +235,7 @@ const content = computed(() => ({
     text: props.tweet.content,
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
-    parentTweet:
-        props.tweet.type !== 'reply'
-            ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet)
-            : undefined,
+    parentTweet: props.tweet.type === 'quote' ? props.tweet.parent_tweet : undefined,
 }))
 
 // Transform user to include avatar property
