@@ -63,7 +63,6 @@ export function useTweetActions(
         async function handleClick() {
             try {
                 await deleteMutation.mutateAsync()
-                router.replace('/')
                 handleShowSnackbar(t('tweets.tweetDeleted'))
             } catch (error) {
                 console.error('Failed to delete tweet:', error)
