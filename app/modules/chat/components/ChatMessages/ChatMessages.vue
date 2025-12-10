@@ -29,12 +29,12 @@
                         :alt="participant.username"
                         class="w-10 h-10 rounded-full object-cover"
                     />
-                    <div>
+                    <NuxtLink :to="`/${participant.username}`">
                         <h2 class="font-bold text-primary">
                             {{ participant.name || 'Chat' }}
                         </h2>
                         <p class="text-sm text-secondary">@{{ participant.username || '' }}</p>
-                    </div>
+                    </NuxtLink>
                 </template>
                 <div v-else class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-secondary animate-pulse" />
