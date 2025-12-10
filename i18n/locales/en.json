@@ -520,5 +520,18 @@
         "loadOlderMessages": "Load older messages",
         "failedToLoad": "Failed to load messages",
         "backToMessages": "Back to messages"
-    }
+    },
+  "notifications": {
+    "and": " and ",
+    "others": "others",
+
+    "followedYou": "followed you",
+
+    "likedYourPost": "liked your post",
+    "likedYourReply": "liked your reply",
+    "likedMany": "liked {count} of your posts",
+
+    "repostedYourPost": "reposted your post",
+    "repostedMany": "reposted {count} of your posts"
+  }
 }

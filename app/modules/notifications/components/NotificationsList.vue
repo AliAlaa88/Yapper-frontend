@@ -74,7 +74,6 @@ onMounted(() => {
     .notification-enter-from {
     opacity: 0;
     transform: translateY(-10px);
-    transition: all 0.3s ease-out;
     }
 
     .notification-enter-to {

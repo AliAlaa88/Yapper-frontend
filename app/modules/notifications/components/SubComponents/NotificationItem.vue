@@ -115,31 +115,42 @@ const notificationFillColor = computed(() => {
     }
 })
 
+const { t } = useI18n()
+
 const notificationMessage = computed(() => {
     const notif = props.notification
 
     switch (notif.type) {
         case 'follow':
-            return 'followed you'
+            return t('notifications.followedYou')
+
         case 'like':
-            // one person, multiple tweets
             if (notif.tweets.length > 1) {
-                return `liked ${notif.tweets.length} of your posts`
+                return t('notifications.likedMany', {
+                    count: notif.tweets.length,
+                })
             }
-            // Single tweet
+
             if (notif.tweets.length === 1 && notif.tweets[0]?.type === 'reply') {
-                return 'liked your reply'
+                return t('notifications.likedYourReply')
             }
-            return 'liked your post'
+
+            return t('notifications.likedYourPost')
+
         case 'repost':
             if (notif.tweets.length > 1) {
-                return `reposted ${notif.tweets.length} of your posts`
+                return t('notifications.repostedMany', {
+                    count: notif.tweets.length,
+                })
             }
-            return 'reposted your post'
+
+            return t('notifications.repostedYourPost')
+
         default:
             return ''
     }
 })
+
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)

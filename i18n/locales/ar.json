@@ -500,5 +500,19 @@
         "loadOlderMessages": "تحميل الرسائل الأقدم",
         "failedToLoad": "فشل تحميل الرسائل",
         "backToMessages": "العودة إلى الرسائل"
-    }
+    },
+    "notifications": {
+    "and": " و ",
+    "others": "آخرين",
+
+    "followedYou": "قام بمتابعتك",
+
+    "likedYourPost": "أعجب بمنشورك",
+    "likedYourReply": "أعجب بردّك",
+    "likedMany": "أعجب بـ {count} من منشوراتك",
+
+    "repostedYourPost": "قام بإعادة نشر منشورك",
+    "repostedMany": "قام بإعادة نشر {count} من منشوراتك"
+  }
 }
+
