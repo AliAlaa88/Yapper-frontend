@@ -1,9 +1,18 @@
 <template>
+    <!-- Mobile: Bottom sheet overlay -->
+    <div
+        v-if="isOpen"
+        class="md:hidden fixed inset-0 bg-black/50 z-50"
+        @click="$emit('close')"
+    ></div>
     <div
         v-if="isOpen"
         ref="emojiPickerRef"
-        class="absolute z-60 bg-primary border border-primary rounded-lg shadow-lg overflow-hidden left-0"
-        :class="position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'"
+        class="fixed md:absolute z-60 bg-primary border border-primary rounded-lg md:rounded-lg rounded-t-2xl rounded-b-none shadow-lg overflow-hidden
+               inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto
+               w-full md:w-auto
+               md:left-0"
+        :class="{ 'md:bottom-full md:mb-2': position === 'top', 'md:top-full md:mt-2': position !== 'top' }"
         @click.stop
     >
         <div class="p-2 border-b border-primary flex justify-between items-center">
