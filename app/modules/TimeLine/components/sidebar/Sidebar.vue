@@ -59,6 +59,12 @@
                                     >
                                         {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
                                     </span>
+                                    <span
+                                        v-if="link.href === '/notifications' && totalUnreadNotifications > 0"
+                                        class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
+                                    >
+                                        {{ totalUnreadNotifications > 99 ? '99+' : totalUnreadNotifications }}
+                                    </span>
                                 </div>
                             </NuxtLink>
                         </template>
@@ -85,6 +91,12 @@
                                     class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
                                 >
                                     {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
+                                </span>
+                                <span
+                                    v-if="link.href === '/notifications' && totalUnreadNotifications > 0"
+                                    class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
+                                >
+                                    {{ totalUnreadNotifications > 99 ? '99+' : totalUnreadNotifications }}
                                 </span>
                             </div>
                             <span class="text-[20px] text-primary font-normal">{{
@@ -221,6 +233,7 @@ const handleClose = () => {
     isOpen.value = false
 }
 
-const { $chatSocketService } = useNuxtApp()
+const { $chatSocketService, $notificationsSocketService } = useNuxtApp()
 const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
+const totalUnreadNotifications = computed(() => $notificationsSocketService.unreadCount.value)
 </script>
