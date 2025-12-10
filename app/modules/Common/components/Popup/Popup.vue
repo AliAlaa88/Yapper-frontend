@@ -8,7 +8,7 @@
         >
             <div
                 id="popup-content"
-                class="bg-primary md:rounded-2xl p-0 overflow-hidden z-50"
+                class="bg-primary md:rounded-2xl p-0 overflow-hidden z-50 h-full md:h-auto w-full"
                 :class="contentClass"
                 @click.stop
             >
@@ -77,7 +77,7 @@ const {
     xPosition = 'center',
     yPosition = 'center',
     containerClass = '',
-    contentClass = 'md:max-w-[600px] w-full h-fit',
+    contentClass = 'md:max-w-[600px] w-full md:min-w-[400px]',
     headerClass = 'border-b border-gray-700',
     slotClass = 'max-h-[calc(90vh-60px)]',
     bgColor = 'bg-popup',

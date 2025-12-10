@@ -125,6 +125,7 @@ import GifPicker from '~/modules/TimeLine/components/postTweet/subComponents/Gif
 import EmojiPicker from '~/modules/TimeLine/components/postTweet/subComponents/EmojiPicker/EmojiPicker.vue'
 import MediaUpload from '~/modules/TimeLine/components/postTweet/subComponents/MediaUpload/MediaUpload.vue'
 import { useUploadMedia } from '~/modules/TimeLine/queries/useUploadMedia'
+import type { participant as participantType } from '~/modules/chat/types'
 
 interface MediaItem {
     url: string
@@ -134,6 +135,8 @@ interface MediaItem {
 const props = defineProps<{
     conversationId: string
     containerRef?: HTMLElement | null
+    messagesLength: number
+    participant: participantType
 }>()
 
 const { $chatSocketService } = useNuxtApp()
@@ -244,10 +247,11 @@ const handleSubmit = () => {
         }
     }
 
-    $chatSocketService.sendMessage(props.conversationId, {
+    $chatSocketService.sendMessage(props.conversationId, props.participant, {
         content: content.value.trim() || undefined,
         mediaUrl,
         messageType,
+        messagesLength: props.messagesLength,
     })
 
     if (props.containerRef) {
