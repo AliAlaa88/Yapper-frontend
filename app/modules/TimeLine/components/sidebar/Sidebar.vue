@@ -1,7 +1,7 @@
 <template>
     <aside
         :class="[
-            'min-h-screen bg-primary flex flex-col transition-all duration-300 ease-in-out',
+            'h-full bg-primary flex flex-col transition-all duration-300 ease-in-out',
             isCollapsed ? 'w-[70px] px-2' : 'w-[275px] px-3',
         ]"
     >
@@ -142,8 +142,9 @@
             :title="t('timeline.sidebar.postTweet')"
             @close="handleClose"
             bgColor="bg-popup/20"
+            :slotClass="'w-full'"
         >
-            <PostTweet :border="false" />
+            <PostTweet :border="false" :handleClose="handleClose" />
         </Popup>
     </aside>
 </template>

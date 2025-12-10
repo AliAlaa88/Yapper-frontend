@@ -12,6 +12,7 @@ const urls = {
     createConversation: '/chat',
     markAsRead: (chatId: string) => `/chat/chats/${chatId}/read`,
     getMessages: (chatId: string) => `/messages/chats/${chatId}/messages`,
+    getConversationById: (chatId: string) => `/chat/${chatId}`,
 }
 
 export const createChatService = () => ({
@@ -41,6 +42,18 @@ export const createChatService = () => ({
                     throw new Error('Invalid or expired token')
                 }
             }
+            throw new Error('Something went wrong')
+        }
+    },
+
+    getConversationById: async (chatId: string) => {
+        const { $axios } = useNuxtApp()
+        try {
+            const response = await $axios.get<ConversationApiResponse>(
+                urls.getConversationById(chatId),
+            )
+            return response.data.data
+        } catch (error: unknown) {
             throw new Error('Something went wrong')
         }
     },

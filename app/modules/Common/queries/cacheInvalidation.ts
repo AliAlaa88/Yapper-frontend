@@ -65,7 +65,9 @@ export const cacheInvalidation = {
     },
     onReplyCreate: (queryClient: QueryClient, parentTweetId: string, userId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(parentTweetId) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(`/users/${userId}/replies`) })
+        queryClient.invalidateQueries({
+            queryKey: queryKeys.tweets.list(`/users/${userId}/replies`),
+        })
     },
 
     /**
@@ -197,6 +199,9 @@ export const cacheInvalidation = {
      * Call after creating a new conversation
      */
     onConversationCreate: (queryClient: QueryClient) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all })
+    },
+    onFirstMessageSent: (queryClient: QueryClient) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all })
     },
 }

@@ -26,12 +26,18 @@ interface Tweet {
         reposted_at: string
     }
     parent_tweet?: Tweet | null
+    parent_tweet_id?: string
     conversation_tweet?: Tweet | null
+    replies?: Tweet[]
 }
 type TweetsPage = {
     data: Tweet[]
     nextCursor?: string
     hasMore?: boolean
+    parent?: boolean
 }
-
-export type { Tweet, TweetsPage }
+type TweetSummary = {
+    tweet_id: string
+    summary: string
+}
+export type { Tweet, TweetsPage, TweetSummary }

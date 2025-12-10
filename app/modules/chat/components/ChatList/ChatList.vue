@@ -16,11 +16,16 @@
             <button
                 id="new-chat-button"
                 class="p-2 hover:bg-hover rounded-full cursor-pointer transition-colors"
+                @click="openCreateConversation"
             >
                 <MessageSquarePlus class="w-5 h-5 text-primary" />
             </button>
         </div>
-        <div id="chat-list-scroll-container" ref="scrollContainerRef" class="overflow-y-auto flex-1" >
+        <div
+            id="chat-list-scroll-container"
+            ref="scrollContainerRef"
+            class="overflow-y-auto flex-1"
+        >
             <ConversationItem
                 v-for="chat in conversations"
                 :id="`conversation-item-${chat.id}`"
@@ -39,11 +44,15 @@
                 v-if="!isFetching && conversations.length === 0"
                 class="flex flex-col items-center justify-center p-8 text-center"
             >
-                <MessageSquarePlus class="w-12 h-12 text-secondary mb-4" />
+                <MessageSquarePlus
+                    class="w-12 h-12 text-secondary mb-4 cursor-pointer"
+                    @click="openCreateConversation"
+                />
                 <p class="text-secondary">{{ $t('chat.noMessagesYet') }}</p>
                 <p class="text-sm text-muted">{{ $t('chat.noMessagesYetDescription') }}</p>
             </div>
         </div>
+        <CreateConversation :isOpen="isCreateConversationOpen" @close="closeCreateConversation" />
     </div>
 </template>
 
@@ -55,6 +64,7 @@ import ConversationItem from './subComponents/ConversationItem/ConversationItem.
 import { useGetConversation } from '~/modules/chat/queries/useGetConversation'
 import { useIntersectionObserver } from '@vueuse/core'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
+import CreateConversation from '../CreateConversation/CreateConversation.vue'
 
 const props = defineProps<{
     selectedChatId?: string | null
@@ -66,6 +76,16 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const { $chatSocketService } = useNuxtApp()
+const isCreateConversationOpen = ref(false)
+
+function openCreateConversation() {
+    console.log('openCreateConversation')
+    isCreateConversationOpen.value = true
+}
+
+const closeCreateConversation = () => {
+    isCreateConversationOpen.value = false
+}
 
 const handleSelectConversation = (conversation: Conversation) => {
     router.push(`/messages/${conversation.id}`)

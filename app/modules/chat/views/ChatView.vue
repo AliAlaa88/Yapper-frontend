@@ -14,10 +14,10 @@
 
         <div class="hidden md:flex flex-1 border-r border-primary w-full h-screen">
             <ChatMessages
-                v-if="selectedConversation"
+                v-if="props.chatId"
                 class="w-full h-full"
-                :conversation-id="selectedConversation.id"
-                :participant="selectedConversation.participant"
+                :conversation-id="props.chatId"
+                :participant="selectedConversation?.participant"
             />
             <div v-else class="flex-1 flex items-center justify-center">
                 <div class="text-center p-8 max-w-md">
@@ -29,7 +29,8 @@
                     </p>
                     <button
                         id="new-chat-button-empty-state"
-                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors cursor-pointer"
+                        class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors cursor-pointer hover:bg-accent/90"
+                        @click="openCreateConversation"
                     >
                         {{ $t('chat.newMessage') }}
                     </button>
@@ -37,22 +38,33 @@
             </div>
         </div>
 
-        <div v-if="selectedConversation" class="md:hidden flex-1 w-full h-screen">
+        <div v-if="props.chatId" class="md:hidden flex-1 w-full h-screen">
             <ChatMessages
                 class="w-full h-full"
-                :conversation-id="selectedConversation.id"
-                :participant="selectedConversation.participant"
+                :conversation-id="props.chatId"
+                :participant="selectedConversation?.participant"
             />
         </div>
+
+        <CreateConversation :isOpen="isCreateConversationOpen" @close="closeCreateConversation" />
     </div>
+
+    <SnackBar />
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, provide } from 'vue'
 import { ChatList } from '../components/ChatList'
 import ChatMessages from '../components/ChatMessages/ChatMessages.vue'
-import { useGetConversation } from '../queries/useGetConversation'
+import CreateConversation from '../components/CreateConversation/CreateConversation.vue'
+import { useGetConversationById } from '../queries/useGetConversation'
 import type { Conversation } from '../types'
+
+import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
+import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+
+const snackbar = useSnackbar()
+provide('snackbar', snackbar)
 
 const props = defineProps<{
     chatId?: string
@@ -61,29 +73,40 @@ const props = defineProps<{
 const { $chatSocketService } = useNuxtApp()
 
 const selectedConversation = ref<Conversation | null>(null)
+const isCreateConversationOpen = ref(false)
 
-// Get conversations to find the one matching chatId
-const { data: conversationsData } = useGetConversation()
+const openCreateConversation = () => {
+    isCreateConversationOpen.value = true
+}
 
-const conversations = computed(() => {
-    return conversationsData.value?.pages.flatMap((page) => page.data) || []
-})
+const closeCreateConversation = () => {
+    isCreateConversationOpen.value = false
+}
 
-// Find and select conversation based on chatId prop
+const conversationIdForQuery = ref(props.chatId || '')
+
+const { data: conversationByIdData, isLoading: isConversationByIdLoading } =
+    useGetConversationById(conversationIdForQuery)
+
 watch(
-    [() => props.chatId, conversations],
-    async ([newChatId, convos]) => {
-        if (newChatId && convos.length > 0) {
-            const conversation = convos.find((c) => c.id === newChatId)
-            if (conversation) {
-                selectedConversation.value = conversation
-                try {
-                    await $chatSocketService.enterChat(newChatId)
-                } catch (error) {
-                    console.error('[ChatView] Failed to join chat from route:', error)
-                }
+    () => props.chatId,
+    (newChatId) => {
+        conversationIdForQuery.value = newChatId || ''
+    },
+    { immediate: true },
+)
+
+watch(
+    conversationByIdData,
+    async (conversation) => {
+        if (props.chatId && conversation) {
+            selectedConversation.value = conversation
+            try {
+                await $chatSocketService.enterChat(conversation.id)
+            } catch (error) {
+                console.error('[ChatView] Failed to join chat from route:', error)
             }
-        } else if (!newChatId) {
+        } else if (!props.chatId) {
             selectedConversation.value = null
         }
     },

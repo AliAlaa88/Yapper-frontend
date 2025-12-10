@@ -361,16 +361,12 @@
     "settings": {
         "yourAccount": "حسابك",
         "yourAccount_desc": "اطّلع على معلومات حسابك، وقم بتنزيل أرشيف لبياناتك، أو تعرّف على كيفية حذف حسابك.",
-
         "accountInformation": "معلومات الحساب",
         "accountInformation_desc": "اطّلع على معلومات حسابك مثل اسم المستخدم والبريد الإلكتروني.",
-
         "changePassword": "تغيير كلمة المرور",
         "changePassword_desc": "يمكنك تغيير كلمة المرور في أي وقت.",
-
         "deleteYourAccount": "حذف حسابك",
         "deleteYourAccount_desc": "تعرّف على كيفية حذف حسابك.",
-
         "accountInfo": {
             "title": "معلومات الحساب",
             "username": "اسم المستخدم",
@@ -386,29 +382,23 @@
             "change_email_description": "بريدك الإلكتروني الحالي هو. ماذا تريد أن تغيره؟ لن يظهر بريدك الإلكتروني في ملفك الشخصي العام على Yapper.",
             "email_address": "عنوان البريد الإلكتروني",
             "cancel": "إلغاء",
-
             "we_sent_code": "لقد أرسلنا لك رمزًا",
             "enter_code_message": "أدخل الرمز أدناه للتحقق من بريدك الإلكتروني.",
             "verification_code": "رمز التحقق",
             "didnt_receive": "لم تستلم الرمز؟ إعادة الإرسال",
             "verify": "تحقق",
-
             "change_country": "تغيير الدولة",
             "country": "الدولة",
-
             "languages": "اللغات",
             "languages_list": "الإنجليزية، العربية",
-
             "birthDate": "تاريخ الميلاد",
             "birthDate_desc": "قم بتغيير تاريخ ميلادك من خلال ملفك الشخصي.",
-
             "age": "العمر",
             "age_desc_long": "إذا لم تُدخل تاريخ ميلادك، سنعرض لك نطاقًا للعمر بناءً على ملفك الشخصي ونشاطك في Yapper. تُستخدم معلومات العمر لتخصيص تجربتك.",
             "age_notRight": "ليس صحيحًا؟ يمكنك إضافة تاريخ ميلادك إلى",
             "age_notRight2": "دون مشاركته بشكل عام.",
             "profile": "الملف الشخصي"
         },
-
         "languages": {
             "title": "اللغات",
             "appsAndLanguage": "التطبيق و لغة النشر",
@@ -417,14 +407,12 @@
             "selectAppLanguage_desc": "ستكون هذه هي اللغة الافتراضية في التطبيق. سترى أيضًا محتوى نقترحه بناءً على اللغات الأخرى التي اخترتها.",
             "next": "التالي"
         },
-
         "changeCountry": {
             "title": "تغيير البلد؟",
             "description": "سيؤدي هذا إلى تخصيص تجربة Yapper الخاصة بك بناءً على البلد الذي تعيش فيه.",
             "button": "تغيير",
             "cancel": "إلغاء"
         },
-
         "confirm_password": "تأكيد كلمة المرور",
         "enter_password_message": "يرجى إدخال كلمة المرور للمتابعة.",
         "password": "كلمة المرور",
@@ -439,53 +427,44 @@
         "currentPassword": "كلمة المرور الحالية",
         "newPassword": "كلمة المرور الجديدة",
         "confirmPassword": "تأكيد كلمة المرور",
-
         "deleteAccount": {
             "title": "حذف الحساب",
             "warningTitle": "سيتم حذف حسابك",
             "description": "أنت على وشك بدء عملية حذف حسابك في Yapper. لن يكون اسم العرض الخاص بك، {username}، وملفك الشخصي العام مرئيين بعد الآن على Yapper.com أو Yapper لنظام iOS أو Yapper لنظام Android.",
             "button": "حذف"
         },
-
         "privacyAndSafety": "الخصوصية والأمان",
         "privacyAndSafety_desc": "إدارة إعدادات الخصوصية والأمان في Yapper.",
-
         "muteAndBlock": "الكتم والحظر",
         "muteAndBlock_desc": "إدارة الحسابات والإشعارات التي قمت بكتمها أو حظرها.",
-
         "blockedAccounts": "الحسابات المحظورة",
         "blockedAccounts_desc": "عند حظر شخص ما، فلن يتمكن من متابعتك أو مراسلتك، ولن ترى إشعارات منه.",
-
         "mutedAccounts": "الحسابات المكتومة",
         "mutedAccounts_desc": "هنا ستجد جميع من قمت بكتمهم. يمكنك إضافة أو إزالة الحسابات من هذه القائمة.",
-
         "block_accounts_title": "حظر الحسابات غير المرغوب فيها",
         "block_accounts_description": "عند حظر شخص ما، لن يتمكن من متابعتك أو مراسلتك، ولن تظهر لك الإشعارات منه.",
-
         "muted_accounts_title": "الحسابات المكتومة",
         "muted_accounts_description": "المنشورات من الحسابات المكتومة لن تظهر في الخط الزمني الرئيسي. يمكنك كتم الحسابات من ملفها الشخصي أو من منشورها.",
         "displayAndLanguages": "العرض واللغات",
         "displayAndLanguages_desc": "إدارة كيفية عرض محتوى Yapper لك.",
-
         "display": "العرض",
         "display_desc": "إدارة لون الخط والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
         "display_desc2": "إدارة حجم الخط، اللون، والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
-
         "fontSize": "حجم الخط",
         "color": "اللون",
         "background": "الخلفية",
         "default": "افتراضي",
         "lights_out": "الوضع المظلم",
-
         "useSystemSetting": "استخدام إعداد النظام",
         "useSystemSetting_desc": "سيتم تغيير السمة تلقائيًا بناءً على إعدادات جهازك.",
-
         "choosePreferredTheme": "اختر السمة المفضّلة لديك"
     },
     "tweets": {
         "reposted": "أعاد النشر",
         "postEngagements": "تفاعلات المنشور",
         "moreActions": "المزيد من الإجراءات",
+        "aiSummary": "ملخص الذكاء الاصطناعي",
+        "aiError": "محتوي المنشور قصير جدا لا يسمح بالملخص",
         "editTweet": "تعديل",
         "deleteTweet": "حذف",
         "tweetDeleted": "تم حذف منشورك",
@@ -775,7 +754,21 @@
         "loading": "جاري التحميل...",
         "loadOlderMessages": "تحميل الرسائل الأقدم",
         "failedToLoad": "فشل تحميل الرسائل",
-        "backToMessages": "العودة إلى الرسائل"
+        "backToMessages": "العودة إلى الرسائل",
+        "createConversation": {
+            "title": "إنشاء محادثة",
+            "newMessage": "رسالة جديدة",
+            "searchUsername": "ابحث عن اسم مستخدم",
+            "startNewConversation": "ابدأ محادثة جديدة",
+            "startNewConversationDescription": "ابحث عن اسم مستخدم لبدء المراسلة",
+            "next": "التالي",
+            "creating": "جاري الإنشاء...",
+            "noUsersFound": "لم يتم العثور على مستخدمين",
+            "tryDifferentUsername": "جرب البحث عن اسم مستخدم مختلف",
+            "loading": "جاري التحميل...",
+            "failedToLoad": "فشل التحميل",
+            "tryAgain": "حاول مرة أخرى"
+        }
     },
     "countries": {
         "Afghanistan": "أفغانستان",
@@ -968,5 +961,10 @@
         "Yemen": "اليمن",
         "Zambia": "زامبيا",
         "Zimbabwe": "زيمبابوي"
+    },
+    "bookmarks": {
+        "title": "الإشارات المرجعية",
+        "noBookmarks": "لا توجد إشارات مرجعية بعد",
+        "saveYourBookmarks": "احفظ المنشورات لوقت لاحق بالنقر على أيقونة الإشارة المرجعية"
     }
 }
