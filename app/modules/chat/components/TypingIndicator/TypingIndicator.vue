@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isTyping" class="flex items-center gap-2 px-4 py-2 text-secondary">
+    <div v-if="isTyping && userName !== currentUserName" class="flex items-center gap-2 px-4 py-2 text-secondary">
         <div class="flex items-center gap-1">
             <span
                 v-for="i in 3"
@@ -14,14 +14,17 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const props = defineProps<{
     chatId: string
     userName?: string
 }>()
 
+const userStore = useUserStore()
 const { $chatSocketService } = useNuxtApp()
 
+const currentUserName = computed(() => userStore.getUser()?.username)
 const isTyping = computed(() => $chatSocketService.isUserTypingInChat(props.chatId))
 
 const typingUsers = computed(() => $chatSocketService.getTypingUsersInChat(props.chatId))
