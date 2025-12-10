@@ -6,8 +6,8 @@
         >
             <div class="flex items-center gap-4">
                 <button
-                    @click="$router.back()"
                     class="p-2 rounded-full hover:bg-hover transition-colors"
+                    @click="$router.back()"
                 >
                     <ArrowLeft :size="20" class="cursor-pointer text-primary" />
                 </button>
