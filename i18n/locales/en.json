@@ -375,10 +375,8 @@
     "settings": {
         "yourAccount": "Your Account",
         "yourAccount_desc": "See information about your account, download an archive of your data, or learn about your account deletion.",
-
         "accountInformation": "Account information",
         "accountInformation_desc": "See your account information like your username and email address.",
-
         "changePassword": "Change your password",
         "changePassword_desc": "Change your password at any time.",
         "currentPassword": "Current password",
@@ -388,7 +386,6 @@
         "deleteYourAccount": "Delete your account",
         "deleteYourAccount_desc": "Find out how you can delete your account.",
         "passwordsDoNotMatch": "Passwords do not match",
-
         "search_settings": "search settings",
         "accountInfo": {
             "title": "Account information",
@@ -430,7 +427,6 @@
         "noPasswordSetTitle": "No password set",
         "noPasswordSetDescription": "Your account doesn't have a password set. This usually happens when you signed up using a social provider (Google, Github).",
         "setUpPassword": "Set up a password →",
-
         "languages": {
             "title": "Languages",
             "appsAndLanguage": "App and post languages",
@@ -439,21 +435,18 @@
             "selectAppLanguage_desc": "This will be your default language in the app. You’ll see content we think you’ll like in the other languages you chose, too.",
             "next": "Next"
         },
-
         "deleteAccount": {
             "title": "Delete Account",
             "warningTitle": "This will delete your account",
             "description": "You're about to start the process of deleting your Yapper account. Your display name, {username}, and public profile will no longer be viewable on Yapper.com, Yapper for iOS, or Yapper for Android.",
             "button": "Delete"
         },
-
         "changeCountry": {
             "title": "Change country?",
             "description": "This will customize your Yapper experience based on the country you live in.",
             "button": "Change",
             "cancel": "Cancel"
         },
-
         "privacyAndSafety": "Privacy and Safety",
         "privacyAndSafety_desc": "Manage your privacy and safety settings on Yapper.",
         "muteAndBlock": "Mute and block",
@@ -467,7 +460,6 @@
         "muted_accounts_description": "Posts from muted accounts won’t show up in your Home timeline. Mute accounts directly from their profile or post.",
         "displayAndLanguages": "Display and languages",
         "displayAndLanguages_desc": "Manage how Yapper content is displayed to you.",
-
         "display": "Display",
         "display_desc": "Manage your font color and background. These settings affect all the Yapper accounts on this browser.",
         "display_desc2": "Manage your font size, color, and background. These settings affect all the Yapper accounts on this browser.",
