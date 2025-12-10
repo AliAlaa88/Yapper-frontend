@@ -1,6 +1,5 @@
 import {
     SOCKET_EVENTS,
-    type AggregateEvent,
     type NotificationEvent,
     type RemoveEvent,
 } from '../types/notificationsSocketEvents'
@@ -105,7 +104,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
             }
         } else if (isRemoveAction(event)) {
             handleRemoveNotification(event)
-        } else if (event.action === 'aggregate') {
+        } else if (isAggregateAction(event)) {
             const apiNotification = convertWebSocketToApi(event)
             if (apiNotification) {
                 replaceNotificationInCache(['notifications'], apiNotification)
@@ -121,12 +120,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         if (eventType === 'like' || eventType === 'repost' || eventType === 'follow') {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
         } else {
-            // remove completely
-            // const notificationId = getRemoveIdentifier(event, eventType)
-            // console.log('Notification ID to remove:', notificationId)
-
-            // if (!notificationId) return
-
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
 
             if (eventType === 'reply' || eventType === 'mention') {
@@ -158,164 +151,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         return null
     }
 
-    // page update count
-    // const handleAggregatedRemove = (event: any, eventType: string) => {
-    //     // console.log('Handling aggregated notification removal for type:', eventType)
-
-    //     // queryClient.setQueryData(['notifications'], (oldData: any) => {
-    //     //     if (!oldData?.pages) return oldData
-
-    //     //     const newPages = oldData.pages.map((page: any) => {
-    //     //         const updatedNotifications = page.notifications
-    //     //             .map((notif: ApiNotification) => {
-    //     //                 if (eventType === 'like' && notif.type === 'like') {
-    //     //                     console.log('Checking like notification:', notif)
-
-    //     //                     // Check if this notification contains the tweet being unliked
-    //     //                     const tweetMatch = notif.tweets.some(
-    //     //                         (t) => t.tweet_id === event.tweet_id,
-    //     //                     )
-
-    //     //                     if (!tweetMatch) {
-    //     //                         return notif
-    //     //                     }
-
-    //     //                     console.log('matching tweet:', event.tweet_id)
-    //     //                     // Determine aggregation type
-    //     //                     const isAggregatedByPerson =
-    //     //                         notif.likers.length === 1 && notif.tweets.length > 1
-    //     //                     const isAggregatedByTweet =
-    //     //                         notif.likers.length > 1 && notif.tweets.length === 1
-
-    //     //                     if (isAggregatedByPerson) {
-    //     //                         // One person, multiple tweets - Remove only the specific tweet
-    //     //                         console.log('Aggregated by person - removing specific tweet')
-    //     //                         const updatedTweets = notif.tweets.filter(
-    //     //                             (t) => t.tweet_id !== event.tweet_id,
-    //     //                         )
-
-    //     //                         if (updatedTweets.length === 0) {
-    //     //                             console.log(' No tweets left, removing notification')
-    //     //                             return null
-    //     //                         }
-
-    //     //                         return {
-    //     //                             ...notif,
-    //     //                             tweets: updatedTweets,
-    //     //                         }
-    //     //                     } else if (isAggregatedByTweet) {
-    //     //                         // Multiple people, one tweet - Remove only the specific user\
-    //     //                         const updatedLikers = notif.likers.filter((liker) => {
-    //     //                             const keep = liker.id !== event.liked_by
-    //     //                             if (!keep) {
-    //     //                                 console.log(' Removing liker:', liker.name)
-    //     //                             }
-    //     //                             return keep
-    //     //                         })
-
-    //     //                         if (updatedLikers.length === 0) {
-    //     //                             return null
-    //     //                         }
-    //     //                         return {
-    //     //                             ...notif,
-    //     //                             likers: updatedLikers,
-    //     //                         }
-    //     //                     } else {
-    //     //                         // Single user, single tweet - Remove entire notification
-    //     //                         console.log('Single like')
-    //     //                         return null
-    //     //                     }
-    //     //                 }
-
-    //     //                 if (eventType === 'repost' && notif.type === 'repost') {
-
-    //     //                     // Check if this notification contains the tweet being unreposted
-    //     //                     const tweetMatch = notif.tweets.some(
-    //     //                         (t) => t.tweet_id === event.tweet_id,
-    //     //                     )
-
-    //     //                     if (!tweetMatch) {
-    //     //                         return notif
-    //     //                     }
-
-    //     //                     console.log('matching tweet:', event.tweet_id)
-
-    //     //                     const isAggregatedByPerson =
-    //     //                         notif.reposters.length === 1 && notif.tweets.length > 1
-    //     //                     const isAggregatedByTweet =
-    //     //                         notif.reposters.length > 1 && notif.tweets.length === 1
-    //     //                     if (isAggregatedByPerson) {
-    //     //                         const updatedTweets = notif.tweets.filter(
-    //     //                             (t) => t.tweet_id !== event.tweet_id,
-    //     //                         )
-
-    //     //                         if (updatedTweets.length === 0) {
-    //     //                             return null
-    //     //                         }
-
-    //     //                         return {
-    //     //                             ...notif,
-    //     //                             tweets: updatedTweets,
-    //     //                         }
-    //     //                     } else if (isAggregatedByTweet) {
-    //     //                         // Multiple people, one tweet -> Remove only the specific user
-    //     //                         const updatedReposters = notif.reposters.filter((reposter) => {
-    //     //                             const keep = reposter.id !== event.reposted_by
-    //     //                             if (!keep) {
-    //     //                                 console.log('removing reposter:', reposter.name)
-    //     //                             }
-    //     //                             return keep
-    //     //                         })
-
-    //     //                         if (updatedReposters.length === 0) {
-    //     //                             return null
-    //     //                         }
-    //     //                         return {
-    //     //                             ...notif,
-    //     //                             reposters: updatedReposters,
-    //     //                         }
-    //     //                     } else {
-    //     //                         return null // single repost
-    //     //                     }
-    //     //                 }
-
-    //     //                 if (eventType === 'follow' && notif.type === 'follow') {
-
-    //     //                     // Remove specific user from followers array
-    //     //                     const updatedFollowers = notif.followers.filter((follower) => {
-    //     //                         const keep = follower.id !== event.follower_id
-    //     //                         return keep
-    //     //                     })
-
-    //     //                     if (updatedFollowers.length === 0) {
-    //     //                         return null  // no followers left
-    //     //                     }
-
-    //     //                     if (updatedFollowers.length !== notif.followers.length) {
-    //     //                         return {
-    //     //                             ...notif,
-    //     //                             followers: updatedFollowers,
-    //     //                         }
-    //     //                     }
-    //     //                 }
-
-    //     //                 return notif
-    //     //             })
-    //     //             .filter(Boolean) // Remove marked notifications
-
-    //     //         return {
-    //     //             ...page,
-    //     //             notifications: updatedNotifications,
-    //     //         }
-    //     //     })
-    //     //     return {
-    //     //         ...oldData,
-    //     //         pages: newPages,
-    //     //     }
-    //     // })
-    //     queryClient.invalidateQueries({ queryKey: ['notifications'] })
-    // }
-
     const addNotificationToCache = (queryKey: string[], notification: ApiNotification | null) => {
         console.log('Notification to add:', notification)
 
@@ -339,35 +174,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         })
     }
 
-    // const removeNotificationFromCache = (queryKey: string[], notificationId: strin) => {
-    //     // queryClient.setQueryData(queryKey, (oldData: any) => {
-    //     //     if (!oldData?.pages) {
-    //     //         return oldData
-    //     //     }
-    //     //     const newData = {
-    //     //         ...oldData,
-    //     //         pages: oldData.pages.map((page: any) => {
-    //     //             const beforeLength = page.notifications.length
-    //     //             const filteredNotifications = page.notifications.filter(
-    //     //                 (notif: ApiNotification) => {
-    //     //                     const id = getNotificationId(notif)
-    //     //                     return id !== notificationId
-    //     //                 },
-    //     //             )
-    //     //             const afterLength = filteredNotifications.length
-
-    //     //             return {
-    //     //                 ...page,
-    //     //                 notifications: filteredNotifications,
-    //     //                 total: Math.max(page.total - (beforeLength - afterLength), 0),
-    //     //             }
-    //     //         }),
-    //     //     }
-    //     //     return newData
-    //     // })
-    //     queryClient.invalidateQueries({ queryKey: queryKey })
-    // }
-
     const getNotificationId = (notification: ApiNotification): string => {
         switch (notification.type) {
             case 'follow':
@@ -386,27 +192,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                 return `notification_${(notification as { created_at?: string }).created_at ?? ''}`
         }
     }
-
-    // const getRemoveIdentifier = (event: any, eventType: string | null): string | null => {
-    //     if (!eventType) return null
-
-    //     switch (eventType) {
-    //         case 'follow':
-    //             return `follow_${event.follower_id}`
-    //         case 'like':
-    //             return `like_${event.tweet_id}_${event.liked_by}`
-    //         case 'reply':
-    //             return `reply_${event.reply_tweet_id}`
-    //         case 'repost':
-    //             return `repost_${event.tweet_id}_${event.reposted_by}`
-    //         case 'quote':
-    //             return `quote_${event.quote_tweet_id}`
-    //         case 'mention':
-    //             return `mention_${event.tweet_id}`
-    //         default:
-    //             return null
-    //     }
-    // }
 
     const replaceNotificationInCache = (
         queryKey: string[],
@@ -430,15 +215,14 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                             notification.likers.length === 1 && notification.tweets.length > 1
                         const isAggregatedByTweet =
                             notification.likers.length > 1 && notification.tweets.length === 1
-                        const match = isAggregatedByPerson
-                            ? n.likers[0]?.id === notification.likers[0]?.id
-                            : isAggregatedByTweet
-                                ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
-                                : n.likers[0]?.id === notification.likers[0]?.id ||
-                                n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
+                        const match = isAggregatedByTweet
+                            ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
+                            : isAggregatedByPerson
+                                ? n.likers[0]?.id === notification.likers[0]?.id
+                                : false
 
-                        console.log('is aggregated by person', isAggregatedByPerson)
-                        console.log('is aggregated by tweet', isAggregatedByTweet)
+                        console.log('is aggregated by person like', isAggregatedByPerson)
+                        console.log('is aggregated by tweet like', isAggregatedByTweet)
                         console.log('like match', match)
                         if (match) {
                             found = true
@@ -447,9 +231,15 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                     }
 
                     if (notification.type === 'repost' && n.type === 'repost') {
-                        const match =
-                            n.reposters[0]?.id === notification.reposters[0]?.id ||
-                            n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
+                        const isAggregatedByPerson =
+                            notification.reposters.length === 1 && notification.tweets.length > 1
+                        const isAggregatedByTweet =
+                            notification.reposters.length > 1 && notification.tweets.length === 1
+                        const match = isAggregatedByTweet
+                            ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
+                            : isAggregatedByPerson
+                                ? n.reposters[0]?.id === notification.reposters[0]?.id
+                                : false
                         if (match) {
                             found = true
                             return notification
