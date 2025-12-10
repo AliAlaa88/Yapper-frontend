@@ -36,5 +36,8 @@ type TweetsPage = {
     hasMore?: boolean
     parent?: boolean
 }
-
-export type { Tweet, TweetsPage }
+type TweetSummary = {
+    tweet_id: string
+    summary: string
+}
+export type { Tweet, TweetsPage, TweetSummary }

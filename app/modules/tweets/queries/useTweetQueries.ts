@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
 import { unref, type MaybeRef } from 'vue'
-import type { Tweet, TweetDetails, User } from '../types'
+import type { Tweet, TweetDetails, User, TweetSummary } from '../types'
 import type { TweetsPage } from '../types/tweet'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 

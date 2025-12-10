@@ -1,11 +1,13 @@
-import type { Tweet, TweetDetails, TweetsPage } from '../types'
+import type { Tweet, TweetDetails, TweetsPage, TweetSummary } from '../types'
 
 export const tweetServiceReal = {
     async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {
         const { $axios } = useNuxtApp()
 
         const separator = path.includes('?') ? '&' : '?'
-        const response = await $axios.get(`${path}` + (nextCursor ? `${separator}cursor=${nextCursor}` : ''))
+        const response = await $axios.get(
+            `${path}` + (nextCursor ? `${separator}cursor=${nextCursor}` : ''),
+        )
         const page = response.data.data
 
         return {
