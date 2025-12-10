@@ -91,6 +91,10 @@ const props = withDefaults(defineProps<Props>(), {
     emptyDescription: 'Try searching for a different username',
 })
 
+const emit = defineEmits<{
+    (e: 'close'): void
+}>()
+
 const router = useRouter()
 
 const selectedUserId = ref<string | null>(null)
@@ -123,6 +127,7 @@ const handleNext = async () => {
         const conversation = await createConversation(selectedUserId.value)
         const conversationId = conversation.id
         if (conversationId) {
+            emit('close')
             router.push(`/messages/${conversationId}`)
         } else {
             router.push('/messages')

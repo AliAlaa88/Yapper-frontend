@@ -23,6 +23,7 @@
                     v-if="searchUsername.trim().length > 0"
                     :search-query="searchUsername"
                     @user-selected="handleUserSelected"
+                    @close="emit('close')"
                 />
 
                 <div v-else class="flex flex-col items-center justify-center h-full text-center">
