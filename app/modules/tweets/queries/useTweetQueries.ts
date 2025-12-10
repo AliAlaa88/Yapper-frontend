@@ -84,6 +84,17 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
     return queryResult
 }
 
+export function useTweetSummaryQuery(tweetId: string, enabled: boolean = true) {
+    const { $tweetService } = useNuxtApp()
+    return useQuery<TweetSummary | null>({
+        queryKey: ['tweetSummary', tweetId],
+        queryFn: () => ($tweetService as any).fetchTweetSummary(tweetId),
+        enabled,
+        staleTime: 1000 * 60 * 30, // 30 minutes - summaries don't change often
+        gcTime: 1000 * 60 * 60, // 1 hour
+    })
+}
+
 export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
     const { $queryClient } = useNuxtApp()
     return useMutation({

@@ -439,53 +439,44 @@
         "currentPassword": "كلمة المرور الحالية",
         "newPassword": "كلمة المرور الجديدة",
         "confirmPassword": "تأكيد كلمة المرور",
-
         "deleteAccount": {
             "title": "حذف الحساب",
             "warningTitle": "سيتم حذف حسابك",
             "description": "أنت على وشك بدء عملية حذف حسابك في Yapper. لن يكون اسم العرض الخاص بك، {username}، وملفك الشخصي العام مرئيين بعد الآن على Yapper.com أو Yapper لنظام iOS أو Yapper لنظام Android.",
             "button": "حذف"
         },
-
         "privacyAndSafety": "الخصوصية والأمان",
         "privacyAndSafety_desc": "إدارة إعدادات الخصوصية والأمان في Yapper.",
-
         "muteAndBlock": "الكتم والحظر",
         "muteAndBlock_desc": "إدارة الحسابات والإشعارات التي قمت بكتمها أو حظرها.",
-
         "blockedAccounts": "الحسابات المحظورة",
         "blockedAccounts_desc": "عند حظر شخص ما، فلن يتمكن من متابعتك أو مراسلتك، ولن ترى إشعارات منه.",
-
         "mutedAccounts": "الحسابات المكتومة",
         "mutedAccounts_desc": "هنا ستجد جميع من قمت بكتمهم. يمكنك إضافة أو إزالة الحسابات من هذه القائمة.",
-
         "block_accounts_title": "حظر الحسابات غير المرغوب فيها",
         "block_accounts_description": "عند حظر شخص ما، لن يتمكن من متابعتك أو مراسلتك، ولن تظهر لك الإشعارات منه.",
-
         "muted_accounts_title": "الحسابات المكتومة",
         "muted_accounts_description": "المنشورات من الحسابات المكتومة لن تظهر في الخط الزمني الرئيسي. يمكنك كتم الحسابات من ملفها الشخصي أو من منشورها.",
         "displayAndLanguages": "العرض واللغات",
         "displayAndLanguages_desc": "إدارة كيفية عرض محتوى Yapper لك.",
-
         "display": "العرض",
         "display_desc": "إدارة لون الخط والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
         "display_desc2": "إدارة حجم الخط، اللون، والخلفية. تؤثر هذه الإعدادات على جميع حسابات Yapper على هذا المتصفح.",
-
         "fontSize": "حجم الخط",
         "color": "اللون",
         "background": "الخلفية",
         "default": "افتراضي",
         "lights_out": "الوضع المظلم",
-
         "useSystemSetting": "استخدام إعداد النظام",
         "useSystemSetting_desc": "سيتم تغيير السمة تلقائيًا بناءً على إعدادات جهازك.",
-
         "choosePreferredTheme": "اختر السمة المفضّلة لديك"
     },
     "tweets": {
         "reposted": "أعاد النشر",
         "postEngagements": "تفاعلات المنشور",
         "moreActions": "المزيد من الإجراءات",
+        "aiSummary": "ملخص الذكاء الاصطناعي",
+        "aiError": "محتوي المنشور قصير جدا لا يسمح بالملخص",
         "editTweet": "تعديل",
         "deleteTweet": "حذف",
         "tweetDeleted": "تم حذف منشورك",

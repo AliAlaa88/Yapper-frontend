@@ -476,16 +476,16 @@
         "background": "Background",
         "default": "Default",
         "lights_out": "Lights out",
-
         "useSystemSetting": "Use system setting",
         "useSystemSetting_desc": "Your theme will automatically switch based on your device settings.",
-
         "choosePreferredTheme": "Choose your preferred theme"
     },
     "tweets": {
         "reposted": "Reposted",
         "postEngagements": "Post engagements",
         "moreActions": "More actions",
+        "aiSummary": "AI Summary",
+        "aiError": "Tweet content too short for summary generation.",
         "editTweet": "Edit",
         "deleteTweet": "Delete",
         "tweetDeleted": "Your post was deleted",

@@ -87,34 +87,68 @@
                             <Publisher :publisher="user" :created-at="createdAt" />
                         </div>
 
-                        <!-- Actions Menu Button -->
-                        <div class="relative">
+                        <!-- AI Summary and Actions Menu Buttons -->
+                        <div class="flex items-center gap-1">
+                            <!-- AI Summary Button -->
                             <button
-                                :id="`tweet-menu-button-${id}`"
-                                class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
-                                :aria-label="$t('tweets.moreActions')"
-                                @click.stop="toggleActionsMenu"
+                                v-if="ShowAIButton"
+                                :id="`tweet-ai-summary-${id}`"
+                                class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue"
+                                :class="{ 'text-blue': showSummary }"
+                                :aria-label="$t('tweets.aiSummary')"
+                                :disabled="isSummaryLoading"
+                                @click.stop="toggleSummary"
                             >
-                                <MoreHorizontal :size="16" />
+                                <Sparkles v-if="!isSummaryLoading" :size="16" />
+                                <LoadingSpinner v-else size="sm" color="blue" />
                             </button>
 
-                            <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
-                            <MyTweetActionsMenu
-                                v-if="showActionsMenu && isOwnTweet"
-                                :tweet-id="tweet.tweet_id"
-                                @edit="onEdit"
-                                @delete="onDelete"
-                            />
-                            <ProfileActionsMenu
-                                v-else-if="showActionsMenu"
-                                :userid="user.id"
-                                :is-tweet="true"
-                                @user-action="handleUserAction"
-                            />
+                            <!-- Actions Menu Button -->
+                            <div class="relative">
+                                <button
+                                    :id="`tweet-menu-button-${id}`"
+                                    class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                                    :aria-label="$t('tweets.moreActions')"
+                                    @click.stop="toggleActionsMenu"
+                                >
+                                    <MoreHorizontal :size="16" />
+                                </button>
+
+                                <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                                <MyTweetActionsMenu
+                                    v-if="showActionsMenu && isOwnTweet"
+                                    :tweet-id="tweet.tweet_id"
+                                    @edit="onEdit"
+                                    @delete="onDelete"
+                                />
+                                <ProfileActionsMenu
+                                    v-else-if="showActionsMenu"
+                                    :userid="user.id"
+                                    :is-tweet="true"
+                                    @user-action="handleUserAction"
+                                />
+                            </div>
                         </div>
                     </div>
 
                     <Content :content="content" />
+
+                    <!-- AI Summary Section -->
+                    <div
+                        v-if="showSummary && summaryData"
+                        class="mb-3 p-3 bg-blue/5 border border-blue/20 rounded-xl"
+                    >
+                        <div class="flex items-center gap-2 mb-2">
+                            <Sparkles :size="14" class="text-blue" />
+                            <span class="text-sm font-medium text-blue">{{
+                                $t('tweets.aiSummary')
+                            }}</span>
+                        </div>
+                        <p class="text-primary text-sm leading-relaxed">
+                            {{ summaryData.summary }}
+                        </p>
+                    </div>
+
                     <Stats :stats="stats" @quote="handleQuote" @reply="handleReply" />
                 </div>
             </div>
@@ -162,34 +196,68 @@
                         <Publisher :publisher="user" :created-at="createdAt" />
                     </div>
 
-                    <!-- Actions Menu Button -->
-                    <div class="relative">
+                    <!-- AI Summary and Actions Menu Buttons -->
+                    <div class="flex items-center gap-1">
+                        <!-- AI Summary Button -->
                         <button
-                            :id="`tweet-menu-button-${id}`"
-                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
-                            :aria-label="$t('tweets.moreActions')"
-                            @click.stop="toggleActionsMenu"
+                            v-if="ShowAIButton"
+                            :id="`tweet-ai-summary-${id}`"
+                            class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue"
+                            :class="{ 'text-blue': showSummary }"
+                            :aria-label="$t('tweets.aiSummary')"
+                            :disabled="isSummaryLoading"
+                            @click.stop="toggleSummary"
                         >
-                            <MoreHorizontal :size="16" />
+                            <Sparkles v-if="!isSummaryLoading" :size="16" />
+                            <LoadingSpinner v-else size="sm" color="blue" />
                         </button>
 
-                        <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
-                        <MyTweetActionsMenu
-                            v-if="showActionsMenu && isOwnTweet"
-                            :tweet-id="tweet.tweet_id"
-                            @edit="onEdit"
-                            @delete="onDelete"
-                        />
-                        <ProfileActionsMenu
-                            v-else-if="showActionsMenu"
-                            :userid="user.id"
-                            :is-tweet="true"
-                            @user-action="handleUserAction"
-                        />
+                        <!-- Actions Menu Button -->
+                        <div class="relative">
+                            <button
+                                :id="`tweet-menu-button-${id}`"
+                                class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                                :aria-label="$t('tweets.moreActions')"
+                                @click.stop="toggleActionsMenu"
+                            >
+                                <MoreHorizontal :size="16" />
+                            </button>
+
+                            <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                            <MyTweetActionsMenu
+                                v-if="showActionsMenu && isOwnTweet"
+                                :tweet-id="tweet.tweet_id"
+                                @edit="onEdit"
+                                @delete="onDelete"
+                            />
+                            <ProfileActionsMenu
+                                v-else-if="showActionsMenu"
+                                :userid="user.id"
+                                :is-tweet="true"
+                                @user-action="handleUserAction"
+                            />
+                        </div>
                     </div>
                 </div>
 
                 <Content :content="content" />
+
+                <!-- AI Summary Section -->
+                <div
+                    v-if="showSummary && (summaryData || summaryError)"
+                    class="mb-3 p-3 bg-blue/5 border border-blue/20 rounded-xl"
+                >
+                    <div class="flex items-center gap-2 mb-2">
+                        <Sparkles :size="14" class="text-blue" />
+                        <span class="text-sm font-medium text-blue">{{
+                            $t('tweets.aiSummary')
+                        }}</span>
+                    </div>
+                    <p class="text-primary text-sm leading-relaxed">
+                        {{ summaryError ? $t('tweets.aiError') : summaryData?.summary }}
+                    </p>
+                </div>
+
                 <Stats :stats="stats" @quote="handleQuote" @reply="handleReply" />
             </div>
         </div>
@@ -236,13 +304,15 @@ import { CustomToolTip } from '~/modules/Common/components/Tooltip/index.js'
 import { computed, nextTick, ref, provide, inject, type Ref } from 'vue'
 import { getProfileUrl, getTweetUrl } from '../../utils/navigation'
 import { navigateTo } from '#app'
-import { Repeat2, MoreHorizontal } from 'lucide-vue-next'
+import { Repeat2, MoreHorizontal, Sparkles } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useQueryClient } from '@tanstack/vue-query'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
 import { handleImageError } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useTweetActions } from '../../composables/useTweetActions'
+import { useTweetSummaryQuery } from '../../queries/useTweetQueries'
+import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 
 const props = defineProps<{
     tweet: TweetType
@@ -255,10 +325,33 @@ const activeMenuTweetId = inject<Ref<string | null>>('activeMenuTweetId', ref(nu
 
 // Computed to check if this tweet's menu is the active one
 const showActionsMenu = computed(() => activeMenuTweetId.value === props.tweet.tweet_id)
-
+const ShowAIButton = computed(() => (props.tweet.content?.length ?? 0) > 150)
 const showQuoteModal = ref(false)
 const showReplyModal = ref(false)
+const showSummary = ref(false)
 provide('show-list', showActionsMenu)
+
+// AI Summary query - only fetch when user requests it
+const shouldFetchSummary = ref(false)
+const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+    refetch: refetchSummary,
+    error: summaryError,
+} = useTweetSummaryQuery(props.tweet.tweet_id, shouldFetchSummary.value)
+
+const toggleSummary = async () => {
+    if (!showSummary.value) {
+        // First time clicking - fetch the summary
+        if (!summaryData.value) {
+            shouldFetchSummary.value = true
+            await refetchSummary()
+        }
+        showSummary.value = true
+    } else {
+        showSummary.value = false
+    }
+}
 
 // Tweet actions composable
 const tweetId = computed(() => props.tweet.tweet_id)

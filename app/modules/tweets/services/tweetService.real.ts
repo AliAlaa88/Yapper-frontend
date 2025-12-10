@@ -34,6 +34,14 @@ export const tweetServiceReal = {
             return null
         }
     },
+    async fetchTweetSummary(tweetId: string): Promise<TweetSummary | null> {
+        const { $axios } = useNuxtApp()
+        const response = await $axios.get(`/tweets/${tweetId}/summary`)
+        if (response.data && response.data.data) {
+            return response.data.data
+        }
+        return null
+    },
     async fetchtweetreplies(tweetId: string): Promise<Tweet[]> {
         const { $axios } = useNuxtApp()
         try {
