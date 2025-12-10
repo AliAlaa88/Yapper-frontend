@@ -13,6 +13,7 @@ import type {
 } from '../types/notifications'
 
 import type { Tweet } from '~/modules/tweets/types'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 export const mapNotificationUser = (user: User | undefined): Tweet['user'] => {
     if (!user) {
@@ -108,8 +109,31 @@ export const mapAnyBaseTweetToTweet = (
     }
 }
 
+
+export const mapLoggedInUserToTweetUser = (u: User): Tweet['user'] => ({
+    id: u.id,
+    name: u.name,
+    username: u.username,
+    avatar_url: u.avatar_url ?? '',
+    verified: u.verified ?? false,
+    bio: u.bio ?? '',
+    followers_count: u.followers ?? 0,
+    following_count: u.following ?? 0,
+    is_following: null,
+    link: null,
+    cover_url: u.cover_url ?? null,
+    country: null,
+    created_at: '',
+    birth_date: null,
+    language: null,
+    email: u.email ?? '',
+})
+
 export const mapParentTweet = (parent: QuoteTweet['parent_tweet']): Tweet | null => {
     if (!parent) return null
+    const userStore = useUserStore()
+
+    const loggedInUser = userStore.user
 
     return {
         tweet_id: parent.tweet_id,
@@ -128,11 +152,17 @@ export const mapParentTweet = (parent: QuoteTweet['parent_tweet']): Tweet | null
         is_bookmarked: parent.is_bookmarked ?? false,
         created_at: parent.created_at,
         updated_at: parent.updated_at,
-        user: mapNotificationUser(parent.user),
+
+        // ⭐ Use logged-in user instead of backend user_id
+        user: loggedInUser
+            ? mapLoggedInUserToTweetUser(loggedInUser)
+            : mapNotificationUser(undefined),
+
         parent_tweet: null,
         conversation_tweet: null,
     }
 }
+
 
 export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
     const reply = mapAnyBaseTweetToTweet(n.reply_tweet as TweetComponent, n.replier)
