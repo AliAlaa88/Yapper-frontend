@@ -7,6 +7,7 @@
             @click="handleClose"
         >
             <div
+                id="popup-content"
                 class="bg-primary md:rounded-2xl p-0 overflow-hidden z-50 h-full md:h-auto w-full"
                 :class="contentClass"
                 @click.stop

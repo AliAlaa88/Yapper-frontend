@@ -75,6 +75,7 @@ provide('activeMenuTweetId', activeMenuTweetId)
 
 const props = defineProps<{
     fetchingSource?: string | null
+    quotes?: boolean
 }>()
 
 // Convert prop to ref for reactivity
@@ -95,8 +96,6 @@ const {
 const loadTweets = () => {
     refetch()
 }
-
-console.log('Tweets query error:', error, data)
 
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
@@ -141,8 +140,17 @@ const tweets = computed(() => {
     const pages = data.value?.pages
 
     if (!pages) return []
-
-    return pages.flatMap((p) => p.data.map((tweet) => ({ ...tweet })))
+    let newPages = pages.flatMap((p) => p.data.map((tweet) => ({ ...tweet })))
+    if (props?.quotes) {
+        newPages = newPages.map((tweet) => {
+            const parentTweet = pages.find((p) => p.parent)?.parent
+            return {
+                ...tweet,
+                parent_tweet: parentTweet || tweet.parent_tweet,
+            }
+        })
+    }
+    return newPages
 })
 
 const getTweetKey = (tweet: TweetType): string => {
@@ -150,11 +158,5 @@ const getTweetKey = (tweet: TweetType): string => {
     return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.likes_count}-${tweet.is_liked}-${tweet.is_reposted}-${tweet.is_bookmarked}`
 }
 
-watch(
-    tweets,
-    (newTweets) => {
-        console.log('tweets updated', newTweets)
-    },
-    { deep: true },
-)
+watch(tweets, (newTweets) => {}, { deep: true })
 </script>

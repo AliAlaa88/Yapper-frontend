@@ -8,18 +8,22 @@
             <div class="flex items-center gap-2 mb-2">
                 <img
                     :src="userAvatar"
-                    :alt="tweet.user.name"
+                    :alt="tweet?.user?.name"
                     class="w-5 h-5 rounded-full"
-                    @error="(event) => handleImageError(tweet.user.name, event)"
-                >
-                <span class="font-semibold text-primary text-sm truncate">{{ tweet.user.name }}</span>
-                <span class="text-secondary text-sm truncate">@{{ tweet.user.username }}</span>
+                    @error="(event) => handleImageError(tweet?.user?.name, event)"
+                />
+                <span class="font-semibold text-primary text-sm truncate">{{
+                    tweet?.user?.name
+                }}</span>
+                <span class="text-secondary text-sm truncate">@{{ tweet?.user?.username }}</span>
                 <span class="text-secondary text-sm">·</span>
                 <span class="text-secondary text-sm">{{ formattedDate }}</span>
             </div>
 
             <!-- Content preview -->
-            <p class="text-primary text-sm leading-5 line-clamp-3 whitespace-pre-wrap wrap-break-word">
+            <p
+                class="text-primary text-sm leading-5 line-clamp-3 whitespace-pre-wrap wrap-break-word"
+            >
                 {{ tweet.content }}
             </p>
 
@@ -33,7 +37,7 @@
                         :src="tweet.images[0]"
                         alt="Quoted tweet media"
                         class="w-full h-full object-cover"
-                    >
+                    />
                 </div>
                 <div
                     v-else-if="tweet.videos && tweet.videos.length > 0"
@@ -72,13 +76,16 @@ const props = defineProps<{
 
 const videoPlayerRef = ref<InstanceType<typeof VideoPlayer> | null>(null)
 
-const userAvatar = computed(() =>
-    props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`,
+const userAvatar = computed(
+    () =>
+        props.tweet?.user?.avatar_url ??
+        `https://ui-avatars.com/api/?name=${props.tweet?.user?.name}`,
 )
 
-const hasMedia = computed(() =>
-    (props.tweet.images && props.tweet.images.length > 0) ||
-    (props.tweet.videos && props.tweet.videos.length > 0),
+const hasMedia = computed(
+    () =>
+        (props.tweet.images && props.tweet.images.length > 0) ||
+        (props.tweet.videos && props.tweet.videos.length > 0),
 )
 
 const formattedDate = computed(() => formatDate(props.tweet.created_at))
