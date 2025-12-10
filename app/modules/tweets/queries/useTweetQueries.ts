@@ -194,9 +194,7 @@ export function useUpdateTweetMutation(tweetId: string) {
                     pages: oldData.pages.map((page: any) => ({
                         ...page,
                         data: page.data.map((tweet: Tweet) =>
-                            tweet.tweet_id === tweetId
-                                ? { ...tweet, content }
-                                : tweet,
+                            tweet.tweet_id === tweetId ? { ...tweet, content } : tweet,
                         ),
                     })),
                 }
