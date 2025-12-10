@@ -48,13 +48,51 @@
 
             <!-- Content column -->
             <div class="flex-1 min-w-0">
-                <Publisher :publisher="user" :created-at="reply.created_at" />
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1">
+                        <Publisher :publisher="user" :created-at="reply.created_at" />
+                    </div>
+
+                    <!-- Actions Menu Button -->
+                    <div class="relative">
+                        <button
+                            :id="`reply-menu-button-${id}`"
+                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                            :aria-label="$t('tweets.moreActions')"
+                            @click.stop="toggleActionsMenu"
+                        >
+                            <MoreHorizontal :size="16" />
+                        </button>
+
+                        <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                        <MyTweetActionsMenu
+                            v-if="showActionsMenu && isOwnReply"
+                            :tweet-id="reply.tweet_id"
+                            @edit="onEdit"
+                            @delete="onDelete"
+                        />
+                        <ProfileActionsMenu
+                            v-else-if="showActionsMenu"
+                            :userid="reply.user.id"
+                            :is-tweet="true"
+                            @user-action="handleUserAction"
+                        />
+                    </div>
+                </div>
                 <Content :content="content" />
                 <Stats :stats="stats" />
             </div>
         </div>
 
-        <!-- Reply form -->
+        <!-- Edit Tweet Modal -->
+        <EditTweetModal
+            :is-open="showEditModal"
+            :tweet-id="reply.tweet_id"
+            :initial-content="reply.content"
+            :is-loading="isUpdateLoading"
+            @close="handleCloseEditModal"
+            @save="handleSaveEdit"
+        />
     </article>
 
     <!-- Nested Replies -->
