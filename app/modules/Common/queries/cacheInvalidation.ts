@@ -1,6 +1,7 @@
 import type { QueryClient, InfiniteData } from '@tanstack/vue-query'
 import type { MutedAndBlockedListsApiResponse } from '~/modules/settings/types/settings'
 import { queryKeys } from './queryKeys'
+import { query } from 'happy-dom/lib/PropertySymbol.js'
 
 export const cacheInvalidation = {
     // ==================== Tweet Mutations ====================
@@ -63,7 +64,7 @@ export const cacheInvalidation = {
     onTweetDelete: (queryClient: QueryClient, tweetId: string) => {
         queryClient.removeQueries({ queryKey: queryKeys.tweets.details(tweetId) })
     },
-    
+
     onReplyCreate: (queryClient: QueryClient, parentTweetId: string, userId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(parentTweetId) })
         queryClient.invalidateQueries({
@@ -96,6 +97,7 @@ export const cacheInvalidation = {
      */
     onTweetBookmarkChange: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookmarks.all })
     },
 
     // ==================== Profile Mutations ====================
@@ -158,16 +160,18 @@ export const cacheInvalidation = {
      */
     onBlockChange: (queryClient: QueryClient, targetUserId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.search.all })
         // queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
         // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 
     /**
      * Call after muting/unmuting a user
-     */
-    onMuteChange: (queryClient: QueryClient, targetUserId: string) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
-        // queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
+    */
+   onMuteChange: (queryClient: QueryClient, targetUserId: string) => {
+       queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
+       queryClient.invalidateQueries({ queryKey: queryKeys.search.all })
+       // queryClient.invalidateQueries({ queryKey: queryKeys.settings.mutedUsers() })
         // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
     },
 

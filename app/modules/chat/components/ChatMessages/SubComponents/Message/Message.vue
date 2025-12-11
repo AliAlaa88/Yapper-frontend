@@ -7,9 +7,7 @@
                 class="rounded-3xl px-4 py-2"
                 :class="isOwnMessage ? 'bg-accent text-primary' : 'bg-dark-gray text-primary'"
             >
-                <p class="text-[15px] leading-5 whitespace-pre-wrap break-words">
-                    {{ message.content }}
-                </p>
+                <p class="text-[15px] leading-5 whitespace-pre-wrap break-words" style="unicode-bidi: plaintext;" v-html="parseLinks(message.content, isOwnMessage)"/>
 
                 <!-- Media display -->
                 <div v-if="message.media && message.media.length > 0" class="mt-2 space-y-2">
@@ -52,6 +50,8 @@ import { computed } from 'vue'
 import type { Message } from '~/modules/chat/types'
 import { formatMessageDate } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+import { parseLinks } from '~/lib/utils'
+
 interface MessageWithMedia extends Message {
     media?: Array<{
         url: string
