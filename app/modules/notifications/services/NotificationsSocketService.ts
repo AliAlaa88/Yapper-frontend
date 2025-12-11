@@ -297,15 +297,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                 created_at: event.created_at || new Date().toISOString(),
                 replier: event.replier,
                 reply_tweet: event.reply_tweet,
-                original_tweet: {
-                    tweet_id: event.original_tweet_id,
-                    type: 'tweet',
-                    content: '',
-                    images: [],
-                    videos: [],
-                    created_at: event.created_at,
-                    updated_at: event.created_at,
-                },
+                original_tweet: event.original_tweet,
                 conversation_id: event.conversation_id,
             }
         }

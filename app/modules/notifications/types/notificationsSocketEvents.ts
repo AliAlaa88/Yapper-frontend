@@ -147,7 +147,7 @@ export interface ReplyAddEvent extends BaseEvent {
     type: 'reply'
     replier: User
     reply_tweet: TweetComponent
-    original_tweet_id: string
+    original_tweet: TweetComponent
     replied_by: string
     reply_to: string
     conversation_id: string

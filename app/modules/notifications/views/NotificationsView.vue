@@ -72,7 +72,7 @@ const userStore = useUserStore()
 const hasScrolled = ref(false)
 
 const handleScroll = () => {
-    if (window.scrollY > 250 && !hasScrolled.value) {
+    if (window.scrollY > 150 && !hasScrolled.value) {
         hasScrolled.value = true
         $notificationsSocketService.markNotificationsAsSeen()
     }

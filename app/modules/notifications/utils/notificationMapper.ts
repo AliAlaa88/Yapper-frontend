@@ -18,7 +18,7 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 export const mapNotificationUser = (user: User | undefined): Tweet['user'] => {
     if (!user) {
         return {
-            id: '',
+            user_id: '',
             name: '',
             username: '',
             avatar_url: '',
@@ -37,15 +37,16 @@ export const mapNotificationUser = (user: User | undefined): Tweet['user'] => {
         }
     }
 
-    return {
-        id: user.id,
+    console.log('mappp user', user)
+    const userData = {
+        user_id: user.id,
         name: user.name,
         username: user.username,
         avatar_url: user.avatar_url ?? '',
         verified: user.verified ?? false,
         bio: user.bio ?? '',
-        followers_count: user.followers ?? 0,
-        following_count: user.following ?? 0,
+        followers: user.followers ?? 0,
+        following: user.following ?? 0,
         is_following: null,
         link: null,
         cover_url: null,
@@ -55,13 +56,57 @@ export const mapNotificationUser = (user: User | undefined): Tweet['user'] => {
         language: null,
         email: '',
     }
+    console.log('mappp userrrr', userData)
+    return userData
+}
+
+export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
+    const reply = mapAnyBaseTweetToTweet(n.reply_tweet as TweetComponent, n.replier)
+
+    if (n.original_tweet) {
+        const userStore = useUserStore()
+        const loggedIn = userStore.user
+        let originalUser: Tweet['user']
+
+        if (loggedIn && loggedIn.user_id === n.original_tweet.user_id) {
+            originalUser = mapLoggedInUserToTweetUser(loggedIn)
+        } else {
+            // Build a fallback User object
+            originalUser = {
+                user_id: n.original_tweet.user_id,
+                name: '',
+                username: '',
+                avatar_url: '',
+                verified: false,
+                bio: '',
+                followers_count: 0,
+                following_count: 0,
+                is_following: null,
+                link: null,
+                cover_url: null,
+                country: null,
+                created_at: '',
+                birth_date: null,
+                language: null,
+                email: '',
+            }
+        }
+
+        reply.parent_tweet = {
+            ...mapAnyBaseTweetToTweet(n.original_tweet),
+            user: originalUser,
+        }
+    }
+
+    return reply
 }
 
 export const mapAnyBaseTweetToTweet = (
     base: TweetComponent | CountTweet | QuoteTweet,
     user?: User,
 ): Tweet => {
-    return {
+
+    const originalTweet = {
         tweet_id: base.tweet_id,
         type: base.type as 'tweet' | 'reply' | 'quote',
         content: base.content,
@@ -83,30 +128,13 @@ export const mapAnyBaseTweetToTweet = (
         created_at: base.created_at,
         updated_at: base.updated_at,
 
-        user: user
-            ? mapNotificationUser(user)
-            : {
-                id: base.user_id ?? '',
-                name: '',
-                username: '',
-                avatar_url: '',
-                verified: false,
-                bio: '',
-                followers_count: 0,
-                following_count: 0,
-                is_following: null,
-                link: null,
-                cover_url: null,
-                country: null,
-                created_at: '',
-                birth_date: null,
-                language: null,
-                email: '',
-            },
+        user: mapNotificationUser(user),
 
         parent_tweet: null,
         conversation_tweet: null,
     }
+    console.log('original tweet', originalTweet)
+    return originalTweet
 }
 
 
@@ -117,8 +145,8 @@ export const mapLoggedInUserToTweetUser = (u: User): Tweet['user'] => ({
     avatar_url: u.avatar_url ?? '',
     verified: u.verified ?? false,
     bio: u.bio ?? '',
-    followers_count: u.followers ?? 0,
-    following_count: u.following ?? 0,
+    followers: u.followers ?? 0,
+    following: u.following ?? 0,
     is_following: null,
     link: null,
     cover_url: u.cover_url ?? null,
@@ -164,15 +192,16 @@ export const mapParentTweet = (parent: QuoteTweet['parent_tweet']): Tweet | null
 }
 
 
-export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
-    const reply = mapAnyBaseTweetToTweet(n.reply_tweet as TweetComponent, n.replier)
+// export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
+//     const reply = mapAnyBaseTweetToTweet(n.reply_tweet as TweetComponent, n.replier)
 
-    if (n.original_tweet) {
-        reply.parent_tweet = mapAnyBaseTweetToTweet(n.original_tweet as TweetComponent)
-    }
+//     if (n.original_tweet) {
+//         reply.parent_tweet = mapAnyBaseTweetToTweet(n.original_tweet as Tweet)
+//         console.log('parent tweeet', reply.parent_tweet)
+//     }
 
-    return reply
-}
+//     return reply
+// }
 
 export const mapQuoteNotificationToTweet = (n: QuoteNotification): Tweet => {
     const quoteTweet = mapAnyBaseTweetToTweet(n.quote_tweet, n.quoter)

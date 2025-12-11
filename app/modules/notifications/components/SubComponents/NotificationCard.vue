@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink :to="link" class="flex gap-3 border-b border-primary p-5 hover:bg-hover transition">
+    <NuxtLink id="link-notification-card" :to="link" class="flex gap-3 border-b border-primary p-5 hover:bg-hover transition">
         <component
             :is="icon"
             :color="iconColor"
@@ -10,7 +10,7 @@
             <div class="flex-1">
                 <div class="flex -space-x-[-5px] mb-1">
                     <div v-for="user in users" :key="user.id">
-                        <NuxtLink :to="`/${user.username}`">
+                        <NuxtLink :id="`user-${user.id}`" :to="`/${user.username}`">
                             <CustomToolTip
                                 :delay-duration="300"
                                 content-class="rounded-2xl shadow-xl border border-primary">
@@ -43,10 +43,11 @@
                                     content-class="rounded-2xl shadow-xl border border-primary">
                                     <template #trigger>
                                         <NuxtLink
+                                            :id="`user-${user.id}-${index}`"
                                             :to="`/${user.username}`"
                                             class="hover:underline underline-offset-2 font-bold inline-block"
                                             @click.stop>
-                                            {{ user.username }}
+                                            {{ user.name }}
                                         </NuxtLink>
                                     </template>
                                     <template #content>
