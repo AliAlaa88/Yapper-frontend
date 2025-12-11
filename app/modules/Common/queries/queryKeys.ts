@@ -36,4 +36,7 @@ export const queryKeys = {
     conversations: {
         all: ['conversations'] as const,
     },
+    search: {
+        all: ['tweets', '/search'] as const,
+    },
 } as const
