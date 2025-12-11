@@ -46,7 +46,7 @@ const initializeSockets = async () => {
         $chatSocketService.initializeListeners()
         $notificationsSocketService.initializeListeners()
         $socketService.connect()
-        const connected = await waitForSocketConnection(9000) // 5 second timeout
+        const connected = await waitForSocketConnection(9000)
 
         if (!connected) {
             console.error('Socket connection timeout')
@@ -67,7 +67,7 @@ const waitForSocketConnection = (timeout: number = 5000): Promise<boolean> => {
             const isConnected = $socketService.isConnected()
             const elapsed = Date.now() - startTime
 
-            console.log(`[App.vue] Connection check: ${isConnected ? '✅' : '❌'} (${elapsed}ms elapsed)`)
+            console.log(`[App.vue] Connection check: ${isConnected}`)
 
             if (isConnected) {
                 resolve(true)
@@ -119,7 +119,7 @@ if (import.meta.client) {
 }
 
 
-const { locale, locales } = useI18n()
+const { t, locale, locales } = useI18n()
 
 const currentLocale = computed(() => locale.value)
 const currentDirection = computed(() => {

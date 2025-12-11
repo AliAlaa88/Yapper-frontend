@@ -128,32 +128,32 @@ const notificationMessage = computed(() => {
 
     switch (notif.type) {
         case 'follow':
-            return t('notifications.followedYou')
+            return t('notifications.content.followedYou')
 
         case 'like':
             if (notif.tweets.length > 1) {
-                return t('notifications.likedMany', {
+                return t('notifications.content.likedMany', {
                     count: notif.tweets.length,
                 })
             }
 
             if (notif.tweets.length === 1 && notif.tweets[0]?.type === 'reply') {
-                return t('notifications.likedYourReply')
+                return t('notifications.content.likedYourReply')
             }
 
-            return t('notifications.likedYourPost')
+            return t('notifications.content.likedYourPost')
 
         case 'repost':
             if (notif.tweets.length > 1) {
-                return t('notifications.repostedMany', {
+                return t('notifications.content.repostedMany', {
                     count: notif.tweets.length,
                 })
             }
 
-            return t('notifications.repostedYourPost')
+            return t('notifications.content.repostedYourPost')
 
         case 'message':
-            return t('notifications.sentYouAMessage')
+            return t('notifications.content.sentYouAMessage')
 
         default:
             return ''

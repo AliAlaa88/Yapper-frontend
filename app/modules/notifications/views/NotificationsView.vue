@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col w-full min-h-screen">
-        <h2 class="text-lg font-bold text-primary px-4 py-3">Notifications</h2>
+        <h2 class="text-lg font-bold text-primary px-4 py-3">{{ $t('notifications.title') }}</h2>
         <Tabs :tabs="tabs" :active-tab="activeTab" @change="handleChange" />
         <div
             v-if="activeTab === 'mentions' ? isLoadingMentions : isLoadingNotifications"
@@ -23,10 +23,9 @@
                 ? isSuccessfullyMentions && mentions.length === 0
                 : isSuccessfullyNotifications && notifications.length === 0"
             class="flex justify-center items-center flex-col space-y-2 mt-9">
-            <h1 class="font-bold text-3xl text-primary">Nothing to see here - yet</h1>
-            <p v-if="activeTab === 'mentions'" class="text-muted text-sm">When someone mentions you, you'll find it
-                here.</p>
-            <p v-else class="text-muted text-sm">When someone interacts with your posts, you'll see it here.</p>
+            <h1 class="font-bold text-3xl text-primary">{{ $t('notifications.empty.title') }}</h1>
+            <p v-if="activeTab === 'mentions'" class="text-muted text-sm">{{ $t('notifications.empty.mentions_description') }}</p>
+            <p v-else class="text-muted text-sm">{{ $t('notifications.empty.all_description') }}</p>
         </div>
     </div>
 </template>
@@ -120,12 +119,12 @@ watch(activeTab, () => {
 
 const tabs = computed(() => [
     {
-        label: 'All',
+        label: $t('notifications.tabs.all'),
         value: 'all',
         test_id: 'all-notifications-tab',
     },
     {
-        label: 'Mentions',
+        label: $t('notifications.tabs.mentions'),
         value: 'mentions',
         test_id: 'mentions-notifications-tab',
     },

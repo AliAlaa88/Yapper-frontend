@@ -61,11 +61,12 @@
                                     </template>
                                 </CustomToolTip>
                                 <template v-if="index < displayedUsers.length - 1">
-                                    <span v-if="displayedUsers.length > 1"> {{ $t('notifications.and') }} </span>
+                                    <span v-if="displayedUsers.length > 1"> {{ $t('notifications.content.and') }} </span>
                                 </template>
                             </template>
                             <template v-if="hiddenCount > 0">
-                                {{ $t('notifications.and') }} <span class="font-bold">{{ hiddenCount }} {{ $t('notifications.others') }}</span>
+                                {{ $t('notifications.content.and') }}
+                                <span class="font-bold">{{ hiddenCount }} {{ $t('notifications.content.others') }}</span>
                             </template>
                         </span>
                         {{ message }}
