@@ -20,6 +20,7 @@
                     type="text"
                     class="bg-transparent outline-none ml-2 text-primary flex-1"
                     :placeholder="$t('search.searchPlaceholder')"
+                    style="unicode-bidi: plaintext;"
                     @focus="handleFocus"
                     @blur="handleBlur"
                     v-model="searchQueryInput"

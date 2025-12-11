@@ -51,11 +51,11 @@ export default defineNuxtPlugin(() => {
                 }
                 return Promise.reject(error)
             }
-            
+
             if (error.response?.status === 401 && !isAuthEndpoint) {
                 if (process.client && window.location.pathname !== '/auth/login' && !error.config?._retry) {
                     error.config._retry = true
-                    
+
                     try {
                         const nuxtApp = useNuxtApp()
                         const authService = nuxtApp.$authService

@@ -1,5 +1,5 @@
 <template>
-    <main class="flex flex-row container mx-auto max-w-[1280px]">
+    <main class="flex flex-row container mx-auto max-w-[1227px]">
         <aside
             class="hidden md:block shrink-0 transition-all duration-300 ease-in-out"
             :style="{ width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
