@@ -19,14 +19,12 @@
                 </div>
             </div>
         </div>
-        <div class="w-full flex justify-center items-center hover:bg-accent/10 h-13 mt-2 text-accent bg-primary">
-            <NuxtLink
-                id="update-email-address-link"
-                to="/settings/add_email"
-            >
-                {{ t('settings.accountInfo.update_email_address') }}
-            </NuxtLink>
-        </div>
+        <NuxtLink
+            id="update-email-address-link"
+            to="/settings/add_email"
+            class="w-full flex justify-center items-center hover:bg-accent/10 h-13 mt-2 text-accent bg-primary">
+            {{ t('settings.accountInfo.update_email_address') }}
+        </NuxtLink>
     </DetailedPanel>
 </template>
 
