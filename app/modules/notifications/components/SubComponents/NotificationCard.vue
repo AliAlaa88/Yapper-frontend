@@ -6,8 +6,8 @@
             :fill="fillColor"
             :size="28" />
 
-        <div class="flex flex-1 gap-3">
-            <div class="flex-1">
+        <div class="flex flex-1 gap-3 min-w-0">
+            <div class="flex-1 min-w-0">
                 <div class="flex -space-x-[-5px] mb-1">
                     <div v-for="user in users" :key="user.id">
                         <NuxtLink :id="`user-${user.id}`" :to="`/${user.username}`">
@@ -76,7 +76,7 @@
 
                 <p
                     v-if="postText"
-                    class="text-muted text-sm mt-3"
+                    class="text-muted text-sm mt-3 break-words whitespace-normal max-w-full"
                     :class="isRtl ? 'text-right' : 'text-left'"
                     :dir="isRtl ? 'rtl' : 'ltr'">
                     {{ postText }}
