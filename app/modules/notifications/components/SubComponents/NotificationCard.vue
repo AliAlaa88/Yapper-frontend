@@ -8,7 +8,7 @@
 
         <div class="flex flex-1 gap-3 min-w-0">
             <div class="flex-1 min-w-0">
-                <div class="flex -space-x-[-5px] mb-1">
+                <div class="flex flex-wrap -space-x-[-5px] mb-1 min-w-0">
                     <div v-for="user in users" :key="user.id">
                         <NuxtLink :id="`user-${user.id}`" :to="`/${user.username}`">
                             <CustomToolTip
