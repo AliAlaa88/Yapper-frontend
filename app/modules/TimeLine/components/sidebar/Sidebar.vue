@@ -223,5 +223,5 @@ const handleClose = () => {
 }
 
 const { $chatSocketService } = useNuxtApp()
-const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadChats.value)
 </script>
