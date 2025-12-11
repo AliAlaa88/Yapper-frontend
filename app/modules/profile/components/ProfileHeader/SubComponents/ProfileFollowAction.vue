@@ -7,7 +7,7 @@
             :button-class="buttonClass"
             :button-text="buttonText"
             :is-loading="isFollowLoading"
-            loading-text="Following"
+            :loading-text="buttonText"
             @click="handleClick"
             @mouseover="handleMouseOver"
             @mouseout="handleMouseOut"
@@ -27,7 +27,7 @@ const me = userStore.getUser()
 
 const props = defineProps<{
     userId: string
-    username: string    
+    username: string
     enabled?: boolean
 
 }>()

@@ -21,15 +21,18 @@
                 <div class="flex items-center">
                     <component
                         :is="category.icon"
-                        class="shrink-0 opacity-50 w-4.5 h-4.5 mr-8 ml-2"
-                    />
+                        class="shrink-0 opacity-50 w-4.5 h-4.5"
+                        :class="locale === 'ar' ? 'ml-8 mr-2' : 'mr-8 ml-2'" />
                     <div>
                         <span class="block text-[15px] text-primary"> {{ category.label }} </span>
-                        <p v-if="category.description" class="text-muted max-w-[450px] text-[13px]">
+                        <p v-if="category.description" class="text-muted max-w-[420px] text-[13px]">
                             {{ category.description }}
                         </p>
                     </div>
-                    <ChevronRight class="w-6 h-6 opacity-40 absolute right-3" />
+                    <component
+                        :is="locale === 'ar' ? ChevronLeft : ChevronRight"
+                        class="opacity-40 group-hover:text-white absolute transition-colors"
+                        :class="locale === 'ar' ? 'left-3' : 'right-3'" />
                 </div>
             </NuxtLink>
         </div>
@@ -38,8 +41,10 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight, ChevronLeft } from 'lucide-vue-next'
 import DetailedHeader from './DetailedHeader.vue'
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 
 interface Category {
     label: string,

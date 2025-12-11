@@ -71,6 +71,10 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         return total
     })
 
+    const totalUnreadChats = computed(() => {
+        return unreadChats.value.size
+    })
+
     const initializeListeners = () => {
         if (listenersInitialized) return
 
@@ -947,7 +951,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         isMeTyping: computed(() => isMeTyping.value),
         totalUnreadCount,
         typingUsers: computed(() => typingUsers.value),
-
+        totalUnreadChats,
         // Lifecycle
         initializeListeners,
         removeListeners,

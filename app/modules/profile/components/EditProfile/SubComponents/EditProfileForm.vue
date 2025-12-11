@@ -7,6 +7,7 @@
                 type="text"
                 :placeholder="$t('profile.editProfileModal.namePlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
+                style="unicode-bidi: plaintext;"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
             >
@@ -28,6 +29,7 @@
                 rows="3"
                 :placeholder="$t('profile.editProfileModal.bioPlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200 resize-none"
+                style="unicode-bidi: plaintext;"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
             />
@@ -49,6 +51,7 @@
                 type="text"
                 :placeholder="$t('profile.editProfileModal.locationPlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
+                style="unicode-bidi: plaintext;"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
             >

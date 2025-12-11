@@ -44,7 +44,7 @@
                                         @{{ parentTweet.user.username }}
                                     </span>
                                 </div>
-                                <p class="text-primary mt-1 whitespace-pre-wrap wrap-break-word">
+                                <p class="text-primary mt-1 whitespace-pre-wrap wrap-break-word" style="unicode-bidi: plaintext;">
                                     {{ parentTweet.content }}
                                 </p>
                                 <!-- Media (Images and Videos) -->

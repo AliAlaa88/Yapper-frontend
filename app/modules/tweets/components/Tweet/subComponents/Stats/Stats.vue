@@ -29,25 +29,41 @@
             @mouseleave="handleRepostMouseLeave"
         >
             <div class="group flex items-center transition-colors">
-                <button
-                    id="tweet-retweet-button"
-                    :class="[
-                        'flex cursor-pointer items-center gap-1 transition-colors',
-                        localIsReposted || isRepostHovered ? 'text-green' : 'text-secondary',
-                    ]"
-                    @click.stop="toggleRepostMenu"
-                >
-                    <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
-                        <Repeat2
-                            :size="18"
-                            :color="
+                <CustomToolTip side="bottom" align="start" :delay-duration="300">
+                    <template #trigger>
+                        <button
+                            id="tweet-retweet-button"
+                            :class="[
+                                'flex cursor-pointer items-center gap-1 transition-colors',
                                 localIsReposted || isRepostHovered
-                                    ? 'currentColor'
-                                    : 'var(--color-x-gray-dark)'
-                            "
-                        />
-                    </div>
-                </button>
+                                    ? 'text-green'
+                                    : 'text-secondary',
+                            ]"
+                            @click.stop="toggleRepostMenu"
+                        >
+                            <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                                <Repeat2
+                                    :size="18"
+                                    :color="
+                                        localIsReposted || isRepostHovered
+                                            ? 'currentColor'
+                                            : 'var(--color-x-gray-dark)'
+                                    "
+                                />
+                            </div>
+                        </button>
+                    </template>
+                    <template #content>
+                        <div :class="contentClass">
+                            {{
+                                localIsReposted
+                                    ? $t('tweets.actions.undoRetweet')
+                                    : $t('tweets.actions.retweet')
+                            }}
+                        </div>
+                    </template>
+                </CustomToolTip>
+
                 <CustomToolTip side="bottom" align="start" :delay-duration="300">
                     <template #trigger>
                         <button

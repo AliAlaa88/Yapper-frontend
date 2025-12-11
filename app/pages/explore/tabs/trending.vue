@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-x-hidden">
+    <div class="overflow-x-hidden h-screen">
         <ExploreTabs />
         <!-- Trending content -->
         <Trending />
@@ -14,4 +14,4 @@ definePageMeta({
     layout: 'main-layout',
     middleware: ['auth'],
 })
-</script> 
+</script>

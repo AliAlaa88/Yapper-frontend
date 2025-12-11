@@ -4,6 +4,7 @@ import { unref, type MaybeRef } from 'vue'
 import type { Tweet, TweetDetails, User, TweetSummary } from '../types'
 import type { TweetsPage } from '../types/tweet'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
+import { query } from 'happy-dom/lib/PropertySymbol.js'
 
 // Query for fetching tweets by path
 
@@ -12,11 +13,10 @@ export function useTweetsQuery(path: MaybeRef<string>) {
 
     // Create reactive query key based on the path
     const queryKey = computed(() => ['tweets', unref(path)])
-
-    // return useQuery<Tweet[]>({
-    //     queryKey,
-    //     queryFn: () => ($tweetService as any).fetchTweets(unref(path)),
-    // })
+    if(unref(path).toString().startsWith('/search')) {
+        queryKey.value.splice(1, 0, '/search')
+    }
+    console.log('Using query key for tweets query:', queryKey.value)
 
     return useInfiniteQuery<TweetsPage>({
         queryKey,
@@ -141,6 +141,10 @@ export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean)
                 ? ($tweetService as any).bookmarkTweet(tweetId)
                 : ($tweetService as any).unbookmarkTweet(tweetId)
         },
+        onSuccess: () => {
+            const { $queryClient } = useNuxtApp()
+            cacheInvalidation.onTweetBookmarkChange($queryClient, tweetId)
+        }
     })
 }
 
@@ -186,6 +190,7 @@ export function useUpdateTweetMutation(tweetId: string) {
         },
         onSuccess: (_data, content) => {
             // Update tweet content in all cached tweet queries
+            console.log('Successfully updated tweet:', tweetId)
             $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData) return oldData
 
@@ -207,6 +212,7 @@ export function useUpdateTweetMutation(tweetId: string) {
                     tweet: { ...oldData.tweet, content },
                 }
             })
+            cacheInvalidation.onTweetUpdate($queryClient, tweetId)
         },
         onError: (error) => {
             console.error('Error updating tweet:', tweetId, error)
