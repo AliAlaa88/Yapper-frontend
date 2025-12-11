@@ -63,11 +63,13 @@ export const cacheInvalidation = {
     onTweetDelete: (queryClient: QueryClient, tweetId: string) => {
         queryClient.removeQueries({ queryKey: queryKeys.tweets.details(tweetId) })
     },
+    
     onReplyCreate: (queryClient: QueryClient, parentTweetId: string, userId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(parentTweetId) })
         queryClient.invalidateQueries({
             queryKey: queryKeys.tweets.list(`/users/${userId}/replies`),
         })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list('/timeline/following') })
     },
 
     /**
@@ -85,6 +87,7 @@ export const cacheInvalidation = {
     onTweetRepostChange: (queryClient: QueryClient, tweetId: string, path: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list(path) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list('/timeline/following') })
         console.log('Invalidated repost cache for tweet:', tweetId, path)
     },
 

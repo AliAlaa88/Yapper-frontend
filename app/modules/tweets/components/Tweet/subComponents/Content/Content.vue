@@ -1,7 +1,11 @@
 <template>
     <div ref="root" class="text-primary text-sm leading-5">
         <!-- Tweet text (links parsed) -->
-        <p class="mb-3 whitespace-pre-wrap wrap-break-word" v-html="parseLinks(content.text)" />
+        <p
+            class="mb-3 whitespace-pre-wrap wrap-break-word"
+            style="unicode-bidi: plaintext"
+            v-html="parseLinks(content.text)"
+        />
 
         <!-- Media (Images and Videos) -->
         <div @click.stop>
@@ -30,6 +34,7 @@ import QuotedTweet from '../QuotedTweet/QuotedTweet.vue'
 
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+import { parseLinks } from '~/lib/utils'
 
 const props = defineProps<{
     content: Content
@@ -37,32 +42,6 @@ const props = defineProps<{
 
 const root = ref<HTMLElement | null>(null)
 const router = useRouter()
-
-function escapeHtml(str = ''): string {
-    return String(str).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
-}
-
-function parseLinks(text = ''): string {
-    if (!text) return ''
-    const escaped = escapeHtml(text)
-
-    const urlRegex = /(https?:\/\/[^\s]+)/g
-    const withUrls = escaped.replace(urlRegex, (url: string) => {
-        const safeUrl = escapeHtml(url)
-        return `<a href="${safeUrl}" class="text-blue-500 underline" target="_blank" rel="noopener noreferrer">${safeUrl}</a>`
-    })
-
-    // Use Unicode property escape for letters which already includes Arabic.
-    // Keep flags `g` and `u` (global + unicode). `s` isn't required here.
-    const hashtagRegex = /#([\p{L}0-9_-]+)/gu
-    const withHashtags = withUrls.replace(hashtagRegex, (_match: string, tag: string) => {
-        const display = `#${escapeHtml(tag)}`
-        const href = `/search?q=${encodeURIComponent('#' + tag)}`
-        return `<a href="${href}" data-hashtag="${escapeHtml(tag)}" class="text-blue-500 underline">${display}</a>`
-    })
-
-    return withHashtags
-}
 
 function onRootClick(e: Event) {
     const target = e.target as HTMLElement | null
