@@ -1,15 +1,10 @@
-import { Bookmark } from "lucide-vue-next";
-
-/**
- * Centralized query keys factory for type-safe cache management.
- * Use these keys consistently across all queries and mutations.
- */
 export const queryKeys = {
     // Tweet related keys
     tweets: {
         all: ['tweets'],
         list: (path: string) => ['tweets', path],
         details: (tweetId: string) => ['tweetDetails', tweetId],
+        summary: (tweetId: string) => ['tweetSummary', tweetId],
     },
 
     // User related keys
@@ -43,7 +38,5 @@ export const queryKeys = {
     },
     bookmarks: {
         all: ['tweets', 'tweets/bookmarks'] as const,
-    }
-
-
+    },
 } as const

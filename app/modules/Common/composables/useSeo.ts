@@ -33,7 +33,7 @@ export function useSeo(options: SeoOptions = {}) {
     // Open Graph meta tags
     const ogTitle = options.ogTitle || title
     const ogDescription = options.ogDescription || description
-    const ogImage = options.ogImage || `${baseUrl}/og-image.png`
+    const ogImage = options.ogImage || `${baseUrl}/favicon.ico`
     const ogUrl = options.ogUrl || currentUrl
 
     // Twitter Card meta tags
@@ -46,11 +46,12 @@ export function useSeo(options: SeoOptions = {}) {
         title,
         htmlAttrs: {
             lang: locale.value,
+            dir: locale.value === 'ar' ? 'rtl' : 'ltr',
         },
         meta: [
             { name: 'description', content: description },
             { name: 'keywords', content: keywords },
-            
+
             // Open Graph
             { property: 'og:type', content: 'website' },
             { property: 'og:title', content: ogTitle },
@@ -77,24 +78,23 @@ export function useSeo(options: SeoOptions = {}) {
         link: [
             { rel: 'canonical', href: currentUrl },
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         ],
     })
 }
 
 export function useProfileSeo(profile: { name?: string; username?: string; bio?: string; profile_image?: string }) {
     const { t } = useI18n()
-    
+
     if (!profile.name || !profile.username) {
         useSeo()
         return
     }
 
     const title = t('seo.profile.title', { name: profile.name, username: profile.username })
-    const description = t('seo.profile.description', { 
-        name: profile.name, 
-        username: profile.username, 
-        bio: profile.bio || '' 
+    const description = t('seo.profile.description', {
+        name: profile.name,
+        username: profile.username,
+        bio: profile.bio || ''
     })
     const keywords = t('seo.profile.keywords', { username: profile.username })
 
@@ -116,13 +116,13 @@ export function useTweetSeo(tweet: { user?: { name?: string; username?: string }
     }
 
     // Truncate tweet text for title (max 50 chars)
-    const truncatedText = tweet.content.length > 50 
-        ? tweet.content.substring(0, 50) + '...' 
+    const truncatedText = tweet.content.length > 50
+        ? tweet.content.substring(0, 50) + '...'
         : tweet.content
 
-    const title = t('seo.tweet.title', { 
-        name: tweet.user.name, 
-        text: truncatedText 
+    const title = t('seo.tweet.title', {
+        name: tweet.user.name,
+        text: truncatedText
     })
     const description = tweet.content
     const keywords = t('seo.tweet.keywords', { username: tweet.user.username })

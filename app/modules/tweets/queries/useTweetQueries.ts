@@ -190,6 +190,8 @@ export function useUpdateTweetMutation(tweetId: string) {
         },
         onSuccess: (_data, content) => {
             // Update tweet content in all cached tweet queries
+            cacheInvalidation.onTweetUpdate($queryClient, tweetId)
+            console.log('Successfully updated tweet:', tweetId)
             $queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
                 if (!oldData) return oldData
 
