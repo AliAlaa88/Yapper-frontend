@@ -123,7 +123,7 @@
                 <button
                     v-else
                     id="sidebar-post-btn_expanded"
-                    class="w-full py-3 px-6 bg-alternate rounded-full text-[17px] text-alternate font-bold transition-all duration-200 hover:opacity-90"
+                    class="w-full py-3 px-6 bg-alternate cursor-pointer rounded-full text-[17px] text-alternate font-bold transition-all duration-200 hover:opacity-90"
                     @click="handleOpen"
                 >
                     {{ t('timeline.sidebar.post') }}
