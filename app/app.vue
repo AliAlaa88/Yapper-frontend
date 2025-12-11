@@ -42,47 +42,48 @@ const initializeSockets = async () => {
         return
     }
 
-    try {
-        $chatSocketService.initializeListeners()
-        $notificationsSocketService.initializeListeners()
-        $socketService.connect()
-        const connected = await waitForSocketConnection(9000)
+    // try {
+    $chatSocketService.initializeListeners()
+    $notificationsSocketService.initializeListeners()
+    $socketService.connect()
+    socketsInitialized.value = true
+    //     const connected = $socketService.isConnected()
 
-        if (!connected) {
-            console.error('Socket connection timeout')
-            return
-        }
-        console.log('Socket connected successfully')
-    } catch (error) {
-        console.log('Error during socket initialization:', error)
-    }
+    //     if (!connected) {
+    //         console.error('Socket connection timeout')
+    //         return
+    //     }
+    //     console.log('Socket connected successfully')
+    // } catch {
+    //     console.log('Error during socket initialization')
+    // }
 
 }
 
-const waitForSocketConnection = (timeout: number = 5000): Promise<boolean> => {
-    return new Promise((resolve) => {
-        const startTime = Date.now()
+// const waitForSocketConnection = (timeout: number = 1000): Promise<boolean> => {
+//     return new Promise((resolve) => {
+//         const startTime = Date.now()
 
-        const checkConnection = () => {
-            const isConnected = $socketService.isConnected()
-            const elapsed = Date.now() - startTime
+//         const checkConnection = () => {
+//             const isConnected = $socketService.isConnected()
+//             const elapsed = Date.now() - startTime
 
-            console.log(`[App.vue] Connection check: ${isConnected}`)
+//             console.log(`[App.vue] Connection check: ${isConnected}`)
 
-            if (isConnected) {
-                resolve(true)
-            } else if (elapsed >= timeout) {
-                console.error(`[App.vue] Connection timeout after ${timeout}ms`)
-                resolve(false)
-            } else {
-                // Check again in 100ms
-                setTimeout(checkConnection, 100)
-            }
-        }
+//             if (isConnected) {
+//                 resolve(true)
+//             } else if (elapsed >= timeout) {
+//                 console.error(`[App.vue] Connection timeout after ${timeout}ms`)
+//                 resolve(false)
+//             } else {
+//                 // Check again in 100ms
+//                 setTimeout(checkConnection, 100)
+//             }
+//         }
 
-        checkConnection()
-    })
-}
+//         checkConnection()
+//     })
+// }
 
 const cleanupSockets = () => {
     try {
@@ -95,7 +96,6 @@ const cleanupSockets = () => {
         console.error('Error during socket cleanup:', error)
     }
 
-    console.groupEnd()
 }
 
 if (import.meta.client) {

@@ -17,6 +17,7 @@ import {
 import type { ApiNotification } from '../types/notifications'
 import type { QueryClient } from '@tanstack/vue-query'
 import { useRoute } from 'vue-router'
+import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
 type SocketService = ReturnType<typeof createSocketService>
 
@@ -32,8 +33,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     const route = useRoute()
 
     const initializeListeners = () => {
-        console.log('Initializing listeners...')
-
         if (listenersInitialized) {
             return
         }
@@ -89,10 +88,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     }
 
     const handleWebSocketEvent = (event: NotificationEvent) => {
-        console.log('Event type:', event.type)
-        console.log('Event action:', event.action)
-        console.log('Full event:', event)
-
         if (isAddAction(event)) {
             const apiNotification = convertWebSocketToApi(event)
             if (apiNotification) {
@@ -114,22 +109,13 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     }
 
     const handleRemoveNotification = (event: NotificationEvent) => {
-        console.log('Remove event received:', event)
-
-        if (event.type === 'like' || event.type === 'repost' || event.type === 'follow') {
-            queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        } else {
-            queryClient.invalidateQueries({ queryKey: ['notifications'] })
-
-            if (event.type === 'reply' || event.type === 'mention') {
-                queryClient.invalidateQueries({ queryKey: ['mentions'] })
-            }
+        cacheInvalidation.onRemoveNotification(queryClient)
+        if (event.type === 'reply' || event.type === 'mention') {
+            cacheInvalidation.onRemoveMention(queryClient)
         }
     }
 
     const addNotificationToCache = (queryKey: string[], notification: ApiNotification | null) => {
-        console.log('Notification to add:', notification)
-
         queryClient.setQueryData(queryKey, (oldData: any) => {
             if (!oldData?.pages || !notification) {
                 return oldData
@@ -199,9 +185,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                                 ? n.likers[0]?.id === notification.likers[0]?.id
                                 : false
 
-                        console.log('is aggregated by person like', isAggregatedByPerson)
-                        console.log('is aggregated by tweet like', isAggregatedByTweet)
-                        console.log('like match', match)
                         if (match) {
                             found = true
                             return notification
@@ -237,8 +220,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     }
 
     const convertWebSocketToApi = (event: NotificationEvent): ApiNotification | null => {
-        console.log('Input event:', event)
-
         if (event.type === 'message' && event.action === 'add') {
             return {
                 type: 'message' as const,

@@ -36,4 +36,9 @@ export const queryKeys = {
     conversations: {
         all: ['conversations'] as const,
     },
+
+    notifications: {
+        all: ['notifications'] as const,
+        mentions: ['mentions'] as const,
+    },
 } as const

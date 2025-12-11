@@ -69,33 +69,33 @@ const route = useRoute()
 const userStore = useUserStore()
 
 
-const hasScrolled = ref(false)
+// const hasScrolled = ref(false)
 
-const handleScroll = () => {
-    if (window.scrollY > 150 && !hasScrolled.value) {
-        hasScrolled.value = true
-        $notificationsSocketService.markNotificationsAsSeen()
-    }
-}
+// const handleScroll = () => {
+//     if (window.scrollY > 150 && !hasScrolled.value) {
+//         hasScrolled.value = true
+//         $notificationsSocketService.markNotificationsAsSeen()
+//     }
+// }
 
 onMounted(() => {
     if (!userStore.isLoggedIn) {
         router.push('/auth')
     }
-    // $notificationsSocketService.markNotificationsAsSeen()
+    $notificationsSocketService.markNotificationsAsSeen()
 
-    window.addEventListener('scroll', handleScroll)
+    // window.addEventListener('scroll', handleScroll)
 })
 
-onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
-})
+// onUnmounted(() => {
+//     window.removeEventListener('scroll', handleScroll)
+// })
 
-watch(() => route.path, (newPath) => {
-    if (newPath !== '/notifications') {
-        hasScrolled.value = false
-    }
-})
+// watch(() => route.path, (newPath) => {
+//     if (newPath !== '/notifications') {
+//         hasScrolled.value = false
+//     }
+// })
 
 onBeforeRouteLeave((to, from, next) => {
     if (from.path === '/notifications' && to.path !== '/notifications') {
