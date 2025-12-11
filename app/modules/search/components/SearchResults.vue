@@ -95,7 +95,6 @@ const searchQueryForApi = computed(() => {
     }
     return query
 })
-console.log(`/search/posts?query=${encodeURIComponent(searchQueryForApi.value)}${fromUsername ? `&username=${fromUsername}` : ''}`)
 
 const currentTab = computed(() => {
     const filter = route.query.f as string

@@ -86,8 +86,8 @@ export const cacheInvalidation = {
 
     onTweetUpdate: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.summary(tweetId) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.search.all })
-        console.log('Invalidated update cache for tweet:', tweetId, queryKeys.search.all)
     },
 
     // ==================== Profile Mutations ====================

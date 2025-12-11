@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full max-w-full border-b border-primary bg-primary/80 group backdrop-blur-md top-0 sticky z-50"
+        class="relative w-full max-w-full border-b border-primary bg-primary/80 group backdrop-blur-md"
         @mouseenter="isHovering = true"
         @mouseleave="isHovering = false"
     >
