@@ -32,7 +32,9 @@
                     <span>
                         {{ t(category.label) }}
                     </span>
-                    <ChevronRight class="opacity-40 group-hover:text-white" />
+                    <component
+                        :is="locale === 'ar' ? ChevronLeft : ChevronRight"
+                        class="opacity-40 group-hover:text-white transition-colors" />
                 </div>
             </NuxtLink>
         </div>
@@ -41,11 +43,10 @@
 
 <script setup lang="ts">
 import DetailedHeader from './DetailedHeader.vue'
-import { ChevronRight, Search } from 'lucide-vue-next'
+import { ChevronRight, Search, ChevronLeft } from 'lucide-vue-next'
 import { useRoute } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
-
+const { t, locale } = useI18n()
 const route = useRoute()
 console.log(route.path)
 const selectedCategory = (path: string) => {
