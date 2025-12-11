@@ -1,6 +1,6 @@
 import { useUserStore } from '../modules/auth/stores/userStore'
 export default defineNuxtRouteMiddleware(async (to) => {
-    const authPages = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth']
+    const authPages = ['/auth/login', '/auth/register', '/auth']
     const isAuthPage = authPages.some(page => to.path.startsWith(page))
 
     const token = useCookie('access_token').value

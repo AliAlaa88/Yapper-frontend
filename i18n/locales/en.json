@@ -557,11 +557,16 @@
     "explore": {
         "trending": "Trending",
         "posts": "posts",
+        "category": "Category",
         "errorLoading": "Failed to load",
         "tryAgain": "Try again",
         "noTrends": "No trends available right now",
         "noCategoriesFound": "No categories available right now",
         "noUsersFound": "No users to follow right now",
+        "noTweetsFound": "No tweets found for this category",
+        "loadMore": "Load more",
+        "loading": "Loading...",
+        "endOfResults": "You've reached the end",
         "connect": "Connect",
         "suggestedForYou": "Suggested for you",
         "tabs": {

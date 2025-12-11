@@ -40,8 +40,8 @@ export default defineNuxtPlugin(() => {
         async (error) => {
             const requestUrl = error.config?.url || ''
             const isAuthEndpoint = requestUrl.includes('/auth/')
-
-            if ((error.response?.status === 400 || error.response?.status === 401) && isAuthEndpoint) {
+            
+            if ((error.response?.status === 401) && isAuthEndpoint) {
                 if (process.client) {
                     useCookie('access_token').value = null
                     userStore.logout()

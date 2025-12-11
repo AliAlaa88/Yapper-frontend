@@ -543,11 +543,16 @@
     "explore": {
         "trending": "الترند",
         "posts": "منشور",
+        "category": "الفئة",
         "errorLoading": "فشل التحميل",
         "tryAgain": "حاول مرة أخرى",
         "noTrends": "لا توجد ترندات حالياً",
         "noCategoriesFound": "لا توجد فئات حالياً",
         "noUsersFound": "لا يوجد مستخدمين للمتابعة حالياً",
+        "noTweetsFound": "لم يتم العثور على منشورات لهذه الفئة",
+        "loadMore": "تحميل المزيد",
+        "loading": "جاري التحميل...",
+        "endOfResults": "لقد وصلت إلى النهاية",
         "connect": "تواصل",
         "suggestedForYou": "مقترح لك",
         "tabs": {

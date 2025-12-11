@@ -15,9 +15,10 @@ export const exploreServiceReal = () => {
             })
             return response.data.data.data
         },
-        getExploreCategories: async (category?: String) => {
-            const params = category ? { category } : {}
-            const response = await $yapperApi.get(`${API_URL}/explore/for-you`, { params })
+        getExploreCategories: async (category_id: string, page: number = 1, limit: number = 20) => {
+            const response = await $yapperApi.get(`${API_URL}/explore/category/${category_id}`, {
+                params: { page, limit }
+            })
             return response.data
         },
         getExploreWhoToFollow: async () => {
