@@ -51,7 +51,10 @@
                     class="border-t border-primary"
                 >
                     <!-- Category Header -->
-                    <div class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer">
+                    <div 
+                        class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
+                        @click="router.push(`/explore/category/${categoryGroup.category.id}`)"
+                    >
                         <h2 class="text-xl font-bold text-primary">{{ categoryGroup.category.name }}</h2>
                         <ChevronRight class="w-5 h-5 text-muted" />
                     </div>
