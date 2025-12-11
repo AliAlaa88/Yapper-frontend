@@ -114,6 +114,7 @@
                     v-model="content"
                     placeholder="Type a message..."
                     class="w-full bg-transparent border-none outline-none resize-none text-primary placeholder:text-muted px-2 py-1 max-h-32 overflow-y-auto"
+                    style="unicode-bidi: plaintext;"
                     rows="1"
                     @input="handleTextareaInput"
                 />
@@ -241,7 +242,7 @@ watch(
                 textareaRef.value.style.height = `${Math.min(textareaRef.value.scrollHeight, 128)}px`
             }
         })
-    },  
+    },
 )
 
 watch(content, () => {
