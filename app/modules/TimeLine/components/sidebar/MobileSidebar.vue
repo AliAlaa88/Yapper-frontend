@@ -123,7 +123,7 @@ const isRTL = computed(() => {
 
 // listen to unread chats summary
 const { $chatSocketService } = useNuxtApp()
-const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadChats.value)
 
 const navLinks = [
     {

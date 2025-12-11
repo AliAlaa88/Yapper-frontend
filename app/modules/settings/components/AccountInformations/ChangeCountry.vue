@@ -20,7 +20,8 @@
                         pointer-events-none px-1 py-1">{{t('settings.accountInfo.country')}}</label>
             <ChevronDown
                 :size="25"
-                class="absolute right-4 top-1/2 -translate-y-1/2 text-muted peer-focus:text-accent pointer-events-none" />
+                class="absolute top-1/2 -translate-y-1/2 text-muted peer-focus:text-accent pointer-events-none"
+                :class="locale === 'ar' ? 'left-4' : 'right-4'" />
         </div>
     </DetailedPanel>
     <ConfirmChangeCountry
@@ -41,7 +42,7 @@ import { useEditProfileMutation } from '~/modules/profile/queries/useEditProfile
 import { ChevronDown } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)

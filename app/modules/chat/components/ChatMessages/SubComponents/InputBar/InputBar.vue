@@ -59,15 +59,22 @@
             </div>
 
             <div class="relative">
-                <button
-                    id="add-gif-button"
-                    type="button"
-                    :disabled="mediaUrls.length >= 4"
-                    class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    @click="toggleGifPicker"
-                >
-                    <ImagePlay class="w-5 h-5 text-accent" />
-                </button>
+                <CustomToolTip side="top">
+                    <template #trigger>
+                        <button
+                            id="add-gif-button"
+                            type="button"
+                            :disabled="mediaUrls.length >= 4"
+                            class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            @click="toggleGifPicker"
+                        >
+                            <ImagePlay class="w-5 h-5 text-accent" />
+                        </button>
+                    </template>
+                    <template #content>
+                        <div :class="contentClass">{{ $t('timeline.postTweet.gifs') }}</div>
+                    </template>
+                </CustomToolTip>
                 <GifPicker
                     :is-open="showGifPicker"
                     position="top"
@@ -77,14 +84,21 @@
             </div>
 
             <div class="relative">
-                <button
-                    id="add-emoji-button"
-                    type="button"
-                    class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
-                    @click="toggleEmojiPicker"
-                >
-                    <Smile class="w-5 h-5 text-accent" />
-                </button>
+                <CustomToolTip side="top">
+                    <template #trigger>
+                        <button
+                            id="add-emoji-button"
+                            type="button"
+                            class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors"
+                            @click="toggleEmojiPicker"
+                        >
+                            <Smile class="w-5 h-5 text-accent" />
+                        </button>
+                    </template>
+                    <template #content>
+                        <div :class="contentClass">{{ $t('timeline.postTweet.emoji') }}</div>
+                    </template>
+                </CustomToolTip>
                 <EmojiPicker
                     :is-open="showEmojiPicker"
                     position="top"
@@ -127,6 +141,8 @@ import MediaUpload from '~/modules/TimeLine/components/postTweet/subComponents/M
 import { useUploadMedia } from '~/modules/TimeLine/queries/useUploadMedia'
 import type { participant as participantType } from '~/modules/chat/types'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import CustomToolTip from '~/modules/Common/components/Tooltip/CustomToolTip.vue'
+import { tooltipContentClass as contentClass } from '~/modules/Common/constants/stylesConstants'
 
 interface MediaItem {
     url: string

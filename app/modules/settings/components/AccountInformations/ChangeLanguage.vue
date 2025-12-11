@@ -21,7 +21,10 @@
                         English and Arabic
                     </p>
                 </div>
-                <ChevronRight class="opacity-40 group-hover:text-white absolute right-3" />
+                <component
+                    :is="locale === 'ar' ? ChevronLeft : ChevronRight"
+                    class="opacity-40 group-hover:text-white absolute transition-colors"
+                    :class="locale === 'ar' ? 'left-3' : 'right-3'" />
             </div>
         </button>
     </DetailedPanel>
@@ -30,10 +33,11 @@
 
 <script setup lang="ts">
 import DetailedPanel from '../DetailedPanel.vue'
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight, ChevronLeft } from 'lucide-vue-next'
 import { ref } from 'vue'
 import LanguageSelector from './SubComponents/LanguageSelector.vue'
-
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 const isOpen = ref(false)
 const handleClose = () => {
     isOpen.value = false

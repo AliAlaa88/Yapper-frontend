@@ -88,6 +88,8 @@ const closeCreateConversation = () => {
 }
 
 const handleSelectConversation = (conversation: Conversation) => {
+    const currentConversationId = router.currentRoute.value.params.chat_id as string
+    if (currentConversationId === conversation.id) return
     router.push(`/messages/${conversation.id}`)
     emit('select-conversation', conversation)
 }
