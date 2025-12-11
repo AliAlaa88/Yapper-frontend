@@ -1,10 +1,10 @@
 <template>
-    <NuxtLink id="link-notification-card" :to="link" class="flex gap-3 border-b border-primary p-5 hover:bg-hover transition">
-        <component
-            :is="icon"
-            :color="iconColor"
-            :fill="fillColor"
-            :size="28" />
+    <NuxtLink
+        id="link-notification-card"
+        :to="link"
+        class="flex gap-3 border-b border-primary p-5 hover:bg-hover transition"
+    >
+        <component :is="icon" :color="iconColor" :fill="fillColor" :size="28" />
 
         <div class="flex flex-1 gap-3 min-w-0">
             <div class="flex-1 min-w-0">
@@ -13,12 +13,14 @@
                         <NuxtLink :id="`user-${user.id}`" :to="`/${user.username}`">
                             <CustomToolTip
                                 :delay-duration="300"
-                                content-class="rounded-2xl shadow-xl border border-primary">
+                                content-class="rounded-2xl shadow-xl border border-primary"
+                            >
                                 <template #trigger>
-                                    <img
-                                        :src="user.avatar_url ?? `https://ui-avatars.com/api/?name=${user.username}`"
-                                        class="w-8 h-8 rounded-full"
-                                        alt="user avatar">
+                                    <UserImage
+                                        :image-url="user.avatar_url ?? ''"
+                                        :name="user.name"
+                                        :size="8"
+                                    />
                                 </template>
                                 <template #content>
                                     <UserCard
@@ -28,7 +30,8 @@
                                         :avatar="user.avatar_url ?? ''"
                                         :bio="user.bio ?? null"
                                         :followers-count="user.followers ?? null"
-                                        :following-count="user.following ?? null" />
+                                        :following-count="user.following ?? null"
+                                    />
                                 </template>
                             </CustomToolTip>
                         </NuxtLink>
@@ -40,13 +43,15 @@
                             <template v-for="(user, index) in displayedUsers" :key="user.id">
                                 <CustomToolTip
                                     :delay-duration="300"
-                                    content-class="rounded-2xl shadow-xl border border-primary">
+                                    content-class="rounded-2xl shadow-xl border border-primary"
+                                >
                                     <template #trigger>
                                         <NuxtLink
                                             :id="`user-${user.id}-${index}`"
                                             :to="`/${user.username}`"
                                             class="hover:underline underline-offset-2 font-bold inline-block"
-                                            @click.stop>
+                                            @click.stop
+                                        >
                                             {{ user.name }}
                                         </NuxtLink>
                                     </template>
@@ -58,16 +63,22 @@
                                             :avatar="user.avatar_url ?? ''"
                                             :bio="user.bio ?? null"
                                             :followers-count="user.followers ?? null"
-                                            :following-count="user.following ?? null" />
+                                            :following-count="user.following ?? null"
+                                        />
                                     </template>
                                 </CustomToolTip>
                                 <template v-if="index < displayedUsers.length - 1">
-                                    <span v-if="displayedUsers.length > 1"> {{ $t('notifications.content.and') }} </span>
+                                    <span v-if="displayedUsers.length > 1">
+                                        {{ $t('notifications.content.and') }}
+                                    </span>
                                 </template>
                             </template>
                             <template v-if="hiddenCount > 0">
                                 {{ $t('notifications.content.and') }}
-                                <span class="font-bold">{{ hiddenCount }} {{ $t('notifications.content.others') }}</span>
+                                <span class="font-bold"
+                                    >{{ hiddenCount }}
+                                    {{ $t('notifications.content.others') }}</span
+                                >
                             </template>
                         </span>
                         {{ message }}
@@ -78,23 +89,22 @@
                     v-if="postText"
                     class="text-muted text-sm mt-3 break-words whitespace-normal max-w-full"
                     :class="isRtl ? 'text-right' : 'text-left'"
-                    :dir="isRtl ? 'rtl' : 'ltr'">
+                    :dir="isRtl ? 'rtl' : 'ltr'"
+                >
                     {{ postText }}
                 </p>
             </div>
             <span class="text-muted text-xs whitespace-nowrap ml-3">{{ createdAt }}</span>
-
         </div>
     </NuxtLink>
 </template>
-
 
 <script setup lang="ts">
 import type { Component } from 'vue'
 import type { User } from '~/modules/notifications/types/notificationsSocketEvents'
 import CustomToolTip from '~/modules/Common/components/Tooltip/CustomToolTip.vue'
 import UserCard from '~/modules/tweets/components/Tweet/subComponents/Publisher/UserCard.vue'
-
+import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
 const props = defineProps<{
     icon: Component | null
     iconColor: string
@@ -111,6 +121,8 @@ const displayedUsers = computed(() => props.users.slice(0, MAX_VISIBLE_USERS))
 const hiddenCount = computed(() => Math.max(0, props.users.length - MAX_VISIBLE_USERS))
 const isRtl = computed(() => {
     if (!props.postText) return false
-    return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(props.postText)
+    return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(
+        props.postText,
+    )
 })
 </script>
