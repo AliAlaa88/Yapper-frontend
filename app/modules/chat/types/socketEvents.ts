@@ -14,6 +14,7 @@ export interface SendMessagePayload {
         content?: string
         media_url?: string
         message_type: 'text' | 'image' | 'video'
+        is_first_message: boolean
     }
 }
 
@@ -142,6 +143,7 @@ export const SOCKET_EVENTS = {
     MESSAGE_DELETED: 'message_deleted',
     USER_TYPING: 'user_typing',
     USER_STOPPED_TYPING: 'user_stopped_typing',
+    FIRST_MESSAGE_SENT: 'first_message',
     ERROR: 'error',
 } as const
 

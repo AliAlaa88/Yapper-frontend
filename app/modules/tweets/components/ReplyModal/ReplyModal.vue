@@ -27,11 +27,11 @@
                         <div class="flex gap-3">
                             <!-- Avatar with connecting line -->
                             <div class="flex flex-col items-center">
-                                <img
-                                    :src="parentTweetAvatar"
-                                    :alt="parentTweet.user.name"
-                                    class="w-10 h-10 rounded-full"
-                                >
+                                <UserImage
+                                    :image-url="parentTweetAvatar"
+                                    :name="parentTweet.user.name"
+                                    :compact="true"
+                                />
                                 <div class="w-0.5 flex-1 bg-gray-600 mt-2" />
                             </div>
                             <!-- Parent tweet content -->
@@ -84,6 +84,7 @@ import { X } from 'lucide-vue-next'
 import type { Tweet } from '../../types/tweet'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
 import TweetMedia from '../Tweet/subComponents/TweetMedia/TweetMedia.vue'
+import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
 
 const props = defineProps<{
     isOpen: boolean
@@ -95,11 +96,11 @@ const emit = defineEmits<{
 }>()
 
 const parentTweetAvatar = computed(() =>
-    props.parentTweet.user.avatar_url ?? 
+    props.parentTweet.user.avatar_url ??
     `https://ui-avatars.com/api/?name=${props.parentTweet.user.name}`,
 )
 
-const hasMedia = computed(() => 
+const hasMedia = computed(() =>
     (props.parentTweet.images && props.parentTweet.images.length > 0) ||
     (props.parentTweet.videos && props.parentTweet.videos.length > 0),
 )

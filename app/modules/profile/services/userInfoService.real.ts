@@ -1,10 +1,7 @@
 import axios from 'axios'
 import { useNuxtApp } from 'nuxt/app'
-import type {
-    Me,
-    OtherUser,
-    FollowUsersPage,
-} from '../types/user'
+import type { Me, OtherUser, FollowUsersPage } from '../types/user'
+import { options } from 'happy-dom/lib/PropertySymbol.js'
 
 export const userInfoServiceReal = {
     async getMe(): Promise<Me> {
@@ -30,9 +27,7 @@ export const userInfoServiceReal = {
     async getUserInfoByUsername(username: string): Promise<OtherUser> {
         const { $axios } = useNuxtApp()
         try {
-            const response = await $axios.get(
-                `/users/by/username/${username}`,
-            )
+            const response = await $axios.get(`/users/by/username/${username}`)
             if (!response.data || !response.data.data) {
                 throw new Error('User not found')
             }
@@ -234,15 +229,12 @@ export const userInfoServiceReal = {
         formData.append('file', file)
 
         try {
-            const response = await $axios.post(
-                '/users/me/upload-avatar',
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+            const response = await $axios.post('/users/me/upload-avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                 },
-            )
+                timeout: 60000,
+            })
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to upload avatar')
             }
@@ -267,15 +259,12 @@ export const userInfoServiceReal = {
         formData.append('file', file)
 
         try {
-            const response = await $axios.post(
-                '/users/me/upload-cover',
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+            const response = await $axios.post('/users/me/upload-cover', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                 },
-            )
+                timeout: 60000,
+            })
             if (!response.data || !response.data.data) {
                 throw new Error('Failed to upload cover photo')
             }

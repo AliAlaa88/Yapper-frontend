@@ -1,6 +1,6 @@
 <template>
     <div class="border-b border-primary bg-primary">
-        <CoverImage :cover-url="user?.cover_url ?? ''" />
+        <CoverImage :cover-url="user?.cover_url" />
 
         <div class="px-4">
             <div class="-mt-[42px] sm:-mt-[67px] mb-3 flex items-end justify-between">
@@ -37,7 +37,7 @@ import ProfileMessageButton from './SubComponents/ProfileMessageButton.vue'
 import ProfileInfo from './SubComponents/ProfileInfo.vue'
 import { useProfileStore } from '../../stores/profileStore'
 import { storeToRefs } from 'pinia'
-
+console.log("ProfileHeader loaded")
 const profileStore = useProfileStore()
 const { profile: user, isMyProfile: isMee } = storeToRefs(profileStore)
 </script>

@@ -39,6 +39,7 @@ export const useUserStore = defineStore('user', () => {
             const token = useCookie('access_token')
             token.value = null
         }
+        localStorage.removeItem('yapper-search-history')
     }
 
     const initAuth = async (fetchUserFn: () => Promise<User>) => {

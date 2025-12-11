@@ -6,8 +6,8 @@
         >
             <div class="flex items-center gap-4">
                 <button
-                    @click="$router.back()"
                     class="p-2 rounded-full hover:bg-hover transition-colors"
+                    @click="$router.back()"
                 >
                     <ArrowLeft :size="20" class="cursor-pointer text-primary" />
                 </button>
@@ -25,34 +25,66 @@
                     />
                 </div>
 
-                <!-- Actions Menu Button -->
-                <div class="relative">
+                <!-- AI Summary and Actions Menu Buttons -->
+                <div class="flex items-center gap-1">
+                    <!-- AI Summary Button -->
                     <button
-                        id="tweet-detail-menu-button"
-                        class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
-                        :aria-label="$t('tweets.moreActions')"
-                        @click.stop="toggleActionsMenu"
+                        v-if="ShowAIButton"
+                        id="tweet-detail-ai-summary-button"
+                        class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue"
+                        :class="{ 'text-blue': showSummary }"
+                        :aria-label="$t('tweets.aiSummary')"
+                        :disabled="isSummaryLoading"
+                        @click.stop="toggleSummary"
                     >
-                        <MoreHorizontal :size="16" />
+                        <Sparkles v-if="!isSummaryLoading" :size="16" />
+                        <LoadingSpinner v-else size="sm" color="blue" />
                     </button>
 
-                    <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
-                    <MyTweetActionsMenu
-                        v-if="showActionsMenu && isOwnTweet"
-                        :tweet-id="tweetDetails.tweet_id"
-                        @edit="onEdit"
-                        @delete="onDelete"
-                    />
-                    <ProfileActionsMenu
-                        v-else-if="showActionsMenu"
-                        :userid="tweetDetails.user.id"
-                        :is-tweet="true"
-                        @user-action="handleUserAction"
-                    />
+                    <!-- Actions Menu Button -->
+                    <div class="relative">
+                        <button
+                            id="tweet-detail-menu-button"
+                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                            :aria-label="$t('tweets.moreActions')"
+                            @click.stop="toggleActionsMenu"
+                        >
+                            <MoreHorizontal :size="16" />
+                        </button>
+
+                        <!-- Show MyTweetActionsMenu for own tweets, ProfileActionsMenu for others -->
+                        <MyTweetActionsMenu
+                            v-if="showActionsMenu && isOwnTweet"
+                            :tweet-id="tweetDetails.tweet_id"
+                            @edit="onEdit"
+                            @delete="onDelete"
+                        />
+                        <ProfileActionsMenu
+                            v-else-if="showActionsMenu"
+                            :userid="tweetDetails.user.id"
+                            :is-tweet="true"
+                            @user-action="handleUserAction"
+                        />
+                    </div>
                 </div>
             </div>
 
             <Content :content="mainTweetContent" />
+
+            <!-- AI Summary Section -->
+            <div
+                v-if="showSummary && (summaryData || summaryError)"
+                class="mb-4 p-3 bg-blue/5 border border-blue/20 rounded-xl"
+            >
+                <div class="flex items-center gap-2 mb-2">
+                    <Sparkles :size="14" class="text-blue" />
+                    <span class="text-sm font-medium text-blue">{{ $t('tweets.aiSummary') }}</span>
+                </div>
+                <p class="text-primary text-sm leading-relaxed">
+                    {{ summaryError ? $t('tweets.aiError') : summaryData?.summary }}
+                </p>
+            </div>
+
             <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
                 <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
@@ -62,7 +94,7 @@
                 :stats="mainTweetStats"
                 @quote="handleQuote"
                 @reply="handleReply"
-                @viewQuotesAndReposts="handleViewQuotesAndReposts"
+                @view-quotes-and-reposts="handleViewQuotesAndReposts"
             />
             <!-- Edit Tweet Modal -->
             <EditTweetModal
@@ -163,7 +195,7 @@ import QuoteModal from '../QuoteModal/QuoteModal.vue'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { formatDetailDate } from '../../utils/lib'
 import { useRoute, useRouter } from '#app'
-import { MessageCircle, AlertTriangle, MoreHorizontal } from 'lucide-vue-next'
+import { MessageCircle, AlertTriangle, MoreHorizontal, Sparkles, ArrowLeft } from 'lucide-vue-next'
 import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import ProfileActionsMenu from '../../../profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue'
@@ -172,7 +204,7 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 import MyTweetActionsMenu from '../Tweet/subComponents/MyTweetActionsMenu/MyTweetActionsMenu.vue'
 import { useTweetActions } from '../../composables/useTweetActions'
 import EditTweetModal from '../EditTweetModal/EditTweetModal.vue'
-import { ArrowLeft } from 'lucide-vue-next'
+import { useTweetSummaryQuery } from '../../queries/useTweetQueries'
 
 // Get tweet ID and username from route params
 const route = useRoute()
@@ -207,7 +239,31 @@ const onDelete = () => handleDeleteWithConfirmation(showActionsMenu)
 const showActionsMenu = ref(false)
 const showQuoteModal = ref(false)
 const replyFormRef = ref(null)
+const showSummary = ref(false)
 provide('show-list', showActionsMenu)
+
+const ShowAIButton = computed(() => (tweetDetails.value?.content?.length ?? 0) > 150)
+// AI Summary query - only fetch when user requests it
+const shouldFetchSummary = ref(false)
+const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+    refetch: refetchSummary,
+    error: summaryError,
+} = useTweetSummaryQuery(tweetId.value, shouldFetchSummary.value)
+
+const toggleSummary = async () => {
+    if (!showSummary.value) {
+        // First time clicking - fetch the summary
+        if (!summaryData.value) {
+            shouldFetchSummary.value = true
+            await refetchSummary()
+        }
+        showSummary.value = true
+    } else {
+        showSummary.value = false
+    }
+}
 
 const toggleActionsMenu = () => {
     showActionsMenu.value = !showActionsMenu.value

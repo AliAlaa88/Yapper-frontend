@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/vue-query'
 import { useNuxtApp } from '#app'
 import { unref, type MaybeRef } from 'vue'
-import type { Tweet, TweetDetails, User } from '../types'
+import type { Tweet, TweetDetails, User, TweetSummary } from '../types'
 import type { TweetsPage } from '../types/tweet'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 
@@ -84,6 +84,17 @@ export function useTweetDetailsQuery(tweetId: string, initialData?: Tweet) {
     return queryResult
 }
 
+export function useTweetSummaryQuery(tweetId: string, enabled: boolean = true) {
+    const { $tweetService } = useNuxtApp()
+    return useQuery<TweetSummary | null>({
+        queryKey: ['tweetSummary', tweetId],
+        queryFn: () => ($tweetService as any).fetchTweetSummary(tweetId),
+        enabled,
+        staleTime: 1000 * 60 * 30, // 30 minutes - summaries don't change often
+        gcTime: 1000 * 60 * 60, // 1 hour
+    })
+}
+
 export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
     const { $queryClient } = useNuxtApp()
     return useMutation({
@@ -104,7 +115,7 @@ export function mutateTweetLikesQuery(tweetId: string, isLike: boolean) {
     })
 }
 
-export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean,path:string) {
+export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean, path: string) {
     return useMutation({
         mutationKey: ['mutateTweetRetweets', tweetId],
         mutationFn: (isRetweet: boolean) => {
@@ -115,9 +126,9 @@ export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean,path
         },
         onSuccess: () => {
             const { $queryClient } = useNuxtApp()
-            console.log('Successfully mutated repost status for tweet:', tweetId,path)
-            cacheInvalidation.onTweetRepostChange($queryClient, tweetId,path)
-        }
+            console.log('Successfully mutated repost status for tweet:', tweetId, path)
+            cacheInvalidation.onTweetRepostChange($queryClient, tweetId, path)
+        },
     })
 }
 
@@ -183,9 +194,7 @@ export function useUpdateTweetMutation(tweetId: string) {
                     pages: oldData.pages.map((page: any) => ({
                         ...page,
                         data: page.data.map((tweet: Tweet) =>
-                            tweet.tweet_id === tweetId
-                                ? { ...tweet, content }
-                                : tweet,
+                            tweet.tweet_id === tweetId ? { ...tweet, content } : tweet,
                         ),
                     })),
                 }
