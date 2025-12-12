@@ -19,8 +19,16 @@ export function parseLinks(text = '', isMessage: boolean = false): string {
         return `<a href="${safeUrl}" class="${isMessage ? '' : 'text-accent'} hover:underline" target="_blank" rel="noopener noreferrer">${safeUrl}</a>`
     })
 
+    // Mentions: @username -> /username
+    const mentionRegex = /@([\p{L}0-9_]+)/gu
+    const withMentions = withUrls.replace(mentionRegex, (_match: string, user: string) => {
+        const display = `@${escapeHtml(user)}`
+        const href = `/${encodeURIComponent(user)}`
+        return `<a href="${href}" data-mention="${escapeHtml(user)}" class="text-accent hover:underline">${display}</a>`
+    })
+
     const hashtagRegex = /#([\p{L}0-9_-]+)/gu
-    const withHashtags = withUrls.replace(hashtagRegex, (_match: string, tag: string) => {
+    const withHashtags = withMentions.replace(hashtagRegex, (_match: string, tag: string) => {
         const display = `#${escapeHtml(tag)}`
         const href = `/search?q=${encodeURIComponent('#' + tag)}`
         return `<a href="${href}" data-hashtag="${escapeHtml(tag)}" class="text-accent hover:underline">${display}</a>`

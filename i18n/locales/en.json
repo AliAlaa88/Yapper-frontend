@@ -554,6 +554,13 @@
             }
         }
     },
+    "mentions": {
+        "loading": "Loading...",
+        "noMatches": "No matches found",
+        "mutual": "You follow each other",
+        "following": "Following",
+        "followsYou": "Follows you"
+    },
     "explore": {
         "trending": "Trending",
         "posts": "posts",
