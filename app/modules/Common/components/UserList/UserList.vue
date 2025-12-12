@@ -31,9 +31,9 @@
             <slot name="loading-more" />
         </template>
 
-        <template v-if="$slots.error" #error="{ error: err, retry }">
+        <!-- <template v-if="$slots.error" #error="{ error: err, retry }">
             <slot name="error" :error="err" :retry="retry" />
-        </template>
+        </template> -->
     </InfiniteList>
 </template>
 

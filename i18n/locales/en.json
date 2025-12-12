@@ -27,7 +27,8 @@
         "success": "Operation completed successfully",
         "error": "An error occurred",
         "loading": "Loading...",
-        "noData": "No data available"
+        "noData": "No data available",
+        "tryAgain": "Please try again"
     },
     "navigation": {
         "home": "Home",
