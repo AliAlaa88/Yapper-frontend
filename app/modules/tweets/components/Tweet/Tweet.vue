@@ -13,7 +13,7 @@
         </div>
 
         <!-- Thread view for replies with parent_tweet -->
-        <template v-if="tweet.type === 'reply' && tweet.parent_tweet">
+        <template v-if="tweet.type === 'reply' && tweet.parent_tweet && !props.compact">
             <!-- Parent Tweet -->
             <div class="flex gap-3 mb-0">
                 <!-- Parent Avatar column with thread line -->
@@ -239,7 +239,13 @@
                         </div>
                     </div>
                 </div>
-
+                <div
+                    v-if="tweet.type === 'reply' && props.compact && tweet.parent_tweet"
+                    class="text-secondary text-xs mb-2 truncate"
+                >
+                    {{ $t('tweets.replyingTo') }}
+                    <a :href="parentProfileUrl" class="text-accent font-medium hover:underline" @click.stop>@{{ parentUser?.username }}</a>
+                </div>
                 <Content :content="content" />
 
                 <!-- AI Summary Section -->
@@ -316,6 +322,7 @@ import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.v
 
 const props = defineProps<{
     tweet: TweetType
+    compact?: boolean
 }>()
 const userStore = useUserStore()
 const currentUser = computed(() => userStore.getUser())
@@ -516,6 +523,10 @@ const createdAt = computed(() => props.tweet.created_at)
 
 // Use utility functions for URLs
 const profileUrl = computed(() => getProfileUrl(user.value))
+const parentProfileUrl = computed(() => {
+    if (!parentUser.value) return '#'
+    return getProfileUrl(parentUser.value)
+})
 const tweetUrl = computed(() => getTweetUrl(props.tweet))
 
 const navigateToTweet = async () => {

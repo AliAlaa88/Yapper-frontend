@@ -46,5 +46,6 @@ const trendsQuery = useGetTrendsQuery(capitalizeFirst(props.category), true)
 const isLoading = computed(() => trendsQuery.isLoading.value)
 const isError = computed(() => trendsQuery.isError.value)
 const trends = computed(() => trendsQuery.data.value || [])
-console.log('categories', toRaw(trends.value))
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log('categories', toRaw(trends.value))
 </script>

@@ -230,6 +230,7 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const user_id = computed(() => userStore.getUser()?.user_id)
 const { $queryClient } = useNuxtApp()
+const config = useRuntimeConfig()
 
 const props = defineProps<{
     stats: StatsType
@@ -376,7 +377,8 @@ const handleLikeClick = () => {
     mutateLike(localIsLiked.value, {
         onSuccess: () => {
             // Invalidate relevant queries to refetch data and confirm the optimistic update
-            console.log('Like mutation succeeded for tweet:', $queryClient, tweet_id.value)
+            if (config.public.env === 'development')
+                console.log('Like mutation succeeded for tweet:', $queryClient, tweet_id.value)
         },
         onError: (error) => {
             // Rollback on error
@@ -611,7 +613,7 @@ const handleShareClick = async () => {
         snackbar?.handleShowSnackbar(t('tweets.actions.copiedToClipboard'))
     } catch (error) {
         // If user cancels share or permission denied, silently fail
-        console.log('Share cancelled or failed:', error)
+        if (config.public.env === 'development') console.log('Share cancelled or failed:', error)
     }
 }
 

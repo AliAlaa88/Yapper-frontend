@@ -513,7 +513,8 @@
             "tweetNotFound": "المنشور غير موجود",
             "tweetNotFoundDescription": "ربما تم حذف هذا المنشور أو ليس لديك إذن لعرضه.",
             "goBack": "العودة"
-        }
+        },
+        "replyingTo": "رد على"
     },
     "search": {
         "searchPlaceholder": "بحث",

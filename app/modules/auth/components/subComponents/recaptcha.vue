@@ -1,7 +1,5 @@
 <template>
-    <div v-if="isTest">
-        Test Mode: reCAPTCHA skipped.    
-    </div>
+    <div v-if="isTest">Test Mode: reCAPTCHA skipped.</div>
     <RecaptchaV2
         v-else
         size="visible"
@@ -20,12 +18,12 @@ const emit = defineEmits<{
     (e: 'error', error: Error): void
 }>()
 
-const config = useRuntimeConfig();
-const isTest = config.public.etest?.toString() === 'true';
-console.log(config.public.etest);
-console.log('reCAPTCHA Test Mode:', isTest);
+const config = useRuntimeConfig()
+const isTest = config.public.etest?.toString() === 'true'
+if (config.public.env === 'development') console.log(config.public.etest)
+if (config.public.env === 'development') console.log('reCAPTCHA Test Mode:', isTest)
 if (isTest) {
-    emit('verified', 'test-captcha-token');
+    emit('verified', 'test-captcha-token')
 }
 
 const widgetId = ref<number | null>(null)
