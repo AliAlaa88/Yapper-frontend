@@ -45,6 +45,7 @@ export default defineNuxtConfig({
             etest: process.env.NUXT_PUBLIC_ETEST || 'false',
             socketUrl: process.env.NUXT_PUBLIC_SOCKET_URL,
             socketPath: process.env.NUXT_PUBLIC_SOCKET_PATH,
+            env: process.env.NUXT_ENV || 'development',
         },
     },
 
