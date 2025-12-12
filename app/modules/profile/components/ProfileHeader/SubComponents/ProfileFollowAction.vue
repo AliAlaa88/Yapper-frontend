@@ -8,6 +8,7 @@
             :button-text="buttonText"
             :is-loading="isFollowLoading"
             loading-text="Following"
+            data-testid="button-follow-user"
             @click="handleClick"
             @mouseover="handleMouseOver"
             @mouseout="handleMouseOut"
