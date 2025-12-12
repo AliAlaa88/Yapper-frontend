@@ -30,7 +30,7 @@
         <!-- Tweets list -->
         <div v-else-if="!isPending" class="divide-y divide-primary flex flex-col items-center">
             <div class="w-full">
-                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" />
+                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" :compact="props.compact" />
             </div>
 
             <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
@@ -76,6 +76,7 @@ provide('activeMenuTweetId', activeMenuTweetId)
 const props = defineProps<{
     fetchingSource?: string | null
     quotes?: boolean
+    compact?: boolean
 }>()
 
 // Convert prop to ref for reactivity

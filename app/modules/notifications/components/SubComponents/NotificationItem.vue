@@ -4,6 +4,7 @@
         <Tweet
             v-if="notification && shouldUseTweet && tweetData"
             :tweet="tweetData"
+            :compact="true"
         />
         <NotificationCard
             v-else-if="notification && shouldUseCard"

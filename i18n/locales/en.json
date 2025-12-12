@@ -526,7 +526,8 @@
             "tweetNotFound": "Tweet not found",
             "tweetNotFoundDescription": "This tweet may have been deleted or you don't have permission to view it.",
             "goBack": "Go back"
-        }
+        },
+        "replyingTo":"Replying to"
     },
     "search": {
         "searchPlaceholder": "Search",
