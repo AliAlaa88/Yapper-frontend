@@ -14,14 +14,11 @@
                     <h2 class="text-xl font-bold text-primary">
                         {{ profile?.name }}
                     </h2>
-                    <p class="text-[13px] text-muted">
-                        @{{ profile?.username }}
-                    </p>
+                    <p class="text-[13px] text-muted">@{{ profile?.username }}</p>
                 </div>
             </div>
             <Tabs :tabs="tabsConfig" :active-tab="currentTab" :on-change="handleTabChange" />
         </div>
-
 
         <div class="min-h-screen">
             <FollowersList v-if="currentTab === 'followers' && profile" />

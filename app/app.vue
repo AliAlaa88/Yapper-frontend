@@ -59,7 +59,6 @@ const initializeSockets = async () => {
     // } catch {
     //     console.log('Error during socket initialization')
     // }
-
 }
 
 // const waitForSocketConnection = (timeout: number = 1000): Promise<boolean> => {
@@ -97,7 +96,6 @@ const cleanupSockets = () => {
     } catch (error) {
         console.error('Error during socket cleanup:', error)
     }
-
 }
 
 if (import.meta.client) {
@@ -105,7 +103,7 @@ if (import.meta.client) {
         if (document.visibilityState === 'visible' && userStore.isLoggedIn) {
             const isConnected = $socketService.isConnected()
             if (!isConnected && !socketsInitialized.value) {
-                await initializeSockets()  // reconnect
+                await initializeSockets() // reconnect
             }
         }
     }
@@ -119,7 +117,6 @@ if (import.meta.client) {
         cleanupSockets()
     })
 }
-
 
 const { t, locale, locales } = useI18n()
 
