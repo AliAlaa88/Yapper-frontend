@@ -1,7 +1,5 @@
 <template>
-    <div v-if="isTest">
-        Test Mode: reCAPTCHA skipped.    
-    </div>
+    <div v-if="isTest">Test Mode: reCAPTCHA skipped.</div>
     <RecaptchaV2
         v-else
         size="visible"

@@ -120,6 +120,8 @@ const selectLanguage = (code: string) => {
     selectedLanguage.value = code
 }
 
+const config = useRuntimeConfig()
+
 function setCookie(name: string, value: string, days = 365) {
     if (typeof document === 'undefined') return
     const expires = new Date()

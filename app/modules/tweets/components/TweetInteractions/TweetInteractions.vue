@@ -91,14 +91,13 @@ import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 import { UserList } from '~/modules/Common/components/UserList'
 import FollowListUserCard from '~/modules/Common/components/UserCard/UserCard.vue'
 import type { FollowUser } from '~/modules/profile/types/user'
-import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const { t } = useI18n()
+const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
-const tweetTransitionStore = useTweetTransitionStore()
 const userStore = useUserStore()
 
 const tweetId = computed(() => route.params.tweetId as string)
