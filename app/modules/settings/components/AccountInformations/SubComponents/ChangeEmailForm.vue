@@ -118,7 +118,7 @@ const handleNext = async () => {
 const handleClose = () => {
     newEmail.value = ''
     errorMessage.value = ''
-    router.push('/settings/email')
+    router.back()
 }
 
 const handleCloseOTP = () => {

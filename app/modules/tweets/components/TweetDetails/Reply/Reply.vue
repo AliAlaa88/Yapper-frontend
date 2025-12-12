@@ -27,7 +27,7 @@
                                 :id="`reply-avatar-${id}`"
                                 :src="user.avatar_url"
                                 :alt="user.name"
-                                class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all relative z-2"
+                                class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all relative z-0"
                                 @error="handleImageError"
                             />
                         </template>

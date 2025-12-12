@@ -1,31 +1,24 @@
 import { useUserStore } from '../modules/auth/stores/userStore'
 export default defineNuxtRouteMiddleware(async (to) => {
-    const authPages = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth']
+    const authPages = ['/auth/login', '/auth/register', '/auth']
     const isAuthPage = authPages.some(page => to.path.startsWith(page))
-    
+
     const token = useCookie('access_token').value
 
     const requiresAuth = to.meta.requiresAuth !== false
 
-    const isToken = !!token
-    let isAuthenticated = isToken
-
-    if (isAuthPage && isToken) {
-        return navigateTo('/')
-    }
-
-    if (isAuthPage) {
-        return
-    }
+    let isAuthenticated = !!token
 
     const userStore = useUserStore()
-    if (!isToken) {
+
+    // Attempt token refresh if no access_token exists
+    if (!token) {
         try {
             const { $authService } = useNuxtApp()
             const response = await $authService.GetAccessToken()
             const access_token = response.data.access_token;
-            const token = useCookie('access_token')
-            token.value = access_token;
+            const tokenCookie = useCookie('access_token')
+            tokenCookie.value = access_token;
             const fetchUserFn = async () => {
                 const userResponse = await $authService.getUserData()
                 return userResponse.data
@@ -34,10 +27,21 @@ export default defineNuxtRouteMiddleware(async (to) => {
             isAuthenticated = true
         } catch (error) {
             useCookie('access_token').value = null
-            return navigateTo('/auth/login')
+            isAuthenticated = false
         }
     }
 
+    // Redirect authenticated users away from auth pages
+    if (isAuthPage && isAuthenticated) {
+        return navigateTo('/')
+    }
+
+    // Allow unauthenticated users to access auth pages
+    if (isAuthPage) {
+        return
+    }
+
+    // Protect routes that require authentication
     if (requiresAuth && !isAuthenticated) {
         if (import.meta.client) {
             window.document.title = 'login'

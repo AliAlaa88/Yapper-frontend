@@ -74,6 +74,7 @@ const forgotPasswordMutation = useForgotPasswordQuery(
     (data: any) => {
         errorMessage.value = ''
         loading.value = false
+        console.log('Forgot Password Step 1 Success:', data)
         emit('next', identifier.value)
     },
     (error: any) => {

@@ -2,11 +2,13 @@
     <div class="relative w-full group">
         <div
             ref="displayRef"
-            class="absolute inset-0 w-full h-full p-4 whitespace-pre-wrap break-words overflow-hidden border-b border-transparent text-base leading-normal font-sans bg-transparent pointer-events-none"
-            style="z-index: 10"
+            class="absolute inset-0 w-full h-full p-4 whitespace-pre-wrap wrap-break-words overflow-hidden border-b border-transparent text-base leading-normal font-sans bg-transparent pointer-events-none"
+            style="z-index: 10; unicode-bidi: plaintext;"
+            :dir="textDirection"
             aria-hidden="true"
         >
             <span v-if="!modelValue" class="text-muted">{{ placeholder }}</span>
+
             <span v-else v-html="formattedContent"></span>
             <br v-if="modelValue.endsWith('\n')" />
         </div>
@@ -18,8 +20,10 @@
             @scroll="handleScroll"
             :id="id"
             :placeholder="!modelValue ? placeholder : ''"
-            class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap break-words overflow-y-hidden text-base leading-normal font-sans placeholder:text-transparent z-20 selection:bg-blue-200/30"
-            :class="props.inlineborder ? 'border-b border-primary focus:border-blue' : ''"
+            :dir="textDirection"
+            class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap wrap-break-words overflow-y-hidden text-base leading-normal font-sans placeholder:text-transparent z-20 selection:bg-blue-200/30"
+            :class="props.inlineborder ? 'border-b border-primary focus:border-accent' : ''"
+            style="unicode-bidi: plaintext;"
             spellcheck="false"
         ></textarea>
     </div>
@@ -27,7 +31,7 @@
 
 <script setup lang="ts">
 import { parseTextWithTags } from '~/utils/helpers'
-
+import { parseLinks } from '~/lib/utils'
 interface Props {
     modelValue: string
     placeholder?: string
@@ -48,9 +52,14 @@ const emit = defineEmits<{
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const displayRef = ref<HTMLDivElement | null>(null)
 
+const { locale } = useI18n()
+const textDirection = computed(() => {
+    return locale.value === 'ar' ? 'rtl' : 'ltr'
+})
+
 // Generate the HTML for the background layer
 const formattedContent = computed(() => {
-    return parseTextWithTags(props.modelValue)
+    return parseLinks(props.modelValue)
 })
 
 // Auto-resize logic

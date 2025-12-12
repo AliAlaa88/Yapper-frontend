@@ -30,7 +30,7 @@
             <Button
                 id="next-language-button"
                 button-class="w-full cursor-pointer bg-alternate text-alternate
-                font-semibold mt-60 mb-4 py-3 rounded-full"
+                font-semibold mt-50 mb-4 py-3 rounded-full"
                 :is-loading="useChangeLanguage.isPending.value"
                 @click="handleConfirm"
             >

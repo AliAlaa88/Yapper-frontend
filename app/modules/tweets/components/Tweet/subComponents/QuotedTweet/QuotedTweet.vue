@@ -23,6 +23,7 @@
             <!-- Content preview -->
             <p
                 class="text-primary text-sm leading-5 line-clamp-3 whitespace-pre-wrap wrap-break-word"
+                style="unicode-bidi: plaintext"
             >
                 {{ tweet.content }}
             </p>

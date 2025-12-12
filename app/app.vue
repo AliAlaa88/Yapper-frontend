@@ -14,6 +14,7 @@
 // import LanguageButton from './modules/Common/components/LanguageButton/LanguageButton.vue'
 // import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 const userStore = useUserStore()
 const { $socketService, $chatSocketService, $notificationsSocketService } = useNuxtApp()

@@ -86,8 +86,7 @@ jobs:
                       cd ~/yapper  # path to your app on VM
 
                       echo "🧭 Getting current running front image tag..."
-                      FRONT_CURRENT_TAG=$(docker compose ps frontend --format json | jq -r '.Image' | cut -d':' -f2 || echo "unknown")
-
+                      FRONT_CURRENT_TAG=$(FRONT_IMG_TAG="" docker compose ps -q frontend | xargs docker inspect -f '{{ .Config.Image }}' | cut -d':' -f2 || echo "unknown")
                       echo "🧭 Getting current running api image tag..."
                       CURRENT_TAG=$(docker compose ps api --format json | jq -r '.Image' | cut -d':' -f2 || echo "unknown")
 
@@ -102,7 +101,7 @@ jobs:
 
                       echo "🔄 Pulling new image and restarting app container..."
                       FRONT_IMG_TAG=$FRONT_IMG_TAG docker compose pull frontend
-                      FRONT_IMG_TAG=$FRONT_IMG_TAG docker compose up -d frontend
+                      FRONT_IMG_TAG=$FRONT_IMG_TAG docker compose up -d frontend frontend-test
 
                       echo "⏳ Waiting for health check (start period: 10s)..."
                       sleep 10
@@ -135,7 +134,7 @@ jobs:
                       else
                         echo "❌ Health check failed after $MAX_RETRIES retries! Rolling back frontend container..."
                         if [ "$FRONT_CURRENT_TAG" != "unknown" ]; then
-                          FRONT_IMG_TAG=$FRONT_CURRENT_TAG IMG_TAG=$CURRENT_TAG docker compose up -d frontend
+                          FRONT_IMG_TAG=$FRONT_CURRENT_TAG IMG_TAG=$CURRENT_TAG docker compose up -d frontend frontend-test
                           echo "🔙 Rolled back frontend to $FRONT_CURRENT_TAG"
                         fi
                         exit 1

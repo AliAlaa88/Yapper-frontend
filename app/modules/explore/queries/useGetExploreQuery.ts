@@ -51,42 +51,24 @@ export function useGetWhoToFollowQuery(
 }
 
 export function useGetExploreCategoriesQuery(
-    category?: String,
+    category_id: Ref<string> | string,
+    page: Ref<number> | number = 1,
+    limit: Ref<number> | number = 20,
     enabled: Ref<boolean> | boolean = false,
-    onSuccess?: (data: any) => void,
-    onError?: (error: unknown) => void,
 ) {
     const { $exploreService } = useNuxtApp()
     const query = useQuery({
-        queryKey: ['getExploreCategories', category],
-        queryFn: () => $exploreService.getExploreCategories(category),
+        queryKey: ['getExploreCategories', category_id, page, limit],
+        queryFn: () => {
+            const catId = typeof category_id === 'string' ? category_id : category_id.value
+            const pageNum = typeof page === 'number' ? page : page.value
+            const limitNum = typeof limit === 'number' ? limit : limit.value
+            return $exploreService.getExploreCategories(catId, pageNum, limitNum)
+        },
         enabled,
         retry: false,
         staleTime: 0,
         refetchOnWindowFocus: true,
     })
-    // Watch for data changes and call onSuccess
-    if (onSuccess) {
-        watch(
-            () => query.data.value,
-            (newData) => {
-                if (newData) {
-                    onSuccess(newData)
-                }
-            },
-            { immediate: true },
-        )
-    }
-    // Watch for error changes and call onError
-    if (onError) {
-        watch(
-            () => query.error.value,
-            (newError) => {
-                if (newError) {
-                    onError(newError)
-                }
-            },
-        )
-    }
     return query
 }

@@ -14,21 +14,25 @@
                 </p>
                 <slot />
             </div>
-            <ChevronRight class="opacity-40 group-hover:text-white absolute right-3" />
+            <component
+                :is="locale === 'ar' ? ChevronLeft : ChevronRight"
+                class="opacity-40 group-hover:text-white absolute transition-colors"
+                :class="locale === 'ar' ? 'left-3' : 'right-3'" />
         </div>
     </NuxtLink>
 </template>
 
 <script setup lang="ts">
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight, ChevronLeft } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 interface Category {
     label: string,
     content?: string | null,
     href: string
 }
-const props = defineProps<{
+defineProps<{
     category: Category
 }>()
 
-console.log('category', props.category)
 </script>
