@@ -47,6 +47,7 @@ export default defineConfig({
                     ],
                     exclude: [
                         'app/modules/tweets/test/unit/*.{test,spec}.ts',
+                        'app/modules/explore/test/unit/*.{test,spec}.ts',
                     ],
                     environment: 'nuxt',
                     setupFiles: './tests/setup.ts',

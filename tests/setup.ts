@@ -1,114 +1,81 @@
-// Ensure Nuxt composables and i18n utilities are available globally
-globalThis.useNuxtApp = () => ({
-	$queryClient: {
-		getQueryData: vi.fn(),
-		setQueryData: vi.fn(),
-		invalidateQueries: vi.fn(),
-		removeQueries: vi.fn(),
-		refetchQueries: vi.fn(),
-		fetchQuery: vi.fn(),
-		queryClient: {},
-	},
-	$userInfoService: {},
-	$tweetService: {},
-})
-globalThis.navigateTo = vi.fn()
-globalThis.$t = (key) => key
-globalThis.useRouter = () => ({ push: vi.fn(), replace: vi.fn(), go: vi.fn(), back: vi.fn(), currentRoute: {} })
-globalThis.useRoute = () => ({ params: {}, query: {}, path: '/', name: '', fullPath: '/', meta: {}, matched: [] })
-globalThis.useI18n = () => ({ t: (key) => key, locale: 'en' })
-globalThis.useRouter = () => ({ push: vi.fn(), replace: vi.fn(), go: vi.fn(), back: vi.fn() })
-globalThis.useRoute = () => ({ params: {}, query: {}, path: '/', name: '', fullPath: '/', meta: {} })
-globalThis.useI18n = () => ({ t: (key) => key, locale: 'en' })
-globalThis.$t = (key) => key
-import 'fake-indexeddb/auto';
-
-// Pinia setup for all tests
-import { createPinia, setActivePinia } from 'pinia'
-import { config } from '@vue/test-utils'
-setActivePinia(createPinia())
-
-// Inject $t as a global property for all Vue components
-config.global.properties = config.global.properties || {}
-config.global.properties.$t = (key) => key
-
-// Vue Router global mocks
 import { vi } from 'vitest'
-// Mock #app for dynamic imports
-vi.mock('#app', () => {
-	const mock = {
-		navigateTo: vi.fn(),
-		$t: (key) => key,
-		useRouter: () => ({ push: vi.fn(), replace: vi.fn(), go: vi.fn(), back: vi.fn(), currentRoute: {} }),
-		useRoute: () => ({ params: {}, query: {}, path: '/', name: '', fullPath: '/', meta: {}, matched: [] }),
-		useI18n: () => ({ t: (key) => key, locale: 'en' })
-	}
-	return { ...mock, default: mock }
+import { config } from '@vue/test-utils'
+import enMessages from '../i18n/locales/en.json'
+
+// Mock Nuxt auto-imports
+;(global as any).defineNuxtComponent = vi.fn((component: any) => component)
+;(global as any).defineNuxtPlugin = vi.fn((plugin: any) => plugin)
+
+// Helper function to get nested translation values
+function getTranslation(key: string, messages: any): string {
+  const keys = key.split('.')
+  let value = messages
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k]
+    } else {
+      return key // Return the key if translation not found
+    }
+  }
+  return typeof value === 'string' ? value : key
+}
+
+// Set up global test configuration
+config.global.mocks = {
+  $t: (key: string) => getTranslation(key, enMessages),
+}
+
+// Mock window.matchMedia for responsive tests
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
 })
-vi.mock('vue-router', () => ({
-	useRoute: () => ({ params: {}, query: {}, path: '/', name: '', fullPath: '/', meta: {} }),
-	useRouter: () => ({ push: vi.fn(), replace: vi.fn(), go: vi.fn(), back: vi.fn() })
-}))
 
-// Vue reactivity utilities global mocks
-import { ref, computed, reactive } from 'vue'
-globalThis.ref = ref
-globalThis.computed = computed
-globalThis.reactive = reactive
+// Mock IntersectionObserver
+;(global as any).IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() {
+    return []
+  }
+  unobserve() {}
+}
 
-// Vue reactivity utility: expose watch globally
-import { watch } from 'vue'
-globalThis.watch = watch
+// Mock ResizeObserver
+;(global as any).ResizeObserver = class ResizeObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+}
 
-// Vue lifecycle utility: expose onUnmounted globally
-import { onUnmounted } from 'vue'
-globalThis.onUnmounted = onUnmounted
+// Mock scrollTo
+;(window as any).scrollTo = vi.fn()
 
-// Mock Vue Query plugin/context
-vi.mock('@tanstack/vue-query', () => ({
-	useQueryClient: () => ({
-		getQueryData: vi.fn(),
-		setQueryData: vi.fn(),
-		invalidateQueries: vi.fn(),
-		removeQueries: vi.fn(),
-		refetchQueries: vi.fn(),
-		fetchQuery: vi.fn(),
-		queryClient: {},
-	}),
-	useMutation: vi.fn(),
-	useQuery: vi.fn(),
-	useInfiniteQuery: vi.fn(),
-}))
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+}
+;(global as any).localStorage = localStorageMock
 
-
-// Nuxt composables and i18n global mocks
-vi.mock('#app', () => ({
-	useNuxtApp: () => ({
-		$queryClient: {
-			getQueryData: vi.fn(),
-			setQueryData: vi.fn(),
-			invalidateQueries: vi.fn(),
-			removeQueries: vi.fn(),
-			refetchQueries: vi.fn(),
-			fetchQuery: vi.fn(),
-			queryClient: {},
-		},
-		$userInfoService: {},
-		$tweetService: {},
-	}),
-	useRouter: () => ({ push: vi.fn(), replace: vi.fn(), go: vi.fn(), back: vi.fn() }),
-	useRoute: () => ({ params: {}, query: {}, path: '/', name: '', fullPath: '/', meta: {} }),
-	useI18n: () => ({ t: (key) => key, locale: 'en' }),
-	$t: (key) => key,
-	navigateTo: vi.fn()
-}))
-
-// vue-i18n global mock (for direct import)
-vi.mock('vue-i18n', () => ({
-	useI18n: () => ({ t: (key: string) => key, locale: 'en' }),
-	navigateTo: vi.fn(),
-	$t: (key) => key
-}))
-
-// Expose $t globally for template usage
-globalThis.$t = (key: string) => key
+// Mock sessionStorage
+const sessionStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+}
+;(global as any).sessionStorage = sessionStorageMock
