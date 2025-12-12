@@ -203,8 +203,8 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         participant: participantType,
         options: {
             content?: string
-            mediaUrl?: string
-            messageType: 'text' | 'image' | 'video'
+            imageUrl?: string | null
+            messageType: 'text' | 'image'
             messagesLength: number
         },
     ) => {
@@ -231,6 +231,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         const optimisticMessage: Message = {
             id: optimisticId,
             content: options.content || '',
+            image_url: options.imageUrl || null,
             sender: {
                 id: (currentUser as any).user_id,
                 username: currentUser.username,
@@ -285,9 +286,10 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             chat_id: chatId,
             message: {
                 content: options.content,
-                media_url: options.mediaUrl,
+                image_url: options.imageUrl || null,
                 message_type: options.messageType,
                 is_first_message: isFirstMessage,
+                reply_to_message_id: null,
             },
         }
         console.log('payload', payload)

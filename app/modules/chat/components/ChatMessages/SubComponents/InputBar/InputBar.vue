@@ -55,7 +55,7 @@
         <!-- Input Bar -->
         <div class="flex items-center gap-2 bg-dark-gray rounded-full p-2 border border-primary">
             <div class="relative">
-                <MediaUpload :disabled="mediaUrls.length >= 4" @select="handleSelectMedia" />
+                <MediaUpload :disabled="mediaUrls.length >= 1" @select="handleSelectMedia" />
             </div>
 
             <div class="relative">
@@ -64,7 +64,7 @@
                         <button
                             id="add-gif-button"
                             type="button"
-                            :disabled="mediaUrls.length >= 4"
+                            :disabled="mediaUrls.length >= 1"
                             class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             @click="toggleGifPicker"
                         >
@@ -147,7 +147,7 @@ import { tooltipContentClass as contentClass } from '~/modules/Common/constants/
 
 interface MediaItem {
     url: string
-    type: 'image' | 'video'
+    type: 'image'
 }
 
 const props = defineProps<{
@@ -173,26 +173,30 @@ const disableSendButton = computed(() => {
     return isEmpty || $chatSocketService.isSendingMessage.value
 })
 
-const processUploadResponse = (response: any, type: 'image' | 'video') => {
+const processUploadResponse = (response: any) => {
     if (response?.data?.url) {
         const url = response.data.url
-        const exists = mediaUrls.value.some((item) => item.url === url)
-        if (!exists && mediaUrls.value.length < 4) {
-            mediaUrls.value.push({ url: url, type: type })
-        }
+        // Replace any existing media with new one (single media only)
+        mediaUrls.value = [{ url: url, type: 'image' }]
     }
 }
 
 const handleSelectMedia = async (files: File[]) => {
-    for (const media of files) {
-        if (mediaUrls.value.length >= 4) break
-        const type = media.type.includes('image') ? 'image' : 'video'
-        try {
-            const response = await uploadMedia.mutateAsync({ media, type })
-            processUploadResponse(response, type)
-        } catch (error) {
-            console.error('Failed to upload media:', error)
-        }
+    // Only take the first file
+    const media = files[0]
+    if (!media) return
+    
+    // Only accept images, not videos
+    if (!media.type.includes('image')) {
+        snackbar?.handleShowSnackbar('Only images are allowed')
+        return
+    }
+    
+    try {
+        const response = await uploadMedia.mutateAsync({ media, type: 'image' })
+        processUploadResponse(response)
+    } catch (error) {
+        console.error('Failed to upload media:', error)
     }
 }
 
@@ -207,8 +211,8 @@ const toggleGifPicker = () => {
 
 const handleGifSelect = (gifUrl: string) => {
     showGifPicker.value = false
-    if (mediaUrls.value.length >= 4) return
-    mediaUrls.value.push({ url: gifUrl, type: 'image' })
+    // Replace any existing media with GIF (single media only)
+    mediaUrls.value = [{ url: gifUrl, type: 'image' }]
 }
 
 const toggleEmojiPicker = () => {
@@ -257,27 +261,27 @@ watch(content, () => {
 const handleSubmit = () => {
     if (disableSendButton.value) return
 
-    if (content.value.trim() === '') return
+    if (content.value.trim() === '' && mediaUrls.value.length === 0) return
 
     if (content.value.length > 200) {
         snackbar?.handleShowSnackbar('Message must be 200 characters or less')
         return
     }
 
-    let messageType: 'text' | 'image' | 'video' = 'text'
-    let mediaUrl: string | undefined
+    let messageType: 'text' | 'image' = 'text'
+    let imageUrl: string | null = null
 
     if (mediaUrls.value.length > 0) {
         const firstMedia = mediaUrls.value[0]
         if (firstMedia) {
-            messageType = firstMedia.type
-            mediaUrl = firstMedia.url
+            messageType = 'image'
+            imageUrl = firstMedia.url
         }
     }
 
     $chatSocketService.sendMessage(props.conversationId, props.participant, {
-        content: content.value.trim() || undefined,
-        mediaUrl,
+        content: content.value.trim(),
+        imageUrl,
         messageType,
         messagesLength: props.messagesLength,
     })

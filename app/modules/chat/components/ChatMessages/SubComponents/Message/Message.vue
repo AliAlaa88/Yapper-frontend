@@ -7,30 +7,15 @@
                 class="rounded-3xl px-4 py-2"
                 :class="isOwnMessage ? 'bg-accent text-primary' : 'bg-dark-gray text-primary'"
             >
-                <p class="text-[15px] leading-5 whitespace-pre-wrap break-words" style="unicode-bidi: plaintext;" v-html="parseLinks(message.content, isOwnMessage)"/>
+                <p v-if="message.content" class="text-[15px] leading-5 whitespace-pre-wrap break-words" style="unicode-bidi: plaintext;" v-html="parseLinks(message.content, isOwnMessage)"/>
 
-                <!-- Media display -->
-                <div v-if="message.media && message.media.length > 0" class="mt-2 space-y-2">
-                    <div
-                        v-for="(item, index) in message.media"
-                        :key="index"
-                        class="rounded-xl overflow-hidden"
-                    >
-                        <img
-                            v-if="item.type === 'image'"
-                            :src="item.url"
-                            :alt="`Media ${index + 1}`"
-                            class="max-w-full h-auto rounded-xl"
-                        />
-                        <video
-                            v-else-if="item.type === 'video'"
-                            :src="item.url"
-                            class="max-w-full h-auto rounded-xl"
-                            controls
-                        >
-                            <p>Your browser does not support the video tag.</p>
-                        </video>
-                    </div>
+                <!-- Image display -->
+                <div v-if="message.image_url" class="mt-2">
+                    <img
+                        :src="message.image_url"
+                        alt="Message image"
+                        class="max-w-full h-auto rounded-xl"
+                    />
                 </div>
             </div>
 
@@ -52,17 +37,10 @@ import { formatMessageDate } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { parseLinks } from '~/lib/utils'
 
-interface MessageWithMedia extends Message {
-    media?: Array<{
-        url: string
-        type: 'image' | 'video'
-    }>
-}
-
 const userStore = useUserStore()
 
 const props = defineProps<{
-    message: MessageWithMedia
+    message: Message
 }>()
 
 const currentUser = userStore.getUser().user_id

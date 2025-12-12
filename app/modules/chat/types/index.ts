@@ -15,7 +15,8 @@ export interface MessageSender {
 export interface Message {
     id: string
     content: string
-    message_type: 'text' | 'image' | 'video' | 'reply'
+    message_type: 'text' | 'image' | 'reply'
+    image_url?: string | null
     sender: MessageSender
     reply_to: string | null
     is_read: boolean
