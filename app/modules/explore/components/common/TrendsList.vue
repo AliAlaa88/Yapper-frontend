@@ -5,7 +5,7 @@
             :key="trend.reference_id || index"
             class="px-4 py-3 hover:bg-hover transition-colors cursor-pointer group"
         >
-            <div class="flex flex-col gap-0.5" data-testid="link-trend-item" @click="onClickTrend(trend)">
+            <div class="flex flex-col gap-0.5" id="link-trend-item" @click="onClickTrend(trend)">
                 <div class="flex items-center gap-1 text-muted text-xs">
                     <template v-if="showRank">
                         <span class="font-medium">{{ index + 1 }}</span>

@@ -5,7 +5,7 @@
             <button
                 type="button"
                 class="px-2 py-1 text-accent hover:bg-accent/10 text-[15px] rounded-full font-semibold transition-colors"
-                data-testid="button-clearAll-search-history"
+                id="button-clearAll-search-history"
                 @click="clearAll"
             >
                 {{ $t('search.clearAll') }}
@@ -25,7 +25,7 @@
                     <Search :size="20" class="text-primary/50 shrink-0" />
                     <div
                         class="flex-1 min-w-0 cursor-pointer"
-                        data-testid="link-query-search-history"
+                        id="link-query-search-history"
                         @click="handleQueryClick(item.query)"
                     >
                         <div class="text-primary font-semibold text-[15px] truncate">
@@ -35,7 +35,7 @@
                     <button
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
-                        data-testid="button-remove-search-history-query"
+                        id="button-remove-search-history-query"
                         @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.query"
                     >
@@ -47,7 +47,7 @@
                 <div
                     v-else-if="item.type === 'user'"
                     class="flex items-center gap-3 cursor-pointer"
-                    data-testid="link-user-search-history"
+                    id="link-user-search-history"
                     @click="handleUserClick(item)"
                 >
                     <img
@@ -73,7 +73,7 @@
                     <button
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
-                        data-testid="button-remove-search-history-user"
+                        id="button-remove-search-history-user"
                         @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.name"
                     >

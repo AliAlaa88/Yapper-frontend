@@ -15,7 +15,7 @@
                     v-for="(item, index) in suggestionsData.suggested_queries"
                     :key="index"
                     class="px-4 py-2 hover:bg-hover transition-colors cursor-pointer"
-                    data-testid="link-suggested-query"
+                    id="link-suggested-query"
                     @click="handleQueryClick(item.query)"
                 >
                     <div class="flex items-center gap-3">
@@ -38,7 +38,7 @@
                     v-for="user in suggestionsData.suggested_users"
                     :key="user.user_id"
                     class="px-4 py-2 hover:bg-hover transition-colors cursor-pointer"
-                    data-testid="link-suggested-user"
+                    id="link-suggested-user"
                     @click="handleUserClick(user)"
                 >
                     <div class="flex items-center gap-3">

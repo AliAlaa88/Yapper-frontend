@@ -6,7 +6,7 @@
                 type="button"
                 class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors shrink-0"
                 :aria-label="$t('navigation.back')"
-                data-testid="button-back-search-bar"
+                id="button-back-search-bar"
                 @click="handleBack"
             >
                 <ArrowLeft :size="20" class="text-primary" />
@@ -21,13 +21,13 @@
                     type="text"
                     class="bg-transparent outline-none ml-2 text-primary flex-1"
                     :placeholder="$t('search.searchPlaceholder')"
-                    data-testid="input-search-query"
+                    id="input-search-query"
                     @focus="handleFocus"
                     @blur="handleBlur"
                     v-model="searchQueryInput"
                     @keydown.enter="handleSearchSubmit(searchQueryInput)"
                 />
-                <CircleX v-if="isFocused && searchQueryInput !== ''" :size="20" data-testid="button-clear-search-query" @click="handleClearQuery" class="cursor-pointer" />
+                <CircleX v-if="isFocused && searchQueryInput !== ''" :size="20" id="button-clear-search-query" @click="handleClearQuery" class="cursor-pointer" />
             </div>
         </div>
         <div
