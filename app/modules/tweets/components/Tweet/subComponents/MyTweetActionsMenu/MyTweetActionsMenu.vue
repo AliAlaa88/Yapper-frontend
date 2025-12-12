@@ -2,6 +2,7 @@
     <div
         v-if="showList"
         ref="dropdownRef"
+        data-menu-container
         class="sm:absolute right-0 mt-2 bg-primary rounded-xl fixed bottom-0 sm:bottom-auto
             sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-all duration-200
             sm:w-70 sm:-top-2 left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
