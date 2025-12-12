@@ -16,6 +16,39 @@ export const formatDate = (date: string) => {
     return tweetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
+export const formatDateWithMonth = (dateString: string): string => {
+    const now = new Date()
+    const date = new Date(dateString)
+
+    const diffInMs = now.getTime() - date.getTime()
+    const diffInSeconds = Math.floor(diffInMs / 1000)
+
+    if (diffInSeconds < 60) {
+        return `${diffInSeconds}s`
+    }
+
+    if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60)
+        return `${minutes}m`
+    }
+
+    if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600)
+        return `${hours}h`
+    }
+
+    const options: Intl.DateTimeFormatOptions = {
+        month: 'short',
+        day: 'numeric',
+    }
+    if (date.getFullYear() !== now.getFullYear()) {
+        options.year = 'numeric'
+    }
+
+    const locale = useI18n().locale.value
+    return date.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US', options)
+}
+
 export const formatConversationDate = (date: string) => {
     if (!date) return ''
     const now = dayjs()

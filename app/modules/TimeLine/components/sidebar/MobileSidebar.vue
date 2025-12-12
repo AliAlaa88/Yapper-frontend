@@ -88,6 +88,10 @@
                             >
                                 {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
                             </span>
+                            <span v-if="link.href === '/notifications' && totalUnreadNotifications > 0"
+                                class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center">
+                                {{ totalUnreadNotifications > 99 ? '99+' : totalUnreadNotifications }}
+                            </span>
                         </div>
                         <span class="text-lg">{{ t(link.labelKey) }}</span>
                     </NuxtLink>
@@ -122,8 +126,9 @@ const isRTL = computed(() => {
 })
 
 // listen to unread chats summary
-const { $chatSocketService } = useNuxtApp()
-const totalUnreadCount = computed(() => $chatSocketService.totalUnreadChats.value)
+const { $chatSocketService, $notificationsSocketService } = useNuxtApp()
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
+const totalUnreadNotifications = computed(() => $notificationsSocketService.unreadCount.value)
 
 const navLinks = [
     {
