@@ -1,5 +1,6 @@
 <template>
     <button
+        :id="id"
         :class="[buttonClass, {
             'cursor-not-allowed': isLoading || disabled,
             'cursor-pointer': !isLoading && !disabled
@@ -20,6 +21,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{
+    id?: string;
     buttonText?: string;
     isLoading?: boolean;
     disabled?: boolean;

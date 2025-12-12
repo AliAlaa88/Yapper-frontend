@@ -53,6 +53,7 @@
             class="sticky bottom-0 bg-primary border-t border-primary p-3 mt-auto shrink-0 -mx-4 px-4"
         >
             <Button
+                id="btn-next-create-conversation"
                 :button-text="$t('chat.createConversation.next')"
                 :is-loading="isCreating"
                 :loading-text="$t('chat.createConversation.creating')"

@@ -6,7 +6,7 @@
         >
             <div class="flex items-center gap-3">
                 <button
-                    id="back-to-messages-button"
+                    id="btn-back-to-messages"
                     class="md:hidden p-2 hover:bg-hover rounded-full cursor-pointer transition-colors"
                     @click="router.push('/messages')"
                     aria-label="Back to messages"
@@ -16,7 +16,7 @@
                 <template
                     v-if="!isConversationLoading && !isLoading && participant && conversationId"
                     >
-                    <NuxtLink :to="`/${participant.username}`">
+                    <NuxtLink id="link-chat-participant-profile" :to="`/${participant.username}`">
                     <div class="flex items-center gap-2">
 
 
@@ -92,6 +92,7 @@
             />
             <!-- Scroll to Bottom Button -->
             <button
+                id="btn-scroll-to-bottom-chat"
                 v-if="showScrollButton"
                 class="sticky bottom-4 right-4 cursor-pointer ml-auto mr-4 bg-alternate text-alternate p-2 rounded-full shadow-lg hover:bg-alternate/90 transition-colors z-20 flex items-center justify-center w-10 h-10"
                 @click="scrollToBottom"
