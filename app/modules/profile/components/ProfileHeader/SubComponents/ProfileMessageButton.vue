@@ -1,5 +1,6 @@
 <template>
     <button
+        id="btn-message-profile"
         class="flex h-9 w-9 items-center cursor-pointer justify-center rounded-full border border-[#536471] transition hover:bg-[#181818]"
         :disabled="isLoading"
         @click="goToMessages"

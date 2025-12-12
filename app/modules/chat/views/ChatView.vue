@@ -28,7 +28,7 @@
                         {{ $t('chat.selectMessageDescription') }}
                     </p>
                     <button
-                        id="new-chat-button-empty-state"
+                        id="btn-new-message-empty-state"
                         class="bg-accent text-primary font-bold rounded-full py-3 px-8 transition-colors cursor-pointer hover:bg-accent/90"
                         @click="openCreateConversation"
                     >

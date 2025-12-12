@@ -27,6 +27,7 @@
             </div>
 
             <NuxtLink
+                id="link-show-more-trends"
                 to="/explore/tabs/trending"
                 class="w-full px-4 py-3 text-left text-sm text-accent hover:bg-hover transition-colors"
             >
@@ -59,6 +60,7 @@
             </div>
 
             <NuxtLink
+                id="link-show-more-who-to-follow"
                 to="/explore/who-to-follow"
                 class="w-full px-4 py-3 text-start text-sm text-accent hover:bg-hover transition-colors block"
             >

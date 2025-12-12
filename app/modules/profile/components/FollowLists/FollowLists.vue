@@ -3,8 +3,9 @@
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md">
             <div class="flex items-center gap-8 px-4 py-3">
                 <button
+                    id="btn-back-follow-lists"
                     type="button"
-                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover"
+                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover cursor-pointer"
                     :aria-label="$t('navigation.back')"
                     @click="router.back()"
                 >

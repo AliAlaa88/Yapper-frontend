@@ -4,7 +4,8 @@
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md border-b border-primary">
             <div class="flex items-center gap-4 px-4 py-3">
                 <button
-                    class="p-2 -ml-2 rounded-full hover:bg-hover transition-colors"
+                    id="btn-back-category-tweets"
+                    class="p-2 -ml-2 rounded-full hover:bg-hover transition-colors cursor-pointer"
                     @click="router.back()"
                 >
                     <ArrowLeft :size="20" class="text-primary" />
@@ -16,7 +17,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Loading state -->
         <div v-if="isLoading && currentPage === 1" class="flex justify-center py-8 min-h-[calc(100vh-60px)]">
             <LoadingSpinner size="xl" />
@@ -28,7 +29,7 @@
             class="flex flex-col items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary gap-2"
         >
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
-            <button @click="refetch" class="text-accent hover:underline">
+            <button id="btn-retry-category-tweets" @click="refetch" class="text-accent hover:underline cursor-pointer">
                 {{ t('explore.tryAgain') }}
             </button>
         </div>
@@ -114,12 +115,12 @@ watch(
     (newData) => {
         if (newData?.data) {
             categoryInfo.value = newData.data.category
-            
+
             // Emit category info to parent
             if (categoryInfo.value) {
                 emit('categoryLoaded', categoryInfo.value)
             }
-            
+
             if (currentPage.value === 1) {
                 // First page - replace all tweets
                 allTweets.value = newData.data.tweets || []
@@ -128,7 +129,7 @@ watch(
                 const newTweets = newData.data.tweets || []
                 allTweets.value = [...allTweets.value, ...newTweets]
             }
-            
+
             // Update hasMore based on pagination info
             hasMore.value = newData.data.pagination?.hasMore || false
         }
@@ -171,7 +172,7 @@ onMounted(() => {
                 threshold: 0.1,
             }
         )
-        
+
         observer.observe(loadMoreTrigger.value)
     }
 })
@@ -183,7 +184,7 @@ watch(
         if (observer) {
             observer.disconnect()
         }
-        
+
         if (el && process.client) {
             observer = new IntersectionObserver(
                 (entries) => {
@@ -198,7 +199,7 @@ watch(
                     threshold: 0.1,
                 }
             )
-            
+
             observer.observe(el)
         }
     }

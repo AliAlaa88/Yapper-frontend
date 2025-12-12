@@ -244,7 +244,7 @@
                     class="text-secondary text-xs mb-2 truncate"
                 >
                     {{ $t('tweets.replyingTo') }}
-                    <a :href="parentProfileUrl" class="text-accent font-medium hover:underline" @click.stop>@{{ parentUser?.username }}</a>
+                    <a :id="`link-replying-to-${parentUser?.username}`" :href="parentProfileUrl" class="text-accent font-medium hover:underline cursor-pointer" @click.stop>@{{ parentUser?.username }}</a>
                 </div>
                 <Content :content="content" />
 

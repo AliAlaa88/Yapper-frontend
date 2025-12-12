@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between px-4 py-2">
             <div class="flex items-center gap-4">
                 <!-- Avatar Trigger -->
-                <button @click="isOpen = true" class="rounded-full overflow-hidden size-10">
+                <button id="btn-open-mobile-sidebar" @click="isOpen = true" class="rounded-full overflow-hidden size-10 cursor-pointer">
                     <UserImage :image-url="user?.avatar_url" :name="user?.name" :compact="true" />
                 </button>
             </div>
@@ -41,8 +41,9 @@
                 <div class="p-4 border-b border-primary flex justify-between items-center">
                     <span class="font-bold text-lg">{{ t('timeline.sidebar.profile') }}</span>
                     <button
+                        id="btn-close-mobile-sidebar"
                         @click="isOpen = false"
-                        class="p-2 hover:bg-hover rounded-full transition-colors"
+                        class="p-2 hover:bg-hover rounded-full transition-colors cursor-pointer"
                     >
                         <X class="w-6 h-6 text-primary" />
                     </button>
@@ -76,6 +77,7 @@
                     <NuxtLink
                         v-for="link in navLinks"
                         :key="link.href"
+                        :id="`mobile-sidebar-link-${link.href}`"
                         :to="link.href"
                         @click="isOpen = false"
                         class="flex items-center gap-4 px-4 py-3 hover:bg-muted transition-colors text-primary rounded-full relative"

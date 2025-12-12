@@ -19,9 +19,10 @@
                     <button
                         v-for="size in fontSizes"
                         :key="size.value"
+                        :id="`btn-font-size-${size.value}`"
                         :aria-label="`Font size ${size.label}`"
                         class="relative z-10 flex items-center justify-center
-                        transition-transform hover:scale-110"
+                        transition-transform hover:scale-110 cursor-pointer"
                         @click="fontSize = size.value"
                     >
                         <div
@@ -45,6 +46,7 @@
                 </div>
 
                 <input
+                    id="input-font-size-range"
                     v-model.number="fontSize"
                     type="range"
                     min="1"

@@ -2,9 +2,10 @@
     <div class="relative w-full">
         <div class="flex items-center w-full">
             <button
+                id="btn-back-search"
                 v-if="isFocused && hasArrow"
                 type="button"
-                class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors shrink-0"
+                class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors shrink-0 cursor-pointer"
                 :aria-label="$t('navigation.back')"
                 @click="handleBack"
             >
@@ -16,6 +17,7 @@
             >
                 <Search :size="18" class="text-secondary" />
                 <input
+                    id="input-search-bar"
                     ref="inputRef"
                     type="text"
                     class="bg-transparent outline-none ml-2 text-primary flex-1"
@@ -26,7 +28,7 @@
                     v-model="searchQueryInput"
                     @keydown.enter="handleSearchSubmit(searchQueryInput)"
                 />
-                <CircleX v-if="isFocused && searchQueryInput !== ''" :size="20" @click="handleClearQuery" class="cursor-pointer" />
+                <CircleX id="btn-clear-search" v-if="isFocused && searchQueryInput !== ''" :size="20" @click="handleClearQuery" class="cursor-pointer" />
             </div>
         </div>
         <div

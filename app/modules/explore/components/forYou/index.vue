@@ -8,8 +8,9 @@
         <!-- Error state -->
         <div v-else-if="isError" class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary">
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
-            <Button 
-                @click="exploreQuery.refetch()" 
+            <Button
+                id="btn-retry-explore-for-you"
+                @click="exploreQuery.refetch()"
                 class="text-accent hover:underline"
             >
                 {{ t('explore.tryAgain') }}
@@ -24,9 +25,9 @@
         <!-- Content -->
         <div v-else >
             <!-- Trending Section -->
-            <TrendsList 
-                v-if="exploreData.trending?.data?.length" 
-                :trends="exploreData.trending.data" 
+            <TrendsList
+                v-if="exploreData.trending?.data?.length"
+                :trends="exploreData.trending.data"
             />
 
             <!-- Who to Follow Section -->
@@ -36,8 +37,9 @@
                 </h2>
                 <WhoToFollowList :users="exploreData.who_to_follow.slice(0, 3)" />
                 <button
+                    id="btn-show-more-who-to-follow"
                     @click="router.push('/explore/who-to-follow')"
-                    class="w-full px-4 py-3 text-start text-sm text-accent hover:bg-hover transition-colors"
+                    class="w-full px-4 py-3 text-start text-sm text-accent hover:bg-hover transition-colors cursor-pointer"
                 >
                     {{ t('timeline.banner.showMore') }}
                 </button>
@@ -45,23 +47,23 @@
 
             <!-- For You Posts by Category -->
             <div v-if="exploreData.for_you?.length">
-                <div 
-                    v-for="categoryGroup in exploreData.for_you" 
+                <div
+                    v-for="categoryGroup in exploreData.for_you"
                     :key="categoryGroup.category.id"
                     class="border-t border-primary"
                 >
                     <!-- Category Header -->
-                    <div 
+                    <div
                         class="px-4 py-3 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
                         @click="router.push(`/explore/category/${categoryGroup.category.id}`)"
                     >
                         <h2 class="text-xl font-bold text-primary">{{ categoryGroup.category.name }}</h2>
                         <ChevronRight class="w-5 h-5 text-muted" />
                     </div>
-                    
+
                     <!-- Posts in this category -->
-                    <Tweet 
-                        v-for="post in categoryGroup.tweets" 
+                    <Tweet
+                        v-for="post in categoryGroup.tweets"
                         :key="post.tweet_id"
                         :tweet="post"
                     />

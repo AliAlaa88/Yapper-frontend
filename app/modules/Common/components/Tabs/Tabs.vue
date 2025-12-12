@@ -6,6 +6,7 @@
     >
         <!-- Left Arrow -->
         <button
+            id="btn-scroll-tabs-left"
             v-if="canScrollLeft && isHovering"
             @click="scrollLeft"
             class="absolute left-0 top-0 bottom-0 z-10 flex items-center justify-center w-10 bg-linear-to-r from-x-background via-x-background to-transparent cursor-pointer transition-opacity duration-200"
@@ -46,6 +47,7 @@
 
         <!-- Right Arrow -->
         <button
+            id="btn-scroll-tabs-right"
             v-if="canScrollRight && isHovering"
             @click="scrollRight"
             class="absolute right-0 top-0 bottom-0 z-10 flex items-center justify-center w-10 bg-linear-to-l from-x-background via-x-background to-transparent cursor-pointer transition-opacity duration-200"

@@ -3,8 +3,9 @@
         <div v-if="sortedHistory.length > 0" class="flex items-center justify-between px-4 py-3">
             <h3 class="text-primary font-bold text-[20px]">{{ $t('search.recent') }}</h3>
             <button
+                id="btn-clear-all-search-history"
                 type="button"
-                class="px-2 py-1 text-accent hover:bg-accent/10 text-[15px] rounded-full font-semibold transition-colors"
+                class="px-2 py-1 text-accent hover:bg-accent/10 text-[15px] rounded-full font-semibold transition-colors cursor-pointer"
                 @click="clearAll"
             >
                 {{ $t('search.clearAll') }}
@@ -31,8 +32,9 @@
                         </div>
                     </div>
                     <button
+                        :id="`btn-remove-search-history-${index}`"
                         type="button"
-                        class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
+                        class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors cursor-pointer"
                         @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.query"
                     >

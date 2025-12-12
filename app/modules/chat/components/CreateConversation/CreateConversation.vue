@@ -11,6 +11,7 @@
             <div class="flex flex-col gap-3 px-4 pt-2 pb-3 shrink-0">
                 <h1 class="text-lg font-bold text-primary">{{ $t('chat.createConversation.newMessage') }}</h1>
                 <input
+                    id="input-search-create-conversation"
                     v-model="searchUsernameRef"
                     type="text"
                     :placeholder="$t('chat.createConversation.searchUsername')"
