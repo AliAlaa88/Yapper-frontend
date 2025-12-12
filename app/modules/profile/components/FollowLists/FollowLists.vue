@@ -79,7 +79,11 @@ const tabsConfig = computed(() => {
     ]
 
     if (!isMyProfile.value) {
-        tabs.push({ label: t('profile.followersYouFollow'), value: 'followers_you_follow', test_id: 'tab-followers-you-follow' })
+        tabs.push({
+            label: t('profile.followersYouFollow'),
+            value: 'followers_you_follow',
+            test_id: 'tab-followers-you-follow',
+        })
     }
 
     return tabs

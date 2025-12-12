@@ -1,7 +1,11 @@
 <template>
     <div class="flex items-start hover:bg-hover gap-3 p-4 transition-colors cursor-pointer">
         <NuxtLink :to="`/${user.username}`" class="flex items-start gap-3 flex-1 min-w-0">
-            <UserImage :image-url="props.user?.avatar_url" :name="props.user?.name" :compact="true"/>
+            <UserImage
+                :image-url="props.user?.avatar_url"
+                :name="props.user?.name"
+                :compact="true"
+            />
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
                     <div class="min-w-0 flex-1">
