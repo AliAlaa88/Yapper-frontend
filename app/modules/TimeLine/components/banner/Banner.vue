@@ -16,7 +16,7 @@
                 <div v-if="isLoading" class="flex justify-center items-center">
                     <LoadingSpinner />
                 </div>
-                <TrendsList v-else-if="trends.length > 0" :trends="trends" :show-rank="true" />
+                <TrendsList v-else-if="trends.length > 0" :trends="trends.slice(0, 3)" :show-rank="true" />
 
                 <div v-else-if="isError" class="px-4 py-3">
                     <p class="text-red-500">{{ t('timeline.banner.error') }}</p>
@@ -69,7 +69,6 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import SearchBar from '~/modules/search/components/SearchBar.vue'
 import { computed } from 'vue'
