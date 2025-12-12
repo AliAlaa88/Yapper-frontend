@@ -540,6 +540,13 @@
             }
         }
     },
+    "mentions": {
+        "loading": "جاري التحميل...",
+        "noMatches": "لا توجد نتائج مطابقة",
+        "mutual": "تتابعون بعضكم البعض",
+        "following": "متابَع",
+        "followsYou": "يتابعك"
+    },
     "explore": {
         "trending": "الترند",
         "posts": "منشور",
