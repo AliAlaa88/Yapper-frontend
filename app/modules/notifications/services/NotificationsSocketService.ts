@@ -136,27 +136,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         })
     }
 
-    const getNotificationId = (notification: ApiNotification): string => {
-        switch (notification.type) {
-            case 'follow':
-                return `follow_${notification.followers[0]?.id}`
-            case 'like':
-                return `like_${notification.tweets[0]?.tweet_id}_${notification.likers[0]?.id}`
-            case 'reply':
-                return `reply_${notification.reply_tweet.tweet_id}`
-            case 'repost':
-                return `repost_${notification.tweets[0]?.tweet_id}_${notification.reposters[0]?.id}`
-            case 'quote':
-                return `quote_${notification.quote_tweet.tweet_id}`
-            case 'mention':
-                return `mention_${notification.tweet.tweet_id}`
-            case 'message' :
-                return `message_${notification.message_id}`
-            default:
-                return `notification_${(notification as { created_at?: string }).created_at ?? ''}`
-        }
-    }
-
     const replaceNotificationInCache = (
         queryKey: string[],
         notification: ApiNotification,
@@ -221,33 +200,21 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
     const convertWebSocketToApi = (event: NotificationEvent): ApiNotification | null => {
         if (event.type === 'message' && event.action === 'add') {
-            return {
-                type: 'message' as const,
-                created_at: event.created_at || new Date().toISOString(),
-                sender: event.sender,
-                message_id: event.message_id,
-                chat_id: event.chat_id,
-            }
+            return event
         }
 
         if (isFollowEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'follow',
                 created_at: event.created_at || new Date().toISOString(),
-                followers: [
-                    {
-                        id: event.follower_id,
-                        name: '',
-                        username: event.follower_name,
-                        email: '',
-                        avatar_url: event.follower_avatar_url,
-                    },
-                ],
+                followers: [event.follower],
             }
         }
 
         if (isFollowEvent(event) && event.action === 'aggregate') {
             return {
+                id: event.id,
                 type: 'follow',
                 created_at: event.created_at || new Date().toISOString(),
                 followers: event.followers,
@@ -256,6 +223,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isLikeEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'like',
                 created_at: event.created_at || new Date().toISOString(),
                 likers: [event.liker],
@@ -265,6 +233,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isLikeEvent(event) && event.action === 'aggregate') {
             return {
+                id: event.id,
                 type: 'like',
                 created_at: event.created_at || new Date().toISOString(),
                 likers: event.likers,
@@ -274,6 +243,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isReplyEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'reply',
                 created_at: event.created_at || new Date().toISOString(),
                 replier: event.replier,
@@ -285,6 +255,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isRepostEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'repost',
                 created_at: event.created_at || new Date().toISOString(),
                 reposters: [event.reposter],
@@ -294,6 +265,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isRepostEvent(event) && event.action === 'aggregate') {
             return {
+                id: event.id,
                 type: 'repost',
                 created_at: event.created_at || new Date().toISOString(),
                 reposters: event.reposters,
@@ -303,6 +275,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isQuoteEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'quote',
                 created_at: event.created_at || new Date().toISOString(),
                 quoter: event.quoted_by,
@@ -312,6 +285,7 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         if (isMentionEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'mention',
                 created_at: event.created_at || new Date().toISOString(),
                 mentioner: event.mentioned_by,
@@ -326,7 +300,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
     return {
         initializeListeners,
         removeListeners,
-        getNotificationId,
         markNotificationsAsSeen,
         unreadCount,
     }

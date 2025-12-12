@@ -64,6 +64,7 @@ export interface QuoteTweet extends TweetComponent {
 
 export interface BaseEvent {
     type: NotificationType
+    id: string
     created_at: string
 }
 
@@ -74,15 +75,14 @@ export interface MessageAddEvent extends BaseEvent {
     message_id: string
     chat_id: string
 }
+
 export type MessageEvent = MessageAddEvent
 
 export interface FollowAddEvent extends BaseEvent {
     type: 'follow'
-    follower_id: string
-    followed_id: string
     action: 'add'
-    follower_avatar_url: string | null
-    follower_name: string
+    id: string
+    follower: User
 }
 
 export interface FollowRemoveEvent extends BaseEvent {

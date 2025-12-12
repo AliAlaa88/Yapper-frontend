@@ -1,12 +1,14 @@
 import type { User, BaseTweet, QuoteTweet } from './notificationsSocketEvents'
 
 export interface FollowNotification {
+    id: string
     type: 'follow'
     created_at: string
     followers: User[]
 }
 
 export interface LikeNotification {
+    id: string
     type: 'like'
     created_at: string
     likers: User[]
@@ -14,6 +16,7 @@ export interface LikeNotification {
 }
 
 export interface ReplyNotification {
+    id: string
     type: 'reply'
     created_at: string
     replier: User
@@ -23,6 +26,7 @@ export interface ReplyNotification {
 }
 
 export interface RepostNotification {
+    id: string
     type: 'repost'
     created_at: string
     reposters: User[]
@@ -30,6 +34,7 @@ export interface RepostNotification {
 }
 
 export interface QuoteNotification {
+    id: string
     type: 'quote'
     created_at: string
     quoter: User
@@ -37,6 +42,7 @@ export interface QuoteNotification {
 }
 
 export interface MentionNotification {
+    id: string
     type: 'mention'
     created_at: string
     mentioner: User
@@ -45,6 +51,7 @@ export interface MentionNotification {
 }
 
 export interface MessageNotification {
+    id: string
     type: 'message'
     created_at: string
     sender: User

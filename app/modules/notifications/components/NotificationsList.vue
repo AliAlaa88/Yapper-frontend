@@ -6,7 +6,7 @@
         appear>
         <NotificationItem
             v-for="noti in notifications"
-            :key="$notificationsSocketService.getNotificationId(noti)"
+            :key="noti.id"
             :notification="noti"
         />
     </TransitionGroup>
@@ -29,7 +29,6 @@ const props = defineProps<{
     fetchNextPage: () => unknown | Promise<void>
 }>()
 
-const { $notificationsSocketService } = useNuxtApp()
 
 
 const loadMore = ref<HTMLElement | null>(null)
