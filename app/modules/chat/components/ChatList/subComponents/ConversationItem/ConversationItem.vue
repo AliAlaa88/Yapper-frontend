@@ -74,6 +74,8 @@ const lastMessagePreview = computed(() => {
 
     const hasContent = lastMessage.content && lastMessage.content.trim().length > 0
     const hasImage = lastMessage.image_url && lastMessage.image_url.trim().length > 0
+    const hasVoice =
+        (lastMessage as any).voice_note_url && (lastMessage as any).voice_note_url.trim().length > 0
 
     if (hasContent) {
         return lastMessage.content
@@ -101,7 +103,28 @@ const lastMessagePreview = computed(() => {
         }
     }
 
-    // Fallback
+    if (hasVoice) {
+        try {
+            const currentUser = userStore.getUser()?.user_id
+            const senderId = lastMessage.sender_id
+
+            if (!currentUser || !senderId) {
+                return t('chat.noMessagesYet')
+            }
+
+            const isOwnMessage = currentUser.toString() === senderId.toString()
+
+            if (isOwnMessage) {
+                return t('chat.youSentVoice')
+            } else {
+                return t('chat.voiceSentToYou')
+            }
+        } catch (error) {
+            console.log('error', error)
+            return t('chat.noMessagesYet')
+        }
+    }
+
     return t('chat.noMessagesYet')
 })
 </script>

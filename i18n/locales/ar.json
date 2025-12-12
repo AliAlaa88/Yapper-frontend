@@ -768,6 +768,8 @@
         "youSentImage": "أرسلت صورة",
         "senderSentImage": "{name} أرسل صورة",
         "imageSentToYou": "تم إرسال صورة إليك",
+        "youSentVoice": "أرسلت رسالة صوتية",
+        "voiceSentToYou": "تم إرسال رسالة صوتية إليك",
         "seeMore": "عرض المزيد",
         "seeLess": "عرض أقل",
         "loading": "جاري التحميل...",
