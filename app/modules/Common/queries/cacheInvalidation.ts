@@ -166,4 +166,12 @@ export const cacheInvalidation = {
     onFirstMessageSent: (queryClient: QueryClient) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all })
     },
+
+    onRemoveNotification: (queryClient: QueryClient) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
+    },
+
+    onRemoveMention: (queryClient: QueryClient) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.notifications.mentions })
+    },
 }

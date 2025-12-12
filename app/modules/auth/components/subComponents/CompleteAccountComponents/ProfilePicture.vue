@@ -4,83 +4,90 @@
         @close="$emit('close')"
         :hasCloseButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        :headerClass="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
+        <!-- Logo -->
+        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Logo -->
-            <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.profilePicture.title') }}
+        </h2>
+        <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.profilePicture.info') }}
+        </p>
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.title') }}</h2>
-            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.profilePicture.info') }}</p>
-
-            <!-- Profile Picture Preview -->
-            <div class="flex justify-center mb-6">
-                <div
-                    class="relative w-32 h-32 rounded-full bg-hover border border-primary overflow-hidden shadow-md"
-                >
-                    <img
-                        v-if="previewImage"
-                        :src="previewImage"
-                        alt="Profile Preview"
-                        class="w-full h-full object-cover"
-                    />
-                    <div v-else class="w-full h-full flex items-center justify-center text-muted">
-                        <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                fill-rule="evenodd"
-                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </div>
+        <!-- Profile Picture Preview -->
+        <div class="flex justify-center mb-6">
+            <div
+                class="relative w-32 h-32 rounded-full bg-hover border border-primary overflow-hidden shadow-md"
+            >
+                <img
+                    v-if="previewImage"
+                    :src="previewImage"
+                    alt="Profile Preview"
+                    class="w-full h-full object-cover"
+                />
+                <div v-else class="w-full h-full flex items-center justify-center text-muted">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            fill-rule="evenodd"
+                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
                 </div>
             </div>
+        </div>
 
-            <!-- Upload Button -->
-            <label
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200 text-center block"
-            >
-                <input
-                    id="input-profile-picture-complete"
-                    type="file"
-                    accept="image/*"
-                    class="hidden"
-                    @change="onFileChange"
-                />
-                {{ $t('auth.profilePicture.chooseImage') }}
-            </label>
+        <!-- Upload Button -->
+        <label
+            class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200 text-center block"
+        >
+            <input
+                id="input-profile-picture-complete"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                @change="onFileChange"
+            />
+            {{ $t('auth.profilePicture.chooseImage') }}
+        </label>
 
-            <!-- Error Message -->
-            <p
-                v-if="errorMessage"
-                id="error-message-profile-picture"
-                class="text-red text-sm mb-4 text-center"
-            >
-                {{ errorMessage }}
-            </p>
+        <!-- Error Message -->
+        <p
+            v-if="errorMessage"
+            id="error-message-profile-picture"
+            class="text-red text-sm mb-4 text-center"
+        >
+            {{ errorMessage }}
+        </p>
 
-            <!-- Next Button -->
-            <Button
-                id="button-next-profile-picture"
-                v-if="previewImage"
-                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
-                :loading-text="$t('auth.common.loading')"
-                :is-loading="loading"
-                @click="onNext"
-            >
-                {{ $t('auth.common.next') }}
-            </Button>
+        <!-- Next Button -->
+        <Button
+            id="button-next-profile-picture"
+            v-if="previewImage"
+            buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
+            :loading-text="$t('auth.common.loading')"
+            :is-loading="loading"
+            @click="onNext"
+        >
+            {{ $t('auth.common.next') }}
+        </Button>
 
-            <!-- Skip Button -->
-            <Button
-                id="button-skip-profile-picture"
-                class="w-full text-primary hover:text-blue transition duration-200"
-                @click="onSkip"
-            >
-                {{ $t('auth.common.skip') }}
-            </Button>
+        <!-- Skip Button -->
+        <Button
+            id="button-skip-profile-picture"
+            class="w-full text-primary hover:text-blue transition duration-200"
+            @click="onSkip"
+        >
+            {{ $t('auth.common.skip') }}
+        </Button>
     </Popup>
 </template>
 
@@ -90,7 +97,10 @@ import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
-import { useUpdateProfilePictureMutation, useUpdateProfileMutation } from '../../../queries/useCompleteProfileQuery'
+import {
+    useUpdateProfilePictureMutation,
+    useUpdateProfileMutation,
+} from '../../../queries/useCompleteProfileQuery'
 import Button from '~/modules/Common/components/Button/Button.vue'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -148,9 +158,10 @@ const onFileChange = (event: Event) => {
     }
 }
 
+const config = useRuntimeConfig()
 const updateProfileMutation = useUpdateProfileMutation(
     (data) => {
-        console.log("updating profile pic");
+        if (config.public.env === 'development') console.log('updating profile pic')
         isUploading.value = false
         errorMessage.value = ''
         emit('next', data.data?.avatar_url || previewImage.value)
@@ -158,18 +169,19 @@ const updateProfileMutation = useUpdateProfileMutation(
     (error) => {
         isUploading.value = false
         loading.value = false
-        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update profile'
+        const errorMsg =
+            error?.response?.data?.message || error?.message || 'Failed to update profile'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
-    }
+    },
 )
 
 const uploadMutation = useUpdateProfilePictureMutation(
     (data) => {
         const avatarUrl = data.data?.image_url || data.image_url
-        console.log(avatarUrl);
+        if (config.public.env === 'development') console.log(avatarUrl);
         if (avatarUrl) {
             updateProfileMutation.mutate({
-                    image_url: avatarUrl
+                image_url: avatarUrl,
             })
         } else {
             isUploading.value = false
@@ -181,9 +193,10 @@ const uploadMutation = useUpdateProfilePictureMutation(
         console.error('Profile picture upload error:', error)
         isUploading.value = false
         loading.value = false
-        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to upload profile picture'
+        const errorMsg =
+            error?.response?.data?.message || error?.message || 'Failed to upload profile picture'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
-    }
+    },
 )
 
 const onNext = () => {

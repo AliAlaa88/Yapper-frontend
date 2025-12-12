@@ -3,8 +3,9 @@
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md">
             <div class="flex items-center gap-8 px-4 py-3">
                 <button
+                    id="btn-back-tweet-interactions"
                     type="button"
-                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover"
+                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover cursor-pointer"
                     :aria-label="$t('navigation.back')"
                     @click="router.back()"
                 >
@@ -82,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Repeat2 } from 'lucide-vue-next'
@@ -91,14 +92,13 @@ import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
 import { UserList } from '~/modules/Common/components/UserList'
 import FollowListUserCard from '~/modules/Common/components/UserCard/UserCard.vue'
 import type { FollowUser } from '~/modules/profile/types/user'
-import { useTweetTransitionStore } from '../../stores/tweetTransition'
 import { useTweetDetails } from '../../composables/useTweetDetails'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const { t } = useI18n()
+const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
-const tweetTransitionStore = useTweetTransitionStore()
 const userStore = useUserStore()
 
 const tweetId = computed(() => route.params.tweetId as string)
@@ -126,7 +126,8 @@ const tabsConfig = computed(() => {
         { label: t('tweets.actions.retweet'), value: 'retweets', test_id: 'tab-retweets' },
     ]
 
-    console.log('isOwnTweet', 'currentTab', currentTab.value, isOwnTweet.value)
+    if (config.public.env === 'development')
+        console.log('isOwnTweet', 'currentTab', currentTab.value, isOwnTweet.value)
 
     if (isOwnTweet.value) {
         tabs.push({ label: t('tweets.actions.likes'), value: 'likes', test_id: 'tab-likes' })

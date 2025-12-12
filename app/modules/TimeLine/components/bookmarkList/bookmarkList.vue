@@ -2,8 +2,9 @@
     <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md transition-all duration-200">
         <div class="flex items-center gap-8 px-4 py-3">
             <button
+                id="btn-back-bookmarks"
                 type="button"
-                class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors"
+                class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors cursor-pointer"
                 :aria-label="$t('navigation.back')"
                 @click="router.back()"
             >

@@ -15,9 +15,10 @@ const props = defineProps<{
 
 const showNotFound = ref(false)
 const profileStore = useProfileStore()
+const config = useRuntimeConfig()
 
 const { error } = useProfile(props.username)
-console.log('ProfileDataProvider error:')
+if (config.public.env === 'development') console.log('ProfileDataProvider error:')
 watch(
     error,
     (newError) => {

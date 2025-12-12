@@ -30,7 +30,7 @@
         <!-- Tweets list -->
         <div v-else-if="!isPending" class="divide-y divide-primary flex flex-col items-center">
             <div class="w-full">
-                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" />
+                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" :compact="props.compact" />
             </div>
 
             <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRef, computed, ref, watch, onUnmounted, provide } from 'vue'
+import { toRef, computed, ref, watch, onMounted, onUnmounted, provide } from 'vue'
 import { useTweetsQuery } from '../../queries/useTweetQueries'
 import Tweet from '../Tweet/Tweet.vue'
 import { RotateCw } from 'lucide-vue-next'
@@ -69,13 +69,32 @@ import Logo from '~/modules/Common/components/Logo/Logo.vue'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'
 import type { Tweet as TweetType } from '../../types/tweet.ts'
 
-// Shared state for active actions menu - only one can be open at a time
 const activeMenuTweetId = ref<string | null>(null)
 provide('activeMenuTweetId', activeMenuTweetId)
+
+const handleClickOutside = (event: MouseEvent) => {
+    if (activeMenuTweetId.value) {
+        const target = event.target as HTMLElement
+        const isMenuClick = target.closest('[data-menu-container]') || 
+                           target.closest('[id^="tweet-menu-button-"]')
+        if (!isMenuClick) {
+            activeMenuTweetId.value = null
+        }
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
 
 const props = defineProps<{
     fetchingSource?: string | null
     quotes?: boolean
+    compact?: boolean
 }>()
 
 // Convert prop to ref for reactivity

@@ -11,7 +11,7 @@
             class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary"
         >
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
-            <button @click="() => trendsQuery.refetch()" class="text-accent hover:underline">
+            <button id="btn-retry-categories" @click="() => trendsQuery.refetch()" class="text-accent hover:underline cursor-pointer">
                 {{ t('explore.tryAgain') }}
             </button>
         </div>
@@ -46,5 +46,6 @@ const trendsQuery = useGetTrendsQuery(capitalizeFirst(props.category), true)
 const isLoading = computed(() => trendsQuery.isLoading.value)
 const isError = computed(() => trendsQuery.isError.value)
 const trends = computed(() => trendsQuery.data.value || [])
-console.log('categories', toRaw(trends.value))
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log('categories', toRaw(trends.value))
 </script>

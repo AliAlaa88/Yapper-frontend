@@ -9,6 +9,7 @@ import { settingsService } from '~/modules/settings/services/settingsService'
 import { listService } from '~/modules/Common/services/listService'
 
 import { createChatService } from '../modules/chat/services'
+import { createNotificationsService } from '~/modules/notifications/services/notificationsService'
 
 export const serviceFactories = {
     userInfoService: createUserInfoService,
@@ -21,6 +22,7 @@ export const serviceFactories = {
     exploreService: exploreService,
     chatService: createChatService,
     listService: () => listService,
+    notificationsService : createNotificationsService,
 }
 
 export type Services = {

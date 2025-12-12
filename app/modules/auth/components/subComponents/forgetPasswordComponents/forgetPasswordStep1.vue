@@ -4,19 +4,25 @@
         @close="$emit('close')"
         :hasCloseButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        :headerClass="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.forgotPassword.step1Title') }}</h2>
-            <!-- Description -->
-            <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step1Info') }}</p>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.forgotPassword.step1Title') }}
+        </h2>
+        <!-- Description -->
+        <p class="text-muted mb-6">{{ $t('auth.forgotPassword.step1Info') }}</p>
 
-            <!-- Input -->
-            <form @submit.prevent="onNext">
+        <!-- Input -->
+        <form @submit.prevent="onNext">
             <input
                 id="input-identifier-forgot-password-s1"
                 type="text"
@@ -44,7 +50,7 @@
             >
                 {{ $t('auth.common.next') }}
             </Button>
-            </form>
+        </form>
     </Popup>
 </template>
 
@@ -70,11 +76,13 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
+const config = useRuntimeConfig()
 const forgotPasswordMutation = useForgotPasswordQuery(
     (data: any) => {
         errorMessage.value = ''
         loading.value = false
-        console.log('Forgot Password Step 1 Success:', data)
+        if (config.public.env === 'development')
+            console.log('Forgot Password Step 1 Success:', data)
         emit('next', identifier.value)
     },
     (error: any) => {

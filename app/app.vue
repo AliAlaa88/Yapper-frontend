@@ -7,7 +7,7 @@
             <NuxtPage />
         </NuxtLayout>
     </div>
-    <VueQueryDevtools />
+    <VueQueryDevtools v-if="config.public.env === 'development'" />
 </template>
 
 <script setup lang="ts">
@@ -15,35 +15,110 @@
 // import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
-
+import { useRuntimeConfig } from '#app'
 const userStore = useUserStore()
-const { $socketService, $chatSocketService } = useNuxtApp()
-
-onMounted(() => {
-    if (userStore.isLoggedIn) {
-        $socketService.connect()
-        $chatSocketService.initializeListeners()
-        console.log('socket connected on app mount')
+const { $socketService, $chatSocketService, $notificationsSocketService } = useNuxtApp()
+const socketsInitialized = ref(false)
+const config = useRuntimeConfig()
+onMounted(async () => {
+    if (userStore.isLoggedIn && !socketsInitialized.value) {
+        await initializeSockets()
     }
 })
 
 watch(
     () => userStore.isLoggedIn,
-    (newVal) => {
-        if (newVal) {
-            $socketService.connect()
-            $chatSocketService.initializeListeners()
-            console.log('socket connected on watch')
-        } else {
-            $chatSocketService.removeListeners()
-            $chatSocketService.reset()
-            $socketService.disconnect()
-            console.log('socket disconnected on watch')
+    async (newVal) => {
+        if (newVal && !socketsInitialized.value) {
+            await initializeSockets()
+        } else if (!newVal && socketsInitialized.value) {
+            cleanupSockets()
         }
     },
 )
 
-const { locale, locales, t } = useI18n()
+const initializeSockets = async () => {
+    if (socketsInitialized.value) {
+        if (config.public.env === 'development')
+            console.log('Sockets already initialized, skipping')
+        return
+    }
+
+    // try {
+    $chatSocketService.initializeListeners()
+    $notificationsSocketService.initializeListeners()
+    $socketService.connect()
+    socketsInitialized.value = true
+    //     const connected = $socketService.isConnected()
+
+    //     if (!connected) {
+    //         console.error('Socket connection timeout')
+    //         return
+    //     }
+    //     console.log('Socket connected successfully')
+    // } catch {
+    //     console.log('Error during socket initialization')
+    // }
+}
+
+// const waitForSocketConnection = (timeout: number = 1000): Promise<boolean> => {
+//     return new Promise((resolve) => {
+//         const startTime = Date.now()
+
+//         const checkConnection = () => {
+//             const isConnected = $socketService.isConnected()
+//             const elapsed = Date.now() - startTime
+
+//             console.log(`[App.vue] Connection check: ${isConnected}`)
+
+//             if (isConnected) {
+//                 resolve(true)
+//             } else if (elapsed >= timeout) {
+//                 console.error(`[App.vue] Connection timeout after ${timeout}ms`)
+//                 resolve(false)
+//             } else {
+//                 // Check again in 100ms
+//                 setTimeout(checkConnection, 100)
+//             }
+//         }
+
+//         checkConnection()
+//     })
+// }
+
+const cleanupSockets = () => {
+    try {
+        $chatSocketService.removeListeners()
+        $notificationsSocketService.removeListeners()
+        $chatSocketService.reset()
+        $socketService.disconnect()
+        socketsInitialized.value = false
+    } catch (error) {
+        console.error('Error during socket cleanup:', error)
+    }
+}
+
+if (import.meta.client) {
+    const handleVisibilityChange = async () => {
+        if (document.visibilityState === 'visible' && userStore.isLoggedIn) {
+            const isConnected = $socketService.isConnected()
+            if (!isConnected && !socketsInitialized.value) {
+                await initializeSockets() // reconnect
+            }
+        }
+    }
+
+    onMounted(() => {
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+    })
+
+    onBeforeUnmount(() => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+        cleanupSockets()
+    })
+}
+
+const { t, locale, locales } = useI18n()
 
 const currentLocale = computed(() => locale.value)
 const currentDirection = computed(() => {

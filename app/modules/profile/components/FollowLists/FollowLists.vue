@@ -3,8 +3,9 @@
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md">
             <div class="flex items-center gap-8 px-4 py-3">
                 <button
+                    id="btn-back-follow-lists"
                     type="button"
-                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover"
+                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover cursor-pointer"
                     :aria-label="$t('navigation.back')"
                     @click="router.back()"
                 >
@@ -14,14 +15,11 @@
                     <h2 class="text-xl font-bold text-primary">
                         {{ profile?.name }}
                     </h2>
-                    <p class="text-[13px] text-muted">
-                        @{{ profile?.username }}
-                    </p>
+                    <p class="text-[13px] text-muted">@{{ profile?.username }}</p>
                 </div>
             </div>
             <Tabs :tabs="tabsConfig" :active-tab="currentTab" :on-change="handleTabChange" />
         </div>
-
 
         <div class="min-h-screen">
             <FollowersList v-if="currentTab === 'followers' && profile" />
@@ -62,7 +60,9 @@ useProfile(username.value)
 
 const profileStore = useProfileStore()
 const { profile, isMyProfile } = storeToRefs(profileStore)
-console.log('isMyProfile:', isMyProfile.value, profile.value)
+const config = useRuntimeConfig()
+if (config.public.env === 'development')
+    console.log('isMyProfile:', isMyProfile.value, profile.value)
 const currentTab = computed(() => {
     const path = route.path
     if (path.endsWith('/following')) return 'following'
@@ -77,7 +77,11 @@ const tabsConfig = computed(() => {
     ]
 
     if (!isMyProfile.value) {
-        tabs.push({ label: t('profile.followersYouFollow'), value: 'followers_you_follow', test_id: 'tab-followers-you-follow' })
+        tabs.push({
+            label: t('profile.followersYouFollow'),
+            value: 'followers_you_follow',
+            test_id: 'tab-followers-you-follow',
+        })
     }
 
     return tabs

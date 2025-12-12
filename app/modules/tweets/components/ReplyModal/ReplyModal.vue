@@ -15,7 +15,8 @@
                     <!-- Header -->
                     <div class="flex items-center justify-between p-4 border-b border-primary">
                         <button
-                            class="p-2 rounded-full hover:bg-hover transition-colors"
+                            id="btn-close-reply-modal"
+                            class="p-2 rounded-full hover:bg-hover transition-colors cursor-pointer"
                             @click="closeModal"
                         >
                             <X :size="20" class="text-primary" />

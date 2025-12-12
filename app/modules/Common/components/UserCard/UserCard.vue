@@ -1,7 +1,11 @@
 <template>
     <div class="flex items-start hover:bg-hover gap-3 p-4 transition-colors cursor-pointer">
         <NuxtLink :to="`/${user.username}`" class="flex items-start gap-3 flex-1 min-w-0">
-            <UserImage :image-url="props.user?.avatar_url" :name="props.user?.name" :compact="true"/>
+            <UserImage
+                :image-url="props.user?.avatar_url"
+                :name="props.user?.name"
+                :compact="true"
+            />
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
                     <div class="min-w-0 flex-1">
@@ -44,6 +48,7 @@ const props = defineProps<{
     hideBio?: boolean | null
 }>()
 
-console.log('hide bio:', props.hideBio)
-console.log('user card user:', props.user)
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log('hide bio:', props.hideBio)
+if (config.public.env === 'development') console.log('user card user:', props.user)
 </script>

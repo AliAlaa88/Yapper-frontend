@@ -12,16 +12,14 @@
         <div
             class="border-l border-r border-primary w-full md:w-[600px] md:min-w-[600px] md:max-w-[600px] transition-all duration-300 ease-in-out order-2"
         >
-            <div v-if="isHome" class="sm:hidden block">
+            <div v-if="isSidebarVisible" class="sm:hidden block">
                 <MobileSidebar />
             </div>
             <slot />
         </div>
 
         <!-- Banner -->
-        <aside
-            class="hidden sticky top-0 h-full xl:flex min-w-0 shrink-0 order-3"
-        >
+        <aside class="hidden sticky top-0 h-full xl:flex min-w-0 shrink-0 order-3">
             <Banner />
         </aside>
 
@@ -45,8 +43,11 @@ import { useRoute } from 'vue-router'
 
 useProfileProviders()
 const route = useRoute()
-console.log(route)
-const isHome = computed(() => route.path === '/')
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log(route)
+const isSidebarVisible = computed(
+    () => route.path === '/' || route.path === '/notifications' || route.path === '/explore',
+)
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
 const { sidebarWidth } = useSidebarState()

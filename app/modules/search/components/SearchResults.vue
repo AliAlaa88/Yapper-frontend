@@ -12,12 +12,14 @@
                 v-if="currentTab === 'top' && searchQuery"
                 :fetchingSource="`/search/posts?query=${encodeURIComponent(searchQueryForApi)}${fromUsername ? `&username=${fromUsername}` : ''}`"
                 class="min-h-[650px] w-full"
+                :compact="true"
             />
 
             <TweetsList
                 v-if="currentTab === 'latest' && searchQuery"
                 :fetchingSource="`/search/posts/latest?query=${encodeURIComponent(searchQueryForApi)}${fromUsername ? `&username=${fromUsername}` : ''}`"
                 class="min-h-[650px] w-full"
+                :compact="true"
             />
 
             <UserList

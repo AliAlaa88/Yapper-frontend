@@ -15,11 +15,10 @@
                     justify-center sm:flex sm:justify-between px-3 gap-3">
                     <button
                         v-for="y_color in colorOptions"
-                        id="color-button"
+                        :id="`btn-color-${y_color.value}`"
                         :key="y_color.value"
-                        :data-test="`color-${y_color.value}`"
                         :class="[
-                            'w-10 h-10 rounded-full transition-all relative',
+                            'w-10 h-10 rounded-full transition-all relative cursor-pointer',
                             y_color.class,
                         ]"
                         :aria-label="y_color.name"
@@ -40,11 +39,10 @@
                 <div class="flex flex-col sm:flex-row  sm:justify-center gap-5 sm:gap-10 mb-5">
                     <button
                         v-for="bg in backgroundOptions"
-                        id="background-button"
+                        :id="`btn-background-${bg.value}`"
                         :key="bg.value"
-                        :data-test="'background-' + bg.value"
                         :class="[
-                            'relative w-full px-4 py-3  sm:w-[200px] h-[65px] rounded-xs border-2 transition-all text-center',
+                            'relative w-full px-4 py-3  sm:w-[200px] h-[65px] rounded-xs border-2 transition-all text-center cursor-pointer',
                             background === bg.value
                                 ? 'border-accent'
                                 : 'border-primary hover:border-secondary',
@@ -94,10 +92,9 @@
                     </p>
                 </div>
                 <button
-                    id="useSystem-button"
-                    data-test="system-theme"
+                    id="btn-use-system-theme"
                     :class="[
-                        'relative w-10 h-4 rounded-full transition-colors',
+                        'relative w-10 h-4 rounded-full transition-colors cursor-pointer',
                         useSystemTheme ? 'bg-accent/60' : 'bg-gray'
                     ]"
                     role="switch"

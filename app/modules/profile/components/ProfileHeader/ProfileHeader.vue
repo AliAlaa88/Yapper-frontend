@@ -15,7 +15,11 @@
                     <div v-else class="flex flex-wrap gap-2">
                         <ProfileMessageButton v-if="user?.user_id" />
                         <ProfileActions v-if="user?.user_id" :is-tweet="false" />
-                        <ProfileFollowAction v-if="user?.user_id" :user-id="user.user_id" :username="user.username" />
+                        <ProfileFollowAction
+                            v-if="user?.user_id"
+                            :user-id="user.user_id"
+                            :username="user.username"
+                        />
                         <ProfileBlockedAction />
                     </div>
                 </div>
@@ -37,7 +41,8 @@ import ProfileMessageButton from './SubComponents/ProfileMessageButton.vue'
 import ProfileInfo from './SubComponents/ProfileInfo.vue'
 import { useProfileStore } from '../../stores/profileStore'
 import { storeToRefs } from 'pinia'
-console.log("ProfileHeader loaded")
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log("ProfileHeader loaded")
 const profileStore = useProfileStore()
 const { profile: user, isMyProfile: isMee } = storeToRefs(profileStore)
 </script>

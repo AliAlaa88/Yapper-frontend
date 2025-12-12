@@ -8,6 +8,7 @@
                 {{ $t('profile.blocked.description', { username }) }}
             </p>
             <Button
+                id="btn-view-blocked-posts"
                 class="bg-accent text-primary cursor-pointer
                 rounded-full font-bold text-[17px] w-[150px] h-[50px]
                 whitespace-nowrap flex items-center justify-center

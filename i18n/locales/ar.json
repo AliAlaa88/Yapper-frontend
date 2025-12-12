@@ -27,7 +27,8 @@
         "success": "تمت العملية بنجاح",
         "error": "حدث خطأ",
         "loading": "جاري التحميل...",
-        "noData": "لا توجد بيانات متاحة"
+        "noData": "لا توجد بيانات متاحة",
+        "tryAgain": "يرجى المحاولة مرة أخرى"
     },
     "navigation": {
         "home": "الرئيسية",
@@ -512,7 +513,8 @@
             "tweetNotFound": "المنشور غير موجود",
             "tweetNotFoundDescription": "ربما تم حذف هذا المنشور أو ليس لديك إذن لعرضه.",
             "goBack": "العودة"
-        }
+        },
+        "replyingTo": "رد على"
     },
     "search": {
         "searchPlaceholder": "بحث",
@@ -539,6 +541,13 @@
                 "description": "حاول تعديل بحثك للعثور على ما تبحث عنه"
             }
         }
+    },
+    "mentions": {
+        "loading": "جاري التحميل...",
+        "noMatches": "لا توجد نتائج مطابقة",
+        "mutual": "تتابعون بعضكم البعض",
+        "following": "متابَع",
+        "followsYou": "يتابعك"
     },
     "explore": {
         "trending": "الترند",
@@ -971,5 +980,34 @@
         "title": "الإشارات المرجعية",
         "noBookmarks": "لا توجد إشارات مرجعية بعد",
         "saveYourBookmarks": "احفظ المنشورات لوقت لاحق بالنقر على أيقونة الإشارة المرجعية"
+    },
+    "notifications": {
+        "title": "الإشعارات",
+
+        "tabs": {
+          "all": "الكل",
+          "mentions": "الذكر"
+        },
+
+        "empty": {
+          "title": "لا يوجد شيء هنا بعد",
+          "mentions_description": "عندما يذكرك أحد، ستجد الإشعارات هنا.",
+          "all_description": "عندما يتفاعل أحد مع منشوراتك، ستظهر الإشعارات هنا."
+        },
+        "content": {
+          "and": " و ",
+          "others": "آخرين",
+
+          "followedYou": "قام بمتابعتك",
+
+          "likedYourPost": "أعجب بمنشورك",
+          "likedYourReply": "أعجب بردّك",
+          "likedMany": "أعجب بـ {count} من منشوراتك",
+
+          "repostedYourPost": "قام بإعادة نشر منشورك",
+          "repostedMany": "قام بإعادة نشر {count} من منشوراتك",
+
+          "sentYouAMessage": "ارسل لك رسالة"
+        }
     }
 }
