@@ -40,6 +40,7 @@
                 v-model="content"
                 :placeholder="computedPlaceholder"
                 :inlineborder="inlineborder"
+                :max-length="MAX_CHARS"
             />
 
             <div
@@ -162,15 +163,53 @@
                         />
                     </li>
                 </ul>
-                <Button
-                    :disabled="disablePostButton"
-                    id="post-tweet-post-btn"
-                    button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    :button-text="buttonText"
-                    @click="handleSubmit"
-                    :loading-text="loadingText"
-                    :is-loading="postTweet.isPending.value"
-                />
+                <div class="flex items-center gap-3">
+                    <!-- Character Counter Circle -->
+                    <div v-if="content.length > 0" class="relative w-8 h-8">
+                        <svg class="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
+
+                            <circle
+                                cx="18"
+                                cy="18"
+                                r="15.5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                class="text-gray-600"
+                            />
+
+                            <circle
+                                cx="18"
+                                cy="18"
+                                r="15.5"
+                                fill="none"
+                                :stroke="progressColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                :stroke-dasharray="circumference"
+                                :stroke-dashoffset="strokeDashoffset"
+                                class="transition-all duration-150"
+                            />
+                        </svg>
+
+                        <span
+                            v-if="remainingChars <= 20"
+                            class="absolute inset-0 flex items-center justify-center text-xs font-medium"
+                            :class="remainingChars < 0 ? 'text-red-500' : 'text-secondary'"
+                        >
+                            {{ remainingChars }}
+                        </span>
+                    </div>
+                    <Button
+                        :disabled="disablePostButton"
+                        id="post-tweet-post-btn"
+                        button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        :button-text="buttonText"
+                        @click="handleSubmit"
+                        :loading-text="loadingText"
+                        :is-loading="postTweet.isPending.value"
+                    />
+                </div>
             </div>
         </div>
     </form>
@@ -227,7 +266,6 @@ const { t } = useI18n()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
-// Inject snackbar from parent layout
 const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
 
 interface MediaItem {
@@ -242,6 +280,20 @@ const mediaUrls = ref<MediaItem[]>([])
 const uploadMedia = useUploadMedia()
 const postTweet = usePostTweet()
 
+
+const MAX_CHARS = 200
+const circumference = 2 * Math.PI * 15.5 
+
+const remainingChars = computed(() => MAX_CHARS - content.value.length)
+const charProgress = computed(() => Math.min(content.value.length / MAX_CHARS, 1))
+const strokeDashoffset = computed(() => circumference * (1 - charProgress.value))
+const progressColor = computed(() => {
+    if (remainingChars.value < 0) return '#f43f5e' // red-500
+    if (remainingChars.value <= 20) return '#f59e0b' // amber-500  
+    return 'var(--accent-color)' 
+})
+const isOverLimit = computed(() => content.value.length > MAX_CHARS)
+
 const processUploadResponse = (response: any, type: 'image' | 'video') => {
     if (response?.data?.url) {
         const url = response.data.url
@@ -253,7 +305,8 @@ const processUploadResponse = (response: any, type: 'image' | 'video') => {
 }
 
 const disablePostButton = computed(() => {
-    return content.value.trim().length === 0 && mediaUrls.value.length === 0
+    const isEmpty = content.value.trim().length === 0 && mediaUrls.value.length === 0
+    return isEmpty || isOverLimit.value
 })
 
 const computedPlaceholder = computed(() => {

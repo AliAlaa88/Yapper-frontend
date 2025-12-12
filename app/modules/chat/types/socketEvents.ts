@@ -12,9 +12,10 @@ export interface SendMessagePayload {
     chat_id: string
     message: {
         content?: string
-        media_url?: string
-        message_type: 'text' | 'image' | 'video'
+        image_url?: string | null
+        message_type: 'text' | 'image'
         is_first_message: boolean
+        reply_to_message_id?: string | null
     }
 }
 

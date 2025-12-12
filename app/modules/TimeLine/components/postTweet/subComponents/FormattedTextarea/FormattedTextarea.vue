@@ -2,7 +2,7 @@
     <div class="relative w-full group">
         <div
             ref="displayRef"
-            class="absolute inset-0 w-full h-full p-4 whitespace-pre-wrap wrap-break-words overflow-hidden border-b border-transparent text-base leading-normal font-sans bg-transparent pointer-events-none"
+            class="absolute inset-0 w-full h-full p-4 whitespace-pre-wrap break-words overflow-hidden border-b border-transparent text-base leading-normal font-sans bg-transparent pointer-events-none"
             style="z-index: 10; unicode-bidi: plaintext"
             :dir="textDirection"
             aria-hidden="true"
@@ -21,7 +21,7 @@
             :id="id"
             :placeholder="!modelValue ? placeholder : ''"
             :dir="textDirection"
-            class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap wrap-break-words overflow-y-hidden text-base leading-normal font-sans placeholder:text-transparent z-20 selection:bg-blue-200/30"
+            class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap break-words overflow-y-hidden text-base leading-normal font-sans placeholder:text-transparent z-20 selection:bg-blue-200/30"
             :class="props.inlineborder ? 'border-b border-primary focus:border-accent' : ''"
             style="unicode-bidi: plaintext"
             spellcheck="false"
@@ -48,12 +48,14 @@ interface Props {
     placeholder?: string
     id?: string
     inlineborder?: boolean
+    maxLength?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
     placeholder: "What's happening?",
     id: '',
     inlineborder: true,
+    maxLength: undefined,
 })
 
 const emit = defineEmits<{
@@ -78,7 +80,16 @@ const textDirection = computed(() => {
 })
 
 const formattedContent = computed(() => {
-    return parseLinks(props.modelValue)
+    const text = props.modelValue
+    
+    // If maxLength is set and text exceeds it, split and color the overflow red
+    if (props.maxLength && text.length > props.maxLength) {
+        const validPart = text.slice(0, props.maxLength)
+        const overflowPart = text.slice(props.maxLength)
+        return parseLinks(validPart) + `<span class="text-red-500 bg-red-500/20">${parseLinks(overflowPart)}</span>`
+    }
+    
+    return parseLinks(text)
 })
 
 const adjustHeight = () => {
