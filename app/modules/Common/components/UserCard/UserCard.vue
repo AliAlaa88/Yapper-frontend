@@ -44,6 +44,7 @@ const props = defineProps<{
     hideBio?: boolean | null
 }>()
 
-console.log('hide bio:', props.hideBio)
-console.log('user card user:', props.user)
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log('hide bio:', props.hideBio)
+if (config.public.env === 'development') console.log('user card user:', props.user)
 </script>

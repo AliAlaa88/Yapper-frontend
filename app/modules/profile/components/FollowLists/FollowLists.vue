@@ -62,7 +62,9 @@ useProfile(username.value)
 
 const profileStore = useProfileStore()
 const { profile, isMyProfile } = storeToRefs(profileStore)
-console.log('isMyProfile:', isMyProfile.value, profile.value)
+const config = useRuntimeConfig()
+if (config.public.env === 'development')
+    console.log('isMyProfile:', isMyProfile.value, profile.value)
 const currentTab = computed(() => {
     const path = route.path
     if (path.endsWith('/following')) return 'following'

@@ -70,11 +70,13 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
+const config = useRuntimeConfig()
 const forgotPasswordMutation = useForgotPasswordQuery(
     (data: any) => {
         errorMessage.value = ''
         loading.value = false
-        console.log('Forgot Password Step 1 Success:', data)
+        if (config.public.env === 'development')
+            console.log('Forgot Password Step 1 Success:', data)
         emit('next', identifier.value)
     },
     (error: any) => {

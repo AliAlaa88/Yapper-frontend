@@ -77,7 +77,8 @@ const {
     fetchNextMentions,
 } = useGetMentionsQuery()
 
-console.log('list data', listData)
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log('list data', listData)
 
 const router = useRouter()
 const route = useRoute()

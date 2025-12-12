@@ -43,7 +43,8 @@ import { useRoute } from 'vue-router'
 
 useProfileProviders()
 const route = useRoute()
-console.log(route)
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log(route)
 const isSidebarVisible = computed(
     () => route.path === '/' || route.path === '/notifications' || route.path === '/explore',
 )

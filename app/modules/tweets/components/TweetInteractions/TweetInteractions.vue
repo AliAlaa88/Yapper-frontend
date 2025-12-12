@@ -126,7 +126,8 @@ const tabsConfig = computed(() => {
         { label: t('tweets.actions.retweet'), value: 'retweets', test_id: 'tab-retweets' },
     ]
 
-    console.log('isOwnTweet', 'currentTab', currentTab.value, isOwnTweet.value)
+    if (config.public.env === 'development')
+        console.log('isOwnTweet', 'currentTab', currentTab.value, isOwnTweet.value)
 
     if (isOwnTweet.value) {
         tabs.push({ label: t('tweets.actions.likes'), value: 'likes', test_id: 'tab-likes' })

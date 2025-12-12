@@ -135,7 +135,8 @@ const languageMutation = useUpdateLanguageMutation(
         // Update locale cookie
         const newLocale = selectedLanguage.value || 'en'
         setLocale(newLocale)
-        console.log('Setting locale cookie to:', selectedLanguage.value)
+        if (config.public.env === 'development')
+            console.log('Setting locale cookie to:', selectedLanguage.value)
         setCookie(LOCALE_COOKIE_KEY, selectedLanguage.value || 'en')
         emit('next', selectedLanguage.value!)
     },

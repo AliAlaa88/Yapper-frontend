@@ -7,7 +7,7 @@
             <NuxtPage />
         </NuxtLayout>
     </div>
-    <VueQueryDevtools />
+    <VueQueryDevtools v-if="config.public.env === 'development'" />
 </template>
 
 <script setup lang="ts">
@@ -15,11 +15,11 @@
 // import StyleButton from '~/modules/Common/components/StyleButton/StyleButton.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
-
+import { useRuntimeConfig } from '#app'
 const userStore = useUserStore()
 const { $socketService, $chatSocketService, $notificationsSocketService } = useNuxtApp()
 const socketsInitialized = ref(false)
-
+const config = useRuntimeConfig()
 onMounted(async () => {
     if (userStore.isLoggedIn && !socketsInitialized.value) {
         await initializeSockets()
@@ -39,7 +39,8 @@ watch(
 
 const initializeSockets = async () => {
     if (socketsInitialized.value) {
-        console.log('Sockets already initialized, skipping')
+        if (config.public.env === 'development')
+            console.log('Sockets already initialized, skipping')
         return
     }
 

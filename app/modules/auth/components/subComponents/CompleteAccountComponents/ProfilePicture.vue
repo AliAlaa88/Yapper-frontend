@@ -148,9 +148,10 @@ const onFileChange = (event: Event) => {
     }
 }
 
+const config = useRuntimeConfig()
 const updateProfileMutation = useUpdateProfileMutation(
     (data) => {
-        console.log("updating profile pic");
+        if (config.public.env === 'development') console.log('updating profile pic')
         isUploading.value = false
         errorMessage.value = ''
         emit('next', data.data?.avatar_url || previewImage.value)
@@ -158,18 +159,19 @@ const updateProfileMutation = useUpdateProfileMutation(
     (error) => {
         isUploading.value = false
         loading.value = false
-        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update profile'
+        const errorMsg =
+            error?.response?.data?.message || error?.message || 'Failed to update profile'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
-    }
+    },
 )
 
 const uploadMutation = useUpdateProfilePictureMutation(
     (data) => {
         const avatarUrl = data.data?.image_url || data.image_url
-        console.log(avatarUrl);
+        if (config.public.env === 'development') console.log(avatarUrl);
         if (avatarUrl) {
             updateProfileMutation.mutate({
-                    image_url: avatarUrl
+                image_url: avatarUrl,
             })
         } else {
             isUploading.value = false
@@ -181,9 +183,10 @@ const uploadMutation = useUpdateProfilePictureMutation(
         console.error('Profile picture upload error:', error)
         isUploading.value = false
         loading.value = false
-        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to upload profile picture'
+        const errorMsg =
+            error?.response?.data?.message || error?.message || 'Failed to upload profile picture'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
-    }
+    },
 )
 
 const onNext = () => {
