@@ -23,12 +23,14 @@ interface Tweet {
         repost_id: string
         id: string
         name: string
+        username?: string
         reposted_at: string
     }
     parent_tweet?: Tweet | null
     parent_tweet_id?: string
     conversation_tweet?: Tweet | null
     replies?: Tweet[]
+    mentions?: string[]
 }
 type TweetsPage = {
     data: Tweet[]
