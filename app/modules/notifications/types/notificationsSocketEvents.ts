@@ -3,7 +3,6 @@ export type NotificationAction = 'add' | 'remove' | 'aggregate'
 
 export interface User {
     id: string
-    email: string
     name: string
     username: string
     avatar_url: string | null
@@ -12,80 +11,61 @@ export interface User {
     cover_url?: string | null
     followers?: number
     following?: number
+    is_following?: boolean
+    is_follower?: boolean
+    is_blocked?: boolean
+    is_muted?: boolean
 }
 
 export interface BaseTweet {
     tweet_id: string
-    user_id?: string
     type: 'tweet' | 'reply' | 'quote' | 'repost'
     content: string
     images: string[]
     videos: string[]
+    likes_count?: number
+    reposts_count?: number
+    views_count?: number
+    quotes_count?: number
+    replies_count?: number
+    bookmarks_count?: number
     created_at: string
     updated_at: string
     deleted_at?: string | null
+    is_liked?: boolean
+    is_reposted?: boolean
+    is_bookmarked?: boolean
 }
 
-export interface TweetComponent extends BaseTweet {
-    user_id: string
-    num_likes: number
-    num_reposts: number
-    num_views: number
-    num_quotes: number
-    num_replies: number
-    num_bookmarks: number
-}
-
-export interface CountTweet extends BaseTweet {
-    likes_count: number
-    reposts_count: number
-    views_count: number
-    quotes_count: number
-    replies_count: number
-    bookmarks_count: number
-    is_bookmarked: boolean
-}
-
-export interface QuoteTweet extends TweetComponent {
-    parent_tweet?: {
-        tweet_id: string
-        type: string
-        content: string
-        images: string[]
-        videos: string[]
-        user: User
-        is_bookmarked: boolean
-        created_at: string
-        updated_at: string
-    }
+export interface QuoteTweet extends BaseTweet {
+    parent_tweet?: BaseTweet
 }
 
 // WebSocket Event Types
-
 export interface BaseEvent {
     type: NotificationType
+    id: string
     created_at: string
 }
 
-export interface MessageAddEvent extends BaseEvent {
+export interface MessageAddEvent extends BaseEvent {  // done
     type: 'message'
     action: 'add'
     sender: User
     message_id: string
     chat_id: string
 }
+
 export type MessageEvent = MessageAddEvent
 
-export interface FollowAddEvent extends BaseEvent {
+export interface FollowAddEvent extends BaseEvent {  //done
     type: 'follow'
-    follower_id: string
-    followed_id: string
     action: 'add'
-    follower_avatar_url: string | null
-    follower_name: string
+    id: string
+    follower: User
 }
 
-export interface FollowRemoveEvent extends BaseEvent {
+export interface FollowRemoveEvent extends BaseEvent {  //done
     type: 'follow'
     follower_id: string
     follower_name: string
@@ -94,13 +74,14 @@ export interface FollowRemoveEvent extends BaseEvent {
     action: 'remove'
 }
 
-export interface FollowAggregateEvent extends BaseEvent {
+export interface FollowAggregateEvent extends BaseEvent { // done
     type: 'follow'
     created_at: string
     followers: User[]
     action: 'aggregate'
     old_notification: {
         type: 'follow'
+        id: string
         created_at: string
         follower_id: string[]
     }
@@ -109,30 +90,31 @@ export interface FollowAggregateEvent extends BaseEvent {
 export type FollowEvent = FollowAddEvent | FollowRemoveEvent | FollowAggregateEvent
 
 // Like Events
-export interface LikeAddEvent extends BaseEvent {
+export interface LikeAddEvent extends BaseEvent {  // done
     type: 'like'
     liker: User
-    tweet: TweetComponent
+    tweet: BaseTweet
     like_to: string
     liked_by: string
     action: 'add'
 }
 
-export interface LikeAggregateEvent extends BaseEvent {
+export interface LikeAggregateEvent extends BaseEvent {  // done
     type: 'like'
     created_at: string
     likers: User[]
-    tweets: TweetComponent[]
+    tweets: BaseTweet[]
     action: 'aggregate'
     old_notification: {
         type: 'like'
+        id: string
         created_at: string
         tweet_id: string[]
         liked_by: string[]
     }
 }
 
-export interface LikeRemoveEvent extends BaseEvent {
+export interface LikeRemoveEvent extends BaseEvent {  //done
     type: 'like'
     tweet_id: string
     like_to: string
@@ -146,8 +128,8 @@ export type LikeEvent = LikeAddEvent | LikeAggregateEvent | LikeRemoveEvent
 export interface ReplyAddEvent extends BaseEvent {
     type: 'reply'
     replier: User
-    reply_tweet: TweetComponent
-    original_tweet: TweetComponent
+    reply_tweet: BaseTweet
+    original_tweet: BaseTweet
     replied_by: string
     reply_to: string
     conversation_id: string
@@ -162,33 +144,34 @@ export interface ReplyRemoveEvent extends BaseEvent {
     action: 'remove'
 }
 
-export type ReplyEvent = ReplyAddEvent | ReplyRemoveEvent
+export type ReplyEvent = ReplyAddEvent | ReplyRemoveEvent //done
 
 // Repost Events
-export interface RepostAddEvent extends BaseEvent {
+export interface RepostAddEvent extends BaseEvent {  // done
     type: 'repost'
     reposter: User
     repost_to: string
     reposted_by: string
-    tweet: TweetComponent
+    tweet: BaseTweet
     action: 'add'
 }
 
-export interface RepostAggregateEvent extends BaseEvent {
+export interface RepostAggregateEvent extends BaseEvent {  // done
     type: 'repost'
     created_at: string
     reposters: User[]
-    tweets: TweetComponent[]
+    tweets: BaseTweet[]
     action: 'aggregate'
     old_notification: {
         type: 'repost'
+        id: string
         created_at: string
         tweet_id: string[]
         reposted_by: string[]
     }
 }
 
-export interface RepostRemoveEvent extends BaseEvent {
+export interface RepostRemoveEvent extends BaseEvent {  //done
     type: 'repost'
     repost_to: string
     reposted_by: string
@@ -201,8 +184,8 @@ export type RepostEvent = RepostAddEvent | RepostRemoveEvent | RepostAggregateEv
 // Quote Events
 export interface QuoteAddEvent extends BaseEvent {
     type: 'quote'
-    quoted_by: User
-    quote: QuoteTweet
+    quoter: User
+    quote_tweet: QuoteTweet
     action: 'add'
 }
 
@@ -219,9 +202,9 @@ export type QuoteEvent = QuoteAddEvent | QuoteRemoveEvent
 // Mention Events
 export interface MentionAddEvent extends BaseEvent {
     type: 'mention'
-    mentioned_by: User
+    mentioner: User
     tweet_type: 'tweet' | 'quote' | 'reply'
-    tweet: CountTweet | QuoteTweet
+    tweet: BaseTweet | QuoteTweet
     action: 'add'
 }
 
