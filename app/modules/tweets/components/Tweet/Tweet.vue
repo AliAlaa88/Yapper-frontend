@@ -488,7 +488,8 @@ const content = computed(() => ({
 const user = computed(() => ({
     ...props.tweet.user,
     avatar:
-        props.tweet.user.avatar_url ?? `https://ui-avatars.com/api/?name=${props.tweet.user.name}`,
+        props.tweet.user.avatar_url ??
+        `https://ui-avatars.com/api/?name=${props.tweet.user.name}?background=random`,
 }))
 
 // Parent tweet user for thread view
@@ -498,7 +499,7 @@ const parentUser = computed(() => {
         ...props.tweet.parent_tweet.user,
         avatar:
             props.tweet.parent_tweet.user.avatar_url ??
-            `https://ui-avatars.com/api/?name=${props.tweet.parent_tweet.user.name}`,
+            `https://ui-avatars.com/api/?name=${props.tweet.parent_tweet.user.name}?background=random`,
     }
 })
 
@@ -511,6 +512,10 @@ const parentContent = computed(() => {
         text: props.tweet.parent_tweet.content,
         images: props.tweet.parent_tweet.images || [],
         videos: props.tweet.parent_tweet.videos || [],
+        parentTweet:
+            props.tweet.parent_tweet.type === 'quote'
+                ? props.tweet.parent_tweet.parent_tweet
+                : undefined,
     }
 })
 
