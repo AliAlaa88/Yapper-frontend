@@ -30,10 +30,8 @@
                     :id="tab.test_id"
                 >
                     <button
-                        class="relative w-full px-4 py-4 text-base font-medium transition-colors duration-200 whitespace-nowrap"
-                        :class="
-                            activeTab === tab.value ? 'text-primary' : 'text-muted'
-                        "
+                        class="relative cursor-pointer w-full px-4 py-4 text-base font-medium transition-colors duration-200 whitespace-nowrap"
+                        :class="activeTab === tab.value ? 'text-primary' : 'text-muted'"
                     >
                         {{ tab.label }}
                         <span

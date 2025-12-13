@@ -9,23 +9,23 @@
         >
             <span v-if="!modelValue" class="text-muted">{{ placeholder }}</span>
 
-            <span v-else v-html="formattedContent"></span>
+            <span v-else v-html="formattedContent" />
             <br v-if="modelValue.endsWith('\n')" />
         </div>
 
         <textarea
+            :id="id"
             ref="textareaRef"
             :value="modelValue"
-            @input="handleInput"
-            @scroll="handleScroll"
-            :id="id"
             :placeholder="!modelValue ? placeholder : ''"
             :dir="textDirection"
             class="relative w-full min-h-24 p-4 bg-transparent text-transparent caret-black dark:caret-white resize-none focus:outline-none whitespace-pre-wrap break-words overflow-y-hidden text-base leading-normal font-sans placeholder:text-transparent z-20 selection:bg-blue-200/30"
             :class="props.inlineborder ? 'border-b border-primary focus:border-accent' : ''"
             style="unicode-bidi: plaintext"
             spellcheck="false"
-        ></textarea>
+            @input="handleInput"
+            @scroll="handleScroll"
+        />
 
         <MentionSuggestion
             :visible="showMentionPopup"
@@ -81,15 +81,18 @@ const textDirection = computed(() => {
 
 const formattedContent = computed(() => {
     const text = props.modelValue
-    
+
     // If maxLength is set and text exceeds it, split and color the overflow red
     if (props.maxLength && text.length > props.maxLength) {
         const validPart = text.slice(0, props.maxLength)
         const overflowPart = text.slice(props.maxLength)
-        return parseLinks(validPart) + `<span class="text-red-500 bg-red-500/20">${parseLinks(overflowPart)}</span>`
+        return (
+            parseLinks(validPart, false, true) +
+            `<span class="text-red-500 bg-red-500/20">${parseLinks(overflowPart)}</span>`
+        )
     }
-    
-    return parseLinks(text)
+
+    return parseLinks(text, false, true)
 })
 
 const adjustHeight = () => {

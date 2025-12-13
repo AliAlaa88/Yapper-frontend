@@ -136,27 +136,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         })
     }
 
-    const getNotificationId = (notification: ApiNotification): string => {
-        switch (notification.type) {
-            case 'follow':
-                return `follow_${notification.followers[0]?.id}`
-            case 'like':
-                return `like_${notification.tweets[0]?.tweet_id}_${notification.likers[0]?.id}`
-            case 'reply':
-                return `reply_${notification.reply_tweet.tweet_id}`
-            case 'repost':
-                return `repost_${notification.tweets[0]?.tweet_id}_${notification.reposters[0]?.id}`
-            case 'quote':
-                return `quote_${notification.quote_tweet.tweet_id}`
-            case 'mention':
-                return `mention_${notification.tweet.tweet_id}`
-            case 'message' :
-                return `message_${notification.message_id}`
-            default:
-                return `notification_${(notification as { created_at?: string }).created_at ?? ''}`
-        }
-    }
-
     const replaceNotificationInCache = (
         queryKey: string[],
         notification: ApiNotification,
@@ -221,61 +200,56 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
     const convertWebSocketToApi = (event: NotificationEvent): ApiNotification | null => {
         if (event.type === 'message' && event.action === 'add') {
-            return {
-                type: 'message' as const,
-                created_at: event.created_at || new Date().toISOString(),
-                sender: event.sender,
-                message_id: event.message_id,
-                chat_id: event.chat_id,
+            return event
+        }
+
+        if (isFollowEvent(event)) {
+            if (event.action === 'add') {
+                return {
+                    id: event.id,
+                    type: 'follow',
+                    created_at: event.created_at,
+                    followers: [event.follower],
+                }
+            }
+
+            if (event.action === 'aggregate') {
+                return {
+                    id: event.id,
+                    type: 'follow',
+                    created_at: event.created_at,
+                    followers: event.followers,
+                }
             }
         }
 
-        if (isFollowEvent(event) && event.action === 'add') {
-            return {
-                type: 'follow',
-                created_at: event.created_at || new Date().toISOString(),
-                followers: [
-                    {
-                        id: event.follower_id,
-                        name: '',
-                        username: event.follower_name,
-                        email: '',
-                        avatar_url: event.follower_avatar_url,
-                    },
-                ],
+        if (isLikeEvent(event)) {
+            if (event.action === 'add') {
+                return {
+                    id: event.id,
+                    type: 'like',
+                    created_at: event.created_at,
+                    likers: [event.liker],
+                    tweets: [event.tweet],
+                }
             }
-        }
 
-        if (isFollowEvent(event) && event.action === 'aggregate') {
-            return {
-                type: 'follow',
-                created_at: event.created_at || new Date().toISOString(),
-                followers: event.followers,
-            }
-        }
-
-        if (isLikeEvent(event) && event.action === 'add') {
-            return {
-                type: 'like',
-                created_at: event.created_at || new Date().toISOString(),
-                likers: [event.liker],
-                tweets: [event.tweet],
-            }
-        }
-
-        if (isLikeEvent(event) && event.action === 'aggregate') {
-            return {
-                type: 'like',
-                created_at: event.created_at || new Date().toISOString(),
-                likers: event.likers,
-                tweets: event.tweets,
+            if (event.action === 'aggregate') {
+                return {
+                    id: event.id,
+                    type: 'like',
+                    created_at: event.created_at,
+                    likers: event.likers,
+                    tweets: event.tweets,
+                }
             }
         }
 
         if (isReplyEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'reply',
-                created_at: event.created_at || new Date().toISOString(),
+                created_at: event.created_at,
                 replier: event.replier,
                 reply_tweet: event.reply_tweet,
                 original_tweet: event.original_tweet,
@@ -283,39 +257,45 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
             }
         }
 
-        if (isRepostEvent(event) && event.action === 'add') {
-            return {
-                type: 'repost',
-                created_at: event.created_at || new Date().toISOString(),
-                reposters: [event.reposter],
-                tweets: [event.tweet],
+        if (isRepostEvent(event)) {
+            if (event.action === 'add') {
+                return {
+                    id: event.id,
+                    type: 'repost',
+                    created_at: event.created_at,
+                    reposters: [event.reposter],
+                    tweets: [event.tweet],
+                }
             }
-        }
 
-        if (isRepostEvent(event) && event.action === 'aggregate') {
-            return {
-                type: 'repost',
-                created_at: event.created_at || new Date().toISOString(),
-                reposters: event.reposters,
-                tweets: event.tweets,
+            if (event.action === 'aggregate') {
+                return {
+                    id: event.id,
+                    type: 'repost',
+                    created_at: event.created_at,
+                    reposters: event.reposters,
+                    tweets: event.tweets,
+                }
             }
         }
 
         if (isQuoteEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'quote',
-                created_at: event.created_at || new Date().toISOString(),
-                quoter: event.quoted_by,
-                quote_tweet: event.quote,
+                created_at: event.created_at,
+                quoter: event.quoter,
+                quote_tweet: event.quote_tweet,
             }
         }
 
         if (isMentionEvent(event) && event.action === 'add') {
             return {
+                id: event.id,
                 type: 'mention',
-                created_at: event.created_at || new Date().toISOString(),
-                mentioner: event.mentioned_by,
-                tweet: event.tweet as any, // CountTweet | QuoteTweet → BaseTweet
+                created_at: event.created_at,
+                mentioner: event.mentioner,
+                tweet: event.tweet,
                 tweet_type: event.tweet_type,
             }
         }
@@ -323,10 +303,10 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         return null
     }
 
+
     return {
         initializeListeners,
         removeListeners,
-        getNotificationId,
         markNotificationsAsSeen,
         unreadCount,
     }

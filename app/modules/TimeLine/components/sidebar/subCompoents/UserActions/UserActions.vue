@@ -108,7 +108,7 @@
                     <div class="py-2">
                         <!-- Add Existing Account -->
                         <button
-                            class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
+                            class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleAddExistingAccount"
                         >
                             Add an existing account
@@ -116,7 +116,7 @@
 
                         <!-- Logout -->
                         <button
-                            class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
+                            class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleLogoutClick"
                         >
                             Log out @{{ user?.username || 'username' }}
@@ -162,7 +162,7 @@
                 <!-- Three Dots Menu -->
                 <button
                     id="user-actions-menu-button"
-                    class="ml-2 p-1 rounded-full hover:bg-primary/10"
+                    class="ml-2 p-1 rounded-full hover:bg-primary/10 cursor-pointer"
                 >
                     <MoreVertical class="w-5 h-5 text-primary" />
                 </button>
@@ -203,7 +203,7 @@
                     <div class="py-2">
                         <!-- Add Existing Account -->
                         <button
-                            class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
+                            class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleAddExistingAccount"
                         >
                             Add an existing account
@@ -211,7 +211,7 @@
 
                         <!-- Logout -->
                         <button
-                            class="w-full px-4 py-3 text-left text-primary hover:bg-hover transition-colors text-sm"
+                            class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleLogoutClick"
                         >
                             Log out @{{ user?.username || 'username' }}

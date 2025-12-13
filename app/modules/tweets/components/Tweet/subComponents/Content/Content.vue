@@ -4,7 +4,7 @@
         <p
             class="mb-3 whitespace-pre-wrap wrap-break-word"
             style="unicode-bidi: plaintext"
-            v-html="parseLinks(content.text)"
+            v-html="parseLinks(content.text, false, false, content.mentions)"
         />
 
         <!-- Media (Images and Videos) -->
