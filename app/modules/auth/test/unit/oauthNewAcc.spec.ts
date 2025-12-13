@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query';
 import { createI18n } from 'vue-i18n';
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' };
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' };
+import { ref } from 'vue'; // Added ref
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 import OAuthComplete from '../../components/OAuthComplete.vue';
 import OAuthStep1 from '../../components/subComponents/OAuthComponents/OAuthStep1.vue';
 
@@ -27,6 +28,7 @@ const mockAuthService = {
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
+        runWithContext: (fn: any) => fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -202,18 +204,20 @@ describe('OAuth New Account Registration', () => {
 
         it('should call OAuthCompleteStep1 with correct data', async () => {
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data:{data: {
-                    message: 'Birth date verified',
-                    usernames: ['s3fan_test', 's3fan123']
+                data: {
+                    data: {
+                        message: 'Birth date verified',
+                        usernames: ['s3fan_test', 's3fan123']
+                    }
                 }
-            }
             });
 
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
-                data:{data: {
-                    message: 'Username set successfully'
+                data: {
+                    data: {
+                        message: 'Username set successfully'
+                    }
                 }
-            }
             });
 
             const wrapper = mountOAuthComplete('oauth-token-789');

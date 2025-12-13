@@ -2,12 +2,23 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
+import { ref } from 'vue' // Added ref
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 import Signup from '../../components/createAccount.vue'
 import createAccount from '../../components/subComponents/signupComponents/createAccount.vue'
 import verifyOtp from '../../components/subComponents/signupComponents/verifyOtp.vue'
 import FinalRegister from '../../components/subComponents/signupComponents/FinalRegister.vue'
+
+// Stub global Nuxt composables
+vi.stubGlobal('useRuntimeConfig', () => ({
+    public: {
+        apiUrl: 'http://localhost:3000',
+        recaptcha: 'test-key',
+        env: 'test'
+    },
+}))
+vi.stubGlobal('navigateTo', vi.fn())
 
 const i18n = createI18n({
     legacy: false,
@@ -30,6 +41,7 @@ const mockAuthService = {
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
+        runWithContext: (fn: any) => fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -41,6 +53,19 @@ vi.mock('#app', () => ({
 
 // Mock register queries - call mockAuthService and handle callbacks properly
 vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
+    checkIdentifier: vi.fn((onSuccess, onError) => ({
+        mutate: vi.fn(async (identifier) => {
+            try {
+                const result = { data: { identifier_type: 'email', available: true } }
+                await Promise.resolve()
+                onSuccess?.(result)
+            } catch (error) {
+                onError?.(error)
+            }
+        }),
+        isLoading: ref(false),
+        isError: ref(false),
+    })),
     useRegisterS1Query: vi.fn((onSuccess, onError) => ({
         mutate: vi.fn(async (payload) => {
             try {
@@ -567,11 +592,12 @@ describe('Signup Component', () => {
 
         it('should call registerStep3 mutation with complete data', async () => {
             const registerStep3Spy = vi.fn().mockResolvedValue({
-                data:{data: {
-                    access_token: 'test-token',
-                    user: { id: 1, email: 'Safan@Developer.com', name: 'Safan Test' },
-                },
-            }
+                data: {
+                    data: {
+                        access_token: 'test-token',
+                        user: { id: 1, email: 'Safan@Developer.com', name: 'Safan Test' },
+                    },
+                }
             })
             mockAuthService.registerStep3 = registerStep3Spy
 
