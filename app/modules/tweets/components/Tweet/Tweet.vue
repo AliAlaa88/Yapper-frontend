@@ -2,14 +2,22 @@
     <article
         :id="`tweet-${id}`"
         class="border-b border-primary px-4 py-3 hover:bg-hover bg-primary transition-colors cursor-pointer"
-        @click="navigateToTweet"
+        @click="navigateToTweet($event)"
     >
         <div v-if="tweet.type === 'repost'" class="flex items-center gap-2 mb-2 text-secondary">
             <Repeat2 :size="16" />
-            <span class="text-sm">
+            <NuxtLink
+                :href="
+                    repostedUsername === 'You'
+                        ? `/${currentUser?.username}`
+                        : `/${props.tweet.reposted_by?.username}`
+                "
+                class="text-sm hover:underline"
+                @click.stop
+            >
                 {{ repostedUsername }}
                 {{ $t('tweets.reposted') }}
-            </span>
+            </NuxtLink>
         </div>
 
         <!-- Thread view for replies with parent_tweet -->
@@ -31,7 +39,7 @@
                 </div>
 
                 <!-- Parent Content column -->
-                <div class="flex-1 min-w-0 pb-3">
+                <div ref="parentTweetEl" class="flex-1 min-w-0 pb-3">
                     <div class="flex items-start justify-between gap-2">
                         <div class="flex-1 min-w-0">
                             <Publisher
@@ -41,7 +49,11 @@
                         </div>
                     </div>
                     <Content :content="parentContent" />
-                    <Stats :stats="parentStats" />
+                    <Stats
+                        :stats="parentStats"
+                        @reply="handleReplyParent"
+                        @quote="handleQuoteParent"
+                    />
                 </div>
             </div>
 
@@ -202,7 +214,7 @@
                         <button
                             v-if="ShowAIButton"
                             :id="`tweet-ai-summary-${id}`"
-                            class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue"
+                            class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue cursor-pointer"
                             :class="{ 'text-blue': showSummary }"
                             :aria-label="$t('tweets.aiSummary')"
                             :disabled="isSummaryLoading"
@@ -216,7 +228,7 @@
                         <div class="relative">
                             <button
                                 :id="`tweet-menu-button-${id}`"
-                                class="p-1.5 rounded-full cursor-pointer hover:bg-hover transition-colors text-secondary hover:text-primary"
+                                class="p-1.5 rounded-full cursor-pointer hover:bg-hover transition-colors text-secondary hover:text-primary cursor-pointer"
                                 :aria-label="$t('tweets.moreActions')"
                                 @click.stop="toggleActionsMenu"
                             >
@@ -244,7 +256,13 @@
                     class="text-secondary text-xs mb-2 truncate"
                 >
                     {{ $t('tweets.replyingTo') }}
-                    <a :id="`link-replying-to-${parentUser?.username}`" :href="parentProfileUrl" class="text-accent font-medium hover:underline cursor-pointer" @click.stop>@{{ parentUser?.username }}</a>
+                    <NuxtLink
+                        :id="`link-replying-to-${parentUser?.username}`"
+                        :href="parentProfileUrl"
+                        class="text-accent font-medium hover:underline cursor-pointer"
+                        @click.stop
+                        >@{{ parentUser?.username }}
+                    </NuxtLink>
                 </div>
                 <Content :content="content" />
 
@@ -272,17 +290,15 @@
     <!-- Quote Modal -->
     <QuoteModal
         :is-open="showQuoteModal"
-        :quoted-tweet="tweet"
+        :quoted-tweet="quoteTarget"
         @close="showQuoteModal = false"
-        @success="handleQuoteSuccess"
     />
 
     <!-- Reply Modal -->
     <ReplyModal
         :is-open="showReplyModal"
-        :parent-tweet="tweet"
+        :parent-tweet="replyTarget"
         @close="showReplyModal = false"
-        @success="handleReplySuccess"
     />
 
     <!-- Edit Tweet Modal -->
@@ -329,14 +345,21 @@ const currentUser = computed(() => userStore.getUser())
 
 // Inject shared active menu state from TweetsList (only one menu open at a time)
 const activeMenuTweetId = inject<Ref<string | null>>('activeMenuTweetId', ref(null))
-
+const showActionsMenuRef = computed({
+    get: () => activeMenuTweetId.value === props.tweet.tweet_id,
+    set: (value) => {
+        if (!value) {
+            activeMenuTweetId.value = null
+        }
+    },
+})
+provide('show-list', showActionsMenuRef)
 // Computed to check if this tweet's menu is the active one
 const showActionsMenu = computed(() => activeMenuTweetId.value === props.tweet.tweet_id)
 const ShowAIButton = computed(() => (props.tweet.content?.length ?? 0) > 150)
 const showQuoteModal = ref(false)
 const showReplyModal = ref(false)
 const showSummary = ref(false)
-provide('show-list', showActionsMenu)
 
 // AI Summary query - only fetch when user requests it
 const shouldFetchSummary = ref(false)
@@ -385,20 +408,33 @@ const toggleActionsMenu = () => {
     }
 }
 
+// Reply/quote target handling. `replyTarget` and `quoteTarget` hold which tweet the
+// ReplyModal/QuoteModal should use.
+const replyTarget = ref<TweetType | null>(props.tweet)
+const quoteTarget = ref<TweetType | null>(props.tweet)
+
 const handleQuote = () => {
+    // Default quote targets the current tweet
+    quoteTarget.value = props.tweet
     showQuoteModal.value = true
 }
 
 const handleReply = () => {
+    // Default reply targets the current tweet
+    replyTarget.value = props.tweet
     showReplyModal.value = true
 }
 
-const handleQuoteSuccess = () => {
-    // Quote posted successfully
+const handleReplyParent = () => {
+    if (!props.tweet.parent_tweet) return
+    replyTarget.value = props.tweet.parent_tweet
+    showReplyModal.value = true
 }
 
-const handleReplySuccess = () => {
-    // Reply posted successfully
+const handleQuoteParent = () => {
+    if (!props.tweet.parent_tweet) return
+    quoteTarget.value = props.tweet.parent_tweet
+    showQuoteModal.value = true
 }
 
 const queryClient = useQueryClient()
@@ -445,6 +481,7 @@ const content = computed(() => ({
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
     parentTweet: props.tweet.type === 'quote' ? props.tweet.parent_tweet : undefined,
+    mentions: props.tweet.mentions || [],
 }))
 
 // Transform user to include avatar property
@@ -529,7 +566,23 @@ const parentProfileUrl = computed(() => {
 })
 const tweetUrl = computed(() => getTweetUrl(props.tweet))
 
-const navigateToTweet = async () => {
+const parentTweetEl = ref<HTMLElement | null>(null)
+
+const parentTweetUrl = computed(() => {
+    return props.tweet.parent_tweet ? getTweetUrl(props.tweet.parent_tweet) : '#'
+})
+
+const navigateToTweet = async (event?: MouseEvent) => {
+    // If click occurred inside the parent tweet container, navigate to parent tweet
+    if (event && parentTweetEl.value && parentTweetEl.value.contains(event.target as Node)) {
+        if (parentTweetUrl.value !== '#') {
+            await nextTick()
+            tweetTransitionStore.setTransitionTweet(props.tweet.parent_tweet)
+            navigateTo(parentTweetUrl.value)
+        }
+        return
+    }
+
     if (tweetUrl.value !== '#') {
         // Wait for any pending DOM updates to complete
         await nextTick()

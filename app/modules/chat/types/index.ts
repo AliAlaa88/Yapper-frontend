@@ -17,7 +17,8 @@ export interface Message {
     content: string
     message_type: 'text' | 'image' | 'reply'
     image_url?: string | null
-    sender: MessageSender
+    sender?: MessageSender
+    sender_id?: string
     reply_to: string | null
     is_read: boolean
     is_edited: boolean

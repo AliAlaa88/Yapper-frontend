@@ -30,7 +30,12 @@
         <!-- Tweets list -->
         <div v-else-if="!isPending" class="divide-y divide-primary flex flex-col items-center">
             <div class="w-full">
-                <Tweet v-for="tweet in tweets" :key="getTweetKey(tweet)" :tweet="tweet" :compact="props.compact" />
+                <Tweet
+                    v-for="tweet in tweets"
+                    :key="getTweetKey(tweet)"
+                    :tweet="tweet"
+                    :compact="props.compact"
+                />
             </div>
 
             <div v-if="isFetchingNextPage" class="flex justify-center py-4 w-full">
@@ -72,13 +77,28 @@ import type { Tweet as TweetType } from '../../types/tweet.ts'
 const activeMenuTweetId = ref<string | null>(null)
 provide('activeMenuTweetId', activeMenuTweetId)
 
+const activeRepostMenuTweetId = ref<string | null>(null)
+provide('activeRepostMenuTweetId', activeRepostMenuTweetId)
+
 const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement
+
+    // Handle actions menu
     if (activeMenuTweetId.value) {
-        const target = event.target as HTMLElement
-        const isMenuClick = target.closest('[data-menu-container]') || 
-                           target.closest('[id^="tweet-menu-button-"]')
+        const isMenuClick =
+            target.closest('[data-menu-container]') || target.closest('[id^="tweet-menu-button-"]')
         if (!isMenuClick) {
             activeMenuTweetId.value = null
+        }
+    }
+
+    // Handle repost menu
+    if (activeRepostMenuTweetId.value) {
+        const isRepostMenuClick =
+            target.closest('[id^="tweet-retweet-button"]') ||
+            target.closest('.absolute.bottom-full') // repost menu dropdown
+        if (!isRepostMenuClick) {
+            activeRepostMenuTweetId.value = null
         }
     }
 }
@@ -174,7 +194,7 @@ const tweets = computed(() => {
 
 const getTweetKey = (tweet: TweetType): string => {
     const user = tweet.user
-    return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.likes_count}-${tweet.is_liked}-${tweet.is_reposted}-${tweet.is_bookmarked}`
+    return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.likes_count}-${tweet.is_liked}-${tweet.is_reposted}-${tweet.is_bookmarked}-${tweet.type}`
 }
 
 watch(tweets, (newTweets) => {}, { deep: true })
