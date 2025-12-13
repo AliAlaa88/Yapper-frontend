@@ -8,10 +8,7 @@
             <div
                 class="relative w-full h-full flex items-start justify-center overflow-y-auto py-4 sm:py-8"
             >
-                <div
-                    class="relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
-                    @click.stop
-                >
+                <div class="relative w-full max-w-[600px] bg-primary rounded-2xl mx-4" @click.stop>
                     <!-- Header -->
                     <div class="flex items-center justify-between p-4 border-b border-primary">
                         <button
@@ -104,14 +101,16 @@ const emit = defineEmits<{
     (e: 'close' | 'success'): void
 }>()
 
-const parentTweetAvatar = computed(() =>
-    props.parentTweet.user.avatar_url ??
-    `https://ui-avatars.com/api/?name=${props.parentTweet.user.name}`,
+const parentTweetAvatar = computed(
+    () =>
+        props.parentTweet.user.avatar_url ??
+        `https://ui-avatars.com/api/?name=${props.parentTweet.user.name}`,
 )
 
-const hasMedia = computed(() =>
-    (props.parentTweet.images && props.parentTweet.images.length > 0) ||
-    (props.parentTweet.videos && props.parentTweet.videos.length > 0),
+const hasMedia = computed(
+    () =>
+        (props.parentTweet.images && props.parentTweet.images.length > 0) ||
+        (props.parentTweet.videos && props.parentTweet.videos.length > 0),
 )
 
 const closeModal = () => {
