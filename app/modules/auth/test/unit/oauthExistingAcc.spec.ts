@@ -64,6 +64,7 @@ vi.mock('#app', () => ({
     useRuntimeConfig: () => ({
         public: {
             apiUrl: 'http://localhost:3000',
+            env: 'test',
         },
     }),
     useRouter: () => mockRouter,
@@ -81,6 +82,16 @@ Object.defineProperty(globalThis.process, 'client', {
 
 vi.mock('~/modules/auth/stores/userStore', () => ({
     useUserStore: () => mockUserStore,
+}))
+
+// Mock useGetUserQuery
+vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
+    useGetUserQuery: vi.fn(() => ({
+        data: ref({ id: 1, name: 'Test User' }),
+        isLoading: ref(false),
+        isError: ref(false),
+        error: ref(null),
+    })),
 }))
 
 // Mock OAuth and user queries - return success immediately
