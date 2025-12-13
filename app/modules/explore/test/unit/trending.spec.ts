@@ -124,7 +124,7 @@ describe('Trending Component', () => {
             mockTrendsQuery.data.value = []
             const wrapper = mountTrending()
             const errorText = wrapper.text()
-            expect(errorText).toContain('explore.errorLoading')
+            expect(errorText).toContain('explore.noTrends')
         })
     })
 
