@@ -142,12 +142,13 @@
                             :alt="user.name"
                             class="w-full h-full object-cover"
                             :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
-                        >
-                            <NuxtImg
-                                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
-                                alt="User"
-                                class="w-full h-full object-cover"
-                        /></NuxtImg>
+                        />
+                        <NuxtImg
+                            v-else
+                            :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
+                            alt="User"
+                            class="w-full h-full object-cover"
+                        />
                     </div>
                     <!-- Name and Username -->
                     <div class="flex flex-col flex-1 min-w-0">

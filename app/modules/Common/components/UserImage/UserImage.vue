@@ -9,7 +9,7 @@
     />
     <img
         v-else
-        :src="`https://ui-avatars.com/api/?name=${name}&background=random`"
+        :src="`https://ui-avatars.com/api/?name=${name}&background=random&size=${size}`"
         :alt="name ?? ''"
         :class="compact ? `w-${size} h-${size}` : `w-${size} h-${size}`"
         class="object-cover rounded-full"

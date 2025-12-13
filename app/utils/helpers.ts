@@ -124,7 +124,7 @@ export function parseTextWithTags(text: string): string {
 }
 export const handleImageError = (userName: string, event: Event) => {
     const target = event.target as HTMLImageElement
-    target.src = `https://ui-avatars.com/api/?name=${userName}`
+    target.src = `https://ui-avatars.com/api/?name=${userName}&background=random`
 }
 
 export function shorterName(name: string, maxLength: number = 15): string {
