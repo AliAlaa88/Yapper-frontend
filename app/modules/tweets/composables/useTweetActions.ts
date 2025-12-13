@@ -23,7 +23,7 @@ export function useTweetActions(
     const queryClient = useQueryClient()
     // Use the mutation queries
     const tweetIdValue = computed(() => tweetId.value ?? '')
-    const deleteMutation = useDeleteTweetMutation(tweetIdValue.value)
+    const deleteMutation = useDeleteTweetMutation(tweetIdValue.value, parentTweetId?.value)
     const updateMutation = useUpdateTweetMutation(tweetIdValue.value)
 
     // Edit modal state

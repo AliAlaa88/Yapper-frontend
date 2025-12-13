@@ -65,7 +65,9 @@ export const cacheInvalidation = {
         })
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list('/timeline/following') })
     },
-
+    onReplyDelete: (queryClient: QueryClient, parentTweetId: string) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(parentTweetId) })
+    },
     onTweetLikeChange: (queryClient: QueryClient, tweetId: string) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.details(tweetId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.tweets.list('/users/me/liked-posts') })

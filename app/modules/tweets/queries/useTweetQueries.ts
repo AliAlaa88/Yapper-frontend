@@ -144,11 +144,11 @@ export function mutateTweetBookmarkQuery(tweetId: string, isBookmarked: boolean)
         onSuccess: () => {
             const { $queryClient } = useNuxtApp()
             cacheInvalidation.onTweetBookmarkChange($queryClient, tweetId)
-        }
+        },
     })
 }
 
-export function useDeleteTweetMutation(tweetId: string) {
+export function useDeleteTweetMutation(tweetId: string, parentTweetId?: string) {
     const { $queryClient } = useNuxtApp()
 
     return useMutation({
@@ -172,6 +172,9 @@ export function useDeleteTweetMutation(tweetId: string) {
             })
             // Invalidate tweet details cache
             $queryClient.invalidateQueries({ queryKey: ['tweetDetails', tweetId] })
+            if (parentTweetId) {
+                cacheInvalidation.onReplyDelete($queryClient, parentTweetId)
+            }
         },
         onError: (error) => {
             console.error('Error deleting tweet:', tweetId, error)
