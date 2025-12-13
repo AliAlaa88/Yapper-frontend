@@ -45,14 +45,21 @@
                                         @{{ parentTweet.user.username }}
                                     </span>
                                 </div>
-                                <p class="text-primary mt-1 whitespace-pre-wrap wrap-break-word" style="unicode-bidi: plaintext;">
-                                    {{ parentTweet.content }}
-                                </p>
+                                <p
+                                    class="text-primary mt-1 whitespace-pre-wrap wrap-break-word"
+                                    style="unicode-bidi: plaintext"
+                                    v-html="
+                                        parseLinks(
+                                            parentTweet.content,
+                                            false,
+                                            false,
+                                            parentTweet.mentions,
+                                        )
+                                    "
+                                />
                                 <!-- Media (Images and Videos) -->
-                                <div
-                                    v-if="hasMedia"
-                                    class="mt-2"
-                                >
+
+                                <div v-if="hasMedia" class="mt-2">
                                     <TweetMedia
                                         :images="parentTweet.images || []"
                                         :videos="parentTweet.videos || []"
@@ -86,6 +93,7 @@ import type { Tweet } from '../../types/tweet'
 import PostTweet from '~/modules/TimeLine/components/postTweet'
 import TweetMedia from '../Tweet/subComponents/TweetMedia/TweetMedia.vue'
 import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
+import { parseLinks } from '~/lib/utils'
 
 const props = defineProps<{
     isOpen: boolean

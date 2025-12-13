@@ -81,15 +81,18 @@ const textDirection = computed(() => {
 
 const formattedContent = computed(() => {
     const text = props.modelValue
-    
+
     // If maxLength is set and text exceeds it, split and color the overflow red
     if (props.maxLength && text.length > props.maxLength) {
         const validPart = text.slice(0, props.maxLength)
         const overflowPart = text.slice(props.maxLength)
-        return parseLinks(validPart) + `<span class="text-red-500 bg-red-500/20">${parseLinks(overflowPart)}</span>`
+        return (
+            parseLinks(validPart, false, true) +
+            `<span class="text-red-500 bg-red-500/20">${parseLinks(overflowPart)}</span>`
+        )
     }
-    
-    return parseLinks(text)
+
+    return parseLinks(text, false, true)
 })
 
 const adjustHeight = () => {

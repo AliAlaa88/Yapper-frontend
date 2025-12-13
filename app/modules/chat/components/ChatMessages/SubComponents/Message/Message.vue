@@ -27,13 +27,14 @@
                             parseLinks(
                                 isExpanded ? message.content : truncatedContent,
                                 isOwnMessage,
+                                false,
                             )
                         "
                     />
                     <button
                         v-if="shouldShowSeeMore"
-                        @click="toggleExpand"
                         class="text-primary hover:underline text-sm mt-1 font-medium"
+                        @click="toggleExpand"
                     >
                         {{ isExpanded ? $t('chat.seeLess') : $t('chat.seeMore') }}
                     </button>
