@@ -345,14 +345,21 @@ const currentUser = computed(() => userStore.getUser())
 
 // Inject shared active menu state from TweetsList (only one menu open at a time)
 const activeMenuTweetId = inject<Ref<string | null>>('activeMenuTweetId', ref(null))
-
+const showActionsMenuRef = computed({
+    get: () => activeMenuTweetId.value === props.tweet.tweet_id,
+    set: (value) => {
+        if (!value) {
+            activeMenuTweetId.value = null
+        }
+    },
+})
+provide('show-list', showActionsMenuRef)
 // Computed to check if this tweet's menu is the active one
 const showActionsMenu = computed(() => activeMenuTweetId.value === props.tweet.tweet_id)
 const ShowAIButton = computed(() => (props.tweet.content?.length ?? 0) > 150)
 const showQuoteModal = ref(false)
 const showReplyModal = ref(false)
 const showSummary = ref(false)
-provide('show-list', showActionsMenu)
 
 // AI Summary query - only fetch when user requests it
 const shouldFetchSummary = ref(false)

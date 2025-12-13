@@ -3,15 +3,16 @@
         v-if="showList"
         ref="dropdownRef"
         data-menu-container
-        class="sm:absolute right-0 mt-2 bg-primary rounded-xl fixed bottom-0 sm:bottom-auto
-        sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-allduration-200
-        sm:w-70 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
-        sm:translate-x-0 w-full sm:rounded-xl rounded-t-2xl sm:max-h-none max-h-[50vh]
-        overflow-y-auto"
+        class="fixed bottom-0 inset-x-0 z-100 bg-primary
+        rounded-t-2xl max-h-[50vh] overflow-y-auto
+        sm:absolute sm:bottom-auto sm:top-[-8px]
+        sm:w-70 sm:rounded-xl
+        sm:shadow-[0_0_7px_rgba(255,255,255,0.4)]
+        ltr:sm:right-0 rtl:sm:left-0"
         @click.stop
     >
         <Button
-            v-if="isTweet"
+            v-if="isTweet && !isBlocked"
             id="follow-tweeet-button"
             button-class="cursor-pointer w-full text-primary font-semibold text-left
             px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
