@@ -69,6 +69,7 @@ import { VideoPlayer } from '@videojs-player/vue'
 import { useTweetTransitionStore } from '~/modules/tweets/stores/tweetTransition'
 
 import 'video.js/dist/video-js.css'
+import { parseLinks } from '~/lib/utils'
 
 const props = defineProps<{
     tweet: Tweet
