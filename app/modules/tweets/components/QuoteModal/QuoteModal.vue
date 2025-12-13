@@ -2,16 +2,13 @@
     <Teleport to="body">
         <div
             v-if="isOpen"
-            class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+            class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-start justify-center overflow-y-auto py-4 sm:py-8"
             @click.self="closeModal"
         >
             <div
-                class="relative w-full h-full flex items-start justify-center overflow-y-auto py-4 sm:py-8"
+                class="quote-modal relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
+                @click.stop
             >
-                <div
-                    class="relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
-                    @click.stop
-                >
                     <!-- Header -->
                     <div class="flex items-center p-4 border-b border-primary">
                         <button
@@ -33,7 +30,6 @@
                     />
                 </div>
             </div>
-        </div>
     </Teleport>
 </template>
 
