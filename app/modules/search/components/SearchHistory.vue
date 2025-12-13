@@ -10,17 +10,6 @@
             >
                 {{ $t('search.clearAll') }}
             </button>
-
-    
-        
-          
-    
-
-        
-        Expand All
-    
-    @@ -25,16 +25,17 @@
-  
         </div>
         <div v-else class="px-4 py-3 text-secondary">
             {{ $t('search.enterQuery') }}
@@ -50,20 +39,10 @@
                         :aria-label="$t('search.removeQuery') + ' ' + item.query"
                         @click.stop="removeItem(index)"
                     >
-
-    
-        
-          
-    
-
-        
-        Expand All
-    
-    @@ -46,6 +47,7 @@
-  
                         <X :size="16" class="text-accent" />
                     </button>
                 </div>
+
                 <!-- User Item -->
                 <div
                     v-else-if="item.type === 'user'"
@@ -71,17 +50,6 @@
                     @click="handleUserClick(item)"
                 >
                     <img
-
-    
-        
-          
-    
-
-        
-        Expand All
-    
-    @@ -71,6 +73,7 @@
-  
                         v-if="item.avatar_url"
                         :src="item.avatar_url"
                         :alt="item.name"
@@ -108,17 +76,6 @@
                         :aria-label="$t('search.removeQuery') + ' ' + item.name"
                         @click.stop="removeItem(index)"
                     >
-
-    
-          
-            
-    
-
-          
-          Expand Down
-    
-    
-  
                         <X :size="16" class="text-accent" />
                     </button>
                 </div>
@@ -130,11 +87,13 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, X } from 'lucide-vue-next'
+
 interface HistoryQuery {
     type: 'query'
     query: string
     timestamp: number
 }
+
 interface HistoryUser {
     type: 'user'
     user_id: string
@@ -143,16 +102,21 @@ interface HistoryUser {
     avatar_url: string
     timestamp: number
 }
+
 type HistoryItem = HistoryQuery | HistoryUser
+
 const emits = defineEmits<{
     handleSearchSubmit: [query: string, src: 'recent_search_click']
 }>()
+
 const router = useRouter()
 const STORAGE_KEY = 'yapper-search-history'
 const searchHistory = ref<HistoryItem[]>([])
+
 const sortedHistory = computed(() => {
     return [...searchHistory.value].sort((a, b) => b.timestamp - a.timestamp)
 })
+
 const loadSearchHistory = () => {
     try {
         const stored = localStorage.getItem(STORAGE_KEY)
@@ -176,6 +140,7 @@ const loadSearchHistory = () => {
         searchHistory.value = []
     }
 }
+
 const saveSearchHistory = () => {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory.value))
@@ -183,6 +148,7 @@ const saveSearchHistory = () => {
         console.error('Failed to save search history:', error)
     }
 }
+
 const removeItem = (index: number) => {
     const actualIndex = searchHistory.value.findIndex((item) => item === sortedHistory.value[index])
     if (actualIndex !== -1) {
@@ -190,10 +156,12 @@ const removeItem = (index: number) => {
         saveSearchHistory()
     }
 }
+
 const clearAll = () => {
     searchHistory.value = []
     saveSearchHistory()
 }
+
 const handleQueryClick = (query: string) => {
     // Move to top by updating timestamp
     const item = searchHistory.value.find((item) => item.type === 'query' && item.query === query)
@@ -203,6 +171,7 @@ const handleQueryClick = (query: string) => {
     }
     emits('handleSearchSubmit', query, 'recent_search_click')
 }
+
 const handleUserClick = (user: HistoryUser) => {
     // Move to top by updating timestamp
     const item = searchHistory.value.find(
@@ -214,6 +183,7 @@ const handleUserClick = (user: HistoryUser) => {
     }
     router.push(`/${user.username}`)
 }
+
 onMounted(() => {
     loadSearchHistory()
 })
