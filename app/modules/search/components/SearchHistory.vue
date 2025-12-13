@@ -3,10 +3,10 @@
         <div v-if="sortedHistory.length > 0" class="flex items-center justify-between px-4 py-3">
             <h3 class="text-primary font-bold text-[20px]">{{ $t('search.recent') }}</h3>
             <button
-                id="btn-clear-all-search-history"
                 type="button"
-                class="px-2 py-1 text-accent hover:bg-accent/10 text-[15px] rounded-full font-semibold transition-colors cursor-pointer"
-                @click="clearAll"
+                class="px-2 py-1 text-accent hover:bg-accent/10 text-[15px] rounded-full font-semibold transition-colors"
+                id="button-clearAll-search-history"
+                @cli++ck="clearAll"
             >
                 {{ $t('search.clearAll') }}
             </button>
@@ -25,6 +25,7 @@
                     <Search :size="20" class="text-primary/50 shrink-0" />
                     <div
                         class="flex-1 min-w-0 cursor-pointer"
+                        id="link-query-search-history"
                         @click="handleQueryClick(item.query)"
                     >
                         <div class="text-primary font-semibold text-[15px] truncate">
@@ -32,9 +33,10 @@
                         </div>
                     </div>
                     <button
-                        :id="`btn-remove-search-history-${index}`"
                         type="button"
-                        class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors cursor-pointer"
+                        class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
+                        id="button-remove-search-history-query"
+                        @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.query"
                         @click.stop="removeItem(index)"
                     >
@@ -46,6 +48,7 @@
                 <div
                     v-else-if="item.type === 'user'"
                     class="flex items-center gap-3 cursor-pointer"
+                    id="link-user-search-history"
                     @click="handleUserClick(item)"
                 >
                     <img
@@ -71,6 +74,8 @@
                     <button
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
+                        id="button-remove-search-history-user"
+                        @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.name"
                         @click.stop="removeItem(index)"
                     >

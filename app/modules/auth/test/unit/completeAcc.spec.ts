@@ -61,11 +61,66 @@ vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
     }),
 }))
 
+// Mock useRegisterQuery (needed for checkIdentifier in Username)
+vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
+    checkIdentifier: vi.fn(() => ({
+        mutate: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+    })),
+}))
+
+// Mock useCompleteProfileQuery (needed for ProfilePicture, Username, Language, and Interests)
+vi.mock('~/modules/auth/queries/useCompleteProfileQuery', () => ({
+    useUpdateProfileMutation: vi.fn(() => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+        isPending: ref(false),
+    })),
+    useUpdateProfilePictureMutation: vi.fn(() => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+        isPending: ref(false),
+    })),
+    useUpdateUsernameMutation: vi.fn(() => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+        isPending: ref(false),
+    })),
+    useUpdateLanguageMutation: vi.fn(() => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+        isPending: ref(false),
+    })),
+    useFetchInterests: vi.fn(() => ({
+        mutate: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+        data: ref(['Music', 'Sports', 'Tech']),
+    })),
+    useUpdateInterestsMutation: vi.fn(() => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(),
+        isLoading: ref(false),
+        isError: ref(false),
+        isPending: ref(false),
+    })),
+}))
+
 // Mock Nuxt app
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: {},
         runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -200,7 +255,7 @@ describe('CompleteAccount Component', () => {
 
             expect(usernameInput.exists()).toBe(true)
             expect(usernameInput.attributes('placeholder')).toBe('username')
-            expect(usernameInput.attributes('maxlength')).toBe('15')
+            expect(usernameInput.attributes('maxlength')).toBe('25')
         })
 
         it('should allow entering sa3fan_test username', async () => {
@@ -222,7 +277,7 @@ describe('CompleteAccount Component', () => {
             await usernameInput.setValue('sa3fan')
             await flushPromises()
 
-            expect(usernameComponent.text()).toContain('6/15')
+            expect(usernameComponent.text()).toContain('6/25')
         })
 
         it('should show "Available!" message for valid username', async () => {

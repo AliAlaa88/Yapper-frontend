@@ -27,7 +27,11 @@ const mockRouter = {
 }
 
 const mockUserStore = {
-    setAuth: vi.fn(),
+    setAuth: vi.fn((data) => {
+        // Actually set the accessToken so tests can verify it
+        mockUserStore.accessToken = data.access_token
+        mockUserStore.user = data.user
+    }),
     setUser: vi.fn(),
     updateUser: vi.fn(),
     logout: vi.fn(),
@@ -37,8 +41,13 @@ const mockUserStore = {
     isLoggedIn: false,
 }
 
+const mockRoute = {
+    query: {} as Record<string, string>,
+}
+
 vi.mock('vue-router', () => ({
     useRouter: () => mockRouter,
+    useRoute: () => mockRoute,
 }))
 
 // Mock cookie storage
@@ -50,6 +59,7 @@ vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
         runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -57,6 +67,7 @@ vi.mock('#app', () => ({
         },
     }),
     useRouter: () => mockRouter,
+    useRoute: () => mockRoute,
     useCookie: () => mockCookie,
 }))
 
@@ -75,41 +86,41 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
 // Mock OAuth and user queries - return success immediately
 vi.mock('~/modules/auth/queries/useOAuthQuery', () => ({
     useExchangeTokenQuery: vi.fn((onSuccess, onError) => ({
-        mutate: vi.fn(async (payload) => {
-            try {
-                const token = payload.exchange_token
-                if (token) {
-                    await Promise.resolve()
-                    onSuccess?.({ access_token: token })
-                } else {
-                    throw new Error('No exchange token provided')
-                }
-            } catch (error) {
-                onError?.(error)
+        mutate: vi.fn((payload) => {
+            const token = payload.exchange_token
+            if (token) {
+                onSuccess?.({ access_token: token })
+            } else {
+                onError?.(new Error('No exchange token provided'))
             }
         }),
+        mutateAsync: vi.fn(),
+        isPending: ref(false),
     })),
 }))
 
 vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
     useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
-        // Watch for enableRef to become true, then call getUserData and onSuccess
-        watch(() => enableRef.value, async (enabled) => {
-            if (enabled) {
-                try {
-                    const userData = await mockAuthService.getUserData()
-                    await Promise.resolve()
-                    onSuccess?.(userData)
-                } catch (error) {
-                    onError?.(error)
+        // Watch for enableRef to become true, then call onSuccess
+        watch(
+            () => enableRef.value,
+            async (enabled) => {
+                if (enabled) {
+                    try {
+                        const userData = await mockAuthService.getUserData()
+                        onSuccess?.(userData)
+                    } catch (error) {
+                        onError?.(error)
+                    }
                 }
-            }
-        }, { immediate: true })
+            },
+            { immediate: true }
+        )
 
         return {
-            data: { value: { username: 'testuser', email: 'test@example.com' } },
-            isLoading: false,
-            isError: false,
+            data: ref({ username: 'testuser', email: 'test@example.com' }),
+            isLoading: ref(false),
+            isError: ref(false),
         }
     }),
 }))
@@ -142,6 +153,9 @@ window.location = {
 function mountSuccessPage(token: string = '') {
     window.location.search = token ? `?exchange_token=${token}` : ''
 
+    // Update mockRoute query params
+    mockRoute.query = token ? { exchange_token: token } : {}
+
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: { retry: false },
@@ -157,8 +171,11 @@ function mountSuccessPage(token: string = '') {
             ],
             mocks: {
                 useRouter: () => mockRouter,
+                useRoute: () => mockRoute,
                 useNuxtApp: () => ({
                     $authService: mockAuthService,
+                    runWithContext: (fn: any) => fn(),
+                    callHook: vi.fn(),
                 }),
                 useRuntimeConfig: () => ({
                     public: {
@@ -168,6 +185,7 @@ function mountSuccessPage(token: string = '') {
             },
             stubs: {
                 NuxtLink: { template: '<a><slot /></a>' },
+                AuthLoadingPage: { template: '<div class="fixed inset-0 bg-black/10 flex items-center justify-center"><p>Loading...</p></div>' },
             },
         },
     })
