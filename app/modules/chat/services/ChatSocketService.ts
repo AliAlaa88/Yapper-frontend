@@ -443,7 +443,9 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         console.log('[ChatSocket] Unread summary:', data)
         unreadChats.value.clear()
         data.chats.forEach((chat) => {
-            unreadChats.value.set(chat.chat_id, chat)
+            if (chat.unread_count > 0) {
+                unreadChats.value.set(chat.chat_id, chat)
+            }
         })
     }
 
@@ -780,7 +782,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
     const clearUnreadCount = (chatId: string) => {
         const chat = unreadChats.value.get(chatId)
         if (chat) {
-            unreadChats.value.set(chatId, { ...chat, unread_count: 0 })
+            unreadChats.value.delete(chatId)
         }
 
         try {
