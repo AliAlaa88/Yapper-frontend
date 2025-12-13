@@ -24,9 +24,8 @@
             <p
                 class="text-primary text-sm leading-5 line-clamp-3 whitespace-pre-wrap wrap-break-word"
                 style="unicode-bidi: plaintext"
-            >
-                {{ tweet.content }}
-            </p>
+                v-html="parseLinks(tweet.content, false, false, tweet.mentions)"
+            />
 
             <!-- Media preview (single thumbnail) -->
             <div v-if="hasMedia" class="mt-2">
@@ -70,6 +69,7 @@ import { VideoPlayer } from '@videojs-player/vue'
 import { useTweetTransitionStore } from '~/modules/tweets/stores/tweetTransition'
 
 import 'video.js/dist/video-js.css'
+import { parseLinks } from '~/lib/utils'
 
 const props = defineProps<{
     tweet: Tweet

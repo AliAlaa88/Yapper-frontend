@@ -38,7 +38,7 @@
                 class="truncate text-sm"
                 :class="conversation.unread_count > 0 ? 'font-bold text-primary' : 'text-secondary'"
             >
-                {{ conversation.last_message?.content || $t('chat.noMessagesYet') }}
+                {{ lastMessagePreview }}
             </p>
         </div>
         <div
@@ -51,11 +51,80 @@
 </template>
 
 <script setup lang="ts">
-import type { Conversation } from '~/modules/chat/types'
+import { computed } from 'vue'
+import type { Conversation, Message } from '~/modules/chat/types'
 import { shorterName, formatConversationDate } from '~/utils/helpers'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { useI18n } from 'vue-i18n'
 
-defineProps<{
+const props = defineProps<{
     conversation: Conversation
     isSelected?: boolean
 }>()
+
+const userStore = useUserStore()
+const { t } = useI18n()
+
+const lastMessagePreview = computed(() => {
+    const lastMessage = props.conversation?.last_message
+
+    if (!lastMessage) {
+        return t('chat.noMessagesYet')
+    }
+
+    const hasContent = lastMessage.content && lastMessage.content.trim().length > 0
+    const hasImage = lastMessage.image_url && lastMessage.image_url.trim().length > 0
+    const hasVoice =
+        (lastMessage as any).voice_note_url && (lastMessage as any).voice_note_url.trim().length > 0
+
+    if (hasContent) {
+        return lastMessage.content
+    }
+
+    if (hasImage) {
+        try {
+            const currentUser = userStore.getUser()?.user_id
+            const senderId = lastMessage.sender_id
+
+            if (!currentUser || !senderId) {
+                return t('chat.noMessagesYet')
+            }
+
+            const isOwnMessage = currentUser.toString() === senderId.toString()
+
+            if (isOwnMessage) {
+                return t('chat.youSentImage')
+            } else {
+                return t('chat.imageSentToYou')
+            }
+        } catch (error) {
+            console.log('error', error)
+            return t('chat.noMessagesYet')
+        }
+    }
+
+    if (hasVoice) {
+        try {
+            const currentUser = userStore.getUser()?.user_id
+            const senderId = lastMessage.sender_id
+
+            if (!currentUser || !senderId) {
+                return t('chat.noMessagesYet')
+            }
+
+            const isOwnMessage = currentUser.toString() === senderId.toString()
+
+            if (isOwnMessage) {
+                return t('chat.youSentVoice')
+            } else {
+                return t('chat.voiceSentToYou')
+            }
+        } catch (error) {
+            console.log('error', error)
+            return t('chat.noMessagesYet')
+        }
+    }
+
+    return t('chat.noMessagesYet')
+})
 </script>
