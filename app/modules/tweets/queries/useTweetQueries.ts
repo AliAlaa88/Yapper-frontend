@@ -13,7 +13,7 @@ export function useTweetsQuery(path: MaybeRef<string>) {
 
     // Create reactive query key based on the path
     const queryKey = computed(() => ['tweets', unref(path)])
-    if(unref(path).toString().startsWith('/search')) {
+    if (unref(path).toString().startsWith('/search')) {
         queryKey.value.splice(1, 0, '/search')
     }
     console.log('Using query key for tweets query:', queryKey.value)
@@ -125,9 +125,30 @@ export function mutateTweetRepostsQuery(tweetId: string, isRetweet: boolean, pat
                 : ($tweetService as any).unrepostTweet(tweetId)
         },
         onSuccess: () => {
-            const { $queryClient } = useNuxtApp()
+            const { $queryClient, $userStore } = useNuxtApp()
             console.log('Successfully mutated repost status for tweet:', tweetId, path)
             cacheInvalidation.onTweetRepostChange($queryClient, tweetId, path)
+            if (!isRetweet) {
+                const currentUserId = $userStore?.getUser()?.user_id
+                // Remove only the repost entry (where type === 'repost' and it's the current user's repost)
+                $queryClient.setQueryData(['tweets', path], (oldData: any) => {
+                    if (!oldData) return oldData
+                    return {
+                        ...oldData,
+                        pages: oldData.pages.map((page: any) => ({
+                            ...page,
+                            data: page.data.filter(
+                                (tweet: Tweet) =>
+                                    !(
+                                        tweet.tweet_id === tweetId &&
+                                        tweet.type === 'repost' &&
+                                        tweet.reposted_by?.id === currentUserId
+                                    ),
+                            ),
+                        })),
+                    }
+                })
+            }
         },
     })
 }
