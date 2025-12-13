@@ -66,6 +66,7 @@ export function useUserActionsQuery(
                     userId.value,
                     targetUsername.value,
                     currentUserId.value,
+                    true, // just followed
                 )
             } else {
                 $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
@@ -91,6 +92,7 @@ export function useUserActionsQuery(
                     userId.value,
                     targetUsername.value,
                     currentUserId.value,
+                    false, // just unfollowed
                 )
             } else {
                 $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })

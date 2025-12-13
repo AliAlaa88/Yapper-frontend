@@ -123,12 +123,56 @@ export const cacheInvalidation = {
         targetUserId: string,
         targetUsername: string,
         currentUserId: string,
+        isFollowing: boolean, // true = just followed, false = just unfollowed
     ) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.users.byId(targetUserId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.profile(targetUsername) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.followers(targetUserId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.following(currentUserId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
+
+        // Optimistically update all tweet caches that contain this user
+        // This ensures UserCard tooltips in timeline show updated follower counts immediately
+        queryClient.setQueriesData({ queryKey: ['tweets'] }, (oldData: any) => {
+            if (!oldData?.pages) return oldData
+
+            const followerDelta = isFollowing ? 1 : -1
+
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page: any) => {
+                    return {
+                        ...page,
+                        data: page.data.map((tweet: any) => {
+                            // Update user data in the tweet if it matches the target user
+                            if (tweet.user?.id === targetUserId) {
+                                return {
+                                    ...tweet,
+                                    user: {
+                                        ...tweet.user,
+                                        followers: Math.max(0, (tweet.user.followers || 0) + followerDelta),
+                                    },
+                                }
+                            }
+                            // Also update parent_tweet user if it exists (for replies/quotes)
+                            if (tweet.parent_tweet?.user?.id === targetUserId) {
+                                return {
+                                    ...tweet,
+                                    parent_tweet: {
+                                        ...tweet.parent_tweet,
+                                        user: {
+                                            ...tweet.parent_tweet.user,
+                                            followers: Math.max(0, (tweet.parent_tweet.user.followers || 0) + followerDelta),
+                                        },
+                                    },
+                                }
+                            }
+                            return tweet
+                        }),
+                    }
+                }),
+            }
+        })
     },
 
     onBlockChange: (queryClient: QueryClient, targetUserId: string) => {
