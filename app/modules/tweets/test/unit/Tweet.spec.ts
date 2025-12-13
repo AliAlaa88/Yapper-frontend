@@ -108,7 +108,7 @@ vi.mock('../../utils/navigation', () => ({
 }))
 
 const defaultStubs = {
-    NuxtLink: true,
+    NuxtLink: { template: '<a><slot /></a>' },
     Publisher: true,
     Content: true,
     Stats: true,
@@ -122,7 +122,7 @@ const defaultStubs = {
     UserCard: { template: '<div class="user-card">UserCard</div>' },
     ProfileActionsMenu: { template: '<div class="profile-actions-menu">ProfileActionsMenu</div>' },
     FormattedTextarea: { template: '<textarea />' },
-    QuoteModal: { template: '<div class="quote-modal">QuoteModal</div>' },
+    QuoteModal: { template: '<div class="quote-modal"></div>' },
 }
 
 const defaultGlobal = {
