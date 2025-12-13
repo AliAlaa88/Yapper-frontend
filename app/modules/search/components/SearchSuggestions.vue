@@ -134,7 +134,7 @@ const handleUserClick = (user: any) => {
 
     try {
         const stored = localStorage.getItem(STORAGE_KEY)
-        const searchHistory = stored ? JSON.parse(stored) : []
+        let searchHistory = stored ? JSON.parse(stored) : []
 
         // Remove duplicate if exists
         const existingIndex = searchHistory.findIndex(
