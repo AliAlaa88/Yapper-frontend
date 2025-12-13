@@ -214,7 +214,7 @@
                         <button
                             v-if="ShowAIButton"
                             :id="`tweet-ai-summary-${id}`"
-                            class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue"
+                            class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue cursor-pointer"
                             :class="{ 'text-blue': showSummary }"
                             :aria-label="$t('tweets.aiSummary')"
                             :disabled="isSummaryLoading"
@@ -228,7 +228,7 @@
                         <div class="relative">
                             <button
                                 :id="`tweet-menu-button-${id}`"
-                                class="p-1.5 rounded-full cursor-pointer hover:bg-hover transition-colors text-secondary hover:text-primary"
+                                class="p-1.5 rounded-full cursor-pointer hover:bg-hover transition-colors text-secondary hover:text-primary cursor-pointer"
                                 :aria-label="$t('tweets.moreActions')"
                                 @click.stop="toggleActionsMenu"
                             >
