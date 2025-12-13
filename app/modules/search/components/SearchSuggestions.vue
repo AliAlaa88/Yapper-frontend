@@ -45,14 +45,14 @@
                             :src="user.avatar_url"
                             :alt="user.name"
                             class="w-10 h-10 rounded-full object-cover shrink-0"
-                            :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}'`"
+                            :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random'`"
                         />
                         <img
                             v-else
-                            :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`"
+                            :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`"
                             :alt="user.name"
                             class="w-10 h-10 rounded-full object-cover shrink-0"
-                            :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}'`"
+                            :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random'`"
                         />
                         <div class="flex-1 min-w-0">
                             <div class="text-primary font-bold text-[15px] truncate">
@@ -134,7 +134,7 @@ const handleUserClick = (user: any) => {
 
     try {
         const stored = localStorage.getItem(STORAGE_KEY)
-        let searchHistory = stored ? JSON.parse(stored) : []
+        const searchHistory = stored ? JSON.parse(stored) : []
 
         // Remove duplicate if exists
         const existingIndex = searchHistory.findIndex(

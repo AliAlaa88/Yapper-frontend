@@ -489,7 +489,7 @@ const user = computed(() => ({
     ...props.tweet.user,
     avatar:
         props.tweet.user.avatar_url ??
-        `https://ui-avatars.com/api/?name=${props.tweet.user.name}?background=random`,
+        `https://ui-avatars.com/api/?name=${props.tweet.user.name}&background=random`,
 }))
 
 // Parent tweet user for thread view
@@ -499,7 +499,7 @@ const parentUser = computed(() => {
         ...props.tweet.parent_tweet.user,
         avatar:
             props.tweet.parent_tweet.user.avatar_url ??
-            `https://ui-avatars.com/api/?name=${props.tweet.parent_tweet.user.name}?background=random`,
+            `https://ui-avatars.com/api/?name=${props.tweet.parent_tweet.user.name}&background=random`,
     }
 })
 

@@ -14,15 +14,15 @@
                         @click="togglePopup"
                     >
                         <div class="w-12 h-12 rounded-full overflow-hidden bg-gray">
-                            <img
+                            <NuxtImg
                                 v-if="user?.avatar_url"
                                 :src="user.avatar_url"
                                 :alt="user.name"
                                 class="w-full h-full object-cover"
                                 :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
                             />
-                            <img
-                                :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                            <NuxtImg
+                                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                                 alt="User"
                                 class="w-full h-full object-cover"
                             />
@@ -78,7 +78,7 @@
                             <div
                                 class="w-12 h-12 rounded-full overflow-hidden bg-gray flex-shrink-0"
                             >
-                                <img
+                                <NuxtImg
                                     v-if="user?.avatar_url"
                                     :src="user.avatar_url"
                                     :alt="user.name"
@@ -87,8 +87,8 @@
                                         (event: any) => handleImageError(user?.name ?? '', event)
                                     "
                                 />
-                                <img
-                                    :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                                <NuxtImg
+                                    :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                                     alt="User"
                                     class="w-full h-full object-cover"
                                 />
@@ -136,18 +136,18 @@
                 <div class="flex items-center gap-3 flex-1">
                     <!-- Avatar -->
                     <div class="w-12 h-12 rounded-full overflow-hidden bg-gray">
-                        <img
+                        <NuxtImg
                             v-if="user?.avatar_url"
                             :src="user.avatar_url"
                             :alt="user.name"
                             class="w-full h-full object-cover"
                             :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
-                        />
-                        <img
-                            :src="`https://ui-avatars.com/api/?name=${user?.name}`"
-                            alt="User"
-                            class="w-full h-full object-cover"
-                        />
+                        >
+                            <NuxtImg
+                                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
+                                alt="User"
+                                class="w-full h-full object-cover"
+                        /></NuxtImg>
                     </div>
                     <!-- Name and Username -->
                     <div class="flex flex-col flex-1 min-w-0">

@@ -80,7 +80,7 @@ const videoPlayerRef = ref<InstanceType<typeof VideoPlayer> | null>(null)
 const userAvatar = computed(
     () =>
         props.tweet?.user?.avatar_url ??
-        `https://ui-avatars.com/api/?name=${props.tweet?.user?.name}`,
+        `https://ui-avatars.com/api/?name=${props.tweet?.user?.name}&background=random`,
 )
 
 const hasMedia = computed(

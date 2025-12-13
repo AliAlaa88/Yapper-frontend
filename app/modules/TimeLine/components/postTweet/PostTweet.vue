@@ -5,7 +5,7 @@
         @submit.prevent="handleSubmit"
     >
         <NuxtLink :to="`/${user?.username}`">
-            <img
+            <NuxtImg
                 v-if="user?.avatar_url"
                 :src="user.avatar_url"
                 :alt="user.name"
@@ -13,9 +13,9 @@
                 class="object-cover rounded-full"
                 :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
             />
-            <img
+            <NuxtImg
                 v-else
-                :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                 :alt="user?.name"
                 :class="compact ? 'w-10 h-10' : 'w-14 h-14'"
                 class="object-cover rounded-full"
@@ -167,7 +167,6 @@
                     <!-- Character Counter Circle -->
                     <div v-if="content.length > 0" class="relative w-8 h-8">
                         <svg class="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
-
                             <circle
                                 cx="18"
                                 cy="18"
@@ -201,13 +200,13 @@
                         </span>
                     </div>
                     <Button
-                        :disabled="disablePostButton"
                         id="post-tweet-post-btn"
+                        :disabled="disablePostButton"
                         button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         :button-text="buttonText"
-                        @click="handleSubmit"
                         :loading-text="loadingText"
                         :is-loading="postTweet.isPending.value"
+                        @click="handleSubmit"
                     />
                 </div>
             </div>
@@ -280,17 +279,16 @@ const mediaUrls = ref<MediaItem[]>([])
 const uploadMedia = useUploadMedia()
 const postTweet = usePostTweet()
 
-
 const MAX_CHARS = 200
-const circumference = 2 * Math.PI * 15.5 
+const circumference = 2 * Math.PI * 15.5
 
 const remainingChars = computed(() => MAX_CHARS - content.value.length)
 const charProgress = computed(() => Math.min(content.value.length / MAX_CHARS, 1))
 const strokeDashoffset = computed(() => circumference * (1 - charProgress.value))
 const progressColor = computed(() => {
     if (remainingChars.value < 0) return '#f43f5e' // red-500
-    if (remainingChars.value <= 20) return '#f59e0b' // amber-500  
-    return 'var(--accent-color)' 
+    if (remainingChars.value <= 20) return '#f59e0b' // amber-500
+    return 'var(--accent-color)'
 })
 const isOverLimit = computed(() => content.value.length > MAX_CHARS)
 

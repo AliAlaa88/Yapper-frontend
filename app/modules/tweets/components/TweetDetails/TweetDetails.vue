@@ -330,7 +330,7 @@ const mainTweetUser = computed(() => {
         ...tweetDetails.value.user,
         avatar:
             tweetDetails.value.user.avatar_url ||
-            `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`,
+            `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}&background=random`,
     }
 })
 
