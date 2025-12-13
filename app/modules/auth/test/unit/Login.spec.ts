@@ -26,6 +26,7 @@ vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
         runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -132,7 +133,7 @@ describe('Login Component', () => {
 
         it('displays Sign in title', () => {
             const wrapper = mountLogin()
-            expect(wrapper.text()).toContain('Sign in to X')
+            expect(wrapper.text()).toContain('Sign in to Yapper')
         })
 
         it('has identifier input field', () => {

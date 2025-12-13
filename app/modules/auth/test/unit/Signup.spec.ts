@@ -10,14 +10,8 @@ import createAccount from '../../components/subComponents/signupComponents/creat
 import verifyOtp from '../../components/subComponents/signupComponents/verifyOtp.vue'
 import FinalRegister from '../../components/subComponents/signupComponents/FinalRegister.vue'
 
+vi.mock('@/app/plugins/axios', () => ({}))
 // Stub global Nuxt composables
-vi.stubGlobal('useRuntimeConfig', () => ({
-    public: {
-        apiUrl: 'http://localhost:3000',
-        recaptcha: 'test-key',
-        env: 'test'
-    },
-}))
 vi.stubGlobal('navigateTo', vi.fn())
 
 const i18n = createI18n({
@@ -39,17 +33,18 @@ const mockAuthService = {
 
 // Mock the Nuxt app
 vi.mock('#app', () => ({
-    useNuxtApp: () => ({
-        $authService: mockAuthService,
-        runWithContext: (fn: any) => fn(),
-    }),
-    useRuntimeConfig: () => ({
-        public: {
-            apiUrl: 'http://localhost:3000',
-            recaptcha: 'test-key',
-        },
-    }),
+  useNuxtApp: () => ({
+    $authService: mockAuthService,
+  }),
+  useRuntimeConfig: () => ({
+    public: {
+      apiUrl: 'http://localhost:3000',
+      recaptcha: 'test-key',
+      env: 'test',
+    },
+  }),
 }))
+
 
 // Mock register queries - call mockAuthService and handle callbacks properly
 vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
@@ -120,6 +115,21 @@ vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
     })),
 }))
 
+vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
+  useGetUserQuery: () => ({
+    data: ref({
+      user: {
+        id: 1,
+        email: 'Safan@Developer.com',
+        name: 'Safan Test',
+      },
+    }),
+    isLoading: ref(false),
+    isError: ref(false),
+  }),
+}))
+
+
 // Mock the user store
 const mockUserStore = {
     setAuth: vi.fn(),
@@ -181,7 +191,7 @@ function mountSignup() {
 
 describe('Signup Component', () => {
     beforeEach(() => {
-        vi.clearAllMocks()
+        vi.restoreAllMocks()
 
         // Set default successful mock implementations for navigation tests
         mockAuthService.registerStep1.mockResolvedValue({

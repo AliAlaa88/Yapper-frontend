@@ -29,6 +29,7 @@ vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
         runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -62,6 +63,17 @@ const mockRouter = {
 vi.mock('vue-router', () => ({
     useRouter: () => mockRouter,
 }));
+
+// Mock useGetUserQuery
+vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
+    useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
+        return {
+            data: ref({}),
+            isLoading: ref(false),
+            isError: ref(false),
+        }
+    }),
+}))
 
 // Mock OAuth queries
 vi.mock('~/modules/auth/queries/useOAuthQuery', async (importOriginal) => {
