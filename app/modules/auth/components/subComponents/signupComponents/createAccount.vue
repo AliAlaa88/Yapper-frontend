@@ -172,11 +172,11 @@ const months = [
 ]
 
 // Day options (1-31)
-const days = Array.from({ length: 31 }, (_, i) => i + 1)
+const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString())
 
 // Year options (current year down to 120 years ago)
 const currentYear = new Date().getFullYear()
-const years = Array.from({ length: 120 }, (_, i) => currentYear - i)
+const years = Array.from({ length: 120 }, (_, i) => (currentYear - i).toString())
 
 // Recaptcha token
 const recaptchaRef = ref<{ run: () => Promise<void> } | null>(null)

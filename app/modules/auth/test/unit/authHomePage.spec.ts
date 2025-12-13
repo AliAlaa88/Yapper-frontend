@@ -5,8 +5,8 @@ import { createI18n } from 'vue-i18n'
 import AuthHomePage from '../../views/index.vue'
 import OAuth from '../../components/subComponents/OAuth.vue'
 import Logo from '../../../Common/components/Logo'
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 
 // Mock Nuxt composables
 const mockPush = vi.fn()
@@ -21,6 +21,7 @@ vi.mock('vue-router', () => ({
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: {},
+        runWithContext: (fn: any) => fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
