@@ -6,6 +6,7 @@ export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig()
     const createSocket = (): Socket => {
         if (socket) {
+            console.log('[Socket] Disconnecting existing socket')
             socket.disconnect()
         }
         const userStore = useUserStore()

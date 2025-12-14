@@ -1,103 +1,86 @@
 import type { Socket } from 'socket.io-client'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+
 export const createSocketService = () => {
     const { $socket } = useNuxtApp()
     let socket: Socket | null = null
 
-    const ensureSocket = (): Socket => {
-        if (socket && (socket.connected || socket.active)) {
-            return socket
-        }
-
+    const connect = () => {
+        // Check token first
         const userStore = useUserStore()
         const token = userStore.getAccessToken()
 
         if (!token) {
-            throw new Error('Cannot create socket: access token not available')
+            throw new Error('Cannot connect: access token not available')
         }
 
+        // Disconnect existing socket if any
         if (socket) {
             socket.removeAllListeners()
             socket.disconnect()
+            socket = null
         }
 
+        // Create new socket with current token
         socket = $socket.create()
-        return socket
-    }
 
-    const connect = () => {
-        try {
-            const currentSocket = ensureSocket()
-            currentSocket.connect()
+        // Connect
+        socket.connect()
 
-            currentSocket.on('connect', () => {
-                console.log('[SocketService] Connected to server')
-            })
+        // Set up basic event handlers
+        socket.on('connect', () => {
+            console.log('[SocketService] Connected to server')
+        })
 
-            currentSocket.on('disconnect', (reason: string) => {
-                console.log('[SocketService] Disconnected:', reason)
-            })
+        socket.on('disconnect', (reason: string) => {
+            console.log('[SocketService] Disconnected:', reason)
+        })
 
-            currentSocket.on('connect_error', (error: Error) => {
-                console.error('[SocketService] Connection error:', error.message)
-            })
-        } catch (error) {
-            console.error('[SocketService] Failed to connect:', error)
-            throw error
-        }
+        socket.on('connect_error', (error: Error) => {
+            console.error('[SocketService] Connection error:', error.message)
+        })
     }
 
     const disconnect = () => {
         if (socket) {
+            socket.removeAllListeners()
             socket.disconnect()
             socket = null
         }
     }
 
     const emit = (event: string, ...args: any[]) => {
-        if (socket?.connected) {
-            socket.emit(event, ...args)
-        } else {
-            console.warn('[SocketService] Cannot emit, not connected')
+        if (!socket || !socket.connected) {
+            console.warn(`[SocketService] Cannot emit "${event}": socket not connected`)
+            return
         }
+        socket.emit(event, ...args)
     }
 
     const on = (event: string, callback: (...args: any[]) => void) => {
         if (!socket) {
             console.warn(
-                '[SocketService] Socket not initialized, listener will be added on connect',
+                `[SocketService] Cannot add listener "${event}": socket not initialized. Call connect() first.`,
             )
-
-            try {
-                ensureSocket()
-            } catch (error) {
-                console.warn(
-                    '[SocketService] Cannot initialize socket for listener, will be added when socket connects',
-                )
-            }
+            return
         }
-        if (socket) {
-            socket.on(event, callback)
-            console.log(`[SocketService] Listener registered: ${event}`)
-        }
+        socket.on(event, callback)
+        console.log(`[SocketService] Listener registered: ${event}`)
     }
 
     const off = (event: string, callback?: (...args: any[]) => void) => {
-        socket?.off(event, callback)
+        if (!socket) return
+        socket.off(event, callback)
     }
 
     const once = (event: string, callback: (...args: any[]) => void) => {
         if (!socket) {
-            try {
-                ensureSocket()
-            } catch (error) {
-                console.warn('[SocketService] Cannot initialize socket for once listener')
-                return
-            }
+            console.warn(
+                `[SocketService] Cannot add once listener "${event}": socket not initialized`,
+            )
+            return
         }
-        if (socket) {
-            socket.once(event, callback)
-        }
+        socket.once(event, callback)
     }
 
     const isConnected = (): boolean => {

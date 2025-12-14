@@ -32,7 +32,10 @@
         @close="onClose"
     />
     <!-- Loading screen while fetching user data -->
-    <div v-if="showLoading" class="fixed inset-0 flex flex-col items-center justify-center bg-primary z-50">
+    <div
+        v-if="showLoading"
+        class="fixed inset-0 flex flex-col items-center justify-center bg-primary z-50"
+    >
         <Logo imgClass="w-16 mb-6 animate-pulse" />
         <div class="text-primary text-xl font-semibold">{{ $t('auth.common.loading') }}</div>
     </div>
@@ -47,7 +50,7 @@ import Interests from './subComponents/CompleteAccountComponents/Interests.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useRouter } from 'vue-router'
 import { useGetUserQuery } from '../queries/useGetuserQuery'
-import { useUserStore } from '~/modules/auth/stores/userStore';
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const router = useRouter()
 const showProfilePicture = ref(false)
@@ -138,19 +141,27 @@ const onLanguageBack = () => {
 const getUserQuery = useGetUserQuery(
     enableUserQuery,
     (data) => {
+        // Get token from store (should already be set from previous auth step)
+        const token = userStore.getAccessToken()
+        if (!token) {
+            console.error('Token missing when completing account')
+            userStore.logout()
+            router.push('/auth')
+            return
+        }
         userStore.setAuth({
-            access_token: useCookie('access_token').value || '',
-            user: data.data
-        });
-        emit('finish', profileData);
-        router.push('/');
+            access_token: token,
+            user: data.data,
+        })
+        emit('finish', profileData)
+        router.push('/')
     },
     (error) => {
-        console.error("Failed to fetch user data after complete account:", error);
+        console.error('Failed to fetch user data after complete account:', error)
         // Still navigate even if fetch fails, user data might already be in store
-        emit('finish', profileData);
-        router.push('/');
-    }
+        emit('finish', profileData)
+        router.push('/')
+    },
 )
 
 // Interests handlers
@@ -158,7 +169,7 @@ const onInterestsFinish = (interests: string[]) => {
     profileData.interests = interests
     showInterests.value = false
     showLoading.value = true
-    
+
     enableUserQuery.value = true
 }
 
@@ -175,6 +186,6 @@ const onInterestsBack = () => {
 }
 
 const onClose = () => {
-    router.push('/');
+    router.push('/')
 }
 </script>
