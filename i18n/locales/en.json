@@ -1030,5 +1030,13 @@
 
           "sentYouAMessage": "sent you a message"
         }
+    },
+    "userActions": {
+        "addExistingAccount": "Add an existing account",
+        "logout": "Log out",
+        "logoutUsername": "Log out {username}",
+        "logoutTitle": "Log out of X?",
+        "logoutDescription": "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.",
+        "cancel": "Cancel"
     }
 }
