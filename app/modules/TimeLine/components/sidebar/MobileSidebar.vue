@@ -9,7 +9,7 @@
                     @click="isOpen = true"
                     class="rounded-full overflow-hidden size-10 cursor-pointer"
                 >
-                    <UserImage :image-url="user?.avatar_url" :name="user?.name" :compact="true" />
+                    <UserImage :image-url="user?.avatar_url" :name="user?.name" :size="40" />
                 </button>
             </div>
 
