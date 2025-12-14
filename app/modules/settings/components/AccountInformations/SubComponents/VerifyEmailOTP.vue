@@ -7,7 +7,7 @@
         slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
         @close="handleClose"
     >
-        <BackButton @close="handleClose" />
+        <!-- <BackButton @close="handleClose" /> -->
         <Logo
             img-class="relative z-10 w-8 lg:w-10 mb-3"
             div-class="flex justify-center mb-6"
@@ -61,7 +61,6 @@ import Logo from '~/modules/Common/components/Logo'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import { userSettingsQueries } from '../../../queries/userSettingsQueries'
-import BackButton from '~/modules/auth/components/subComponents/backButton.vue'
 
 const props = defineProps<{
     isOpen: boolean

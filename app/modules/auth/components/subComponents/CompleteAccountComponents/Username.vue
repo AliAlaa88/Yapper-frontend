@@ -10,7 +10,7 @@
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
-        
+
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -21,7 +21,7 @@
             <!-- Username Input -->
             <div class="mb-6">
                 <div class="relative">
-                    <span 
+                    <span
                         class="absolute top-1/2 -translate-y-1/2 text-muted"
                         :class="isArabic ? 'right-4' : 'left-4'"
                     >@</span>
@@ -104,7 +104,6 @@
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
-import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateUsernameMutation } from '../../../queries/useCompleteProfileQuery'
 import Button from '~/modules/Common/components/Button/Button.vue'

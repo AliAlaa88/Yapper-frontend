@@ -10,7 +10,7 @@
         :hasBackButton="true"
     >
         <!-- Back Button -->
-        
+
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -78,7 +78,6 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
-import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateInterestsMutation } from '../../../queries/useCompleteProfileQuery'
 import Button from '~/modules/Common/components/Button/Button.vue'
@@ -98,7 +97,7 @@ interface Interest {
 const interests = ref<Interest[]>([])
 
 const fetchInterests = useFetchInterests((data: any) => {
-    
+
     interests.value = data.data.map((item: any, index: number) => ({
         // id is index + 1
         id: (index + 1).toString(),
