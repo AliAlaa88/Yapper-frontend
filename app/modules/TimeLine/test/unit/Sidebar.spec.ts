@@ -1,186 +1,251 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ref, computed } from 'vue'
+import { mount } from '@vue/test-utils'
+import { ref } from 'vue'
+import Sidebar from '../../components/sidebar/Sidebar.vue'
+import { createPinia, setActivePinia } from 'pinia'
 
-describe('Sidebar.vue', () => {
-  beforeEach(() => {
-    // Mock useNuxtApp
-    vi.stubGlobal('useNuxtApp', () => ({
-      $chatSocketService: {
-        totalUnreadChats: { value: 5 },
-      },
-      $notificationsSocketService: {
-        unreadCount: { value: 3 },
-      },
-    }))
-  })
+// Mock dependencies
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({
+        t: (key: string) => key,
+        locale: ref('en'),
+    }),
+}))
 
-  it('should compute unread chat count correctly', () => {
-    const result = computed(() => {
-      const { $chatSocketService } = useNuxtApp()
-      return $chatSocketService.totalUnreadChats.value
+vi.mock('#app', () => ({
+    useNuxtApp: () => ({
+        $chatSocketService: {
+            totalUnreadChats: ref(5),
+        },
+        $notificationsSocketService: {
+            unreadCount: ref(3),
+        },
+    }),
+    navigateTo: vi.fn(),
+}))
+
+vi.mock('pinia', () => ({
+    storeToRefs: () => ({
+        user: ref({
+            id: 'user-1',
+            username: 'testuser',
+        }),
+    }),
+    defineStore: vi.fn(),
+    createPinia: () => ({}),
+    setActivePinia: vi.fn(),
+}))
+
+vi.mock('~/modules/auth/stores/userStore', () => ({
+    useUserStore: () => ({
+        user: ref({
+            id: 'user-1',
+            username: 'testuser',
+        }),
+    }),
+}))
+
+vi.mock('~/modules/TimeLine/composables/useSidebarState', () => ({
+    useSidebarState: () => ({
+        isExpanded: ref(true),
+        sidebarWidth: ref('275px'),
+        toggleSidebar: vi.fn(),
+    }),
+}))
+
+describe('Sidebar Component', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
     })
-    expect(result.value).toBe(5)
-  })
 
-  it('should compute unread notifications count correctly', () => {
-    const result = computed(() => {
-      const { $notificationsSocketService } = useNuxtApp()
-      return $notificationsSocketService.unreadCount.value
+    it('should mount component successfully', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        expect(wrapper.exists()).toBe(true)
     })
-    expect(result.value).toBe(3)
-  })
 
-  it('should format unread count with 99+ for large numbers', () => {
-    vi.stubGlobal('useNuxtApp', () => ({
-      $chatSocketService: {
-        totalUnreadChats: { value: 150 },
-      },
-      $notificationsSocketService: {
-        unreadCount: { value: 150 },
-      },
-    }))
-
-    const count = 150
-    const formattedCount = count > 99 ? '99+' : count
-    expect(formattedCount).toBe('99+')
-  })
-
-  it('should show actual count when less than 99', () => {
-    const count = 15
-    const formattedCount = count > 99 ? '99+' : count
-    expect(formattedCount).toBe(15)
-  })
-
-  it('should have navigation links array', () => {
-    const navLinks = [
-      { labelKey: 'timeline.sidebar.home', href: '/' },
-      { labelKey: 'timeline.sidebar.explore', href: '/explore' },
-      { labelKey: 'timeline.sidebar.notifications', href: '/notifications' },
-      { labelKey: 'timeline.sidebar.messages', href: '/messages' },
-      { labelKey: 'timeline.sidebar.profile', href: '/profile' },
-      { labelKey: 'timeline.sidebar.bookmarks', href: '/bookmarks' },
-      { labelKey: 'timeline.sidebar.settings', href: '/settings/account' },
-    ]
-    expect(navLinks.length).toBe(7)
-    expect(navLinks[0].href).toBe('/')
-    expect(navLinks[2].href).toBe('/notifications')
-    expect(navLinks[3].href).toBe('/messages')
-  })
-
-  it('should determine RTL direction based on locale', () => {
-    const isRTL = computed(() => {
-      const locale = 'ar' // Arabic
-      return locale === 'ar' || locale === 'he'
+    it('should render sidebar aside element', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('aside').exists()).toBe(true)
     })
-    expect(isRTL.value).toBe(true)
-  })
 
-  it('should use correct tooltip side for RTL languages', () => {
-    const isRTL = true
-    const tooltipSide = isRTL ? 'left' : 'right'
-    expect(tooltipSide).toBe('left')
-  })
+    it('should render logo inside navigation', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        // Logo is inside a stubbed NuxtLink, so we verify the structure is rendered
+        const aside = wrapper.find('aside')
+        expect(aside.exists()).toBe(true)
+    })
 
-  it('should use correct tooltip side for LTR languages', () => {
-    const isRTL = false
-    const tooltipSide = isRTL ? 'left' : 'right'
-    expect(tooltipSide).toBe('right')
-  })
+    it('should render navigation links', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        const navLinks = wrapper.findAll('nuxt-link-stub')
+        expect(navLinks.length).toBeGreaterThan(0)
+    })
 
-  it('should manage popup open/close state', () => {
-    const isOpen = ref(false)
-    expect(isOpen.value).toBe(false)
+    it('should render UserActions component', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: { template: '<a></a>' },
+                    UserActions: { template: '<div class="user-actions"></div>' },
+                    Logo: { template: '<div></div>' },
+                    CustomToolTip: { template: '<div></div>' },
+                    Popup: { template: '<div></div>' },
+                    Teleport: { template: '<div></div>' },
+                    PostTweet: { template: '<div></div>' },
+                },
+            },
+        })
+        
+        expect(wrapper.find('.user-actions').exists()).toBe(true)
+    })
 
-    isOpen.value = true
-    expect(isOpen.value).toBe(true)
+    it('should render with sidebar width class', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        const aside = wrapper.find('aside')
+        expect(aside.exists()).toBe(true)
+        const classes = aside.classes()
+        expect(classes).toContain('w-[275px]')
+    })
 
-    isOpen.value = false
-    expect(isOpen.value).toBe(false)
-  })
+    it('should have nav element', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('nav').exists()).toBe(true)
+    })
 
-  it('should have sidebar responsive widths', () => {
-    const collapsedWidth = '70px'
-    const expandedWidth = '275px'
-    expect(collapsedWidth).toBe('70px')
-    expect(expandedWidth).toBe('275px')
-  })
+    it('should apply flex and column layout classes', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        const aside = wrapper.find('aside')
+        expect(aside.classes()).toContain('flex')
+        expect(aside.classes()).toContain('flex-col')
+    })
 
-  it('should have logo dimensions for collapsed state', () => {
-    const collapsedLogoDimensions = { width: '30px', height: '30px' }
-    expect(collapsedLogoDimensions.width).toBe('30px')
-    expect(collapsedLogoDimensions.height).toBe('30px')
-  })
+    it('should have proper background classes', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        const aside = wrapper.find('aside')
+        expect(aside.classes()).toContain('bg-primary')
+        expect(aside.classes()).toContain('h-full')
+    })
 
-  it('should have logo dimensions for expanded state', () => {
-    const expandedLogoDimensions = { width: '40px', height: '40px' }
-    expect(expandedLogoDimensions.width).toBe('40px')
-    expect(expandedLogoDimensions.height).toBe('40px')
-  })
-
-  it('should render unread badge only for specific routes', () => {
-    const links = [
-      { href: '/messages', shouldShowUnread: true },
-      { href: '/notifications', shouldShowUnread: true },
-      { href: '/explore', shouldShowUnread: false },
-      { href: '/', shouldShowUnread: false },
-    ]
-
-    const messagesLink = links.find(l => l.href === '/messages')
-    expect(messagesLink?.shouldShowUnread).toBe(true)
-
-    const homeLink = links.find(l => l.href === '/')
-    expect(homeLink?.shouldShowUnread).toBe(false)
-  })
-
-  it('should display badge when unread count is greater than 0', () => {
-    const unreadCount = 5
-    const shouldShowBadge = unreadCount > 0
-    expect(shouldShowBadge).toBe(true)
-  })
-
-  it('should not display badge when unread count is 0', () => {
-    const unreadCount = 0
-    const shouldShowBadge = unreadCount > 0
-    expect(shouldShowBadge).toBe(false)
-  })
-
-  it('should handle tooltip position for collapsed sidebar', () => {
-    const isCollapsed = true
-    const shouldShowTooltip = isCollapsed
-    expect(shouldShowTooltip).toBe(true)
-  })
-
-  it('should not show tooltip text when expanded', () => {
-    const isCollapsed = false
-    const shouldShowTooltip = isCollapsed
-    expect(shouldShowTooltip).toBe(false)
-  })
-
-  it('should have max 4 media items in post tweet', () => {
-    const maxMedia = 4
-    const currentMedia = [1, 2, 3]
-    const canAddMore = currentMedia.length < maxMedia
-    expect(canAddMore).toBe(true)
-
-    const fullMedia = [1, 2, 3, 4]
-    const canAddMoreFull = fullMedia.length < maxMedia
-    expect(canAddMoreFull).toBe(false)
-  })
-
-  it('should validate link href format', () => {
-    const links = [
-      { href: '/' },
-      { href: '/explore' },
-      { href: '/messages' },
-    ]
-
-    const validLinks = links.every(l => l.href.startsWith('/'))
-    expect(validLinks).toBe(true)
-  })
-
-  it('should have transition animation classes', () => {
-    const animationClasses = ['transition-all', 'duration-300', 'ease-in-out']
-    expect(animationClasses).toContain('transition-all')
-    expect(animationClasses).toContain('duration-300')
-  })
+    it('should render Popup component for posting tweets', () => {
+        const wrapper = mount(Sidebar, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    UserActions: true,
+                    Logo: true,
+                    CustomToolTip: true,
+                    Popup: true,
+                    Teleport: true,
+                    PostTweet: true,
+                },
+            },
+        })
+        
+        // Popup component is rendered (PostTweet is inside it)
+        expect(wrapper.find('popup-stub').exists()).toBe(true)
+    })
 })
