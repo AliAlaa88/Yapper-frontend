@@ -215,7 +215,17 @@
 <script setup lang="ts">
 import type { Stats as StatsType } from '../../../../types'
 import { formatCount } from '../../../../utils/lib'
-import { toRefs, ref, watch, onMounted, onBeforeUnmount, inject, isReactive, reactive } from 'vue'
+import {
+    toRefs,
+    ref,
+    watch,
+    onMounted,
+    inject,
+    isReactive,
+    reactive,
+    computed,
+    type Ref,
+} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MessageCircle, Repeat2, Heart, BarChart3, Share, Bookmark, Quote } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
@@ -263,9 +273,12 @@ const localRepostsCount = ref(retweets.value)
 const localIsBookmarked = ref(is_bookmarked.value)
 const shareTooltipText = ref('')
 const localRepliesCount = ref(replies.value)
-const showRepostMenu = ref(false)
 const repostContainerRef = ref<HTMLElement | null>(null)
 const isRepostHovered = ref(false)
+
+const activeRepostMenuTweetId = inject<Ref<string | null>>('activeRepostMenuTweetId', ref(null))
+
+const showRepostMenu = computed(() => activeRepostMenuTweetId.value === tweet_id.value)
 const { t, locale } = useI18n()
 
 const route = useRoute()
@@ -283,21 +296,9 @@ const snackbar = inject<{
     ) => void
 }>('snackbar')
 
-// Initialize share tooltip text
 onMounted(() => {
     shareTooltipText.value = t('tweets.actions.share')
-    document.addEventListener('click', handleClickOutsideRepostMenu)
 })
-
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutsideRepostMenu)
-})
-
-const handleClickOutsideRepostMenu = (event: MouseEvent) => {
-    if (repostContainerRef.value && !repostContainerRef.value.contains(event.target as Node)) {
-        showRepostMenu.value = false
-    }
-}
 
 const handleRepostMouseEnter = () => {
     isRepostHovered.value = true
@@ -422,15 +423,21 @@ const handleLikeClick = () => {
 }
 
 const toggleRepostMenu = () => {
-    showRepostMenu.value = !showRepostMenu.value
+    if (activeRepostMenuTweetId.value === tweet_id.value) {
+        activeRepostMenuTweetId.value = null
+    } else {
+        activeRepostMenuTweetId.value = tweet_id.value
+    }
 }
 
 const closeRepostMenu = () => {
-    showRepostMenu.value = false
+    if (activeRepostMenuTweetId.value === tweet_id.value) {
+        activeRepostMenuTweetId.value = null
+    }
 }
 
 const handleQuoteClick = () => {
-    showRepostMenu.value = false
+    closeRepostMenu()
     emit('quote')
 }
 
@@ -439,18 +446,17 @@ const handleReplyClick = () => {
 }
 
 const handleViewQuotesAndReposts = () => {
-    showRepostMenu.value = false
+    closeRepostMenu()
     emit('viewQuotesAndReposts')
 }
 
 const handleViewQuotesAndRepostsFromMenu = () => {
-    showRepostMenu.value = false
+    closeRepostMenu()
     emit('viewQuotesAndReposts')
 }
 
 const handleRepostAction = () => {
-    showRepostMenu.value = false
-    // Logic to handle repost/unrepost action can be added here
+    closeRepostMenu()
     if (isRepostPending.value) return // Prevent multiple clicks while mutation is in progress
 
     const previousRepostedState = localIsReposted.value

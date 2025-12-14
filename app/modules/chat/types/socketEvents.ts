@@ -76,6 +76,7 @@ export interface MessageSentResponse {
     chat_id: string
     is_read: boolean
     created_at: string
+    image_url: string | null
 }
 
 export interface NewMessageEvent {
@@ -92,6 +93,7 @@ export interface NewMessageEvent {
         sender_id: string
         is_read: boolean
         created_at: string
+        image_url?: string | null
     }
 }
 

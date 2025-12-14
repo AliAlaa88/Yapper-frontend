@@ -4,7 +4,11 @@
         <div class="flex items-center justify-between px-4 py-2">
             <div class="flex items-center gap-4">
                 <!-- Avatar Trigger -->
-                <button id="btn-open-mobile-sidebar" @click="isOpen = true" class="rounded-full overflow-hidden size-10 cursor-pointer">
+                <button
+                    id="btn-open-mobile-sidebar"
+                    @click="isOpen = true"
+                    class="rounded-full overflow-hidden size-10 cursor-pointer"
+                >
                     <UserImage :image-url="user?.avatar_url" :name="user?.name" :compact="true" />
                 </button>
             </div>
@@ -90,9 +94,15 @@
                             >
                                 {{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}
                             </span>
-                            <span v-if="link.href === '/notifications' && totalUnreadNotifications > 0"
-                                class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center">
-                                {{ totalUnreadNotifications > 99 ? '99+' : totalUnreadNotifications }}
+                            <span
+                                v-if="
+                                    link.href === '/notifications' && totalUnreadNotifications > 0
+                                "
+                                class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
+                            >
+                                {{
+                                    totalUnreadNotifications > 99 ? '99+' : totalUnreadNotifications
+                                }}
                             </span>
                         </div>
                         <span class="text-lg">{{ t(link.labelKey) }}</span>
@@ -129,7 +139,7 @@ const isRTL = computed(() => {
 
 // listen to unread chats summary
 const { $chatSocketService, $notificationsSocketService } = useNuxtApp()
-const totalUnreadCount = computed(() => $chatSocketService.totalUnreadCount.value)
+const totalUnreadCount = computed(() => $chatSocketService.totalUnreadChats.value)
 const totalUnreadNotifications = computed(() => $notificationsSocketService.unreadCount.value)
 
 const navLinks = [

@@ -7,18 +7,11 @@
             <p class="m-0 max-w-[350px] text-[15px] leading-6 text-muted">
                 {{ $t('profile.blocked.description', { username }) }}
             </p>
-            <Button
-                id="btn-view-blocked-posts"
-                class="bg-accent text-primary cursor-pointer
-                rounded-full font-bold text-[17px] w-[150px] h-[50px]
-                whitespace-nowrap flex items-center justify-center
-                transition-colors hover:bg-accent/90 mt-5">View posts</Button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import Button from '~/modules/Common/components/Button/Button.vue'
 
 defineProps<{
     username: string

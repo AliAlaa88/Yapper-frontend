@@ -93,7 +93,27 @@ const userStore = useUserStore()
 //     }
 // }
 
+const activeMenuTweetId = ref<string | null>(null)
+provide('activeMenuTweetId', activeMenuTweetId)
+
+const handleClickOutside = (event: MouseEvent) => {
+    if (activeMenuTweetId.value) {
+        const target = event.target as HTMLElement
+        const isMenuClick = target.closest('[data-menu-container]') ||
+            target.closest('[id^="tweet-menu-button-"]')
+        if (!isMenuClick) {
+            activeMenuTweetId.value = null
+        }
+    }
+}
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
+
+
 onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
     if (!userStore.isLoggedIn) {
         router.push('/auth')
     }
@@ -131,9 +151,9 @@ watch(
     },
 )
 
-watch(activeTab, () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-})
+// watch(activeTab, () => {
+//     window.scrollTo({ top: 0, behavior: 'smooth' })
+// })
 
 const tabs = computed(() => [
     {
