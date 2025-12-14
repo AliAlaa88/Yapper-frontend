@@ -1016,5 +1016,13 @@
 
           "sentYouAMessage": "ارسل لك رسالة"
         }
+    },
+    "userActions": {
+        "addExistingAccount": "إضافة حساب موجود",
+        "logout": "تسجيل الخروج",
+        "logoutUsername": "تسجيل الخروج {username}",
+        "logoutTitle": "تسجيل الخروج من X؟",
+        "logoutDescription": "يمكنك دائماً تسجيل الدخول مرة أخرى في أي وقت. إذا كنت تريد فقط تبديل الحسابات، يمكنك القيام بذلك عن طريق إضافة حساب موجود.",
+        "cancel": "إلغاء"
     }
 }
