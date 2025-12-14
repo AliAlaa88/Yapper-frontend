@@ -9,14 +9,14 @@
                 :src="conversation.participant.avatar_url"
                 :alt="conversation.participant.username"
                 class="w-12 h-12 rounded-full object-cover"
-                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}'`"
+                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}&background=random'`"
             />
             <img
                 v-else
-                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}`"
+                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}&background=random`"
                 :alt="conversation.participant.username"
                 class="w-12 h-12 rounded-full object-cover"
-                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}'`"
+                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}'&background=random'`"
             />
         </div>
         <div class="flex-1 min-w-0">

@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import ProfileActionsMenu from './ProfileActionsMenu.vue'
-
+import { ref, provide } from 'vue'
 defineProps<{
     isTweet: boolean
 }>()

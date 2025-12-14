@@ -188,7 +188,8 @@ const content = computed(() => ({
 const user = computed(() => ({
     ...props.reply.user,
     avatar_url:
-        props.reply.user.avatar_url || `https://ui-avatars.com/api/?name=${props.reply.user.name}`,
+        props.reply.user.avatar_url ||
+        `https://ui-avatars.com/api/?name=${props.reply.user.name}&background=random`,
 }))
 
 // Transform stats
@@ -213,7 +214,7 @@ const profileUrl = computed(() =>
 // Error handling for images
 const handleImageError = (event: Event) => {
     const target = event.target as HTMLImageElement
-    target.src = `https://ui-avatars.com/api/?name=${props.reply.user.name}`
+    target.src = `https://ui-avatars.com/api/?name=${props.reply.user.name}&background=random`
 }
 
 // Navigation handler

@@ -10,15 +10,47 @@ export const useUserStore = defineStore('user', () => {
 
     const getUser = () => user.value
 
-    const getAccessToken = () => accessToken.value
+    if (import.meta.client) {
+        const token = useCookie('access_token')
+        if (token.value) {
+            accessToken.value = token.value
+        }
+    }
 
-    const setAuth = (authData: AuthResponse) => {
-        user.value = authData.user
-        accessToken.value = authData.access_token
+    watch(accessToken, (newToken) => {
         if (import.meta.client) {
             const token = useCookie('access_token')
-            token.value = authData.access_token
+            token.value = newToken
+            console.log('access token changed', newToken ? 'present' : 'null')
         }
+    })
+
+    if (import.meta.client) {
+        const tokenCookie = useCookie('access_token')
+        watch(
+            () => tokenCookie.value,
+            (cookieToken) => {
+                const tokenValue = cookieToken ?? null
+                if (tokenValue !== accessToken.value) {
+                    accessToken.value = tokenValue
+                }
+            },
+        )
+    }
+
+    const getAccessToken = () => accessToken.value
+
+    const setAccessToken = (token: string | null) => {
+        accessToken.value = token
+    }
+
+    const setAuth = (authData: AuthResponse) => {
+        if (!authData.access_token) {
+            console.warn('[UserStore] setAuth called without access_token')
+            return
+        }
+        accessToken.value = authData.access_token
+        user.value = authData.user
     }
 
     const setUser = (userData: User) => {
@@ -34,11 +66,6 @@ export const useUserStore = defineStore('user', () => {
     const logout = () => {
         user.value = null
         accessToken.value = null
-
-        if (import.meta.client) {
-            const token = useCookie('access_token')
-            token.value = null
-        }
         localStorage.removeItem('yapper-search-history')
     }
 
@@ -63,6 +90,7 @@ export const useUserStore = defineStore('user', () => {
         isLoggedIn,
         getUser,
         getAccessToken,
+        setAccessToken,
         setAuth,
         setUser,
         updateUser,

@@ -40,11 +40,10 @@ export default defineNuxtPlugin(() => {
         async (error) => {
             const requestUrl = error.config?.url || ''
             const isAuthEndpoint = requestUrl.includes('/auth/')
-            
-            if ((error.response?.status === 401) && isAuthEndpoint) {
+
+            if (error.response?.status === 401 && isAuthEndpoint) {
                 if (process.client) {
-                    useCookie('access_token').value = null
-                    userStore.logout()
+                    userStore.logout() // logout handles both store and cookie
                     if (window.location.pathname !== '/auth/login') {
                         navigateTo('/auth/login')
                     }
@@ -53,7 +52,11 @@ export default defineNuxtPlugin(() => {
             }
 
             if (error.response?.status === 401 && !isAuthEndpoint) {
-                if (process.client && window.location.pathname !== '/auth/login' && !error.config?._retry) {
+                if (
+                    process.client &&
+                    window.location.pathname !== '/auth/login' &&
+                    !error.config?._retry
+                ) {
                     error.config._retry = true
 
                     try {
@@ -61,16 +64,18 @@ export default defineNuxtPlugin(() => {
                         const authService = nuxtApp.$authService
                         const response = await authService.GetAccessToken()
                         const access_token = response.data.access_token
+                        // Update cookie (will sync to store via watch)
                         const token = useCookie('access_token')
                         token.value = access_token
+                        // Also update store directly for immediate availability
+                        userStore.setAccessToken(access_token)
                         // Retry the original request with the new token
                         const originalRequest = error.config
                         originalRequest.headers['Authorization'] = `Bearer ${access_token}`
                         return yapperApi(originalRequest)
                     } catch (refreshError) {
                         // Refresh failed, clear access token and redirect
-                        useCookie('access_token').value = null
-                        userStore.logout()
+                        userStore.logout() // logout handles both store and cookie
                         navigateTo('/auth/login')
                         return Promise.reject(refreshError)
                     }

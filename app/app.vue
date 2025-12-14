@@ -21,24 +21,6 @@ const { $socketService, $chatSocketService, $notificationsSocketService } = useN
 const socketsInitialized = ref(false)
 const isInitializing = ref(false)
 const config = useRuntimeConfig()
-
-onMounted(async () => {
-    if (userStore.isLoggedIn && !socketsInitialized.value && !isInitializing.value) {
-        await initializeSockets()
-    }
-})
-
-watch(
-    () => userStore.isLoggedIn,
-    async (newVal) => {
-        if (newVal && !socketsInitialized.value && !isInitializing.value) {
-            await initializeSockets()
-        } else if (!newVal && socketsInitialized.value) {
-            cleanupSockets()
-        }
-    },
-)
-
 const initializeSockets = async () => {
     if (isInitializing.value) {
         if (config.public.env === 'development') {
@@ -54,9 +36,20 @@ const initializeSockets = async () => {
         return
     }
 
+    const token = userStore.getAccessToken()
+    if (!token) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] No access token available, skipping socket initialization')
+        }
+        return
+    }
+
     isInitializing.value = true
 
     try {
+        console.log('[App.vue] Initializing sockets')
+        console.log('[App.vue] Access token:', token ? 'present' : 'missing')
+
         $socketService.connect()
 
         $chatSocketService.initializeListeners()
@@ -74,6 +67,33 @@ const initializeSockets = async () => {
         isInitializing.value = false
     }
 }
+onMounted(async () => {
+    await nextTick()
+    const token = userStore.getAccessToken()
+    if (token && !socketsInitialized.value && !isInitializing.value) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] onMounted: Initializing sockets with existing token')
+        }
+        await initializeSockets()
+    }
+})
+
+watch(
+    () => userStore.accessToken,
+    async (newToken, oldToken) => {
+        if (newToken === oldToken) return
+
+        if (config.public.env === 'development') {
+            console.log('[App.vue] Token changed:', newToken ? 'present' : 'null')
+        }
+
+        if (newToken && !socketsInitialized.value && !isInitializing.value) {
+            await initializeSockets()
+        } else if (!newToken && socketsInitialized.value) {
+            cleanupSockets()
+        }
+    },
+)
 
 const cleanupSockets = () => {
     try {
@@ -93,7 +113,15 @@ const cleanupSockets = () => {
 
 if (import.meta.client) {
     const handleVisibilityChange = async () => {
-        if (document.visibilityState === 'visible' && userStore.isLoggedIn) {
+        if (document.visibilityState === 'visible') {
+            const token = userStore.getAccessToken()
+            if (!token) {
+                if (config.public.env === 'development') {
+                    console.log('[App.vue] Page visible but no token, skipping socket reconnect')
+                }
+                return
+            }
+
             const isConnected = $socketService.isConnected()
             if (!isConnected && !isInitializing.value) {
                 if (config.public.env === 'development') {

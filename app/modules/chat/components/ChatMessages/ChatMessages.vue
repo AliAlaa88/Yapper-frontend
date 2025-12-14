@@ -8,39 +8,38 @@
                 <button
                     id="btn-back-to-messages"
                     class="md:hidden p-2 hover:bg-hover rounded-full cursor-pointer transition-colors"
-                    @click="router.push('/messages')"
                     aria-label="Back to messages"
+                    @click="router.push('/messages')"
                 >
                     <ArrowLeft class="w-5 h-5 text-primary" />
                 </button>
                 <template
                     v-if="!isConversationLoading && !isLoading && participant && conversationId"
-                    >
+                >
                     <NuxtLink id="link-chat-participant-profile" :to="`/${participant.username}`">
-                    <div class="flex items-center gap-2">
-
-
+                        <div class="flex items-center gap-2">
                             <img
-                            v-if="participant.avatar_url"
-                            :src="participant.avatar_url"
-                        :alt="participant.username"
-                        class="w-10 h-10 rounded-full object-cover"
-                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}'`"
-                    />
-                    <img
-                        v-else
-                        :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name || 'User')}`"
-                        :alt="participant.username"
-                        class="w-10 h-10 rounded-full object-cover"
-                    />
-                    <div>
-
-                        <h2 class="font-bold text-primary">
-                            {{ participant.name || 'Chat' }}
-                        </h2>
-                        <p class="text-sm text-secondary">@{{ participant.username || '' }}</p>
-                    </div>
-                    </div>
+                                v-if="participant.avatar_url"
+                                :src="participant.avatar_url"
+                                :alt="participant.username"
+                                class="w-10 h-10 rounded-full object-cover"
+                                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=random'`"
+                            />
+                            <img
+                                v-else
+                                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name || 'User')}&background=random`"
+                                :alt="participant.username"
+                                class="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div>
+                                <h2 class="font-bold text-primary">
+                                    {{ participant.name || 'Chat' }}
+                                </h2>
+                                <p class="text-sm text-secondary">
+                                    @{{ participant.username || '' }}
+                                </p>
+                            </div>
+                        </div>
                     </NuxtLink>
                 </template>
                 <div v-else class="flex items-center gap-3">
@@ -92,11 +91,11 @@
             />
             <!-- Scroll to Bottom Button -->
             <button
-                id="btn-scroll-to-bottom-chat"
                 v-if="showScrollButton"
+                id="btn-scroll-to-bottom-chat"
                 class="sticky bottom-4 right-4 cursor-pointer ml-auto mr-4 bg-alternate text-alternate p-2 rounded-full shadow-lg hover:bg-alternate/90 transition-colors z-20 flex items-center justify-center w-10 h-10"
-                @click="scrollToBottom"
                 aria-label="Scroll to bottom"
+                @click="scrollToBottom"
             >
                 <ArrowDown class="w-5 h-5" />
             </button>
@@ -106,8 +105,8 @@
         <InputBar
             v-if="conversationId && participant && !isConversationLoading && !isLoading"
             :conversation-id="conversationId"
-            :containerRef="messagesContainerRef"
-            :messagesLength="messages.length"
+            :container-ref="messagesContainerRef"
+            :messages-length="messages.length"
             :participant="participant"
         />
     </div>

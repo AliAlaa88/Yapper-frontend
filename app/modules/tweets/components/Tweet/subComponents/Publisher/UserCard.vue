@@ -13,7 +13,7 @@
                 />
                 <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse" />
             </NuxtLink>
-            <ProfileFollowAction :userId="id" :username="username" :enabled="isOpen" />
+            <ProfileFollowAction :user-id="id" :username="username" :enabled="isOpen" />
         </div>
 
         <!-- Name and Username -->
@@ -51,7 +51,7 @@
 import { computed, ref, onBeforeMount } from 'vue'
 import { getProfileUrl } from '../../../../utils/navigation'
 import { handleImageError } from '~/utils/helpers'
-import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue';
+import ProfileFollowAction from '~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue'
 const props = defineProps<{
     id: string
     name: string
@@ -93,7 +93,7 @@ onBeforeMount(() => {
         isLoading.value = false
     }
     img.onerror = () => {
-        avatarSrc.value = `https://ui-avatars.com/api/?name=${props.name}`
+        avatarSrc.value = `https://ui-avatars.com/api/?name=${props.name}&background=random`
         isLoading.value = false
     }
     img.src = props.avatar

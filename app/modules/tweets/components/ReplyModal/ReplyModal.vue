@@ -104,7 +104,7 @@ const emit = defineEmits<{
 const parentTweetAvatar = computed(
     () =>
         props.parentTweet.user.avatar_url ??
-        `https://ui-avatars.com/api/?name=${props.parentTweet.user.name}`,
+        `https://ui-avatars.com/api/?name=${props.parentTweet.user.name}&background=random`,
 )
 
 const hasMedia = computed(
