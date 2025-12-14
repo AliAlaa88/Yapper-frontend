@@ -200,7 +200,7 @@
                         </span>
                     </div>
                     <Button
-                        id="post-tweet-post-btn"
+                        :id="btnId"
                         :disabled="disablePostButton"
                         button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         :button-text="buttonText"
@@ -266,7 +266,7 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
 const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
-
+const btnId = computed(() => (props.parentTweetId ? 'reply-tweet-btn' : props.quotedTweet ? 'quote-tweet-btn' : 'post-tweet-btn'))
 interface MediaItem {
     url: string
     type: 'image' | 'video'
