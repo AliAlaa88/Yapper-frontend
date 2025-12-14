@@ -6,7 +6,6 @@ export const createSocketService = () => {
     let socket: Socket | null = null
 
     const connect = () => {
-        // Check token first
         const userStore = useUserStore()
         const token = userStore.getAccessToken()
 
@@ -14,20 +13,16 @@ export const createSocketService = () => {
             throw new Error('Cannot connect: access token not available')
         }
 
-        // Disconnect existing socket if any
         if (socket) {
             socket.removeAllListeners()
             socket.disconnect()
             socket = null
         }
 
-        // Create new socket with current token
         socket = $socket.create()
 
-        // Connect
         socket.connect()
 
-        // Set up basic event handlers
         socket.on('connect', () => {
             console.log('[SocketService] Connected to server')
         })

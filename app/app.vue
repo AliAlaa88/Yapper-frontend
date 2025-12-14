@@ -68,7 +68,6 @@ const initializeSockets = async () => {
     }
 }
 onMounted(async () => {
-    // Wait a tick to ensure store is fully initialized
     await nextTick()
     const token = userStore.getAccessToken()
     if (token && !socketsInitialized.value && !isInitializing.value) {
@@ -79,11 +78,9 @@ onMounted(async () => {
     }
 })
 
-// Watch accessToken directly instead of isLoggedIn to avoid double triggers
 watch(
     () => userStore.accessToken,
     async (newToken, oldToken) => {
-        // Only proceed if token actually changed
         if (newToken === oldToken) return
 
         if (config.public.env === 'development') {
@@ -91,10 +88,8 @@ watch(
         }
 
         if (newToken && !socketsInitialized.value && !isInitializing.value) {
-            // Token became available - connect sockets
             await initializeSockets()
         } else if (!newToken && socketsInitialized.value) {
-            // Token was removed - cleanup sockets
             cleanupSockets()
         }
     },
@@ -119,7 +114,6 @@ const cleanupSockets = () => {
 if (import.meta.client) {
     const handleVisibilityChange = async () => {
         if (document.visibilityState === 'visible') {
-            // Verify token exists and is fresh before reconnecting
             const token = userStore.getAccessToken()
             if (!token) {
                 if (config.public.env === 'development') {
