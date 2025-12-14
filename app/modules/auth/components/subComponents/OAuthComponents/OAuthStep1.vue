@@ -99,7 +99,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import closeButton from '../closeButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery'
 import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
