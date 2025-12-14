@@ -87,7 +87,11 @@ describe('AccountInformation Component', () => {
                 content: 'hagar@gmail.com',
                 href: '/settings/email',
             },
-            { label: 'settings.accountInfo.country', content: 'Egypt', href: '/settings/country' },
+            {
+                label: 'settings.accountInfo.country',
+                content: 'countries.Egypt',
+                href: '/settings/country',
+            },
             {
                 label: 'settings.accountInfo.languages',
                 content: 'English, Arabic',
@@ -117,9 +121,8 @@ describe('AccountInformation Component', () => {
         expect(accountSection.text()).toContain('settings.accountInfo.accountCreation')
         expect(accountSection.text()).toContain('January 15, 2020 at 10:30 AM')
 
-        // Check that country row exists in rows, not inside accountSection
         const countryRow = rows[2]
-        expect(countryRow?.attributes('data-content')).toBe('Egypt')
+        expect(countryRow?.attributes('data-content')).toBe('countries.Egypt')
     })
 
     it('computes categories with correct formatting and hrefs', () => {
@@ -129,7 +132,7 @@ describe('AccountInformation Component', () => {
         expect(categories).toHaveLength(7)
         expect(categories[0]?.content).toBe('hagar')
         expect(categories[1]?.content).toBe('hagar@gmail.com')
-        expect(categories[2]?.content).toBe('Egypt')
+        expect(categories[2]?.content).toBe('countries.Egypt')
         expect(categories[3]?.content).toBe('English, Arabic')
         expect(categories[4]?.content).toBe('May 15, 1990')
         expect(categories[5]?.content).toBe('34')
@@ -147,7 +150,6 @@ describe('AccountInformation Component', () => {
         expect(accountSection.classes()).toContain('border-b')
         expect(accountSection.classes()).toContain('border-primary')
 
-        // Only one paragraph inside the accountSection, so adjust expectation
         const paragraphs = accountSection.findAll('p.text-muted')
         expect(paragraphs.length).toBe(1)
         expect(paragraphs[0]?.text()).toBe('January 15, 2020 at 10:30 AM')
