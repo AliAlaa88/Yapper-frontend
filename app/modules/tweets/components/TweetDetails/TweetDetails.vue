@@ -85,7 +85,7 @@
                 </p>
             </div>
 
-            <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
+            <div class="text-secondary text-sm mb-4 border-b border-primary pb-2 mt-3">
                 <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
                 </time>
