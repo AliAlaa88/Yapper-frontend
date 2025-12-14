@@ -10,6 +10,16 @@ export const useUserStore = defineStore('user', () => {
 
     const getUser = () => user.value
 
+    watch(
+        accessToken,
+        () => {
+            const token = useCookie('access_token')
+            token.value = accessToken.value
+            console.log('access token changed', token.value)
+        },
+        { immediate: true },
+    )
+
     const getAccessToken = () => accessToken.value
 
     const setAuth = (authData: AuthResponse) => {

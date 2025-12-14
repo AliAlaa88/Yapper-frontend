@@ -29,8 +29,10 @@ onMounted(async () => {
 })
 
 watch(
-    () => userStore.isLoggedIn,
+    () => userStore.getAccessToken(),
     async (newVal) => {
+        console.log('access token changed in app', newVal)
+
         if (newVal && !socketsInitialized.value && !isInitializing.value) {
             await initializeSockets()
         } else if (!newVal && socketsInitialized.value) {
@@ -54,9 +56,20 @@ const initializeSockets = async () => {
         return
     }
 
+    const token = userStore.getAccessToken()
+    if (!token) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] No access token available, skipping socket initialization')
+        }
+        return
+    }
+
     isInitializing.value = true
 
     try {
+        console.log('[App.vue] Initializing sockets')
+        console.log('[App.vue] Access token:', token ? 'present' : 'missing')
+
         $socketService.connect()
 
         $chatSocketService.initializeListeners()
