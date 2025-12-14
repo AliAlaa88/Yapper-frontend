@@ -35,8 +35,8 @@
                         :id="`btn-remove-search-history-${index}`"
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors cursor-pointer"
-                        @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.query"
+                        @click.stop="removeItem(index)"
                     >
                         <X :size="16" class="text-accent" />
                     </button>
@@ -53,14 +53,14 @@
                         :src="item.avatar_url"
                         :alt="item.name"
                         class="w-10 h-10 rounded-full object-cover shrink-0"
-                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}'`"
+                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random'`"
                     />
                     <img
                         v-else
-                        :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}`"
+                        :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random`"
                         :alt="item.name"
                         class="w-10 h-10 rounded-full object-cover shrink-0"
-                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}'`"
+                        :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random'`"
                     />
                     <div class="flex-1 min-w-0">
                         <div class="text-primary font-bold text-[15px] truncate">
@@ -71,8 +71,8 @@
                     <button
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
-                        @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.name"
+                        @click.stop="removeItem(index)"
                     >
                         <X :size="16" class="text-accent" />
                     </button>

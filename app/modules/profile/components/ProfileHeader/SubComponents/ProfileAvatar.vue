@@ -15,7 +15,7 @@
 
         <img
             v-else
-            :src="`https://ui-avatars.com/api/?name=${displayName}`"
+            :src="`https://ui-avatars.com/api/?name=${displayName}&background=random`"
             :alt="displayName"
             class="flex h-[85px] w-[85px] sm:h-[133px] sm:w-[133px] items-center justify-center rounded-full border-4 border-black bg-[#71767b] text-3xl sm:text-5xl font-bold text-white"
         />
@@ -39,7 +39,10 @@ const handleImageError = () => {
     imageError.value = true
 }
 
-watch(() => props.avatarUrl, () => {
-    imageError.value = false
-})
+watch(
+    () => props.avatarUrl,
+    () => {
+        imageError.value = false
+    },
+)
 </script>

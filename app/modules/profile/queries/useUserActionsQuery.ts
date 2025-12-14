@@ -97,6 +97,9 @@ export function useUserActionsQuery(
             } else {
                 $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
             }
+            $queryClient.invalidateQueries({
+                queryKey: ['following', `/users/${currentUserId?.value}/following`],
+            })
         },
         onError: (error: Error) => {
             if (error.message.includes('Not following') || error.message.includes('Already')) {
@@ -190,6 +193,9 @@ export function useUserActionsQuery(
                 cacheInvalidation.onRemoveFollower($queryClient, currentUserId.value)
             }
             $queryClient.invalidateQueries({ queryKey: ['user', userId.value] })
+            $queryClient.invalidateQueries({
+                queryKey: ['followers', `/users/${currentUserId?.value}/followers?following=false`],
+            })
         },
         onError: (error: Error) => {
             if (error.message.includes('Already') || error.message.includes('Not following')) {

@@ -180,6 +180,8 @@ export const cacheInvalidation = {
         queryClient.invalidateQueries({ queryKey: queryKeys.search.all })
         // queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
         // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
+        queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
+        queryClient.invalidateQueries({ queryKey: queryKeys.notifications.mentions})
     },
 
     onMuteChange: (queryClient: QueryClient, targetUserId: string) => {

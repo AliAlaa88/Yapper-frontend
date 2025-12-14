@@ -316,7 +316,6 @@
         background-color: color-mix(in srgb, var(--color-x-background) 50%, transparent);
     }
 
-
     .bg-alternate {
         background-color: var(--color-x-alternate);
     }
@@ -366,8 +365,9 @@
 
     /* Shadow utilities */
     .shadow-secondary {
-        box-shadow: 0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent),
-                    0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent);
+        box-shadow:
+            0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent),
+            0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent);
     }
 
     /* Border colors */
@@ -558,10 +558,6 @@
 
     .focus\:border-red:focus {
         border-color: var(--color-x-red-hover);
-        /* Animation classes */
-        .animate-like {
-            animation: like 0.6s ease-in-out;
-        }
     }
 
     /* Hide scrollbar for Chrome, Safari and Opera */
@@ -601,4 +597,9 @@
     100% {
         transform: scale(1);
     }
+}
+
+/* Global animation class for like heart */
+.animate-like {
+    animation: like 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }

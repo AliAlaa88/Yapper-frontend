@@ -14,15 +14,15 @@
                         @click="togglePopup"
                     >
                         <div class="w-12 h-12 rounded-full overflow-hidden bg-gray">
-                            <img
+                            <NuxtImg
                                 v-if="user?.avatar_url"
                                 :src="user.avatar_url"
                                 :alt="user.name"
                                 class="w-full h-full object-cover"
                                 :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
                             />
-                            <img
-                                :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                            <NuxtImg
+                                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                                 alt="User"
                                 class="w-full h-full object-cover"
                             />
@@ -78,7 +78,7 @@
                             <div
                                 class="w-12 h-12 rounded-full overflow-hidden bg-gray flex-shrink-0"
                             >
-                                <img
+                                <NuxtImg
                                     v-if="user?.avatar_url"
                                     :src="user.avatar_url"
                                     :alt="user.name"
@@ -87,8 +87,8 @@
                                         (event: any) => handleImageError(user?.name ?? '', event)
                                     "
                                 />
-                                <img
-                                    :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                                <NuxtImg
+                                    :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                                     alt="User"
                                     class="w-full h-full object-cover"
                                 />
@@ -106,20 +106,16 @@
 
                     <!-- Menu Items -->
                     <div class="py-2">
-                        <!-- Add Existing Account -->
-                        <button
-                            class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
-                            @click="handleAddExistingAccount"
-                        >
-                            Add an existing account
-                        </button>
-
                         <!-- Logout -->
                         <button
                             class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleLogoutClick"
                         >
-                            Log out @{{ user?.username || 'username' }}
+                            {{
+                                $t('userActions.logoutUsername', {
+                                    username: user?.username || 'username',
+                                })
+                            }}
                         </button>
                     </div>
                 </div>
@@ -136,15 +132,16 @@
                 <div class="flex items-center gap-3 flex-1">
                     <!-- Avatar -->
                     <div class="w-12 h-12 rounded-full overflow-hidden bg-gray">
-                        <img
+                        <NuxtImg
                             v-if="user?.avatar_url"
                             :src="user.avatar_url"
                             :alt="user.name"
                             class="w-full h-full object-cover"
                             :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
                         />
-                        <img
-                            :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                        <NuxtImg
+                            v-else
+                            :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                             alt="User"
                             class="w-full h-full object-cover"
                         />
@@ -201,20 +198,16 @@
 
                     <!-- Menu Items -->
                     <div class="py-2">
-                        <!-- Add Existing Account -->
-                        <button
-                            class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
-                            @click="handleAddExistingAccount"
-                        >
-                            Add an existing account
-                        </button>
-
                         <!-- Logout -->
                         <button
                             class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleLogoutClick"
                         >
-                            Log out @{{ user?.username || 'username' }}
+                            {{
+                                $t('userActions.logoutUsername', {
+                                    username: user?.username || 'username',
+                                })
+                            }}
                         </button>
                     </div>
                 </div>
@@ -242,12 +235,13 @@
                 </div>
 
                 <!-- Title -->
-                <h2 class="text-xl font-bold text-primary mb-2">Log out of X?</h2>
+                <h2 class="text-xl font-bold text-primary mb-2">
+                    {{ $t('userActions.logoutTitle') }}
+                </h2>
 
                 <!-- Description -->
                 <p class="text-secondary text-[15px] text-center mb-6 leading-5">
-                    You can always log back in at any time. If you just want to switch accounts, you
-                    can do that by adding an existing account.
+                    {{ $t('userActions.logoutDescription') }}
                 </p>
 
                 <!-- Action Buttons -->
@@ -257,7 +251,7 @@
                         class="w-full py-3 px-6 bg-white text-black text-[15px] font-bold rounded-full hover:bg-gray-200 transition-colors"
                         @click="confirmLogout"
                     >
-                        Log out
+                        {{ $t('userActions.logout') }}
                     </button>
 
                     <!-- Cancel Button -->
@@ -265,7 +259,7 @@
                         class="w-full py-3 px-6 bg-transparent border border-gray-700 text-primary text-[15px] font-bold rounded-full hover:bg-gray-800/50 transition-colors"
                         @click="closeLogoutConfirm"
                     >
-                        Cancel
+                        {{ $t('userActions.cancel') }}
                     </button>
                 </div>
             </div>

@@ -31,14 +31,18 @@
                 :to="`/${user?.username}/following`"
                 class="hover:underline flex gap-1 items-center"
             >
-                <span class="font-bold text-primary" dir="ltr">{{ formatNumber(user?.following_count ?? 0) }}</span>
+                <span class="font-bold text-primary" dir="ltr">{{
+                    formatNumber(user?.following_count ?? 0)
+                }}</span>
                 <span class="text-secondary">{{ t('profile.following') }}</span>
             </NuxtLink>
             <NuxtLink
                 :to="`/${user?.username}/followers`"
                 class="hover:underline flex gap-1 items-center"
             >
-                <span class="font-bold text-primary" dir="ltr">{{ formatNumber(user?.followers_count ?? 0) }}</span>
+                <span class="font-bold text-primary" dir="ltr">{{
+                    formatNumber(user?.followers_count ?? 0)
+                }}</span>
                 <span class="text-secondary">{{ t('profile.followers') }}</span>
             </NuxtLink>
         </div>
@@ -48,18 +52,15 @@
             class="mt-3 flex items-center gap-2 text-sm text-secondary"
         >
             <div class="flex -space-x-2 rtl:space-x-reverse">
-                <img
+                <UserImage
                     v-for="follower in topMutualFollowers.slice(0, 3)"
-                    :key="follower.avatar_url"
-                    :src="follower.avatar_url"
-                    :alt="follower.name"
-                    class="h-6 w-6 rounded-full border-2 border-primary"
-                >
+                    :key="follower.user_id"
+                    :image-url="follower.avatar_url"
+                    :name="follower.name"
+                    :size="6"
+                />
             </div>
-            <NuxtLink
-                :to="`/${user?.username}/followers_you_follow`"
-                class="hover:underline"
-            >
+            <NuxtLink :to="`/${user?.username}/followers_you_follow`" class="hover:underline">
                 {{ t('profile.mutualFollowers.followedBy') }}
                 <span class="font-semibold text-primary">
                     {{ formatMutualFollowers }}
@@ -74,9 +75,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { MapPin, Calendar, Cake } from 'lucide-vue-next'
+import { MapPin, Calendar, Cake, User } from 'lucide-vue-next'
 import type { Me, OtherUser } from '../../../types/user'
 import ProfileMuteMessage from './ProfileMuteMessage.vue'
+import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
 
 const props = defineProps<{
     user: Me | OtherUser | null
@@ -94,9 +96,7 @@ const mutualFollowersCount = computed(() => {
     return count ? Number(count) : 0
 })
 
-const topMutualFollowers = computed(
-    () => (props.user as OtherUser)?.top_mutual_followers ?? [],
-)
+const topMutualFollowers = computed(() => (props.user as OtherUser)?.top_mutual_followers ?? [])
 
 const monthNames = computed(() => [
     t('months.january'),
