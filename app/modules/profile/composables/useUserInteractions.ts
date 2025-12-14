@@ -128,7 +128,7 @@ export function useUserInteractions(userId: Ref<string | undefined>, userName: R
         if (showList) showList.value = false
     }
 
-    async function handleMuteWithSnackbar() {
+    async function handleMuteWithSnackbar(showList?: Ref<boolean>) {
         try {
             await handleMute()
             if(userId.value) cacheInvalidation.toggleMutedInCache($queryClient, userId.value, true)
@@ -136,10 +136,13 @@ export function useUserInteractions(userId: Ref<string | undefined>, userName: R
             handleShowSnackbar(
                 t('profile.actions.mute.snackbar', { username: '@' + username.value }),
                 '',
+                t('profile.actions.mute.undoButton'),
+                handleUnmuteWithSnackbar,
             )
         } catch (error) {
             console.error('failed to mute: ', error)
         }
+        if (showList) showList.value = false
     }
 
     function handleRemoveFollowerWithConfirmation(showList?: Ref<boolean>) {

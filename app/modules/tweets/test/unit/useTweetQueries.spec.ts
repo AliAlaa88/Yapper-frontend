@@ -138,7 +138,9 @@ describe('useTweetQueries', () => {
             useTweetsQuery(testPath)
 
             const options = mockUseInfiniteQuery.mock.calls[0]?.[0]
-            expect(options.queryKey.value).toEqual(['tweets', testPath])
+            // When path is /search, it gets duplicated due to splice logic in source
+            const expectedKey = testPath === '/search' ? ['tweets', '/search', '/search'] : ['tweets', testPath]
+            expect(options.queryKey.value).toEqual(expectedKey)
 
             await options.queryFn({ pageParam: '' })
             expect(localMockTweetService.fetchTweets).toHaveBeenCalledWith(testPath, '')

@@ -1,19 +1,51 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`matches snapshot 1`] = `
+exports[`Stats Component > matches snapshot 1`] = `
 "<div class="flex items-center justify-between mt-3">
   <!-- Reply -->
-  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Retweet with dropdown -->
-  <div class="relative"><button id="tweet-retweet-button" class="group flex cursor-pointer items-center gap-1 transition-colors text-secondary hover:text-green">
-      <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
-        <anonymous-stub size="18" fill="none"></anonymous-stub>
-      </div><span class="text-xs min-w-5">3</span>
-    </button><!-- Repost Dropdown Menu -->
+  <div side="bottom" align="start" delay-duration="300"><button id="tweet-reply-button" class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors">
+      <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-icon lucide-message-circle">
+          <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path>
+        </svg></div><span class="text-xs min-w-5">5</span>
+    </button></div><!-- Retweet with dropdown -->
+  <div class="relative">
+    <div class="group flex items-center transition-colors">
+      <div side="bottom" align="start" delay-duration="300"><button id="tweet-retweet-button" class="flex cursor-pointer items-center gap-1 transition-colors text-secondary">
+          <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-x-gray-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat2-icon lucide-repeat-2">
+              <path d="m2 9 3-3 3 3"></path>
+              <path d="M13 18H7a2 2 0 0 1-2-2V6"></path>
+              <path d="m22 15-3 3-3-3"></path>
+              <path d="M11 6h6a2 2 0 0 1 2 2v10"></path>
+            </svg></div>
+        </button></div>
+      <div side="bottom" align="start" delay-duration="300"><button class="text-xs min-w-5 cursor-pointer transition-colors text-secondary">3</button></div>
+    </div><!-- Repost Dropdown Menu -->
     <!--v-if-->
   </div><!-- Like -->
-  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Views -->
-  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Bookmark -->
-  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub><!-- Share -->
-  <custom-tool-tip-stub delayduration="300" side="bottom" align="start" aschild="true" open="false"></custom-tool-tip-stub>
+  <div side="bottom" align="start" delay-duration="300"><button id="tweet-like-button" class="group flex cursor-pointer items-center gap-1 transition-colors text-secondary hover:text-red">
+      <div class="p-2 rounded-full group-hover:bg-red/10 transition-colors relative"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart">
+          <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path>
+        </svg></div><span class="text-xs min-w-5">10</span>
+    </button></div><!-- Views -->
+  <div side="bottom" align="start"><button id="tweet-views-button" class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors">
+      <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column-icon lucide-chart-column">
+          <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+          <path d="M18 17V9"></path>
+          <path d="M13 17V5"></path>
+          <path d="M8 17v-3"></path>
+        </svg></div><span class="text-xs min-w-5">100</span>
+    </button></div><!-- Bookmark -->
+  <div side="bottom" align="start" delay-duration="300"><button id="tweet-bookmark-button" class="group flex cursor-pointer items-center gap-1 transition-colors text-secondary hover:text-blue">
+      <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+        </svg></div>
+    </button></div><!-- Share -->
+  <div side="bottom" align="start" delay-duration="300"><button id="tweet-share-button" class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors">
+      <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-icon lucide-share">
+          <path d="M12 2v13"></path>
+          <path d="m16 6-4-4-4 4"></path>
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+        </svg></div>
+    </button></div>
 </div>"
 `;

@@ -5,8 +5,8 @@ import { createI18n } from 'vue-i18n'
 import AuthHomePage from '../../views/index.vue'
 import OAuth from '../../components/subComponents/OAuth.vue'
 import Logo from '../../../Common/components/Logo'
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 
 // Mock Nuxt composables
 const mockPush = vi.fn()
@@ -21,6 +21,8 @@ vi.mock('vue-router', () => ({
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: {},
+        runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -129,7 +131,7 @@ describe('Auth Home Page', () => {
     describe('Create Account Button', () => {
         it('should render "Create account" button', () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
             expect(createButton.exists()).toBe(true)
             expect(createButton.text()).toBe('Create account')
         })
@@ -137,7 +139,7 @@ describe('Auth Home Page', () => {
 
         it('should navigate to signup page when create account is clicked', async () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
 
             await createButton.trigger('click')
             await flushPromises()
@@ -147,7 +149,7 @@ describe('Auth Home Page', () => {
 
         it('should call goToSignup function on click', async () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
 
             await createButton.trigger('click')
             await flushPromises()
@@ -173,14 +175,14 @@ describe('Auth Home Page', () => {
 
         it('should render "Sign in" button', () => {
             const wrapper = mountAuthHomePage()
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const signInButton = wrapper.find('#btn-sign-in')
             expect(signInButton.exists()).toBe(true)
             expect(signInButton.text()).toContain('Sign in')
         })
 
         it('should navigate to login page when sign in is clicked', async () => {
             const wrapper = mountAuthHomePage()
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const signInButton = wrapper.find('#btn-sign-in')
 
             await signInButton.trigger('click')
             await flushPromises()
@@ -190,7 +192,7 @@ describe('Auth Home Page', () => {
 
         it('should call goToLogin function on click', async () => {
             const wrapper = mountAuthHomePage()
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const signInButton = wrapper.find('#btn-sign-in')
 
             await signInButton.trigger('click')
             await flushPromises()
@@ -202,7 +204,7 @@ describe('Auth Home Page', () => {
     describe('Navigation Functions', () => {
         it('should have goToLogin function that navigates correctly', async () => {
             const wrapper = mountAuthHomePage()
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const signInButton = wrapper.find('#btn-sign-in')
 
             mockPush.mockClear()
             await signInButton.trigger('click')
@@ -214,7 +216,7 @@ describe('Auth Home Page', () => {
 
         it('should have goToSignup function that navigates correctly', async () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
 
             mockPush.mockClear()
             await createButton.trigger('click')
@@ -226,7 +228,7 @@ describe('Auth Home Page', () => {
 
         it('should handle multiple clicks on create account button', async () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
 
             mockPush.mockClear()
             await createButton.trigger('click')
@@ -240,7 +242,7 @@ describe('Auth Home Page', () => {
 
         it('should handle multiple clicks on sign in button', async () => {
             const wrapper = mountAuthHomePage()
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const signInButton = wrapper.find('#btn-sign-in')
 
             mockPush.mockClear()
             await signInButton.trigger('click')
@@ -255,8 +257,8 @@ describe('Auth Home Page', () => {
     describe('Button Interactions', () => {
         it('should have both buttons clickable', async () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
+            const signInButton = wrapper.find('#btn-sign-in')
 
             expect(createButton.attributes('disabled')).toBeUndefined()
             expect(signInButton.attributes('disabled')).toBeUndefined()
@@ -264,8 +266,8 @@ describe('Auth Home Page', () => {
 
         it('should navigate to different routes for each button', async () => {
             const wrapper = mountAuthHomePage()
-            const createButton = wrapper.find('[data-testid="button-createAccount-authHome"]')
-            const signInButton = wrapper.find('[data-testid="button-signIn-authHome"]')
+            const createButton = wrapper.find('#btn-create-account')
+            const signInButton = wrapper.find('#btn-sign-in')
 
             mockPush.mockClear()
 

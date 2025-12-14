@@ -7,14 +7,27 @@ import type { TweetDetails as tweetDetails } from '../../types'
 // Mock Nuxt composables
 vi.mock('#app', () => ({
     navigateTo: vi.fn(),
+    useNuxtApp: vi.fn(() => ({
+        $queryClient: {},
+        $tweetService: {},
+        $userInfoService: {},
+    })),
     useRoute: vi.fn(() => ({
         params: {
             username: 'alice',
             tweetId: 't1',
         },
+        path: '/',
     })),
     useRouter: vi.fn(() => ({
         back: vi.fn(),
+    })),
+}))
+
+vi.mock('vue-i18n', () => ({
+    useI18n: vi.fn(() => ({
+        t: (key: string) => key,
+        locale: 'en',
     })),
 }))
 
@@ -40,6 +53,39 @@ vi.mock('../../utils/lib', () => ({
 // Mock useTweetDetails composable
 vi.mock('../../composables/useTweetDetails', () => ({
     useTweetDetails: vi.fn(),
+}))
+
+// Mock useSnackbar and useConfirmation composables
+vi.mock('~/modules/profile/composables/useSnackbar', () => ({
+    useSnackbar: vi.fn(() => ({
+        showSnackbar: vi.fn(),
+        handleShowSnackbar: vi.fn(),
+    })),
+}))
+
+vi.mock('~/modules/profile/composables/useConfirmation', () => ({
+    useConfirmation: vi.fn(() => ({
+        showConfirmation: vi.fn(),
+        handleShowConfirmation: vi.fn(),
+    })),
+}))
+
+// Mock tweet mutations
+vi.mock('../../queries/useTweetQueries', () => ({
+    useDeleteTweetMutation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: { value: false },
+    })),
+    useUpdateTweetMutation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: { value: false },
+    })),
+    useTweetSummaryQuery: vi.fn(() => ({
+        data: { value: null },
+        isLoading: { value: false },
+        error: { value: null },
+        refetch: vi.fn(),
+    })),
 }))
 
 describe('TweetDetails Component', () => {
@@ -70,7 +116,20 @@ describe('TweetDetails Component', () => {
                         QuoteModal: { template: '<div></div>' },
                         ProfileActionsMenu: { template: '<div></div>' },
                     },
+                    provide: {
+                        snackbar: {
+                            showSnackbar: vi.fn(),
+                            handleShowSnackbar: vi.fn(),
+                        },
+                        confirmation: {
+                            showConfirmation: vi.fn(),
+                            handleShowConfirmation: vi.fn(),
+                        },
+                    },
                     mocks: {
+                        $router: {
+                            back: vi.fn(),
+                        },
                         $t: (msg) => {
                             if (msg === 'tweets.loading.tweetDetails') return 'Loading';
                             if (msg === 'tweets.errors.tryAgain') return 'Try Again';
@@ -118,7 +177,20 @@ describe('TweetDetails Component', () => {
                         Content: true,
                         Stats: true,
                     },
+                    provide: {
+                        snackbar: {
+                            showSnackbar: vi.fn(),
+                            handleShowSnackbar: vi.fn(),
+                        },
+                        confirmation: {
+                            showConfirmation: vi.fn(),
+                            handleShowConfirmation: vi.fn(),
+                        },
+                    },
                     mocks: {
+                        $router: {
+                            back: vi.fn(),
+                        },
                         t: (msg) => {
                             if (msg === 'tweets.loading.tweetDetails') return 'Loading';
                             if (msg === 'tweets.errors.tryAgain') return 'Try Again';
@@ -165,7 +237,20 @@ describe('TweetDetails Component', () => {
                         Content: true,
                         Stats: true,
                     },
+                    provide: {
+                        snackbar: {
+                            showSnackbar: vi.fn(),
+                            handleShowSnackbar: vi.fn(),
+                        },
+                        confirmation: {
+                            showConfirmation: vi.fn(),
+                            handleShowConfirmation: vi.fn(),
+                        },
+                    },
                     mocks: {
+                        $router: {
+                            back: vi.fn(),
+                        },
                         $t: (msg) => {
                             if (msg === 'tweets.loading.tweetDetails') return 'Loading';
                             if (msg === 'tweets.errors.tryAgain') return 'Try Again';
@@ -190,7 +275,7 @@ describe('TweetDetails Component', () => {
                 return msg;
             }
             await wrapper.vm.$forceUpdate?.()
-            await wrapper.find('button').trigger('click')
+            await wrapper.find('#tweet-detail-retry-button').trigger('click')
             expect(fetchTweetDetailsMock).toHaveBeenCalled()
         })
     })

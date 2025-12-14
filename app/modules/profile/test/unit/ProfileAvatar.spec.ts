@@ -47,7 +47,7 @@ describe('ProfileAvatar', () => {
             },
         })
 
-        expect(wrapper.find('img').exists()).toBe(false)
-        expect(wrapper.text()).toBe('T')
+        expect(wrapper.find('img').exists()).toBe(true)
+        expect(wrapper.find('img').attributes('src')).toContain('ui-avatars.com')
     })
 })

@@ -174,7 +174,6 @@ const oauthCompleteStep2Mutation = useOAuthCompleteStep2Query(
         userStore.setAuth(data.data)
         errorMessage.value = ''
         loading.value = false
-        recommendations.value = recommendations.value.splice(1)
         emit('finish', recommendations.value)
     },
     (error: any) => {

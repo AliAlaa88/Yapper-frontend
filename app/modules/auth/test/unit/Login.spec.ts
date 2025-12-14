@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 import Login from '../../components/login.vue'
 import loginStep1 from '../../components/subComponents/loginComponents/loginStep1.vue'
 import loginStep2 from '../../components/subComponents/loginComponents/loginStep2.vue'
@@ -25,6 +25,8 @@ const mockAuthService = {
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
+        runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -131,7 +133,7 @@ describe('Login Component', () => {
 
         it('displays Sign in title', () => {
             const wrapper = mountLogin()
-            expect(wrapper.text()).toContain('Sign in to X')
+            expect(wrapper.text()).toContain('Sign in to Yapper')
         })
 
         it('has identifier input field', () => {

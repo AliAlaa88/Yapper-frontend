@@ -33,7 +33,6 @@
                         class="w-full bg-primary text-primary border border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
                         :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
                         maxlength="25"
-                        @input="validateUsername"
                     />
                 </div>
                 <div class="flex justify-between mt-2 px-4">
@@ -107,12 +106,17 @@ import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateUsernameMutation } from '../../../queries/useCompleteProfileQuery'
 import Button from '~/modules/Common/components/Button/Button.vue'
+import { checkIdentifier } from '~/modules/auth/queries/useRegisterQuery'
+import { useDebounce } from '~/modules/Common/composables/useDebounce'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for username
 const username = defineModel<string | null>('username', { default: null })
+
+// Debounce username input for validation
+const debouncedUsername = useDebounce(username, 500)
 
 const errorMessage = ref('')
 const isSubmitting = ref(false)
@@ -129,9 +133,31 @@ const props = defineProps<{
     Recommendations: string[]
 }>()
 
-const validateUsername = () => {
-    const value = username.value
 
+const checkIdentifierMutation = checkIdentifier(
+    (data) => {
+        if(data.data.identifier_type === 'username'){
+            if(errorMessage.value === '')
+                errorMessage.value = 'this username is already in use.'
+        }
+        else
+            if(errorMessage.value === '')
+                errorMessage.value = 'invalid username format.'
+    },
+    (err: any) => {
+        const errorMsg =
+            err?.response?.data?.message || err?.message || 'Identifier check failed. Please try again.'
+        if(errorMsg.includes('Username not found')){
+            if(errorMessage.value === '')
+                errorMessage.value = ''
+        } else {
+            if(errorMessage.value === '')
+                errorMessage.value = 'invalid username format.'
+        }
+    },
+)
+
+const validateUsername = (value: string | null) => {
     if (!value || value.length === 0) {
         errorMessage.value = ''
         return
@@ -158,13 +184,20 @@ const validateUsername = () => {
     }
 
     errorMessage.value = ''
+    checkIdentifierMutation.mutate(value)
 }
+
+// Watch debounced username for validation
+watch(debouncedUsername, (newValue) => {
+    validateUsername(newValue)
+})
 
 const isValid = computed(() => {
     return username.value && username.value.length >= 3 && !errorMessage.value
 })
 
 const usernameMutation = useUpdateUsernameMutation(
+    props.Recommendations[0],
     (data) => {
         isSubmitting.value = false
         loading.value = false
@@ -172,6 +205,7 @@ const usernameMutation = useUpdateUsernameMutation(
         emit('next', username.value!)
     },
     (error) => {
+        console.error('error');
         console.error('Username update error:', error)
         isSubmitting.value = false
         loading.value = false

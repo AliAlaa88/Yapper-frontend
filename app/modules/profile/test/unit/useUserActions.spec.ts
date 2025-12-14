@@ -143,13 +143,16 @@ describe('useUserActions', () => {
 
     it('should work with different userId', async () => {
         const userId = ref('different-user')
-        const { handleBlock } = useUserActions(userId)
+        const targetUsername = ref('test-user')
+        const currentUserId = ref('current-user')
+        const enabled = ref(true)
+        const { handleBlock } = useUserActions(userId, targetUsername, currentUserId, enabled)
 
         const promise = handleBlock()
         await vi.advanceTimersByTimeAsync(300)
         await promise
 
-        expect(useUserActionsQuery).toHaveBeenCalledWith(userId)
+        expect(useUserActionsQuery).toHaveBeenCalledWith(userId, targetUsername, currentUserId, enabled)
         expect(mockMutations.blockMutation.mutateAsync).toHaveBeenCalled()
     })
 })
