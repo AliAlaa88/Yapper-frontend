@@ -1,6 +1,7 @@
 <template>
     <Popup
         :is-open="isOpen"
+        data-test="popup"
         :has-close-button="false"
         content-class="max-w-lg sm:max-w-xl w-full"
         header-class="absolute top-4 left-4 z-10 bg-transparent p-0"

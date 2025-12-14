@@ -21,6 +21,9 @@ describe('SidebarCategories Component', () => {
     const createWrapper = () => {
         return mount(SidebarCategories, {
             global: {
+                mocks: {
+                    $t: (key: string) => key,
+                },
                 stubs: {
                     NuxtLink: {
                         props: ['to'],
@@ -47,7 +50,9 @@ describe('SidebarCategories Component', () => {
 
     it('renders header, search input, and category links', () => {
         expect(wrapper.find('input[type="text"]').exists()).toBe(true)
-        expect(wrapper.find('input[type="text"]').attributes('placeholder')).toBe('Search Settings')
+        expect(wrapper.find('input[type="text"]').attributes('placeholder')).toBe(
+            'settings.search_settings',
+        )
 
         const links = wrapper.findAll('a')
         expect(links.length).toBe(3)
