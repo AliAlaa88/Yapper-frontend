@@ -36,7 +36,7 @@
                     @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        passwordError ? 'border-red focus:border-red' : ''    
+                        passwordError ? 'border-red focus:border-red' : ''
                     ]"
                 />
                 <p v-if="passwordError" class="text-red text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">{{ passwordError }}</p>
@@ -62,7 +62,6 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRegisterS3Query } from '../../../queries/useRegisterQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
-import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
 import Button from '~/modules/Common/components/Button/Button.vue'

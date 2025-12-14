@@ -238,11 +238,12 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 name: currentUser.name,
                 avatar_url: currentUser.avatar_url || null,
             },
+            sender_id: (currentUser as any).user_id,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             is_read: false,
             is_edited: false,
-            message_type: options.messageType,
+            message_type: 'text',
             reply_to: null,
         }
 
@@ -287,7 +288,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             message: {
                 content: options.content,
                 image_url: options.imageUrl || null,
-                message_type: options.messageType,
+                message_type: 'text',
                 is_first_message: isFirstMessage,
                 reply_to_message_id: null,
             },
@@ -309,13 +310,17 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
                 id: data.id,
                 content: data.content,
                 sender: data.sender,
+                sender_id: data.sender_id,
                 created_at: data.created_at,
                 updated_at: data.created_at,
                 is_read: data.is_read,
                 is_edited: false,
-                message_type: options.messageType,
+                message_type: 'text',
                 reply_to: null,
+                image_url: data.image_url || null,
             }
+
+            console.log('realMessage', realMessage)
 
             replaceOptimisticMessage(chatId, optimisticId, realMessage)
         })
@@ -438,7 +443,9 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
         console.log('[ChatSocket] Unread summary:', data)
         unreadChats.value.clear()
         data.chats.forEach((chat) => {
-            unreadChats.value.set(chat.chat_id, chat)
+            if (chat.unread_count > 0) {
+                unreadChats.value.set(chat.chat_id, chat)
+            }
         })
     }
 
@@ -449,12 +456,14 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             id: data.message.id,
             content: data.message.content,
             sender: data.message.sender,
+            sender_id: data.message.sender_id,
             created_at: data.message.created_at,
             updated_at: data.message.created_at,
             is_read: data.message.is_read,
             is_edited: false,
             message_type: 'text',
             reply_to: null,
+            image_url: data.message.image_url || null,
         }
 
         addMessageToCache(data.chat_id, newMessage)
@@ -773,7 +782,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
     const clearUnreadCount = (chatId: string) => {
         const chat = unreadChats.value.get(chatId)
         if (chat) {
-            unreadChats.value.set(chatId, { ...chat, unread_count: 0 })
+            unreadChats.value.delete(chatId)
         }
 
         try {

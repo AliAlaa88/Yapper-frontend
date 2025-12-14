@@ -10,7 +10,7 @@
             />
             <img
                 v-else
-                :src="`https://ui-avatars.com/api/?name=${user?.name}`"
+                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                 :alt="user?.name"
                 class="w-10 h-10 object-cover rounded-full"
             />
@@ -18,8 +18,8 @@
                 {{ $t('timeline.postTweet.replyPlaceholder') }}
             </span>
             <Button
-                :disabled="true"
                 id="reply-tweet-reply-btn"
+                :disabled="true"
                 button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 :button-text="t('timeline.postTweet.reply')"
             />
@@ -68,7 +68,7 @@ const handleFocus = () => {
 
 // Expose focus method for parent components
 defineExpose({
-    focus: handleFocus
+    focus: handleFocus,
 })
 
 const handleSuccess = () => {

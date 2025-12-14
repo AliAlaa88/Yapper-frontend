@@ -19,72 +19,81 @@ import { useRuntimeConfig } from '#app'
 const userStore = useUserStore()
 const { $socketService, $chatSocketService, $notificationsSocketService } = useNuxtApp()
 const socketsInitialized = ref(false)
+const isInitializing = ref(false)
 const config = useRuntimeConfig()
+const initializeSockets = async () => {
+    if (isInitializing.value) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] Socket initialization already in progress, skipping')
+        }
+        return
+    }
+
+    if (socketsInitialized.value) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] Sockets already initialized, skipping')
+        }
+        return
+    }
+
+    const token = userStore.getAccessToken()
+    if (!token) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] No access token available, skipping socket initialization')
+        }
+        return
+    }
+
+    isInitializing.value = true
+
+    try {
+        console.log('[App.vue] Initializing sockets')
+        console.log('[App.vue] Access token:', token ? 'present' : 'missing')
+
+        $socketService.connect()
+
+        $chatSocketService.initializeListeners()
+        $notificationsSocketService.initializeListeners()
+
+        socketsInitialized.value = true
+
+        if (config.public.env === 'development') {
+            console.log('[App.vue] Socket initialization started successfully')
+        }
+    } catch (error) {
+        console.error('[App.vue] Error during socket initialization:', error)
+        socketsInitialized.value = false // reset to allow retry
+    } finally {
+        isInitializing.value = false
+    }
+}
 onMounted(async () => {
-    if (userStore.isLoggedIn && !socketsInitialized.value) {
+    await nextTick()
+    const token = userStore.getAccessToken()
+    if (token && !socketsInitialized.value && !isInitializing.value) {
+        if (config.public.env === 'development') {
+            console.log('[App.vue] onMounted: Initializing sockets with existing token')
+        }
         await initializeSockets()
     }
 })
 
 watch(
-    () => userStore.isLoggedIn,
-    async (newVal) => {
-        if (newVal && !socketsInitialized.value) {
+    () => userStore.accessToken,
+    async (newToken, oldToken) => {
+        if (newToken === oldToken) return
+
+        if (config.public.env === 'development') {
+            console.log('[App.vue] Token changed:', newToken ? 'present' : 'null')
+        }
+
+        if (newToken && !socketsInitialized.value && !isInitializing.value) {
             await initializeSockets()
-        } else if (!newVal && socketsInitialized.value) {
+        } else if (!newToken && socketsInitialized.value) {
             cleanupSockets()
         }
     },
 )
-
-const initializeSockets = async () => {
-    if (socketsInitialized.value) {
-        if (config.public.env === 'development')
-            console.log('Sockets already initialized, skipping')
-        return
-    }
-
-    // try {
-    $chatSocketService.initializeListeners()
-    $notificationsSocketService.initializeListeners()
-    $socketService.connect()
-    socketsInitialized.value = true
-    //     const connected = $socketService.isConnected()
-
-    //     if (!connected) {
-    //         console.error('Socket connection timeout')
-    //         return
-    //     }
-    //     console.log('Socket connected successfully')
-    // } catch {
-    //     console.log('Error during socket initialization')
-    // }
-}
-
-// const waitForSocketConnection = (timeout: number = 1000): Promise<boolean> => {
-//     return new Promise((resolve) => {
-//         const startTime = Date.now()
-
-//         const checkConnection = () => {
-//             const isConnected = $socketService.isConnected()
-//             const elapsed = Date.now() - startTime
-
-//             console.log(`[App.vue] Connection check: ${isConnected}`)
-
-//             if (isConnected) {
-//                 resolve(true)
-//             } else if (elapsed >= timeout) {
-//                 console.error(`[App.vue] Connection timeout after ${timeout}ms`)
-//                 resolve(false)
-//             } else {
-//                 // Check again in 100ms
-//                 setTimeout(checkConnection, 100)
-//             }
-//         }
-
-//         checkConnection()
-//     })
-// }
 
 const cleanupSockets = () => {
     try {
@@ -93,17 +102,35 @@ const cleanupSockets = () => {
         $chatSocketService.reset()
         $socketService.disconnect()
         socketsInitialized.value = false
+        isInitializing.value = false
+        if (config.public.env === 'development') {
+            console.log('[App.vue] Sockets cleaned up')
+        }
     } catch (error) {
-        console.error('Error during socket cleanup:', error)
+        console.error('[App.vue] Error during socket cleanup:', error)
     }
 }
 
 if (import.meta.client) {
     const handleVisibilityChange = async () => {
-        if (document.visibilityState === 'visible' && userStore.isLoggedIn) {
+        if (document.visibilityState === 'visible') {
+            const token = userStore.getAccessToken()
+            if (!token) {
+                if (config.public.env === 'development') {
+                    console.log('[App.vue] Page visible but no token, skipping socket reconnect')
+                }
+                return
+            }
+
             const isConnected = $socketService.isConnected()
-            if (!isConnected && !socketsInitialized.value) {
-                await initializeSockets() // reconnect
+            if (!isConnected && !isInitializing.value) {
+                if (config.public.env === 'development') {
+                    console.log(
+                        '[App.vue] Page visible but socket not connected, reinitializing...',
+                    )
+                }
+                socketsInitialized.value = false // reset to allow reinitialization
+                await initializeSockets()
             }
         }
     }
@@ -126,7 +153,6 @@ const currentDirection = computed(() => {
     return currentLocaleObj?.dir || 'ltr'
 })
 
-// Set default SEO for pages that don't have specific SEO
 useHead({
     htmlAttrs: {
         lang: currentLocale.value,

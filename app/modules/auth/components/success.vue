@@ -2,11 +2,12 @@
     <AuthLoadingPage v-if="isLoading" />
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useUserStore } from '~/modules/auth/stores/userStore';
 import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery';
 import { useRouter } from 'vue-router';
 import { useExchangeTokenQuery } from '~/modules/auth/queries/useOAuthQuery';
+import { useCookie } from '#app';
 import AuthLoadingPage from './AuthLoadingPage.vue';
 const router = useRouter();
 const userStore = useUserStore();
@@ -17,14 +18,9 @@ const enableUserQuery = ref(false);
 
 const exchangeTokenMutation = useExchangeTokenQuery(
     (data: any) => {
-        // setAuth will handle both token and user, but we need to fetch user first
-        // Store token temporarily via cookie, then fetch user
-        const token = useCookie('access_token')
-        token.value = data.access_token
-        userStore.setAuth({
-            access_token: data.access_token,
-            user: userStore.user!, // Will be set properly after user fetch
-        })
+        // Store token temporarily in store (will sync to cookie via watch)
+        // Don't call setAuth until we have both token and user
+        userStore.setAccessToken(data.access_token)
         enableUserQuery.value = true
     },
     (error: any) => {
@@ -38,20 +34,28 @@ const exchangeTokenMutation = useExchangeTokenQuery(
 useGetUserQuery(
     enableUserQuery,
     (data) => {
+        // Now we have both token (already in store) and user - call setAuth once
+        const token = userStore.getAccessToken()
+        if (!token) {
+            console.error('Token missing when setting auth')
+            userStore.logout()
+            router.push('/auth')
+            return
+        }
         userStore.setAuth({
-            access_token: useCookie('access_token').value || '',
+            access_token: token,
             user: data.data,
         })
         isLoading.value = false
         router.push('/')
     },
     (error) => {
-        console.error("Failed to fetch user data:", error);
-        isLoading.value = false;
-        userStore.logout();
-        router.push('/auth');
-    }
-);
+        console.error('Failed to fetch user data:', error)
+        isLoading.value = false
+        userStore.logout()
+        router.push('/auth')
+    },
+)
 
 onMounted(() => {
     if (exchange_token.value) {

@@ -528,7 +528,7 @@
             "tweetNotFoundDescription": "This tweet may have been deleted or you don't have permission to view it.",
             "goBack": "Go back"
         },
-        "replyingTo":"Replying to"
+        "replyingTo": "Replying to"
     },
     "search": {
         "searchPlaceholder": "Search",
@@ -627,7 +627,8 @@
             "showMore": "Show more",
             "whoToFollow": "Who to follow",
             "follow": "Follow",
-            "following": "Following"
+            "following": "Following",
+            "noTrends": "No trends available right now"
         },
         "timelineView": {
             "forYou": "For You",
@@ -779,6 +780,13 @@
         "noMessagesYet": "No messages yet",
         "noMessagesYetDescription": "Start a conversation from someone's profile",
         "noMessagesInChat": "No messages yet. Start the conversation!",
+        "youSentImage": "You sent image",
+        "senderSentImage": "{name} sent image",
+        "imageSentToYou": "Image sent to you",
+        "youSentVoice": "You sent voice",
+        "voiceSentToYou": "Voice sent to you",
+        "seeMore": "See more",
+        "seeLess": "See less",
         "loading": "Loading...",
         "loadOlderMessages": "Load older messages",
         "failedToLoad": "Failed to load messages",
@@ -999,29 +1007,37 @@
         "title": "Notifications",
 
         "tabs": {
-          "all": "All",
-          "mentions": "Mentions"
+            "all": "All",
+            "mentions": "Mentions"
         },
 
         "empty": {
-          "title": "Nothing to see here - yet",
-          "mentions_description": "When someone mentions you, you'll find it here.",
-          "all_description": "When someone interacts with your posts, you'll see it here."
+            "title": "Nothing to see here - yet",
+            "mentions_description": "When someone mentions you, you'll find it here.",
+            "all_description": "When someone interacts with your posts, you'll see it here."
         },
         "content": {
-          "and": " and ",
-          "others": "others",
+            "and": " and ",
+            "others": "others",
 
-          "followedYou": "followed you",
+            "followedYou": "followed you",
 
-          "likedYourPost": "liked your post",
-          "likedYourReply": "liked your reply",
-          "likedMany": "liked {count} of your posts",
+            "likedYourPost": "liked your post",
+            "likedYourReply": "liked your reply",
+            "likedMany": "liked {count} of your posts",
 
-          "repostedYourPost": "reposted your post",
-          "repostedMany": "reposted {count} of your posts",
+            "repostedYourPost": "reposted your post",
+            "repostedMany": "reposted {count} of your posts",
 
-          "sentYouAMessage": "sent you a message"
+            "sentYouAMessage": "sent you a message"
         }
+    },
+    "userActions": {
+        "addExistingAccount": "Add an existing account",
+        "logout": "Log out",
+        "logoutUsername": "Log out {username}",
+        "logoutTitle": "Log out of X?",
+        "logoutDescription": "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.",
+        "cancel": "Cancel"
     }
 }

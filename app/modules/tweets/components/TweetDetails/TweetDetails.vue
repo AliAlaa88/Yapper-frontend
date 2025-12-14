@@ -31,7 +31,7 @@
                     <button
                         v-if="ShowAIButton"
                         id="tweet-detail-ai-summary-button"
-                        class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue"
+                        class="p-1.5 rounded-full hover:bg-blue/10 transition-colors text-secondary hover:text-blue cursor-pointer"
                         :class="{ 'text-blue': showSummary }"
                         :aria-label="$t('tweets.aiSummary')"
                         :disabled="isSummaryLoading"
@@ -45,7 +45,7 @@
                     <div class="relative">
                         <button
                             id="tweet-detail-menu-button"
-                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary"
+                            class="p-1.5 rounded-full hover:bg-hover transition-colors text-secondary hover:text-primary cursor-pointer"
                             :aria-label="$t('tweets.moreActions')"
                             @click.stop="toggleActionsMenu"
                         >
@@ -85,7 +85,7 @@
                 </p>
             </div>
 
-            <div class="text-secondary text-sm mb-4 border-b border-primary pb-4">
+            <div class="text-secondary text-sm mb-4 border-b border-primary pb-2 mt-3">
                 <time id="tweet-detail-timestamp" class="hover:underline cursor-pointer">
                     {{ formatDetailDate(tweetDetails.created_at, locale) }}
                 </time>
@@ -179,7 +179,6 @@
             :is-open="showQuoteModal"
             :quoted-tweet="tweetDetails"
             @close="showQuoteModal = false"
-            @success="handleQuoteSuccess"
         />
     </div>
 </template>
@@ -279,10 +278,6 @@ const handleReply = () => {
     }
 }
 
-const handleQuoteSuccess = () => {
-    // Quote posted successfully
-}
-
 const handleViewQuotesAndReposts = () => {
     // Navigate to the quotes page for this tweet
     if (tweetDetails.value) {
@@ -335,7 +330,7 @@ const mainTweetUser = computed(() => {
         ...tweetDetails.value.user,
         avatar:
             tweetDetails.value.user.avatar_url ||
-            `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}`,
+            `https://ui-avatars.com/api/?name=${tweetDetails.value.user.name}&background=random`,
     }
 })
 
@@ -347,6 +342,7 @@ const mainTweetContent = computed(() => {
         videos: tweetDetails.value.videos || [],
         parentTweet:
             tweetDetails.value.type === 'quote' ? tweetDetails.value.parent_tweet : undefined,
+        mentions: tweetDetails.value.mentions || [],
     }
 })
 

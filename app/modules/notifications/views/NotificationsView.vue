@@ -1,9 +1,20 @@
 <template>
     <div class="flex flex-col w-full min-h-screen">
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md">
-            <h2 class="text-lg font-bold text-primary px-4 py-3">
-                {{ $t('notifications.title') }}
-            </h2>
+            <div class="flex items-center gap-8 px-4 py-3">
+                <button
+                    id="btn-back-bookmarks"
+                    type="button"
+                    class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors cursor-pointer"
+                    :aria-label="$t('navigation.back')"
+                    @click="router.back()"
+                >
+                    <ArrowLeft :size="20" class="text-primary" />
+                </button>
+                <div class="flex flex-col">
+                    <h2 class="text-xl font-bold text-primary">{{ $t('notifications.title') }}</h2>
+                </div>
+            </div>
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="handleChange" />
         </div>
         <div
@@ -53,6 +64,7 @@ import { useUserStore } from '~/modules/auth/stores/userStore'
 import NotificationsList from '~/modules/notifications/components/NotificationsList.vue'
 import { useGetNotificationsQuery } from '../queries/useGetNotificationsQuery'
 import { useGetMentionsQuery } from '../queries/useGetMentionsQuery'
+import { ArrowLeft } from 'lucide-vue-next'
 
 const { $notificationsSocketService } = useNuxtApp()
 const activeTab = ref('all')
@@ -93,7 +105,26 @@ const userStore = useUserStore()
 //     }
 // }
 
+const activeMenuTweetId = ref<string | null>(null)
+provide('activeMenuTweetId', activeMenuTweetId)
+
+const handleClickOutside = (event: MouseEvent) => {
+    if (activeMenuTweetId.value) {
+        const target = event.target as HTMLElement
+        const isMenuClick =
+            target.closest('[data-menu-container]') || target.closest('[id^="tweet-menu-button-"]')
+        if (!isMenuClick) {
+            activeMenuTweetId.value = null
+        }
+    }
+}
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
+
 onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
     if (!userStore.isLoggedIn) {
         router.push('/auth')
     }
@@ -131,9 +162,9 @@ watch(
     },
 )
 
-watch(activeTab, () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-})
+// watch(activeTab, () => {
+//     window.scrollTo({ top: 0, behavior: 'smooth' })
+// })
 
 const tabs = computed(() => [
     {

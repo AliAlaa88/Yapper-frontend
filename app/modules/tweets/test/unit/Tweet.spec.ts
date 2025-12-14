@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { nextTick, ref } from 'vue'
 import Tweet from '../../components/Tweet/Tweet.vue'
 import Publisher from '../../components/Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../../components/Tweet/subComponents/Content/Content.vue'
@@ -41,6 +41,24 @@ vi.mock('../../../TimeLine/queries/usePostTweet', () => ({
         isPending: { value: false },
         mutateAsync: vi.fn(),
     }),
+}))
+
+// Mock useTweetQueries
+vi.mock('../../queries/useTweetQueries', () => ({
+    useTweetSummaryQuery: vi.fn(() => ({
+        data: { value: null },
+        isLoading: { value: false },
+        error: { value: null },
+        refetch: vi.fn(),
+    })),
+    useDeleteTweetMutation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: { value: false },
+    })),
+    useUpdateTweetMutation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: { value: false },
+    })),
 }))
 
 const mockTweet: TweetType = {
@@ -90,7 +108,7 @@ vi.mock('../../utils/navigation', () => ({
 }))
 
 const defaultStubs = {
-    NuxtLink: true,
+    NuxtLink: { template: '<a><slot /></a>' },
     Publisher: true,
     Content: true,
     Stats: true,
@@ -104,6 +122,7 @@ const defaultStubs = {
     UserCard: { template: '<div class="user-card">UserCard</div>' },
     ProfileActionsMenu: { template: '<div class="profile-actions-menu">ProfileActionsMenu</div>' },
     FormattedTextarea: { template: '<textarea />' },
+    QuoteModal: { template: '<div class="quote-modal"></div>' },
 }
 
 const defaultGlobal = {
@@ -118,6 +137,14 @@ const defaultGlobal = {
     },
     provide: {
         $t: (key: string) => key,
+        snackbar: {
+            showSnackbar: vi.fn(),
+            handleShowSnackbar: vi.fn(),
+        },
+        confirmation: {
+            showConfirmation: vi.fn(),
+            handleShowConfirmation: vi.fn(),
+        },
     },
     // Ensure $t is available on the instance
     plugins: [
@@ -139,7 +166,10 @@ describe('Tweet Component', () => {
             props: { tweet },
             global: {
                 ...defaultGlobal,
-                provide: { snackbar: mockSnackbar },
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                },
                 mocks: { $t: (key) => key },
             },
         })
@@ -147,16 +177,20 @@ describe('Tweet Component', () => {
     })
 
     it('renders ProfileActionsMenu for actions', async () => {
+        const activeMenuTweetId = ref<string | null>(null)
         const wrapper = mount(Tweet, {
             props: { tweet: mockTweet },
             global: {
                 ...defaultGlobal,
-                stubs: { ...defaultStubs, ProfileActionsMenu: { template: '<div class="profile-actions-menu">ProfileActionsMenu</div>' } },
-                provide: { snackbar: mockSnackbar },
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                    activeMenuTweetId,
+                },
                 mocks: { $t: (key) => key },
             },
         })
-        wrapper.vm.showActionsMenu = true
+        activeMenuTweetId.value = mockTweet.tweet_id
         await nextTick()
         expect(wrapper.find('.profile-actions-menu').exists()).toBe(true)
     })
@@ -164,13 +198,19 @@ describe('Tweet Component', () => {
     it('shows QuoteModal when quoting', async () => {
         const wrapper = mount(Tweet, {
             props: { tweet: mockTweet },
-            global: { ...defaultGlobal, provide: { snackbar: mockSnackbar } },
+            global: {
+                ...defaultGlobal,
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                },
+            },
         })
         // Simulate quote action
         // Use a workaround for non-extensible objects
         wrapper.vm.showQuoteModal = true
         await nextTick()
-        expect(wrapper.findComponent({ name: 'QuoteModal' }).exists()).toBe(true)
+        expect(wrapper.find('.quote-modal').exists()).toBe(true)
     })
 
 
@@ -179,7 +219,10 @@ describe('Tweet Component', () => {
             props: { tweet: mockTweet },
             global: {
                 ...defaultGlobal,
-                provide: { snackbar: mockSnackbar },
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                },
                 stubs: {
                     ...defaultStubs,
                     NuxtLink: { template: '<a><slot /></a>' },
@@ -319,10 +362,7 @@ describe('Tweet Component', () => {
             
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                    mocks: { $t: (key) => key },
-                },
+                global: { ...defaultGlobal },
             })
             
             const link = wrapper.find('#tweet-avatar-link-t1')
@@ -341,10 +381,7 @@ describe('Tweet Component', () => {
             
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                    mocks: { $t: (key) => key },
-                },
+                global: { ...defaultGlobal },
             })
 
             await wrapper.find('article').trigger('click')

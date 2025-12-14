@@ -2,8 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
+import { ref } from 'vue' // Added ref
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
+
+// Stub global Nuxt composables
+vi.stubGlobal('useRuntimeConfig', () => ({
+    public: {
+        apiUrl: 'http://localhost:3000',
+        recaptcha: 'test-key',
+        env: 'test'
+    },
+}))
+vi.stubGlobal('navigateTo', vi.fn())
+
 import ForgetPassword from '../../components/forgetPassword.vue'
 import ForgetPasswordStep1 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep1.vue'
 import ForgetPasswordStep2 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep2.vue'
@@ -29,8 +41,15 @@ const mockAuthService = {
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
+        runWithContext: (fn: any) => fn(),
     }),
     navigateTo: vi.fn(),
+    useRuntimeConfig: () => ({
+        public: {
+            apiUrl: 'http://localhost:3000',
+            recaptcha: 'test-key',
+        },
+    }),
 }))
 
 // Mock the forgot password queries - match TanStack Vue Query structure
@@ -158,7 +177,7 @@ describe('Reset Password Flow', () => {
             await form.trigger('submit.prevent')
             await flushPromises()
 
-            expect(wrapper.findComponent(ForgetPasswordStep2).exists()).toBe(true)        
+            expect(wrapper.findComponent(ForgetPasswordStep2).exists()).toBe(true)
         })
 
         it('should move to step 2 on successful identifier verification', async () => {
@@ -293,7 +312,7 @@ describe('Reset Password Flow', () => {
 
         it('should allow entering OTP', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 2
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -310,7 +329,7 @@ describe('Reset Password Flow', () => {
 
         it('should call verifyForgotPasswordOTP mutation with identifier and OTP', async () => {
             const verifyOTPSpy = vi.fn().mockResolvedValue({
-                data: { 
+                data: {
                     message: 'OTP verified',
                     reset_token: 'test-reset-token-123',
                 },
@@ -318,7 +337,7 @@ describe('Reset Password Flow', () => {
             mockAuthService.verifyForgotPasswordOTP = verifyOTPSpy
 
             const wrapper = mountResetPassword()
-            
+
             // Move to step 2
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -338,14 +357,14 @@ describe('Reset Password Flow', () => {
 
         it('should move to step 3 on successful OTP verification', async () => {
             mockAuthService.verifyForgotPasswordOTP.mockResolvedValue({
-                data: { 
+                data: {
                     message: 'OTP verified',
                     reset_token: 'test-reset-token-123',
                 },
             })
 
             const wrapper = mountResetPassword()
-            
+
             // Move to step 2
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -365,7 +384,7 @@ describe('Reset Password Flow', () => {
 
         it('should show error message on invalid OTP', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 2
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -394,7 +413,7 @@ describe('Reset Password Flow', () => {
 
         it('should pass identifier to step 2', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 2
             const input = wrapper.find('input[type="text"]')
             await input.setValue('test@example.com')
@@ -413,7 +432,7 @@ describe('Reset Password Flow', () => {
                 data: { message: 'Reset code sent successfully' },
             })
             mockAuthService.verifyForgotPasswordOTP.mockResolvedValue({
-                data: { 
+                data: {
                     message: 'OTP verified',
                     reset_token: 'test-reset-token-123',
                 },
@@ -422,7 +441,7 @@ describe('Reset Password Flow', () => {
 
         it('should display reset password screen after OTP verification', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move through steps 1 and 2
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -441,7 +460,7 @@ describe('Reset Password Flow', () => {
 
         it('should have two password input fields', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 3
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -461,7 +480,7 @@ describe('Reset Password Flow', () => {
 
         it('should allow entering new password', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 3
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -485,7 +504,7 @@ describe('Reset Password Flow', () => {
 
         it('should show error when passwords do not match', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 3
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -517,7 +536,7 @@ describe('Reset Password Flow', () => {
             mockAuthService.resetPassword = resetPasswordSpy
 
             const wrapper = mountResetPassword()
-            
+
             // Move to step 3
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -552,7 +571,7 @@ describe('Reset Password Flow', () => {
             })
 
             const wrapper = mountResetPassword()
-            
+
             // Move through all steps
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -579,7 +598,7 @@ describe('Reset Password Flow', () => {
 
         it('should show error on password reset failure', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 3
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -615,7 +634,7 @@ describe('Reset Password Flow', () => {
 
         it('should pass reset token to step 3', async () => {
             const wrapper = mountResetPassword()
-            
+
             // Move to step 3
             const input = wrapper.find('input[type="text"]')
             await input.setValue('user@example.com')
@@ -643,7 +662,7 @@ describe('Reset Password Flow', () => {
                 data: { message: 'Reset code sent successfully' },
             })
             mockAuthService.verifyForgotPasswordOTP.mockResolvedValue({
-                data: { 
+                data: {
                     message: 'OTP verified',
                     reset_token: 'test-reset-token-123',
                 },
@@ -694,7 +713,7 @@ describe('Reset Password Flow', () => {
                     data: { message: 'Reset code sent successfully' },
                 })
                 const verifyOTPSpy = vi.fn().mockResolvedValue({
-                    data: { 
+                    data: {
                         message: 'OTP verified',
                         reset_token: 'test-token',
                     },
@@ -702,7 +721,7 @@ describe('Reset Password Flow', () => {
                 const resetPasswordSpy = vi.fn().mockResolvedValue({
                     data: { message: 'Password reset successfully' },
                 })
-                
+
                 mockAuthService.forgotPassword = forgotPasswordSpy
                 mockAuthService.verifyForgotPasswordOTP = verifyOTPSpy
                 mockAuthService.resetPassword = resetPasswordSpy

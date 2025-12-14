@@ -45,11 +45,18 @@ const mockUserInteractions = {
     handleUnmuteWithConfirmation: vi.fn(),
     handleBlockWithConfirmation: vi.fn(),
     handleMuteWithSnackbar: vi.fn(),
+    handleMuteWithSnackbarWithAction: vi.fn(),
     handleRemoveFollowerWithConfirmation: vi.fn(),
     handleUnblockWithConfirmation: vi.fn(),
     handleUnmuteWithSnackbar: vi.fn(),
     handleUnfollowWithConfirmation: vi.fn(),
     handleFollowAction: vi.fn(),
+    handleFolloweWithSnackbar: vi.fn(),
+    handleUnfollowWithSnackbar: vi.fn(),
+    isMuteLoading: { value: false },
+    isFollowLoading: { value: false },
+    isUnfollowLoading: { value: false },
+    isUnmuteLoading: { value: false },
 }
 
 describe('ProfileActionsMenu Component', () => {
@@ -244,8 +251,9 @@ describe('ProfileActionsMenu Component', () => {
             await nextTick()
 
             const muteButton = wrapper.find('#mute-button')
-            muteButton.trigger('click')
-            expect(mockUserInteractions.handleMuteWithSnackbar).toHaveBeenCalledTimes(1)
+            await muteButton.trigger('click')
+            await nextTick()
+            expect(mockUserInteractions.handleMuteWithSnackbarWithAction).toHaveBeenCalledTimes(1)
         })
     })
 

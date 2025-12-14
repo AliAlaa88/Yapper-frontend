@@ -1,7 +1,16 @@
 <template>
     <div class="bg-primary">
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md">
-            <div class="p-4">
+            <div class="p-4 flex items-center w-full">
+                <button
+                    id="btn-back-search-mobile"
+                    type="button"
+                    class="md:hidden flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors shrink-0 cursor-pointer"
+                    :aria-label="$t('navigation.back')"
+                    @click="router.back()"
+                >
+                    <ArrowLeft :size="20" class="text-primary" />
+                </button>
                 <SearchBar :has-arrow="true" />
             </div>
 
@@ -76,6 +85,7 @@ import EmptyState from '~/modules/profile/components/ProfileContent/SubComponent
 import FollowListUserCard from '~/modules/Common/components/UserCard/UserCard.vue'
 import type { FollowUser } from '~/modules/profile/types/user'
 import MediaGrid from '~/modules/Common/components/MediaGrid/MediaGrid.vue'
+import { ArrowLeft } from 'lucide-vue-next'
 
 const { t } = useI18n()
 const route = useRoute()

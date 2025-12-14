@@ -326,7 +326,7 @@ describe('useUserInteractions', () => {
             const showList = ref(true)
             const { handleUnmuteWithSnackbar } = useUserInteractions(userId)
 
-            await handleUnmuteWithSnackbar(showList)
+            await handleUnmuteWithSnackbar(false, showList)
 
             expect(showList.value).toBe(false)
         })

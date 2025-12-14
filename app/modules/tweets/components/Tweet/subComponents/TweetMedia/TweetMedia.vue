@@ -4,6 +4,7 @@
         :modules="[Pagination]"
         :pagination="{ clickable: true }"
         class="rounded-2xl border border-primary tweet-media-swiper max-h-[500px]"
+        @slideChange="onSlideChange"
     >
         <SwiperSlide
             v-for="(media, index) in mediaArray"
@@ -21,6 +22,7 @@
             <div
                 v-else-if="media.type === 'video'"
                 class="video-wrapper w-full h-full"
+                :data-slide-index="index"
                 @pointerdown.stop.prevent="onVideoPointerDown"
                 @pointerup.stop.prevent="onVideoPointerUp"
                 @pointercancel.stop.prevent="onVideoPointerUp"
@@ -50,17 +52,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import VueEasyLightbox from 'vue-easy-lightbox'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination } from 'swiper/modules'
 import { VideoPlayer } from '@videojs-player/vue'
 
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-// Import video.js styles
 import 'video.js/dist/video-js.css'
 
 const props = defineProps<{
@@ -68,25 +68,22 @@ const props = defineProps<{
     videos?: string[]
 }>()
 
-// Lightbox state
 const lightboxVisible = ref(false)
 const lightboxIndex = ref(0)
 const mediaArray = computed(() => {
-    // i want to add meta type to the media array
     return [
         ...(props.images || []).map((image) => ({ type: 'image', url: image })),
         ...(props.videos || []).map((video) => ({ type: 'video', url: video })),
     ]
 })
 
-// Video players ref
 const videoPlayersRef = ref<InstanceType<typeof VideoPlayer>[]>([])
 
-// Swiper instance ref so we can toggle touch interaction
 const swiperRef = ref<any>(null)
 
+let intersectionObserver: IntersectionObserver | null = null
+
 function getSwiperInstance() {
-    // Swiper Vue exposes the instance on the component ref as `.swiper`
     return swiperRef.value?.swiper ?? swiperRef.value
 }
 
@@ -95,9 +92,7 @@ function setSwiperAllowTouch(allow: boolean) {
     if (!s) return
     try {
         s.allowTouchMove = allow
-    } catch {
-        // ignore errors when toggling swiper
-    }
+    } catch {}
 }
 
 function onVideoPointerDown(e: Event) {
@@ -115,20 +110,91 @@ function openLightbox(index: number) {
     lightboxVisible.value = true
 }
 
-// Pause videos when tab loses focus
-const handleVisibilityChange = () => {
-    if (document.hidden && videoPlayersRef.value.length > 0) {
-        for (const playerRef of videoPlayersRef.value) {
-            const player = playerRef as any
-            if (player.player && typeof player.player.pause === 'function') {
-                player.player.pause()
+function pauseAllVideos() {
+    const videoWrappers = document.querySelectorAll('.video-wrapper')
+    videoWrappers.forEach((wrapper) => {
+        const videoPlayer = wrapper.querySelector('.video-js') as any
+        if (videoPlayer && videoPlayer.player && typeof videoPlayer.player.pause === 'function') {
+            videoPlayer.player.pause()
+        }
+    })
+}
+
+function pauseVideo(wrapper: HTMLElement) {
+    const videoPlayer = wrapper.querySelector('.video-js') as any
+    if (videoPlayer && videoPlayer.player && typeof videoPlayer.player.pause === 'function') {
+        videoPlayer.player.pause()
+    }
+}
+
+function onSlideChange(swiper: any) {
+    const activeIndex = swiper.activeIndex
+    const videoWrappers = swiper.el.querySelectorAll('.video-wrapper')
+
+    videoWrappers.forEach((wrapper: HTMLElement) => {
+        const slideIndex = parseInt(wrapper.getAttribute('data-slide-index') || '0', 10)
+        if (slideIndex !== activeIndex) {
+            pauseVideo(wrapper)
+        }
+    })
+}
+
+function setupVideoObserver() {
+    if (intersectionObserver) {
+        intersectionObserver.disconnect()
+    }
+
+    intersectionObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                const videoWrapper = entry.target as HTMLElement
+
+                if (!entry.isIntersecting) {
+                    pauseVideo(videoWrapper)
+                }
+                // You can auto-play when video comes into view
+                // else if (entry.isIntersecting) {
+                //     const videoPlayer = videoWrapper.querySelector('.video-js') as any
+                //     if (videoPlayer && videoPlayer.player) {
+                //         videoPlayer.player.play()
+                //     }
+                // }
+            })
+        },
+        {
+            threshold: 0.5,
+
+            rootMargin: '0px',
+        },
+    )
+
+    setTimeout(() => {
+        if (swiperRef.value) {
+            const swiper = getSwiperInstance()
+            const container = swiper?.el || swiperRef.value.$el
+
+            if (container) {
+                const videoWrappers = container.querySelectorAll('.video-wrapper')
+                videoWrappers.forEach((wrapper: Element) => {
+                    intersectionObserver?.observe(wrapper)
+                })
             }
         }
+    }, 100)
+}
+
+// Pause videos when tab loses focus
+const handleVisibilityChange = () => {
+    if (document.hidden) {
+        pauseAllVideos()
     }
 }
 
 onMounted(() => {
     document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    // Setup Intersection Observer
+    setupVideoObserver()
 
     // Capture-phase handlers to prevent Swiper from intercepting video interactions
     const onDocPointerDown = (e: Event) => {
@@ -179,6 +245,14 @@ onMounted(() => {
 
 onUnmounted(() => {
     document.removeEventListener('visibilitychange', handleVisibilityChange)
+
+    // Cleanup Intersection Observer
+    if (intersectionObserver) {
+        intersectionObserver.disconnect()
+        intersectionObserver = null
+    }
+
+    // Cleanup document event handlers
     const handlers = (onMounted as any)._tweetMedia_docHandlers
     if (handlers) {
         document.removeEventListener('pointerdown', handlers.onDocPointerDown, true)

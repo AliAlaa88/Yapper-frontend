@@ -30,7 +30,9 @@
                         <NuxtImg
                             :src="
                                 user?.avatar_url ||
-                                'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name)
+                                'https://ui-avatars.com/api/?name=' +
+                                    encodeURIComponent(user.name) +
+                                    '&background=random'
                             "
                             :alt="user.name"
                             class="h-10 w-10 rounded-full object-cover shrink-0"

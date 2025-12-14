@@ -475,6 +475,7 @@ describe('userInfoServiceReal', () => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
+                    timeout: 60000,
                 },
             )
             expect(result).toBe(imageUrl)
@@ -524,6 +525,7 @@ describe('userInfoServiceReal', () => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
+                    timeout: 60000,
                 },
             )
             expect(result).toBe(imageUrl)
