@@ -200,6 +200,7 @@
                     <div class="py-2">
                         <!-- Logout -->
                         <button
+                            id="logout-btn"
                             class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleLogoutClick"
                         >
