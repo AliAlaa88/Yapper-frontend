@@ -104,7 +104,7 @@
             >@{{ username }}</span
         >
         <span class="text-secondary text-sm">·</span>
-        <span class="text-secondary text-sm hover:underline cursor-pointer">
+        <span class="text-secondary text-sm hover:underline cursor-pointer whitespace-nowrap">
             {{ formatDate(createdAt, locale) }}
         </span>
     </div>

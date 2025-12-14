@@ -5,10 +5,10 @@
             <template #trigger>
                 <button
                     id="tweet-reply-button"
-                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
+                    class="group flex cursor-pointer items-center text-secondary hover:text-blue transition-colors"
                     @click.stop="handleReplyClick"
                 >
-                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                    <div class="p-1 rounded-full group-hover:bg-blue/10 transition-colors">
                         <MessageCircle :size="18" />
                     </div>
                     <span class="text-xs min-w-5">{{
@@ -34,14 +34,14 @@
                         <button
                             id="tweet-retweet-button"
                             :class="[
-                                'flex cursor-pointer items-center gap-1 transition-colors',
+                                'flex cursor-pointer items-center transition-colors',
                                 localIsReposted || isRepostHovered
                                     ? 'text-green'
                                     : 'text-secondary',
                             ]"
                             @click.stop="toggleRepostMenu"
                         >
-                            <div class="p-2 rounded-full group-hover:bg-green/10 transition-colors">
+                            <div class="p-1 rounded-full group-hover:bg-green/10 transition-colors">
                                 <Repeat2
                                     :size="18"
                                     :color="
@@ -124,17 +124,18 @@
                 <button
                     id="tweet-like-button"
                     :class="[
-                        'group flex cursor-pointer items-center gap-1 transition-colors',
+                        'group flex cursor-pointer items-center transition-colors',
                         localIsLiked ? 'text-red' : 'text-secondary hover:text-red',
                     ]"
                     @click.stop="handleLikeClick"
                 >
-                    <div class="p-2 rounded-full group-hover:bg-red/10 transition-colors relative">
-                        <Heart
-                            :size="18"
-                            :fill="localIsLiked ? 'currentColor' : 'none'"
-                            :class="{ 'animate-like': isAnimating }"
-                        />
+                    <div
+                        :class="[
+                            'p-1 rounded-full group-hover:bg-red/10 relative',
+                            { 'animate-like': isAnimating },
+                        ]"
+                    >
+                        <Heart :size="18" :fill="localIsLiked ? 'currentColor' : 'none'" />
                     </div>
                     <span class="text-xs min-w-5">{{ formatCount(localLikesCount, locale) }}</span>
                 </button>
@@ -151,10 +152,10 @@
             <template #trigger>
                 <button
                     id="tweet-views-button"
-                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
+                    class="group flex cursor-pointer items-center text-secondary hover:text-blue transition-colors"
                     @click.stop
                 >
-                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                    <div class="p-1 rounded-full group-hover:bg-blue/10 transition-colors">
                         <BarChart3 :size="18" />
                     </div>
                     <span class="text-xs min-w-5">{{ formatCount(views || 0, locale) }}</span>
@@ -171,12 +172,12 @@
                 <button
                     id="tweet-bookmark-button"
                     :class="[
-                        'group flex cursor-pointer items-center gap-1 transition-colors',
+                        'group flex cursor-pointer items-center transition-colors',
                         localIsBookmarked ? 'text-blue' : 'text-secondary hover:text-blue',
                     ]"
                     @click.stop="handleBookmarkClick"
                 >
-                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                    <div class="p-1 rounded-full group-hover:bg-blue/10 transition-colors">
                         <Bookmark :size="18" :fill="localIsBookmarked ? 'currentColor' : 'none'" />
                     </div>
                 </button>
@@ -197,10 +198,10 @@
             <template #trigger>
                 <button
                     id="tweet-share-button"
-                    class="group flex cursor-pointer items-center gap-1 text-secondary hover:text-blue transition-colors"
+                    class="group flex cursor-pointer items-center text-secondary hover:text-blue transition-colors"
                     @click.stop="handleShareClick"
                 >
-                    <div class="p-2 rounded-full group-hover:bg-blue/10 transition-colors">
+                    <div class="p-1 rounded-full group-hover:bg-blue/10 transition-colors">
                         <Share :size="18" />
                     </div>
                 </button>
@@ -363,6 +364,16 @@ const handleLikeClick = () => {
                             likes_count: localLikesCount.value,
                         }
                     }
+                    if (tweet.parent_tweet?.tweet_id === tweet_id.value) {
+                        return {
+                            ...tweet,
+                            parent_tweet: {
+                                ...tweet.parent_tweet,
+                                is_liked: localIsLiked.value,
+                                likes_count: localLikesCount.value,
+                            },
+                        }
+                    }
                     return tweet
                 })
 
@@ -406,6 +417,16 @@ const handleLikeClick = () => {
                                     ...tweet,
                                     is_liked: previousLikedState,
                                     likes_count: previousLikesCount,
+                                }
+                            }
+                            if (tweet.parent_tweet?.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    parent_tweet: {
+                                        ...tweet.parent_tweet,
+                                        is_liked: previousLikedState,
+                                        likes_count: previousLikesCount,
+                                    },
                                 }
                             }
                             return tweet
@@ -484,16 +505,24 @@ const handleRepostAction = () => {
             pages: oldData.pages.map((page: any) => {
                 const updatedData = page.data.map((tweet: any) => {
                     if (tweet.tweet_id === tweet_id.value) {
-                        // Create a new object reference
                         return {
                             ...tweet,
                             is_reposted: localIsReposted.value,
                             reposts_count: localRepostsCount.value,
                         }
                     }
+                    if (tweet.parent_tweet?.tweet_id === tweet_id.value) {
+                        return {
+                            ...tweet,
+                            parent_tweet: {
+                                ...tweet.parent_tweet,
+                                is_reposted: localIsReposted.value,
+                                reposts_count: localRepostsCount.value,
+                            },
+                        }
+                    }
                     return tweet
                 })
-
                 return {
                     ...page,
                     data: updatedData,
@@ -530,6 +559,15 @@ const handleBookmarkClick = () => {
                         return {
                             ...tweet,
                             is_bookmarked: localIsBookmarked.value,
+                        }
+                    }
+                    if (tweet.parent_tweet?.tweet_id === tweet_id.value) {
+                        return {
+                            ...tweet,
+                            parent_tweet: {
+                                ...tweet.parent_tweet,
+                                is_bookmarked: localIsBookmarked.value,
+                            },
                         }
                     }
                     return tweet
@@ -577,6 +615,15 @@ const handleBookmarkClick = () => {
                                 return {
                                     ...tweet,
                                     is_bookmarked: previousBookmarkedState,
+                                }
+                            }
+                            if (tweet.parent_tweet?.tweet_id === tweet_id.value) {
+                                return {
+                                    ...tweet,
+                                    parent_tweet: {
+                                        ...tweet.parent_tweet,
+                                        is_bookmarked: previousBookmarkedState,
+                                    },
                                 }
                             }
                             return tweet
