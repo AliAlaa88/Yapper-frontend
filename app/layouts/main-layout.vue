@@ -12,7 +12,7 @@
         <div
             class="border-l border-r border-primary w-full md:w-[600px] md:min-w-[600px] md:max-w-[600px] transition-all duration-300 ease-in-out order-2"
         >
-            <div v-if="isSidebarVisible" class="sm:hidden block">
+            <div v-if="isSidebarVisible && !isSearch" class="sm:hidden block">
                 <MobileSidebar />
             </div>
             <slot />
@@ -51,6 +51,9 @@ const isSidebarVisible = computed(
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
 const { sidebarWidth } = useSidebarState()
+const isSearch = computed(
+    () => route.path.startsWith('/explore') || route.path.startsWith('/search'),
+)
 
 const isRTL = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)

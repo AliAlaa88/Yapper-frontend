@@ -41,18 +41,6 @@
                 class="fixed top-0 bottom-0 z-9999 w-[280px] bg-primary shadow-xl overflow-y-auto flex flex-col"
                 :class="isRTL ? 'right-0' : 'left-0'"
             >
-                <!-- Drawer Header -->
-                <div class="p-4 border-b border-primary flex justify-between items-center">
-                    <span class="font-bold text-lg">{{ t('timeline.sidebar.profile') }}</span>
-                    <button
-                        id="btn-close-mobile-sidebar"
-                        @click="isOpen = false"
-                        class="p-2 hover:bg-hover rounded-full transition-colors cursor-pointer"
-                    >
-                        <X class="w-6 h-6 text-primary" />
-                    </button>
-                </div>
-
                 <!-- User Info Summary -->
                 <div class="p-4 border-b border-primary">
                     <div class="flex flex-col gap-1">
