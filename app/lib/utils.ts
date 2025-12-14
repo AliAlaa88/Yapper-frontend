@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-
+import twitterText from 'twitter-text'
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
@@ -45,11 +45,18 @@ export function parseLinks(
             return `<NuxtLink href="${href}" data-mention="${escapeHtml(user)}" class="text-accent hover:underline">${display}</NuxtLink>`
         })
     }
-    const hashtagRegex = /#([\p{L}0-9_-]+)/gu
-    const withHashtags = withMentions.replace(hashtagRegex, (_match: string, tag: string) => {
-        const display = `#${escapeHtml(tag)}`
-        const href = `/search?q=${encodeURIComponent('#' + tag)}`
-        return `<NuxtLink href="${href}" data-hashtag="${escapeHtml(tag)}" class="text-accent hover:underline">${display}</NuxtLink>`
+
+    const extractedHashtags = twitterText.extractHashtags(text)
+
+    let withHashtags = withMentions
+    extractedHashtags.forEach((tag: string) => {
+        const escapedTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const hashtagRegex = new RegExp(`#${escapedTag}(?![^<]*>)(?![^<]*</)`, 'gi')
+        withHashtags = withHashtags.replace(hashtagRegex, () => {
+            const display = `#${escapeHtml(tag)}`
+            const href = `/search?q=${encodeURIComponent('#' + tag)}`
+            return `<NuxtLink href="${href}" data-hashtag="${escapeHtml(tag)}" class="text-accent hover:underline">${display}</NuxtLink>`
+        })
     })
 
     return withHashtags
