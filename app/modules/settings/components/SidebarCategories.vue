@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import DetailedHeader from './DetailedHeader.vue'
-import { ChevronRight, Search, ChevronLeft } from 'lucide-vue-next'
+import { ChevronRight, ChevronLeft } from 'lucide-vue-next'
 import { useRoute } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
