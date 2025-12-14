@@ -85,6 +85,12 @@ const errorMessage = ref('')
 const newEmail = ref('')
 const showOTPModal = ref(false)
 
+watch(newEmail, () => {
+    if (errorMessage.value) {
+        errorMessage.value = ''
+    }
+})
+
 const { sendEmailOTPMutation } = userSettingsQueries()
 
 const isValidEmail = computed(() => {
