@@ -1,44 +1,3 @@
-  it('renders with zero and large stat values (formatted)', () => {
-    const wrapper = shallowMount(Stats, {
-      props: { stats: shallowReactive({
-        likes: 0,
-        replies: 0,
-        retweets: 99999,
-        views: 1234567,
-        is_liked: false,
-        is_reposted: false,
-        is_bookmarked: false,
-        tweet_id: 't2',
-        username: 'bob',
-        user_id: 'u2',
-      }) },
-      global,
-    })
-    // Only retweets count is visible, and is formatted as 99K
-    expect(wrapper.text()).toContain('99K')
-  })
-
-  it('does not render views button if views is missing', () => {
-    const wrapper = shallowMount(Stats, {
-      props: { stats: shallowReactive({
-        ...defaultStats,
-        views: undefined,
-      }) },
-      global,
-    })
-    // Should not contain the views button id
-    expect(wrapper.html()).not.toContain('tweet-views-button')
-  })
-
-
-
-  it('matches snapshot', () => {
-    const wrapper = shallowMount(Stats, {
-      props: { stats: shallowReactive({ ...defaultStats }) },
-      global,
-    })
-    expect(wrapper.html()).toMatchSnapshot()
-  })
 // Mock vue-i18n useI18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({ t: (key: string) => key, locale: 'en' }),
@@ -51,7 +10,7 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
 }))
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import { shallowReactive } from 'vue'
 import Stats from '../../components/Tweet/subComponents/Stats/Stats.vue'
 
@@ -60,9 +19,9 @@ const likeMutate = vi.fn()
 const repostMutate = vi.fn()
 const bookmarkMutate = vi.fn()
 vi.mock('../../queries/useTweetQueries', () => ({
-  mutateTweetLikesQuery: () => ({ mutate: likeMutate, isPending: false }),
-  mutateTweetRepostsQuery: () => ({ mutate: repostMutate, isPending: false }),
-  mutateTweetBookmarkQuery: () => ({ mutate: bookmarkMutate, isPending: false }),
+  mutateTweetLikesQuery: () => ({ mutate: likeMutate, isPending: { value: false } }),
+  mutateTweetRepostsQuery: () => ({ mutate: repostMutate, isPending: { value: false } }),
+  mutateTweetBookmarkQuery: () => ({ mutate: bookmarkMutate, isPending: { value: false } }),
 }))
 vi.mock('../../stores/tweetTransition', () => ({
   useTweetTransitionStore: () => ({}),
@@ -85,7 +44,11 @@ describe('Stats Component', () => {
   const mockSnackbar = { show: vi.fn() }
   const global = {
     provide: { snackbar: mockSnackbar },
-    stubs: ['RouterLink', 'FontAwesomeIcon', 'CustomToolTip'],
+    stubs: {
+      'RouterLink': true,
+      'FontAwesomeIcon': true,
+      'CustomToolTip': { template: '<div><slot name="trigger" /></div>' },
+    },
   }
 
   beforeEach(() => {
@@ -94,8 +57,62 @@ describe('Stats Component', () => {
     bookmarkMutate.mockClear()
   })
 
-  it('renders retweets count as visible text', () => {
+  it('renders with zero and large stat values (formatted)', () => {
+    const wrapper = mount(Stats, {
+      props: { stats: shallowReactive({
+        likes: 0,
+        replies: 0,
+        retweets: 99999,
+        views: 1234567,
+        is_liked: false,
+        is_reposted: false,
+        is_bookmarked: false,
+        tweet_id: 't2',
+        username: 'bob',
+        user_id: 'u2',
+      }) },
+      global: {
+        provide: { snackbar: mockSnackbar },
+        stubs: {
+          'RouterLink': true,
+          'FontAwesomeIcon': true,
+          'CustomToolTip': { template: '<div><slot name="trigger" /></div>' },
+        },
+      },
+    })
+    // Only retweets count is visible, and is formatted as 99K
+    expect(wrapper.text()).toContain('99K')
+  })
+
+  it('does not render views button if views is missing', () => {
     const wrapper = shallowMount(Stats, {
+      props: { stats: shallowReactive({
+        ...defaultStats,
+        views: undefined,
+      }) },
+      global,
+    })
+    // Should not contain the views button id
+    expect(wrapper.html()).not.toContain('tweet-views-button')
+  })
+
+  it('matches snapshot', () => {
+    const wrapper = mount(Stats, {
+      props: { stats: shallowReactive({ ...defaultStats }) },
+      global: {
+        provide: { snackbar: mockSnackbar },
+        stubs: {
+          'RouterLink': true,
+          'FontAwesomeIcon': true,
+          'CustomToolTip': { template: '<div><slot name="trigger" /></div>' },
+        },
+      },
+    })
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('renders retweets count as visible text', () => {
+    const wrapper = mount(Stats, {
       props: { stats: shallowReactive({ ...defaultStats }) },
       global,
     })
@@ -103,10 +120,18 @@ describe('Stats Component', () => {
   })
 
   it('renders CustomToolTip stubs', () => {
-    const wrapper = shallowMount(Stats, {
+    const wrapper = mount(Stats, {
       props: { stats: shallowReactive({ ...defaultStats }) },
-      global,
+      global: {
+        provide: { snackbar: mockSnackbar },
+        stubs: {
+          'RouterLink': true,
+          'FontAwesomeIcon': true,
+          'CustomToolTip': { template: '<div><slot name="trigger" /></div>' },
+        },
+      },
     })
-    expect(wrapper.findAllComponents({ name: 'CustomToolTip' }).length).toBeGreaterThan(0)
+    // After mounting with proper CustomToolTip stub, buttons should be rendered
+    expect(wrapper.findAll('button').length).toBeGreaterThan(0)
   })
 })

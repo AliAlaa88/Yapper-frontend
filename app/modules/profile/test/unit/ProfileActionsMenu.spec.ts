@@ -51,6 +51,12 @@ const mockUserInteractions = {
     handleUnmuteWithSnackbar: vi.fn(),
     handleUnfollowWithConfirmation: vi.fn(),
     handleFollowAction: vi.fn(),
+    handleFolloweWithSnackbar: vi.fn(),
+    handleUnfollowWithSnackbar: vi.fn(),
+    isMuteLoading: { value: false },
+    isFollowLoading: { value: false },
+    isUnfollowLoading: { value: false },
+    isUnmuteLoading: { value: false },
 }
 
 describe('ProfileActionsMenu Component', () => {

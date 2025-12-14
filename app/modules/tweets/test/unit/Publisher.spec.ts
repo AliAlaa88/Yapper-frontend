@@ -1,12 +1,23 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Publisher from '../../components/Tweet/subComponents/Publisher/Publisher.vue'
-import type { User } from '../../types'
+
+// Mock Nuxt composables
+vi.mock('#app', () => ({
+    navigateTo: vi.fn(),
+    useRouter: () => ({ push: vi.fn() }),
+    useNuxtApp: () => ({
+        $queryClient: {},
+        $userInfoService: {},
+    }),
+}))
 
 // Mock the utility functions
 vi.mock('../../utils/lib', () => ({
     formatDate: vi.fn((date) => '2h'), // Mock return value
 }))
+
+import Publisher from '../../components/Tweet/subComponents/Publisher/Publisher.vue'
+import type { User } from '../../types'
 
 vi.mock('../../utils/navigation', () => ({
     getProfileUrl: vi.fn((user) => user.link || `/profile/${user.username}`),

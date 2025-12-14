@@ -1,3 +1,16 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+// Mock Nuxt composables FIRST
+vi.mock('#app', () => ({
+  navigateTo: vi.fn(),
+  useRouter: () => ({ push: vi.fn() }),
+  useNuxtApp: () => ({
+    $queryClient: {},
+    $userInfoService: {},
+    $tweetService: {},
+  }),
+}))
+
 // Mock user store for Stats.vue
 vi.mock('~/modules/auth/stores/userStore', () => ({
   useUserStore: () => ({
@@ -12,9 +25,10 @@ vi.mock('../../queries/useTweetQueries', () => ({
   mutateTweetLikesQuery: () => ({ mutate: likeMutate, isPending: false }),
   mutateTweetRepostsQuery: () => ({ mutate: repostMutate, isPending: false }),
   mutateTweetBookmarkQuery: () => ({ mutate: bookmarkMutate, isPending: false }),
+  useDeleteTweetMutation: () => ({ mutateAsync: vi.fn() }),
+  useUpdateTweetMutation: () => ({ mutateAsync: vi.fn() }),
 }))
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, shallowMount } from '@vue/test-utils'
 import { shallowReactive } from 'vue'
 import Reply from '../../components/TweetDetails/Reply/Reply.vue'
@@ -37,6 +51,20 @@ vi.mock('../../utils/navigation', () => ({
   getTweetUrl: vi.fn((tweet) => `/${tweet.user.username}/status/${tweet.tweet_id}`),
 }))
 
+vi.mock('~/modules/profile/composables/useSnackbar', () => ({
+  useSnackbar: () => ({
+    showSnackbar: vi.fn(),
+    handleShowSnackbar: vi.fn(),
+  }),
+}))
+
+vi.mock('~/modules/profile/composables/useConfirmation', () => ({
+  useConfirmation: () => ({
+    showConfirmation: vi.fn(),
+    handleShowConfirmation: vi.fn(),
+  }),
+}))
+
 // Mock Pinia store
 vi.mock('../../stores/tweetTransition', () => ({
   useTweetTransitionStore: () => ({ setTransitionTweet: vi.fn() }),
@@ -45,7 +73,13 @@ vi.mock('../../stores/tweetTransition', () => ({
 describe('Reply Component', () => {
   const mockSnackbar = { handleShowSnackbar: vi.fn() }
   const global = {
-    provide: { snackbar: mockSnackbar },
+    provide: {
+      snackbar: mockSnackbar,
+      confirmation: {
+        showConfirmation: vi.fn(),
+        handleShowConfirmation: vi.fn(),
+      },
+    },
     stubs,
     mocks: { $t: (key) => key },
   }
