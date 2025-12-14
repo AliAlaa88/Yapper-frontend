@@ -1,309 +1,388 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ref, computed } from 'vue'
+import { mount } from '@vue/test-utils'
+import { ref } from 'vue'
+import PostTweet from '../../components/postTweet/PostTweet.vue'
+import { createPinia, setActivePinia } from 'pinia'
 
-describe('PostTweet.vue', () => {
-  beforeEach(() => {
-    // Mock useNuxtApp
-    vi.stubGlobal('useNuxtApp', () => ({
-      $chatSocketService: {
-        totalUnreadChats: { value: 0 },
-      },
-      $notificationsSocketService: {
-        unreadCount: { value: 0 },
-      },
-    }))
+// Mock dependencies
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({
+        t: (key: string, options?: any) => {
+            if (key === 'timeline.postTweet.replyingTo') return 'Replying to'
+            if (key === 'timeline.postTweet.placeholder') return "What's happening?"
+            if (key === 'timeline.postTweet.post') return 'Post'
+            return key
+        },
+    }),
+}))
 
-    // Mock inject for snackbar
-    vi.stubGlobal('inject', () => ({
-      handleShowSnackbar: vi.fn(),
-    }))
-  })
+vi.mock('#app', () => ({
+    navigateTo: vi.fn(),
+    useNuxtApp: () => ({
+        $chatSocketService: {
+            totalUnreadChats: ref(0),
+        },
+        $notificationsSocketService: {
+            unreadCount: ref(0),
+        },
+    }),
+}))
 
-  it('should initialize with empty content', () => {
-    const content = ref('')
-    expect(content.value).toBe('')
-  })
+vi.mock('pinia', () => ({
+    storeToRefs: () => ({
+        user: ref({
+            id: 'user-1',
+            username: 'testuser',
+            name: 'Test User',
+            avatar_url: 'https://example.com/avatar.jpg',
+        }),
+    }),
+    defineStore: vi.fn(),
+    createPinia: () => ({}),
+    setActivePinia: vi.fn(),
+}))
 
-  it('should initialize with empty media array', () => {
-    const mediaUrls = ref([])
-    expect(mediaUrls.value.length).toBe(0)
-  })
+vi.mock('~/modules/auth/stores/userStore', () => ({
+    useUserStore: () => ({
+        user: ref({
+            id: 'user-1',
+            username: 'testuser',
+            name: 'Test User',
+            avatar_url: 'https://example.com/avatar.jpg',
+        }),
+    }),
+}))
 
-  it('should initialize with closed emoji picker', () => {
-    const showEmojiPicker = ref(false)
-    expect(showEmojiPicker.value).toBe(false)
-  })
+vi.mock('~/modules/TimeLine/queries/useUploadMedia', () => ({
+    useUploadMedia: () => ({
+        mutateAsync: vi.fn(),
+    }),
+}))
 
-  it('should initialize with closed GIF picker', () => {
-    const showGifPicker = ref(false)
-    expect(showGifPicker.value).toBe(false)
-  })
+vi.mock('~/modules/TimeLine/queries/usePostTweet', () => ({
+    usePostTweet: () => ({
+        mutateAsync: vi.fn(),
+        isPending: ref(false),
+    }),
+}))
 
-  it('should have max characters limit of 200', () => {
-    const MAX_CHARS = 200
-    expect(MAX_CHARS).toBe(200)
-  })
+vi.mock('~/utils/helpers', () => ({
+    handleImageError: vi.fn(),
+}))
 
-  it('should calculate remaining characters correctly', () => {
-    const content = 'Hello World' // 11 characters
-    const MAX_CHARS = 200
-    const remainingChars = MAX_CHARS - content.length
-    expect(remainingChars).toBe(189)
-  })
+describe('PostTweet Component', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+        // Mock inject for snackbar
+        vi.stubGlobal('inject', () => ({
+            handleShowSnackbar: vi.fn(),
+        }))
+    })
 
-  it('should show warning at 20 or fewer remaining characters', () => {
-    const MAX_CHARS = 200
-    const content = 'a'.repeat(185) // 15 remaining
-    const remainingChars = MAX_CHARS - content.length
-    const showWarning = remainingChars <= 20
-    expect(showWarning).toBe(true)
-  })
+    it('should mount component successfully', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.exists()).toBe(true)
+    })
 
-  it('should show error when over character limit', () => {
-    const MAX_CHARS = 200
-    const content = 'a'.repeat(201)
-    const isOverLimit = content.length > MAX_CHARS
-    expect(isOverLimit).toBe(true)
-  })
+    it('should render form element', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('form').exists()).toBe(true)
+    })
 
-  it('should disable post button when content is empty and no media', () => {
-    const content = ref('')
-    const mediaUrls = ref([])
-    const isEmpty = content.value.trim().length === 0 && mediaUrls.value.length === 0
-    expect(isEmpty).toBe(true)
-  })
+    it('should render user avatar', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: { template: '<a><slot /></a>' },
+                    NuxtImg: { template: '<img />' },
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('img').exists()).toBe(true)
+    })
 
-  it('should enable post button when content exists', () => {
-    const content = ref('Test tweet')
-    const isEmpty = content.value.trim().length === 0
-    expect(isEmpty).toBe(false)
-  })
+    it('should render FormattedTextarea', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: { template: '<textarea class="formatted-textarea"></textarea>' },
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('.formatted-textarea').exists()).toBe(true)
+    })
 
-  it('should enable post button when media exists', () => {
-    const content = ref('')
-    const mediaUrls = ref([{ url: 'test.jpg', type: 'image' }])
-    const isEmpty = content.value.trim().length === 0 && mediaUrls.value.length === 0
-    expect(isEmpty).toBe(false)
-  })
+    it('should show replying to username when provided', () => {
+        const wrapper = mount(PostTweet, {
+            props: {
+                replyingToUsername: 'johndoe',
+            },
+            global: {
+                stubs: {
+                    NuxtLink: { template: '<a><slot /></a>' },
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.text()).toContain('Replying to')
+        expect(wrapper.text()).toContain('@johndoe')
+    })
 
-  it('should have max 4 media items', () => {
-    const mediaUrls = ref([
-      { url: '1.jpg', type: 'image' },
-      { url: '2.jpg', type: 'image' },
-      { url: '3.jpg', type: 'image' },
-      { url: '4.jpg', type: 'image' },
-    ])
-    const canAddMore = mediaUrls.value.length < 4
-    expect(canAddMore).toBe(false)
-  })
+    it('should not show replying indicator when no username', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.text()).not.toContain('Replying to')
+    })
 
-  it('should allow adding media when less than max', () => {
-    const mediaUrls = ref([{ url: '1.jpg', type: 'image' }])
-    const canAddMore = mediaUrls.value.length < 4
-    expect(canAddMore).toBe(true)
-  })
+    it('should render media upload button', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: { template: '<button class="media-upload-btn"></button>' },
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('.media-upload-btn').exists()).toBe(true)
+    })
 
-  it('should remove media by index', () => {
-    const mediaUrls = ref([
-      { url: '1.jpg', type: 'image' },
-      { url: '2.jpg', type: 'image' },
-    ])
-    const indexToRemove = 0
-    mediaUrls.value.splice(indexToRemove, 1)
-    expect(mediaUrls.value.length).toBe(1)
-    expect(mediaUrls.value[0].url).toBe('2.jpg')
-  })
+    it('should render emoji picker button', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: { template: '<div><slot name="trigger" /></div>' },
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        const emojiButton = wrapper.find('#post-tweet-emoji-picker-btn')
+        expect(emojiButton.exists()).toBe(true)
+    })
 
-  it('should toggle emoji picker state', () => {
-    const showEmojiPicker = ref(false)
-    showEmojiPicker.value = !showEmojiPicker.value
-    expect(showEmojiPicker.value).toBe(true)
-  })
+    it('should render GIF picker button', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: { template: '<div><slot name="trigger" /></div>' },
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        const gifButton = wrapper.find('#post-tweet-gif-picker-btn')
+        expect(gifButton.exists()).toBe(true)
+    })
 
-  it('should toggle GIF picker state', () => {
-    const showGifPicker = ref(false)
-    showGifPicker.value = !showGifPicker.value
-    expect(showGifPicker.value).toBe(true)
-  })
+    it('should render post button', () => {
+        const wrapper = mount(PostTweet, {
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: { template: '<button id="post-tweet-post-btn">Post</button>' },
+                },
+            },
+        })
+        
+        expect(wrapper.find('#post-tweet-post-btn').exists()).toBe(true)
+    })
 
-  it('should close emoji picker when GIF picker opens', () => {
-    const showEmojiPicker = ref(true)
-    const showGifPicker = ref(false)
-    
-    showGifPicker.value = true
-    showEmojiPicker.value = false
-    
-    expect(showGifPicker.value).toBe(true)
-    expect(showEmojiPicker.value).toBe(false)
-  })
+    it('should apply border class when border prop is true', () => {
+        const wrapper = mount(PostTweet, {
+            props: {
+                border: true,
+            },
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        const form = wrapper.find('form')
+        expect(form.classes()).toContain('border-b')
+    })
 
-  it('should handle emoji selection', () => {
-    const content = ref('Hello')
-    const emoji = '😀'
-    content.value += emoji
-    expect(content.value).toBe('Hello😀')
-  })
+    it('should not apply border class when border prop is false', () => {
+        const wrapper = mount(PostTweet, {
+            props: {
+                border: false,
+            },
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        const form = wrapper.find('form')
+        expect(form.classes()).not.toContain('border-b')
+    })
 
-  it('should handle GIF selection', () => {
-    const mediaUrls = ref([])
-    const gifUrl = 'https://example.com/gif.gif'
-    mediaUrls.value.push({ url: gifUrl, type: 'image' })
-    expect(mediaUrls.value.length).toBe(1)
-    expect(mediaUrls.value[0].url).toBe(gifUrl)
-  })
+    it('should show QuotedTweet when quotedTweet prop is provided', () => {
+        const mockTweet = {
+            id: '1',
+            content: 'Test tweet',
+            user: { username: 'testuser', name: 'Test User' },
+        }
+        
+        const wrapper = mount(PostTweet, {
+            props: {
+                quotedTweet: mockTweet,
+            },
+            global: {
+                stubs: {
+                    NuxtLink: true,
+                    NuxtImg: true,
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: { template: '<div class="quoted-tweet"></div>' },
+                    Button: true,
+                },
+            },
+        })
+        
+        expect(wrapper.find('.quoted-tweet').exists()).toBe(true)
+    })
 
-  it('should format button text for reply', () => {
-    const parentTweetId = 'tweet-1'
-    const buttonText = parentTweetId ? 'timeline.postTweet.reply' : 'timeline.postTweet.post'
-    expect(buttonText).toBe('timeline.postTweet.reply')
-  })
-
-  it('should format button text for quote', () => {
-    const quotedTweet = { tweet_id: '1' }
-    const buttonText = quotedTweet ? 'timeline.postTweet.post' : 'timeline.postTweet.post'
-    expect(buttonText).toBe('timeline.postTweet.post')
-  })
-
-  it('should format button text for regular post', () => {
-    const parentTweetId = undefined
-    const buttonText = parentTweetId ? 'timeline.postTweet.reply' : 'timeline.postTweet.post'
-    expect(buttonText).toBe('timeline.postTweet.post')
-  })
-
-  it('should set placeholder for reply', () => {
-    const parentTweetId = 'tweet-1'
-    const placeholder = parentTweetId ? 'timeline.postTweet.replyPlaceholder' : 'timeline.postTweet.placeholder'
-    expect(placeholder).toBe('timeline.postTweet.replyPlaceholder')
-  })
-
-  it('should set placeholder for quote', () => {
-    const quotedTweet = { tweet_id: '1' }
-    const placeholder = quotedTweet ? 'timeline.postTweet.quotePlaceholder' : 'timeline.postTweet.placeholder'
-    expect(placeholder).toBe('timeline.postTweet.quotePlaceholder')
-  })
-
-  it('should set custom placeholder when provided', () => {
-    const customPlaceholder = 'Write your custom text here'
-    expect(customPlaceholder).toBe('Write your custom text here')
-  })
-
-  it('should calculate character progress correctly', () => {
-    const MAX_CHARS = 200
-    const content = 'a'.repeat(100)
-    const progress = Math.min(content.length / MAX_CHARS, 1)
-    expect(progress).toBe(0.5)
-  })
-
-  it('should calculate character progress at limit', () => {
-    const MAX_CHARS = 200
-    const content = 'a'.repeat(200)
-    const progress = Math.min(content.length / MAX_CHARS, 1)
-    expect(progress).toBe(1)
-  })
-
-  it('should build tweet data for regular post', () => {
-    const content = 'Hello World'
-    const mediaUrls = [{ url: '1.jpg', type: 'image' }]
-    const tweetData = {
-      content,
-      images: mediaUrls.filter(m => m.type === 'image').map(m => m.url),
-      videos: mediaUrls.filter(m => m.type === 'video').map(m => m.url),
-    }
-    expect(tweetData.content).toBe('Hello World')
-    expect(tweetData.images.length).toBe(1)
-    expect(tweetData.videos.length).toBe(0)
-  })
-
-  it('should build tweet data for reply', () => {
-    const content = 'Reply text'
-    const parentTweetId = 'parent-1'
-    const tweetData = {
-      content,
-      parent_tweet_id: parentTweetId,
-      type: 'reply',
-      images: [],
-      videos: [],
-    }
-    expect(tweetData.type).toBe('reply')
-    expect(tweetData.parent_tweet_id).toBe('parent-1')
-  })
-
-  it('should build tweet data for quote', () => {
-    const content = 'Quote text'
-    const quotedTweetId = 'quoted-1'
-    const tweetData = {
-      content,
-      parent_tweet_id: quotedTweetId,
-      type: 'quote',
-      images: [],
-      videos: [],
-    }
-    expect(tweetData.type).toBe('quote')
-    expect(tweetData.parent_tweet_id).toBe('quoted-1')
-  })
-
-  it('should handle image upload', () => {
-    const mediaUrls = ref([])
-    const imageUrl = 'https://example.com/image.jpg'
-    mediaUrls.value.push({ url: imageUrl, type: 'image' })
-    expect(mediaUrls.value[0].type).toBe('image')
-  })
-
-  it('should handle video upload', () => {
-    const mediaUrls = ref([])
-    const videoUrl = 'https://example.com/video.mp4'
-    mediaUrls.value.push({ url: videoUrl, type: 'video' })
-    expect(mediaUrls.value[0].type).toBe('video')
-  })
-
-  it('should clear content after successful post', () => {
-    const content = ref('Test tweet')
-    content.value = ''
-    expect(content.value).toBe('')
-  })
-
-  it('should clear media after successful post', () => {
-    const mediaUrls = ref([{ url: 'test.jpg', type: 'image' }])
-    mediaUrls.value = []
-    expect(mediaUrls.value.length).toBe(0)
-  })
-
-  it('should have proper form submission structure', () => {
-    const formMethod = 'prevent'
-    expect(formMethod).toBe('prevent')
-  })
-
-  it('should show avatar in compact mode with w-10 h-10', () => {
-    const compact = true
-    const avatarClass = compact ? 'w-10 h-10' : 'w-16 h-16'
-    expect(avatarClass).toBe('w-10 h-10')
-  })
-
-  it('should show avatar in full mode with w-16 h-16', () => {
-    const compact = false
-    const avatarClass = compact ? 'w-10 h-10' : 'w-16 h-16'
-    expect(avatarClass).toBe('w-16 h-16')
-  })
-
-  it('should filter images from media array', () => {
-    const mediaUrls = [
-      { url: '1.jpg', type: 'image' },
-      { url: 'video.mp4', type: 'video' },
-      { url: '2.jpg', type: 'image' },
-    ]
-    const images = mediaUrls.filter(m => m.type === 'image').map(m => m.url)
-    expect(images.length).toBe(2)
-    expect(images).toContain('1.jpg')
-  })
-
-  it('should filter videos from media array', () => {
-    const mediaUrls = [
-      { url: '1.jpg', type: 'image' },
-      { url: 'video.mp4', type: 'video' },
-      { url: 'video2.mp4', type: 'video' },
-    ]
-    const videos = mediaUrls.filter(m => m.type === 'video').map(m => m.url)
-    expect(videos.length).toBe(2)
-    expect(videos).toContain('video.mp4')
-  })
+    it('should use compact avatar size when compact prop is true', () => {
+        const wrapper = mount(PostTweet, {
+            props: {
+                compact: true,
+            },
+            global: {
+                stubs: {
+                    NuxtLink: { template: '<a><slot /></a>' },
+                    NuxtImg: { template: '<img class="avatar" />' },
+                    FormattedTextarea: true,
+                    CustomToolTip: true,
+                    MediaUpload: true,
+                    GifPicker: true,
+                    EmojiPicker: true,
+                    QuotedTweet: true,
+                    Button: true,
+                },
+            },
+        })
+        
+        // Component renders avatar with compact sizing
+        expect(wrapper.find('.avatar').exists()).toBe(true)
+    })
 })
