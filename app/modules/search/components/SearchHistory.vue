@@ -35,7 +35,6 @@
                         :id="`btn-remove-search-history-${index}`"
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors cursor-pointer"
-                        @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.query"
                         @click.stop="removeItem(index)"
                     >
@@ -72,7 +71,6 @@
                     <button
                         type="button"
                         class="p-1 hover:bg-accent/10 rounded-full shrink-0 transition-colors"
-                        @click.stop="removeItem(index)"
                         :aria-label="$t('search.removeQuery') + ' ' + item.name"
                         @click.stop="removeItem(index)"
                     >
