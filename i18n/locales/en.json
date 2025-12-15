@@ -117,9 +117,12 @@
         "username": {
             "title": "What should we call you?",
             "info": "Your username is unique. You can always change it later.",
+            "label": "Username",
             "placeholder": "username",
             "available": "Available!",
-            "recommendations": "Recommended usernames:"
+            "recommendations": "Recommended usernames:",
+            "showMore": "Show more",
+            "showLess": "Show less"
         },
         "profilePicture": {
             "title": "Pick a profile picture",
@@ -155,12 +158,21 @@
             "passwordMismatch": "Passwords do not match."
         },
         "language": {
-            "title": "Select your language",
-            "info": "This will help us personalize your Yapper experience."
+            "title": "Select language",
+            "info": "You'll be able to see posts, people, and trends in any languages you choose.",
+            "showMore": "Show more"
         },
         "interests": {
-            "title": "What are you interested in?",
-            "info": "Select at least 3 interests to help us tailor your feed."
+            "title": "What do you want to see on Yapper?",
+            "info": "Choose what you like, and we'll customize your Yapper experience with more of what you're interested in.",
+            "selected": "of 1 selected"
+        },
+        "whoToFollow": {
+            "title": "Don't miss out",
+            "info": "When you follow someone, you'll see their posts in your Timeline. You'll also get more relevant recommendations.",
+            "requirement": "Follow 1 or more accounts",
+            "follow": "Follow",
+            "following": "Following"
         },
         "validation": {
             "emailRequired": "Email is required",
