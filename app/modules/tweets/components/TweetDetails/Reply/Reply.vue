@@ -80,7 +80,11 @@
                     </div>
                 </div>
                 <Content :content="content" />
-                <Stats :stats="stats" />
+                <Stats
+                    :stats="stats"
+                    @reply="showReplyModal = true"
+                    @quote="showQuoteModal = true"
+                />
             </div>
         </div>
 
@@ -95,6 +99,8 @@
         />
     </article>
 
+    <ReplyModal :is-open="showReplyModal" :parent-tweet="reply" @close="showReplyModal = false" />
+    <QuoteModal :is-open="showQuoteModal" :quoted-tweet="reply" @close="showQuoteModal = false" />
     <!-- Nested Replies -->
     <div v-if="hasNestedReplies">
         <Reply
@@ -123,6 +129,8 @@ import ProfileActionsMenu from '../../../../profile/components/ProfileHeader/Sub
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useTweetActions } from '../../../composables/useTweetActions'
 import EditTweetModal from '../../EditTweetModal/EditTweetModal.vue'
+import ReplyModal from '../../ReplyModal/ReplyModal.vue'
+import QuoteModal from '../../QuoteModal/QuoteModal.vue'
 
 const props = defineProps<{
     reply: Tweet
@@ -135,7 +143,8 @@ const userStore = useUserStore()
 // Get parent tweet ID from route for cache invalidation
 const route = useRoute()
 const parentTweetId = computed(() => route.params.tweetId as string)
-
+const showReplyModal = ref(false)
+const showQuoteModal = ref(false)
 // Actions menu state
 const showActionsMenu = ref(false)
 provide('show-list', showActionsMenu)
