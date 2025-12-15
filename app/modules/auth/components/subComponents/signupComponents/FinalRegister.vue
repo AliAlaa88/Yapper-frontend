@@ -118,7 +118,8 @@ const clearPasswordError = () => {
     passwordError.value = ''
     errorMessage.value = ''
 }
-
+const config = useRuntimeConfig()
+const isTest = config.public.etest?.toString() === 'true'
 const onNext = () => {
     // Validate before submitting
     if (!validatePasswordField()) {
@@ -127,6 +128,15 @@ const onNext = () => {
     errorMessage.value = '' // Clear previous errors
     loading.value = true
 
+    if (!props.username || isTest) {
+        registerMutation.mutate({
+            Email: props.Email,
+            Username: `user${Date.now()}`,
+            Password: password.value,
+            Language: 'en',
+        })
+        return
+    }
     registerMutation.mutate({
         Email: props.Email,
         Username: props.username,

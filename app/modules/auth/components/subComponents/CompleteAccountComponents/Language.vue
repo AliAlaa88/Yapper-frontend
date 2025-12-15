@@ -7,46 +7,54 @@
         :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        slotClass="pt-4 px-8 pb-8 sm:pt-6 sm:px-10 sm:pb-10"
     >
-        <!-- Back Button -->
-
-        <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo at top -->
+        <div class="flex justify-center mb-6">
+            <Logo imgClass="w-8 lg:w-10" />
+        </div>
 
         <!-- Title -->
-        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+        <h2 class="text-2xl font-bold mb-2" :class="isArabic ? 'text-right' : 'text-left'">
             {{ $t('auth.language.title') }}
         </h2>
-        <p class="text-muted mb-6">{{ $t('auth.language.info') }}</p>
+        <p class="text-muted text-sm mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.language.info') }}</p>
 
         <!-- Language List -->
         <div class="mb-6">
-            <button
-                v-for="lang in languages"
+            <div
+                v-for="lang in displayedLanguages"
                 :key="lang.code"
                 :id="`button-language-${lang.code}`"
-                :class="[
-                    'w-full text-left px-4 py-3 rounded-lg transition duration-200 flex items-center justify-between',
-                    selectedLanguage === lang.code
-                        ? 'bg-alternate text-alternate'
-                        : 'text-primary hover:bg-hover',
-                ]"
+                class="flex items-center justify-between py-4 border-b border-primary cursor-pointer"
                 @click="selectLanguage(lang.code)"
             >
-                <span>{{ lang.name }} ({{ lang.nativeName }})</span>
-                <svg
-                    v-if="selectedLanguage === lang.code"
-                    class="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
+                <span class="text-primary">{{ lang.nativeName }} - {{ lang.name }}</span>
+                <div 
+                    class="w-5 h-5 border-2 rounded flex items-center justify-center transition"
+                    :class="selectedLanguage === lang.code ? 'bg-blue border-blue' : 'border-muted'"
                 >
-                    <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                    />
-                </svg>
+                    <svg
+                        v-if="selectedLanguage === lang.code"
+                        class="w-3 h-3 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                </div>
+            </div>
+            <!-- Show More button -->
+            <button
+                v-if="!showAllLanguages && languages.length > languagesToShow"
+                @click="showAllLanguages = true"
+                class="mt-4 text-blue hover:text-blue-light transition duration-200 text-sm w-full text-center"
+            >
+                {{ $t('auth.language.showMore') || 'Show more' }}
             </button>
         </div>
 
@@ -54,26 +62,17 @@
         <Button
             id="button-next-language"
             :disabled="!selectedLanguage"
-            buttonClass="w-full font-semibold rounded-full py-2 transition mb-3"
+            buttonClass="w-full font-semibold rounded-full py-3 transition"
             :class="[
                 selectedLanguage
                     ? 'bg-alternate hover:bg-hover-alternate text-alternate'
-                    : 'bg-alternate text-alternate',
+                    : 'bg-muted text-muted opacity-50 cursor-not-allowed',
             ]"
             :loading-text="$t('auth.common.loading')"
             :is-loading="loading"
             @click="onNext"
         >
             {{ $t('auth.common.next') }}
-        </Button>
-
-        <!-- Skip Button -->
-        <Button
-            id="button-skip-language"
-            class="w-full text-primary hover:text-blue transition duration-200"
-            @click="onSkip"
-        >
-            {{ $t('auth.common.skip') }}
         </Button>
     </Popup>
 </template>
@@ -94,6 +93,8 @@ const isArabic = computed(() => locale.value === 'ar')
 const errorMessage = ref('')
 const isSubmitting = ref(false)
 const loading = ref(false)
+const showAllLanguages = ref(false)
+const languagesToShow = 2
 
 interface Language {
     code: string
@@ -102,9 +103,16 @@ interface Language {
 }
 
 const languages: Language[] = [
-    { code: 'en', name: 'English', nativeName: 'English' },
     { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
+    { code: 'en', name: 'English', nativeName: 'English' },
 ]
+
+const displayedLanguages = computed(() => {
+    if (showAllLanguages.value) {
+        return languages
+    }
+    return languages.slice(0, languagesToShow)
+})
 
 // Use v-model for selected language
 const selectedLanguage = defineModel<string | null>('selectedLanguage', { default: null })

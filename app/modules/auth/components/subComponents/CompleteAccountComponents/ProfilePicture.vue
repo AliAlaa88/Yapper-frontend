@@ -9,16 +9,18 @@
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
         "
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        slotClass="pt-4 px-8 pb-8 sm:pt-6 sm:px-10 sm:pb-10"
     >
-        <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo at top -->
+        <div class="flex justify-center mb-6">
+            <Logo imgClass="w-8 lg:w-10" />
+        </div>
 
         <!-- Title -->
-        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+        <h2 class="text-2xl font-bold mb-2" :class="isArabic ? 'text-right' : 'text-left'">
             {{ $t('auth.profilePicture.title') }}
         </h2>
-        <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+        <p class="text-muted text-sm mb-6" :class="isArabic ? 'text-right' : 'text-left'">
             {{ $t('auth.profilePicture.info') }}
         </p>
 
