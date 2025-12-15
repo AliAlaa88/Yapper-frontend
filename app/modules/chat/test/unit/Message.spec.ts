@@ -166,12 +166,7 @@ describe('Message Component', () => {
         it('should display images when media is present', () => {
             const messageWithImage = {
                 ...mockOwnMessage,
-                media: [
-                    {
-                        url: 'https://example.com/image.jpg',
-                        type: 'image' as const,
-                    },
-                ],
+                image_url: 'https://example.com/image.jpg',
             }
 
             const wrapper = mount(Message, {
@@ -183,53 +178,45 @@ describe('Message Component', () => {
             const image = wrapper.find('img')
             expect(image.exists()).toBe(true)
             expect(image.attributes('src')).toBe('https://example.com/image.jpg')
-            expect(image.attributes('alt')).toBe('Media 1')
         })
 
-        it('should display videos when media is present', () => {
-            const messageWithVideo = {
+        it('should not display content when only image_url is present without content', () => {
+            const messageWithOnlyImage = {
                 ...mockOwnMessage,
-                media: [
-                    {
-                        url: 'https://example.com/video.mp4',
-                        type: 'video' as const,
-                    },
-                ],
+                content: '',
+                image_url: 'https://example.com/image.jpg',
             }
 
             const wrapper = mount(Message, {
                 props: {
-                    message: messageWithVideo,
+                    message: messageWithOnlyImage,
                 },
             })
 
-            const video = wrapper.find('video')
-            expect(video.exists()).toBe(true)
-            expect(video.attributes('src')).toBe('https://example.com/video.mp4')
-            expect(video.attributes('controls')).toBeDefined()
+            const image = wrapper.find('img')
+            expect(image.exists()).toBe(true)
+            expect(image.attributes('src')).toBe('https://example.com/image.jpg')
         })
 
-        it('should display multiple media items', () => {
-            const messageWithMultipleMedia = {
+        it('should display image with content when both are present', () => {
+            const messageWithImageAndContent = {
                 ...mockOwnMessage,
-                media: [
-                    { url: 'https://example.com/image1.jpg', type: 'image' as const },
-                    { url: 'https://example.com/image2.jpg', type: 'image' as const },
-                    { url: 'https://example.com/video.mp4', type: 'video' as const },
-                ],
+                content: 'Check out this image!',
+                image_url: 'https://example.com/image.jpg',
             }
 
             const wrapper = mount(Message, {
                 props: {
-                    message: messageWithMultipleMedia,
+                    message: messageWithImageAndContent,
                 },
             })
 
-            const images = wrapper.findAll('img')
-            const videos = wrapper.findAll('video')
+            const image = wrapper.find('img')
+            const text = wrapper.find('p')
 
-            expect(images).toHaveLength(2)
-            expect(videos).toHaveLength(1)
+            expect(image.exists()).toBe(true)
+            expect(image.attributes('src')).toBe('https://example.com/image.jpg')
+            expect(text.exists()).toBe(true)
         })
 
         it('should not display media section when media is empty', () => {

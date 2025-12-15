@@ -18,11 +18,25 @@ vi.mock('~/utils/helpers', () => ({
     },
 }))
 
-// Mock i18n
+// Mock i18n composable
 const mockT = vi.fn((key: string) => {
-    if (key === 'chat.noMessagesYet') return 'No messages yet'
-    return key
+    const translations: Record<string, string> = {
+        'chat.noMessagesYet': 'No messages yet',
+        'chat.noMessagesYet2': 'No messages yet',
+        'chat.youSentImage': 'You sent an image',
+        'chat.imageSentToYou': 'Image sent to you',
+        'chat.youSentVoice': 'You sent a voice message',
+        'chat.voiceSentToYou': 'Voice message sent to you',
+    }
+    return translations[key] || key
 })
+
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({
+        t: mockT,
+        locale: 'en',
+    }),
+}))
 
 describe('ConversationItem Component', () => {
     const mockConversation: Conversation = {
@@ -77,22 +91,24 @@ describe('ConversationItem Component', () => {
             expect(avatarImg.attributes('alt')).toBe('johndoe')
         })
 
-        it('should have onerror fallback when avatar_url is provided', () => {
+        it('should have fallback avatar URL available in template', () => {
             const wrapper = mount(ConversationItem, {
                 props: {
                     conversation: mockConversation,
                 },
-                global: {
-                    mocks: {
-                        $t: mockT,
-                    },
-                },
             })
 
+            // The component renders one img with the provided avatar_url
+            // and has a fallback to ui-avatars when avatar_url is null
             const avatarImg = wrapper.find('img')
-            const onError = avatarImg.attributes('onerror')
-            expect(onError).toContain('ui-avatars.com')
-            expect(onError).toContain(encodeURIComponent('John Doe'))
+            expect(avatarImg.exists()).toBe(true)
+            expect(avatarImg.attributes('src')).toBe('https://example.com/avatar.jpg')
+            // Verify the fallback mechanism exists for when avatar_url is null
+            const conversationNoAvatar = { ...mockConversation, participant: { ...mockConversation.participant, avatar_url: null } }
+            const wrapper2 = mount(ConversationItem, { props: { conversation: conversationNoAvatar } })
+            const fallbackImg = wrapper2.find('img')
+            expect(fallbackImg.attributes('src')).toContain('ui-avatars.com')
+            expect(fallbackImg.attributes('src')).toContain(encodeURIComponent('John Doe'))
         })
 
         it('should display ui-avatars when avatar_url is null', () => {

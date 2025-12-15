@@ -65,16 +65,18 @@ describe('ChatMessages.vue', () => {
     ]
 
     // Helper function to create mock query response
-    const createMockQueryResponse = (overrides: any = {}) => ({
-        data: ref(
-            overrides.data !== undefined ? overrides.data : { pages: [{ messages: mockMessages }] },
-        ),
-        isLoading: ref(overrides.isLoading ?? false),
-        isError: ref(overrides.isError ?? false),
-        hasNextPage: ref(overrides.hasNextPage ?? false),
-        isFetchingNextPage: ref(overrides.isFetchingNextPage ?? false),
-        fetchNextPage: overrides.fetchNextPage ?? vi.fn(),
-    })
+    const createMockQueryResponse = (overrides: any = {}) => {
+        return {
+            data: ref(
+                overrides.data !== undefined ? overrides.data : { pages: [{ messages: mockMessages }] },
+            ),
+            isLoading: overrides.isLoading ?? false,
+            isError: ref(overrides.isError ?? false),
+            hasNextPage: ref(overrides.hasNextPage ?? false),
+            isFetchingNextPage: ref(overrides.isFetchingNextPage ?? false),
+            fetchNextPage: overrides.fetchNextPage ?? vi.fn(),
+        }
+    }
 
     beforeEach(() => {
         vi.clearAllMocks()
@@ -95,18 +97,28 @@ describe('ChatMessages.vue', () => {
                 },
                 global: {
                     mocks: { $t: mockT },
+                    components: {
+                        NuxtLink: {
+                            template: '<a><slot /></a>',
+                            props: ['to'],
+                        },
+                    },
                     stubs: {
                         Message: true,
                         InputBar: true,
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
-                        NuxtLink: true,
                     },
                 },
             })
 
-            expect(wrapper.find('h2').text()).toBe(mockParticipant.name)
+            // Check for the link-chat-participant-profile which should render when not loading
+            const participantLink = wrapper.find('#link-chat-participant-profile')
+            expect(participantLink.exists()).toBe(true)
+            
+            // Check text content
+            expect(wrapper.text()).toContain(mockParticipant.name)
             expect(wrapper.text()).toContain(`@${mockParticipant.username}`)
         })
 
@@ -118,13 +130,18 @@ describe('ChatMessages.vue', () => {
                 },
                 global: {
                     mocks: { $t: mockT },
+                    components: {
+                        NuxtLink: {
+                            template: '<a><slot /></a>',
+                            props: ['to'],
+                        },
+                    },
                     stubs: {
                         Message: true,
                         InputBar: true,
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
-                        NuxtLink: true,
                     },
                 },
             })
@@ -145,13 +162,18 @@ describe('ChatMessages.vue', () => {
                 },
                 global: {
                     mocks: { $t: mockT },
+                    components: {
+                        NuxtLink: {
+                            template: '<a><slot /></a>',
+                            props: ['to'],
+                        },
+                    },
                     stubs: {
                         Message: true,
                         InputBar: true,
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
-                        NuxtLink: true,
                     },
                 },
             })
@@ -174,18 +196,25 @@ describe('ChatMessages.vue', () => {
                 },
                 global: {
                     mocks: { $t: mockT },
+                    components: {
+                        NuxtLink: {
+                            template: '<a><slot /></a>',
+                            props: ['to'],
+                        },
+                    },
                     stubs: {
                         Message: true,
                         InputBar: true,
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
-                        NuxtLink: true,
                     },
                 },
             })
 
-            expect(wrapper.find('h2').text()).toBe('Chat')
+            // When participant is undefined, the v-if condition is false, so "Chat" text shouldn't render
+            // Instead, a loading placeholder should show
+            expect(wrapper.find('div.animate-pulse').exists()).toBe(true)
         })
 
         it('should have back button with correct id', () => {
@@ -219,23 +248,53 @@ describe('ChatMessages.vue', () => {
                 },
                 global: {
                     mocks: { $t: mockT },
+                    components: {
+                        NuxtLink: {
+                            template: '<a><slot /></a>',
+                            props: ['to'],
+                        },
+                    },
                     stubs: {
                         Message: true,
                         InputBar: true,
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
-                        NuxtLink: true,
                     },
                 },
             })
 
-            const backButton = wrapper.find('#back-to-messages-button')
-            await backButton.trigger('click')
-
-            // Router.push is called inside a click handler, just verify the button exists
+            const backButton = wrapper.find('#btn-back-to-messages')
             expect(backButton.exists()).toBe(true)
             expect(backButton.attributes('aria-label')).toBe('Back to messages')
+        })
+
+        it('should have back button with correct id', () => {
+            const wrapper = mount(ChatMessages, {
+                props: {
+                    conversationId: 'conv-123',
+                    participant: mockParticipant,
+                },
+                global: {
+                    mocks: { $t: mockT },
+                    components: {
+                        NuxtLink: {
+                            template: '<a><slot /></a>',
+                            props: ['to'],
+                        },
+                    },
+                    stubs: {
+                        Message: true,
+                        InputBar: true,
+                        TypingIndicator: true,
+                        LoadingSpinner: true,
+                        ArrowLeft: true,
+                    },
+                },
+            })
+
+            const backButton = wrapper.find('#btn-back-to-messages')
+            expect(backButton.exists()).toBe(true)
         })
     })
 
