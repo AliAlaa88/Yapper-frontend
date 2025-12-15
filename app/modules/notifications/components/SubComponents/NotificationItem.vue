@@ -28,6 +28,9 @@ import type { ApiNotification } from '../../types/notifications'
 import { Repeat2, Heart, UserRound, MessageCircle } from 'lucide-vue-next'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { mapNotificationToTweet, shouldUseCardComponent, shouldUseTweetComponent } from '../../utils/notificationMapper'
+import { storeToRefs } from 'pinia'
+import { formatDateWithMonth } from '~/utils/helpers'
+
 const props = defineProps<{
     notification: ApiNotification
 }>()
@@ -35,6 +38,7 @@ const isNew = ref(false)
 const route = useRoute()
 const shouldUseTweet = computed(() => shouldUseTweetComponent(props.notification))
 const shouldUseCard = computed(() => shouldUseCardComponent(props.notification))
+defineExpose({ isNew })
 
 
 const tweetData = computed(() => {
