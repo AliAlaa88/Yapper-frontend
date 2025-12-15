@@ -77,4 +77,33 @@ describe('useGetMentionsQuery', () => {
         expect(typeof result.fetchPreviousMentions).toBe('function')
         expect(typeof result.refetchMentions).toBe('function')
     })
+
+    it('should call getNextPageParam with correct logic', () => {
+        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+        useGetMentionsQuery()
+        const call = (useInfiniteQuery as any).mock.calls[0][0]
+        const getNextPageParam = call.getNextPageParam
+
+        const pageWithNext = { has_next: true, page: 1, notifications: [] }
+        expect(getNextPageParam(pageWithNext)).toBe(2)
+
+        const pageWithoutNext = { has_next: false, page: 2, notifications: [] }
+        expect(getNextPageParam(pageWithoutNext)).toBeUndefined()
+
+        consoleSpy.mockRestore()
+    })
+
+    it('should handle multiple pages correctly', () => {
+        const multiPageData = ref({
+            pages: [
+                { notifications: [{ id: '1' }] },
+                { notifications: [{ id: '2' }] },
+                { notifications: [{ id: '3' }] },
+            ],
+        })
+        mockQuery.data.value = multiPageData.value
+        const { mentions } = useGetMentionsQuery()
+        expect(mentions.value).toHaveLength(3)
+        expect(mentions.value).toEqual([{ id: '1' }, { id: '2' }, { id: '3' }])
+    })
 })
