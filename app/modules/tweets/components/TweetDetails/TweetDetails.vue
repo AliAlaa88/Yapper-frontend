@@ -102,6 +102,7 @@
                 :tweet-id="tweetDetails.tweet_id"
                 :initial-content="tweetDetails.content"
                 :is-loading="isUpdateLoading"
+                :mentions="tweetDetails.mentions"
                 @close="handleCloseEditModal"
                 @save="handleSaveEdit"
             />
