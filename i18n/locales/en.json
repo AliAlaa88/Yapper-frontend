@@ -165,7 +165,7 @@
         "interests": {
             "title": "What do you want to see on Yapper?",
             "info": "Choose what you like, and we'll customize your Yapper experience with more of what you're interested in.",
-            "selected": "of 1 selected"
+            "selected": "selected"
         },
         "whoToFollow": {
             "title": "Don't miss out",

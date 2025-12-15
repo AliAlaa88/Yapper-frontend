@@ -249,6 +249,7 @@
                 <div class="flex flex-col gap-3 w-full">
                     <!-- Log out Button -->
                     <button
+                        id ="confirm-logout-btn"
                         class="w-full py-3 px-6 bg-white text-black text-[15px] font-bold rounded-full hover:bg-gray-200 transition-colors"
                         @click="confirmLogout"
                     >
@@ -257,6 +258,7 @@
 
                     <!-- Cancel Button -->
                     <button
+                        id="cancel-logout-btn"
                         class="w-full py-3 px-6 bg-transparent border border-gray-700 text-primary text-[15px] font-bold rounded-full hover:bg-gray-800/50 transition-colors"
                         @click="closeLogoutConfirm"
                     >
