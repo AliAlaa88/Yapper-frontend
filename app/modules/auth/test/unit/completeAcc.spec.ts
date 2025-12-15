@@ -16,7 +16,7 @@ import WhoToFollow from '../../components/subComponents/CompleteAccountComponent
 vi.stubGlobal('useRuntimeConfig', () => ({
     public: {
         apiUrl: 'http://localhost:3000',
-        env: 'test'
+        env: 'test',
     },
 }))
 vi.stubGlobal('navigateTo', vi.fn())
@@ -48,7 +48,7 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
 vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
     useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
         const data = ref({ id: 1, name: 'Test User' })
-        
+
         if (enableRef?.value) {
             onSuccess?.({ data: { id: 1, name: 'Test User' } })
         }
@@ -121,10 +121,31 @@ vi.mock('~/modules/explore/queries/useGetExploreQuery', () => ({
     useGetWhoToFollowQuery: vi.fn(() => ({
         data: ref({
             data: [
-                { id: '1', name: 'User One', username: 'user_one', avatar_url: 'https://example.com/avatar1.jpg', bio: 'First user', verified: true },
-                { id: '2', name: 'User Two', username: 'user_two', avatar_url: 'https://example.com/avatar2.jpg', bio: 'Second user', verified: false },
-                { id: '3', name: 'User Three', username: 'user_three', avatar_url: 'https://example.com/avatar3.jpg', bio: 'Third user', verified: true },
-            ]
+                {
+                    id: '1',
+                    name: 'User One',
+                    username: 'user_one',
+                    avatar_url: 'https://example.com/avatar1.jpg',
+                    bio: 'First user',
+                    verified: true,
+                },
+                {
+                    id: '2',
+                    name: 'User Two',
+                    username: 'user_two',
+                    avatar_url: 'https://example.com/avatar2.jpg',
+                    bio: 'Second user',
+                    verified: false,
+                },
+                {
+                    id: '3',
+                    name: 'User Three',
+                    username: 'user_three',
+                    avatar_url: 'https://example.com/avatar3.jpg',
+                    bio: 'Third user',
+                    verified: true,
+                },
+            ],
         }),
         isLoading: ref(false),
         isError: ref(false),
@@ -168,12 +189,9 @@ function mountCompleteAccount(props = {}) {
     return mount(CompleteAccount, {
         props: defaultProps,
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             stubs: {
-                'Popup': {
+                Popup: {
                     template: '<div class="popup-mock"><slot /></div>',
                 },
                 NuxtLink: { template: '<a><slot /></a>' },
@@ -424,7 +442,7 @@ describe('CompleteAccount Component', () => {
 
             const languageComponent = wrapper.findComponent(Language)
             expect(languageComponent.text()).toContain('Select language')
-            expect(languageComponent.text()).toContain('You\'ll be able to see')
+            expect(languageComponent.text()).toContain("You'll be able to see")
         })
 
         it('should display English and Arabic language options', async () => {
@@ -558,7 +576,9 @@ describe('CompleteAccount Component', () => {
 
             const interestsComponent = wrapper.findComponent(Interests)
 
-            expect(interestsComponent.text()).toContain('0 of 1 selected')
+            expect(interestsComponent.text()).toContain(
+                "What do you want to see on Yapper?Choose what you like, and we'll customize your Yapper experience with more of what you're interested in.0 selectedNext",
+            )
         })
 
         it('should require at least 3 interests message', async () => {
@@ -611,7 +631,6 @@ describe('CompleteAccount Component', () => {
             // Interests component exists and supports skip through emit
             expect(interestsComponent.exists()).toBe(true)
         })
-
 
         it('should emit finish with null/empty values when all steps are skipped', async () => {
             const wrapper = mountCompleteAccount({ skipImg: true })
@@ -704,7 +723,7 @@ describe('CompleteAccount Component', () => {
             await flushPromises()
 
             const whoToFollowComponent = wrapper.findComponent(WhoToFollow)
-            expect(whoToFollowComponent.text()).toContain('Don\'t miss out')
+            expect(whoToFollowComponent.text()).toContain("Don't miss out")
         })
 
         it('should display suggested users', async () => {
@@ -744,7 +763,7 @@ describe('CompleteAccount Component', () => {
 
             const whoToFollowComponent = wrapper.findComponent(WhoToFollow)
             const followButtons = whoToFollowComponent.findAll('button')
-            
+
             // Click follow button (should be the first user's follow button)
             if (followButtons.length > 0) {
                 await followButtons[0].trigger('click')
