@@ -1,6 +1,6 @@
 <template>
     <!-- Mobile: Bottom sheet overlay -->
-    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"></div>
+    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"/>
     <div
         v-if="isOpen"
         ref="gifPickerRef"
@@ -8,19 +8,19 @@
         :style="pickerStyle"
         @click.stop
     >
-        <div class="p-2 border-b border-primary flex gap-2" id="gif-picker-container">
+        <div id="gif-picker-container" class="p-2 border-b border-primary flex gap-2">
             <input
+                id="gif-picker-search-input"
                 v-model="query"
                 type="text"
                 placeholder="Search GIFs..."
-                id="gif-picker-search-input"
-                @input="searchGifs"
                 class="w-full px-2 py-1 rounded bg-primary outline-none text-sm text-primary placeholder:text-muted"
-            />
+                @input="searchGifs"
+            >
             <button
-                @click="$emit('close')"
-                class="text-muted hover:text-primary"
                 id="close-gif-picker-btn"
+                class="text-muted hover:text-primary"
+                @click="$emit('close')"
             >
                 <X class="w-4 h-4" />
             </button>
@@ -37,7 +37,7 @@
                     :src="gif.images.fixed_height_small.url"
                     :alt="gif.title"
                     class="rounded-md w-full h-full object-cover"
-                />
+                >
             </div>
         </div>
     </div>

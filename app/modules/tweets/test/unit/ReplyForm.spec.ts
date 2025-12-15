@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 
+import ReplyForm from '../../components/TweetDetails/Reply/ReplyForm.vue'
+
 // Mock Nuxt composables FIRST
 vi.mock('#app', () => ({
     navigateTo: vi.fn(),
@@ -11,8 +13,6 @@ vi.mock('#app', () => ({
         $tweetService: {},
     }),
 }))
-
-import ReplyForm from '../../components/TweetDetails/Reply/ReplyForm.vue'
 
 describe('ReplyForm Component', () => {
     it('renders reply input', async () => {

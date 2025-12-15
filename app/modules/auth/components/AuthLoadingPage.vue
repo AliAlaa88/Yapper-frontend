@@ -3,7 +3,7 @@
         <div class="fixed inset-0 bg-primary flex flex-col items-center justify-center z-100">
             <!-- Animated Logo -->
             <div class="animate-pulse">
-                <Logo imgClass="w-16 h-16 md:w-20 md:h-20" />
+                <Logo img-class="w-16 h-16 md:w-20 md:h-20" />
             </div>
 
             <!-- Loading text -->

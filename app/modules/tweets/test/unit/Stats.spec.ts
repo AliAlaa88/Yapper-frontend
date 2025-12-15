@@ -1,4 +1,9 @@
 // Mock vue-i18n useI18n
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount, shallowMount } from '@vue/test-utils'
+import { shallowReactive } from 'vue'
+import Stats from '../../components/Tweet/subComponents/Stats/Stats.vue'
+
 vi.mock('vue-i18n', () => ({
     useI18n: () => ({ t: (key: string) => key, locale: 'en' }),
 }))
@@ -8,11 +13,6 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
         getUser: () => ({ user_id: 'u1' }),
     }),
 }))
-
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount, shallowMount } from '@vue/test-utils'
-import { shallowReactive } from 'vue'
-import Stats from '../../components/Tweet/subComponents/Stats/Stats.vue'
 
 // Setup spies for mutation mocks
 const likeMutate = vi.fn()

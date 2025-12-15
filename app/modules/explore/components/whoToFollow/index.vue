@@ -6,8 +6,8 @@
                 <div class="flex items-center gap-8 px-4 py-3 rtl:flex-row-reverse">
                     <button
                         id="btn-back-who-to-follow"
-                        @click="router.back()"
                         class="hover:bg-hover rounded-full p-2 transition-colors cursor-pointer"
+                        @click="router.back()"
                     >
                         <ArrowLeft class="w-5 h-5 text-primary rtl:rotate-180" />
                     </button>
@@ -41,8 +41,8 @@
                     <p class="text-muted">{{ t('explore.errorLoading') }}</p>
                     <button
                         id="btn-retry-who-to-follow"
-                        @click="whoToFollowQuery.refetch()"
                         class="mt-2 text-accent hover:underline cursor-pointer"
+                        @click="whoToFollowQuery.refetch()"
                     >
                         {{ t('explore.tryAgain') }}
                     </button>

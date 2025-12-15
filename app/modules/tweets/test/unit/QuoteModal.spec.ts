@@ -1,4 +1,8 @@
-import { vi } from 'vitest'
+import { vi, describe, it, expect  } from 'vitest'
+
+import { mount } from '@vue/test-utils'
+import { defineComponent } from 'vue'
+import QuoteModal from '../../components/QuoteModal/QuoteModal.vue'
 
 // Mock Nuxt composables FIRST
 vi.mock('#app', () => ({
@@ -44,11 +48,6 @@ vi.mock('~/modules/profile/composables/useConfirmation', () => ({
         handleShowConfirmation: vi.fn(),
     }),
 }))
-
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { defineComponent } from 'vue'
-import QuoteModal from '../../components/QuoteModal/QuoteModal.vue'
 
 describe('QuoteModal Component', () => {
     const quotedTweet = {

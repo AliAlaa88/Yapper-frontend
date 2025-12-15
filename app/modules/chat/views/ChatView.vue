@@ -46,7 +46,7 @@
             />
         </div>
 
-        <CreateConversation :isOpen="isCreateConversationOpen" @close="closeCreateConversation" />
+        <CreateConversation :is-open="isCreateConversationOpen" @close="closeCreateConversation" />
     </div>
 
     <SnackBar />

@@ -9,7 +9,7 @@
                         :value="user?.email"
                         readonly
                         class="w-full outline-none bg-gray-500/30 px-4 pt-7 pb-2 rounded-md opacity-50 text-muted text-base focus:outline-none cursor-default"
-                    />
+                    >
                     <label
                         for="current-email"
                         class="absolute start-3 top-1 text-xs text-muted opacity-50 pointer-events-none px-1 py-1"

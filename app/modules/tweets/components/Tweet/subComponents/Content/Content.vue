@@ -12,7 +12,7 @@
             <TweetMedia
                 v-if="
                     (content.images && content.images.length > 0) ||
-                    (content.videos && content.videos.length > 0)
+                        (content.videos && content.videos.length > 0)
                 "
                 :images="content.images"
                 :videos="content.videos"

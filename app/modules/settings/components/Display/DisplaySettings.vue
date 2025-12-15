@@ -73,8 +73,8 @@
                                     ? bg.value === 'light'
                                         ? 'text-black'
                                         : bg.value === 'dark'
-                                          ? 'text-primary'
-                                          : 'text-primary'
+                                            ? 'text-primary'
+                                            : 'text-primary'
                                     : 'text-white',
                             ]"
                         >

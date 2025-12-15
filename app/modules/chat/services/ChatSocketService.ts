@@ -622,74 +622,74 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             queryClient.setQueryData<{
                 pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
                 pageParams: (string | null)[]
-            }>(['conversations'], (oldData) => {
-                if (!oldData) return oldData
+                    }>(['conversations'], (oldData) => {
+                        if (!oldData) return oldData
 
-                if ('pages' in oldData) {
-                    // Update the conversation with new last message
-                    const updatedConversations = oldData.pages.flatMap((page) =>
-                        page.data.map((conv) => {
-                            if (conv.id === chatId) {
-                                return {
-                                    ...conv,
-                                    last_message: message,
-                                    updated_at: new Date().toISOString(),
-                                }
-                            }
-                            return conv
-                        }),
-                    )
+                        if ('pages' in oldData) {
+                            // Update the conversation with new last message
+                            const updatedConversations = oldData.pages.flatMap((page) =>
+                                page.data.map((conv) => {
+                                    if (conv.id === chatId) {
+                                        return {
+                                            ...conv,
+                                            last_message: message,
+                                            updated_at: new Date().toISOString(),
+                                        }
+                                    }
+                                    return conv
+                                }),
+                            )
 
-                    const sortedConversations = sortConversations(updatedConversations)
+                            const sortedConversations = sortConversations(updatedConversations)
 
-                    const totalOldConversations = oldData.pages.reduce(
-                        (sum, page) => sum + page.data.length,
-                        0,
-                    )
-                    const conversationWasAdded = sortedConversations.length > totalOldConversations
+                            const totalOldConversations = oldData.pages.reduce(
+                                (sum, page) => sum + page.data.length,
+                                0,
+                            )
+                            const conversationWasAdded = sortedConversations.length > totalOldConversations
 
-                    let conversationIndex = 0
-                    const redistributedPages = oldData.pages.map((page, pageIndex) => {
-                        const basePageSize = page.data.length
-                        const pageSize =
+                            let conversationIndex = 0
+                            const redistributedPages = oldData.pages.map((page, pageIndex) => {
+                                const basePageSize = page.data.length
+                                const pageSize =
                             pageIndex === 0 && conversationWasAdded
                                 ? basePageSize + 1
                                 : basePageSize
-                        const pageData = sortedConversations.slice(
-                            conversationIndex,
-                            conversationIndex + pageSize,
-                        )
-                        conversationIndex += pageData.length
-                        return {
-                            ...page,
-                            data: pageData,
-                            nextCursor: page.nextCursor ?? null,
-                            hasMore: page.hasMore ?? false,
-                        }
-                    })
+                                const pageData = sortedConversations.slice(
+                                    conversationIndex,
+                                    conversationIndex + pageSize,
+                                )
+                                conversationIndex += pageData.length
+                                return {
+                                    ...page,
+                                    data: pageData,
+                                    nextCursor: page.nextCursor ?? null,
+                                    hasMore: page.hasMore ?? false,
+                                }
+                            })
 
-                    return {
-                        ...oldData,
-                        pages: redistributedPages,
-                    }
-                }
-
-                const updatedConversations = sortConversations(
-                    (oldData as any).map((conv: Conversation) => {
-                        if (conv.id === chatId) {
                             return {
-                                ...conv,
-                                last_message: message,
+                                ...oldData,
+                                pages: redistributedPages,
                             }
                         }
-                        return conv
-                    }),
-                )
-                return {
-                    pages: [{ data: updatedConversations, nextCursor: null, hasMore: false }],
-                    pageParams: [null],
-                }
-            })
+
+                        const updatedConversations = sortConversations(
+                            (oldData as any).map((conv: Conversation) => {
+                                if (conv.id === chatId) {
+                                    return {
+                                        ...conv,
+                                        last_message: message,
+                                    }
+                                }
+                                return conv
+                            }),
+                        )
+                        return {
+                            pages: [{ data: updatedConversations, nextCursor: null, hasMore: false }],
+                            pageParams: [null],
+                        }
+                    })
         } catch (error) {
             console.warn('[ChatSocket] Could not update conversation:', error)
         }
@@ -702,69 +702,69 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             queryClient.setQueryData<{
                 pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
                 pageParams: (string | null)[]
-            }>(['conversations'], (oldData) => {
-                if (!oldData) return oldData
+                    }>(['conversations'], (oldData) => {
+                        if (!oldData) return oldData
 
-                if ('pages' in oldData) {
-                    const updatedPages = oldData.pages.map((page) => ({
-                        ...page,
-                        data: sortConversations(
-                            page.data.map((conv) => {
+                        if ('pages' in oldData) {
+                            const updatedPages = oldData.pages.map((page) => ({
+                                ...page,
+                                data: sortConversations(
+                                    page.data.map((conv) => {
+                                        if (conv.id === chatId) {
+                                            return {
+                                                ...conv,
+                                                last_message: message,
+                                                updated_at: new Date().toISOString(),
+                                                unread_count: isInChat
+                                                    ? conv.unread_count
+                                                    : conv.unread_count + 1,
+                                            }
+                                        }
+                                        return conv
+                                    }),
+                                ),
+                            }))
+
+                            const allConversations = updatedPages.flatMap((page) => page.data)
+                            const sortedConversations = sortConversations(allConversations)
+
+                            let conversationIndex = 0
+                            const redistributedPages = oldData.pages.map((page) => {
+                                const pageSize = page.data.length
+                                const pageData = sortedConversations.slice(
+                                    conversationIndex,
+                                    conversationIndex + pageSize,
+                                )
+                                conversationIndex += pageSize
+                                return {
+                                    ...page,
+                                    data: pageData,
+                                }
+                            })
+
+                            return {
+                                ...oldData,
+                                pages: redistributedPages,
+                            }
+                        }
+
+                        const updatedConversations = sortConversations(
+                            (oldData as any).map((conv: Conversation) => {
                                 if (conv.id === chatId) {
                                     return {
                                         ...conv,
                                         last_message: message,
-                                        updated_at: new Date().toISOString(),
-                                        unread_count: isInChat
-                                            ? conv.unread_count
-                                            : conv.unread_count + 1,
+                                        unread_count: isInChat ? conv.unread_count : conv.unread_count + 1,
                                     }
                                 }
                                 return conv
                             }),
-                        ),
-                    }))
-
-                    const allConversations = updatedPages.flatMap((page) => page.data)
-                    const sortedConversations = sortConversations(allConversations)
-
-                    let conversationIndex = 0
-                    const redistributedPages = oldData.pages.map((page) => {
-                        const pageSize = page.data.length
-                        const pageData = sortedConversations.slice(
-                            conversationIndex,
-                            conversationIndex + pageSize,
                         )
-                        conversationIndex += pageSize
                         return {
-                            ...page,
-                            data: pageData,
+                            pages: [{ data: updatedConversations, nextCursor: null, hasMore: false }],
+                            pageParams: [null],
                         }
                     })
-
-                    return {
-                        ...oldData,
-                        pages: redistributedPages,
-                    }
-                }
-
-                const updatedConversations = sortConversations(
-                    (oldData as any).map((conv: Conversation) => {
-                        if (conv.id === chatId) {
-                            return {
-                                ...conv,
-                                last_message: message,
-                                unread_count: isInChat ? conv.unread_count : conv.unread_count + 1,
-                            }
-                        }
-                        return conv
-                    }),
-                )
-                return {
-                    pages: [{ data: updatedConversations, nextCursor: null, hasMore: false }],
-                    pageParams: [null],
-                }
-            })
         } catch (error) {
             console.warn('[ChatSocket] Could not update conversation on new message:', error)
         }
@@ -789,31 +789,31 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             queryClient.setQueryData<{
                 pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
                 pageParams: (string | null)[]
-            }>(['conversations'], (oldData) => {
-                if (!oldData) return oldData
+                    }>(['conversations'], (oldData) => {
+                        if (!oldData) return oldData
 
-                if ('pages' in oldData) {
-                    return {
-                        ...oldData,
-                        pages: oldData.pages.map((page) => ({
-                            ...page,
-                            data: page.data.map((conv) => {
-                                if (conv.id === chatId) {
-                                    return { ...conv, unread_count: 0 }
-                                }
-                                return conv
-                            }),
-                        })),
-                    }
-                }
+                        if ('pages' in oldData) {
+                            return {
+                                ...oldData,
+                                pages: oldData.pages.map((page) => ({
+                                    ...page,
+                                    data: page.data.map((conv) => {
+                                        if (conv.id === chatId) {
+                                            return { ...conv, unread_count: 0 }
+                                        }
+                                        return conv
+                                    }),
+                                })),
+                            }
+                        }
 
-                return (oldData as any).map((conv: Conversation) => {
-                    if (conv.id === chatId) {
-                        return { ...conv, unread_count: 0 }
-                    }
-                    return conv
-                })
-            })
+                        return (oldData as any).map((conv: Conversation) => {
+                            if (conv.id === chatId) {
+                                return { ...conv, unread_count: 0 }
+                            }
+                            return conv
+                        })
+                    })
         } catch (error) {
             console.warn('[ChatSocket] Could not clear unread count in cache:', error)
         }
@@ -840,65 +840,65 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
             queryClient.setQueryData<{
                 pages: Array<{ data: Conversation[]; nextCursor: string | null; hasMore: boolean }>
                 pageParams: (string | null)[]
-            }>(['conversations'], (oldData) => {
-                if (!oldData) {
-                    // If no data exists, create initial structure with the conversation
-                    return {
-                        pages: [{ data: [conversation], nextCursor: null, hasMore: false }],
-                        pageParams: [null],
-                    }
-                }
+                    }>(['conversations'], (oldData) => {
+                        if (!oldData) {
+                            // If no data exists, create initial structure with the conversation
+                            return {
+                                pages: [{ data: [conversation], nextCursor: null, hasMore: false }],
+                                pageParams: [null],
+                            }
+                        }
 
-                if ('pages' in oldData && oldData.pages.length > 0) {
-                    const conversationExists = oldData.pages.some((page) =>
-                        page.data.some((conv) => conv.id === conversation.id),
-                    )
+                        if ('pages' in oldData && oldData.pages.length > 0) {
+                            const conversationExists = oldData.pages.some((page) =>
+                                page.data.some((conv) => conv.id === conversation.id),
+                            )
 
-                    if (conversationExists) {
-                        return oldData
-                    }
+                            if (conversationExists) {
+                                return oldData
+                            }
 
-                    const firstPage = oldData.pages[0]
-                    if (!firstPage) {
-                        return oldData
-                    }
+                            const firstPage = oldData.pages[0]
+                            if (!firstPage) {
+                                return oldData
+                            }
 
-                    const updatedFirstPage = {
-                        ...firstPage,
-                        data: [conversation, ...firstPage.data],
-                    }
+                            const updatedFirstPage = {
+                                ...firstPage,
+                                data: [conversation, ...firstPage.data],
+                            }
 
-                    const allConversations = updatedFirstPage.data.concat(
-                        ...oldData.pages.slice(1).flatMap((page) => page.data),
-                    )
-                    const sortedConversations = sortConversations(allConversations)
+                            const allConversations = updatedFirstPage.data.concat(
+                                ...oldData.pages.slice(1).flatMap((page) => page.data),
+                            )
+                            const sortedConversations = sortConversations(allConversations)
 
-                    let conversationIndex = 0
-                    const pageSize = firstPage.data.length
-                    const redistributedPages = oldData.pages.map((page, pageIndex) => {
-                        const currentPageSize = pageIndex === 0 ? pageSize + 1 : page.data.length
-                        const pageData = sortedConversations.slice(
-                            conversationIndex,
-                            conversationIndex + currentPageSize,
-                        )
-                        conversationIndex += pageData.length
+                            let conversationIndex = 0
+                            const pageSize = firstPage.data.length
+                            const redistributedPages = oldData.pages.map((page, pageIndex) => {
+                                const currentPageSize = pageIndex === 0 ? pageSize + 1 : page.data.length
+                                const pageData = sortedConversations.slice(
+                                    conversationIndex,
+                                    conversationIndex + currentPageSize,
+                                )
+                                conversationIndex += pageData.length
+                                return {
+                                    ...page,
+                                    data: pageData,
+                                }
+                            })
+
+                            return {
+                                ...oldData,
+                                pages: redistributedPages,
+                            }
+                        }
+
                         return {
-                            ...page,
-                            data: pageData,
+                            pages: [{ data: [conversation], nextCursor: null, hasMore: false }],
+                            pageParams: [null],
                         }
                     })
-
-                    return {
-                        ...oldData,
-                        pages: redistributedPages,
-                    }
-                }
-
-                return {
-                    pages: [{ data: [conversation], nextCursor: null, hasMore: false }],
-                    pageParams: [null],
-                }
-            })
         } catch (error) {
             console.warn('[ChatSocket] Could not add conversation to cache:', error)
         }

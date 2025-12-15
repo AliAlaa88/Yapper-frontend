@@ -29,7 +29,7 @@
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all relative z-0"
                                 @error="handleImageError"
-                            />
+                            >
                         </template>
                         <template #content>
                             <UserCard

@@ -1,23 +1,23 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        @back="$emit('back')"
-        :hasCloseButton="false"
-        :hasBackButton="true"
-        contentClass="sm:max-w-xl w-full"
+        :is-open="true"
+        :has-close-button="false"
+        :has-back-button="true"
+        content-class="sm:max-w-xl w-full"
         container-class="bg-auth-popup"
-        :headerClass="
+        :header-class="
             isArabic
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
         "
-        slotClass="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
+        slot-class="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
+        @close="$emit('close')"
+        @back="$emit('back')"
     >
         <!-- Back Button -->
 
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -33,22 +33,22 @@
                 :value="props.identifier"
                 readonly
                 class="w-full bg-primary text-primary border border-alternate focus:border-blue rounded-md px-4 py-2 focus:outline-none mb-4 opacity-70 shadow-sm"
-            />
+            >
 
             <!-- Password -->
             <div class="mb-4">
                 <input
                     id="input-password-login-s2"
+                    v-model="password"
                     type="password"
                     :placeholder="$t('auth.common.password')"
-                    v-model="password"
-                    @blur="validatePasswordField"
-                    @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         passwordError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validatePasswordField"
+                    @input="clearPasswordError"
+                >
                 <p
                     v-if="passwordError"
                     class="text-red text-xs mt-1"
@@ -81,7 +81,7 @@
             <!-- Login Button -->
             <Button
                 id="button-login-s2"
-                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
+                button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
                 :loading-text="t('auth.common.loading')"
                 :is-loading="loading"
                 type="submit"

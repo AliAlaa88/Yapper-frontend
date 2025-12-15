@@ -1,6 +1,10 @@
 <template>
     <div class="relative h-[200px] bg-gray-800">
-        <img v-if="coverUrl" :src="coverUrl" alt="Cover photo" class="w-full h-full object-cover" />
+        <img
+            v-if="coverUrl"
+            :src="coverUrl"
+            alt="Cover photo"
+            class="w-full h-full object-cover" >
         <div class="absolute inset-0 bg-black/40 flex items-center justify-center gap-4">
             <button
                 id="cover-upload-button"

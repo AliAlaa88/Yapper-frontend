@@ -16,7 +16,7 @@ export function useGetExploreQuery(enabled: Ref<boolean> | boolean = false) {
 }
 
 export function useGetTrendsQuery(
-    category?: String,
+    category?: string,
     enabled: Ref<boolean> | boolean = false,
     limit?: number,
 ) {

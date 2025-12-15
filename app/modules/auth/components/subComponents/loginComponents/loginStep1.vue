@@ -1,19 +1,19 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="true"
-        contentClass="sm:max-w-xl w-full"
+        :is-open="true"
+        :has-close-button="true"
+        content-class="sm:max-w-xl w-full"
         container-class="bg-auth-popup"
-        :headerClass="
+        :header-class="
             isArabic
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
         "
-        slotClass="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
+        slot-class="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
+        @close="$emit('close')"
     >
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -25,9 +25,9 @@
 
         <!-- OR Divider -->
         <div class="flex items-center my-4 w-full">
-            <div class="flex-1 h-px border-t border-primary"></div>
+            <div class="flex-1 h-px border-t border-primary"/>
             <span class="px-3 text-muted text-sm">{{ $t('auth.common.or') }}</span>
-            <div class="flex-1 h-px border-t border-primary"></div>
+            <div class="flex-1 h-px border-t border-primary"/>
         </div>
 
         <!-- Input -->
@@ -35,16 +35,16 @@
             <div class="mb-4">
                 <input
                     id="input-identifier-login"
+                    v-model="identifier"
                     type="text"
                     :placeholder="$t('auth.login.identifierPlaceholder')"
-                    v-model="identifier"
-                    @blur="validateIdentifierField"
-                    @input="clearValidationError"
                     :class="[
                         'w-full bg-primary text-primary border border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         validationError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validateIdentifierField"
+                    @input="clearValidationError"
+                >
                 <p v-if="validationError" class="text-red text-xs mt-1">{{ validationError }}</p>
             </div>
             <p v-if="errorMessage" id="error-message-login-s1" class="text-red text-sm mb-4">
@@ -65,8 +65,8 @@
         <Button
             id="button-forgot-password-login"
             class="w-full border border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
-            @click="onForgotPassword"
             :is-loading="false"
+            @click="onForgotPassword"
         >
             {{ $t('auth.login.forgotPassword') }}
         </Button>
@@ -75,7 +75,7 @@
             {{ $t('auth.login.switchPrompt') }}
             <Button
                 id="button-switch-to-signup"
-                buttonClass="text-accent hover:underline font-semibold transition duration-200"
+                button-class="text-accent hover:underline font-semibold transition duration-200"
                 @click="$emit('switch')"
             >
                 {{ $t('auth.common.signUp') }}

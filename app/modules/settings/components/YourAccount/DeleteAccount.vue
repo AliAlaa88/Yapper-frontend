@@ -2,7 +2,7 @@
     <DetailedPanel :title="$t('settings.deleteAccount.title')">
         <div class="w-full text-primary">
             <div class="flex items-start px-4 py-3 transition">
-                <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover" />
+                <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover" >
 
                 <div class="flex-1 ml-3 space-y-1">
                     <div class="flex items-left flex-col justify-between">

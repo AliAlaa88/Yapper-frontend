@@ -1,10 +1,10 @@
 <template>
     <Popup
-        :isOpen="props.isOpen"
+        :is-open="props.isOpen"
         :title="$t('chat.createConversation.title')"
         content-class="!md:w-[600px] md:max-w-[600px] w-full border-1 border-primary rounded-2xl"
         slot-class="h-[600px]"
-        :bgColor="'bg-transparent'"
+        :bg-color="'bg-transparent'"
         @close="emit('close')"
     >
         <div class="flex flex-col h-full w-full">
@@ -18,7 +18,7 @@
                     type="text"
                     :placeholder="$t('chat.createConversation.searchUsername')"
                     class="w-full px-4 py-2.5 rounded-full bg-primary border-2 border-primary focus:border-accent outline-none text-primary text-sm"
-                />
+                >
             </div>
 
             <div class="flex-1 min-h-0 overflow-hidden px-4 pb-4">

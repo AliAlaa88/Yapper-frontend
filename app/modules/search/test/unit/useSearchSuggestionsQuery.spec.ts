@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
 
+// Import after mocking
+import { useSearchSuggestionsQuery } from '../../queries/useSearchSuggestionsQuery'
+
 // Mock useQuery
 const mockUseQuery = vi.fn()
 
@@ -18,9 +21,6 @@ vi.mock('nuxt/app', () => ({
         },
     }),
 }))
-
-// Import after mocking
-import { useSearchSuggestionsQuery } from '../../queries/useSearchSuggestionsQuery'
 
 describe('useSearchSuggestionsQuery', () => {
     beforeEach(() => {

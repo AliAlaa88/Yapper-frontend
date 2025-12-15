@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, computed } from 'vue'
 
+// Import after mocks are set up
+import { useTweetActions } from '../../composables/useTweetActions'
+
 // Mock all dependencies before importing
 vi.mock('vue-i18n', () => ({
     useI18n: () => ({
@@ -45,9 +48,6 @@ const mockShowSnackbar = ref(false)
 const mockHandleShowSnackbar = vi.fn()
 const mockShowConfirmation = ref(false)
 const mockHandleShowConfirmation = vi.fn()
-
-// Import after mocks are set up
-import { useTweetActions } from '../../composables/useTweetActions'
 
 // Mock provide/inject
 vi.mock('vue', async () => {

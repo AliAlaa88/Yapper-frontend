@@ -2,13 +2,13 @@
     <div class="min-h-svh grid grid-cols-1 md:grid-cols-2 bg-primary text-primary">
         <!-- Left section (hidden on mobile) -->
         <div class="hidden md:flex items-center justify-center relative bg-cover bg-center">
-            <Logo imgClass="relative z-10 w-32 lg:w-40" />
+            <Logo img-class="relative z-10 w-32 lg:w-40" />
         </div>
 
         <!-- Right section -->
         <div class="flex items-center justify-center p-6 sm:p-10">
             <div class="w-full max-w-md">
-                <Logo imgClass="w-10 mb-8 md:hidden" />
+                <Logo img-class="w-10 mb-8 md:hidden" />
                 <h1
                     class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-primary"
                 >

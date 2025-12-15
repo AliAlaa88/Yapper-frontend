@@ -11,7 +11,7 @@
                     :alt="tweet?.user?.name"
                     class="w-5 h-5 rounded-full"
                     @error="(event) => handleImageError(tweet?.user?.name, event)"
-                />
+                >
                 <span class="font-semibold text-primary text-sm truncate">{{
                     tweet?.user?.name
                 }}</span>
@@ -37,7 +37,7 @@
                         :src="tweet.images[0]"
                         alt="Quoted tweet media"
                         class="w-full h-full object-cover"
-                    />
+                    >
                 </div>
                 <div
                     v-else-if="tweet.videos && tweet.videos.length > 0"

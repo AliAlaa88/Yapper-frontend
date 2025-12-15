@@ -28,7 +28,7 @@
                         ? 'focus:border-red'
                         : 'focus:border-accent',
                 ]"
-            />
+            >
 
             <p
                 v-if="errorMessage || (!isValidEmail && newEmail !== '')"

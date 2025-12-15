@@ -26,7 +26,7 @@
                 required
                 autofocus
                 class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-accent mb-4 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            />
+            >
 
             <Button
                 id="reset-otp-button"

@@ -26,7 +26,7 @@
                         }"
                         required
                         autofocus
-                    />
+                    >
                     <NuxtLink
                         id="settings-link-forgot-password1"
                         to="/auth/forgot-password"

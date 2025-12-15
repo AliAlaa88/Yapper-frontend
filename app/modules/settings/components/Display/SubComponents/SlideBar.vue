@@ -18,8 +18,8 @@
                 <div class="relative h-10 flex items-center justify-between">
                     <button
                         v-for="size in fontSizes"
-                        :key="size.value"
                         :id="`btn-font-size-${size.value}`"
+                        :key="size.value"
                         :aria-label="`Font size ${size.label}`"
                         class="relative z-10 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer"
                         @click="fontSize = size.value"
@@ -31,8 +31,8 @@
                                 fontSize === size.value
                                     ? 'border-accent bg-transparent scale-0'
                                     : fontSize <= size.value
-                                      ? 'border-none bg-accent/80'
-                                      : 'border-none bg-accent',
+                                        ? 'border-none bg-accent/80'
+                                        : 'border-none bg-accent',
                             ]"
                         />
 
@@ -56,7 +56,7 @@
                     step="1"
                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                     aria-label="Font size"
-                />
+                >
             </div>
 
             <span class="text-xl text-secondary font-normal">Aa</span>

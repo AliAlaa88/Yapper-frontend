@@ -1,18 +1,18 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        :headerClass="
+        :is-open="true"
+        :has-close-button="true"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        :header-class="
             isArabic
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
         "
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
+        @close="$emit('close')"
     >
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -32,7 +32,7 @@
                     :src="previewImage"
                     alt="Profile Preview"
                     class="w-full h-full object-cover"
-                />
+                >
                 <div v-else class="w-full h-full flex items-center justify-center text-muted">
                     <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -55,7 +55,7 @@
                 accept="image/*"
                 class="hidden"
                 @change="onFileChange"
-            />
+            >
             {{ $t('auth.profilePicture.chooseImage') }}
         </label>
 
@@ -70,9 +70,9 @@
 
         <!-- Next Button -->
         <Button
-            id="button-next-profile-picture"
             v-if="previewImage"
-            buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
+            id="button-next-profile-picture"
+            button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
             :loading-text="$t('auth.common.loading')"
             :is-loading="loading"
             @click="onNext"

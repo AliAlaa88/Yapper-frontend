@@ -18,7 +18,7 @@
                         shorterName(conversation.participant.name)
                     }}</span>
                     <span class="text-secondary text-sm truncate"
-                        >@{{ conversation.participant.username }}</span
+                    >@{{ conversation.participant.username }}</span
                     >
                     <span class="text-secondary text-sm">·</span>
                     <span class="text-secondary text-sm">{{

@@ -11,7 +11,7 @@
                         :disabled="useChangePassword.isPending.value"
                         class="w-full border border-primary py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                         required
-                    />
+                    >
                     <NuxtLink
                         id="settings-forgot-password"
                         to="/auth/forgot-password"
@@ -31,7 +31,7 @@
                             class="w-full border border-primary py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                             required
                             minlength="8"
-                        />
+                        >
                         <p
                             v-if="newPassword && !isPasswordStrong"
                             class="text-red text-xs mt-1 pl-1"
@@ -49,7 +49,7 @@
                             :disabled="useChangePassword.isPending.value"
                             class="w-full border border-primary py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                             required
-                        />
+                        >
                         <p
                             v-if="confirmPassword && !passwordsMatch"
                             class="text-red text-xs mt-1 pl-1"

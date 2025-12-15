@@ -9,7 +9,7 @@
                 src="https://www.svgrepo.com/show/355037/google.svg"
                 alt="Google"
                 class="w-5 h-5"
-            />
+            >
             {{ $t('auth.OAuth.continueWithGoogle') }}
         </button>
 
@@ -22,7 +22,7 @@
                 src="https://www.svgrepo.com/show/512317/github-142.svg"
                 alt="GitHub"
                 class="w-5 h-5 github-icon"
-            />
+            >
             {{ $t('auth.OAuth.continueWithGithub') }}
         </button>
     </div>
