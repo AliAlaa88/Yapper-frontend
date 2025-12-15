@@ -76,7 +76,6 @@ const { $chatSocketService, $socketService } = useNuxtApp()
 
 const selectedConversation = ref<Conversation | null>(null)
 const isCreateConversationOpen = ref(false)
-// use reactive connection state from socket service
 const isChatSocketConnected = $socketService.connected
 
 const openCreateConversation = () => {
