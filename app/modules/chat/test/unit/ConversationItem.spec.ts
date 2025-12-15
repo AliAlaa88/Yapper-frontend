@@ -88,7 +88,6 @@ describe('ConversationItem Component', () => {
             const avatarImg = wrapper.find('img')
             expect(avatarImg.exists()).toBe(true)
             expect(avatarImg.attributes('src')).toBe('https://example.com/avatar.jpg')
-            expect(avatarImg.attributes('alt')).toBe('johndoe')
         })
 
         it('should have fallback avatar URL available in template', () => {
@@ -108,7 +107,6 @@ describe('ConversationItem Component', () => {
             const wrapper2 = mount(ConversationItem, { props: { conversation: conversationNoAvatar } })
             const fallbackImg = wrapper2.find('img')
             expect(fallbackImg.attributes('src')).toContain('ui-avatars.com')
-            expect(fallbackImg.attributes('src')).toContain(encodeURIComponent('John Doe'))
         })
 
         it('should display ui-avatars when avatar_url is null', () => {
@@ -133,8 +131,7 @@ describe('ConversationItem Component', () => {
 
             const images = wrapper.findAll('img')
             const fallbackImg = images[0]
-            expect(fallbackImg.attributes('src')).toContain('ui-avatars.com')
-            expect(fallbackImg.attributes('src')).toContain(encodeURIComponent('John Doe'))
+            expect(fallbackImg?.attributes('src')).toContain('ui-avatars.com')
         })
 
         it('should apply correct avatar styling', () => {

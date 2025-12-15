@@ -7,7 +7,7 @@ const DetailedPanelStub = { name: 'DetailedPanel', template: '<div><slot /></div
 const NuxtLinkStub = {
     name: 'NuxtLink',
     props: ['to'],
-    template: '<a :href="to"><slot /></slot></a>',
+    template: '<a :href="to"><slot /></a>',
 }
 
 vi.mock('vue-i18n', () => ({

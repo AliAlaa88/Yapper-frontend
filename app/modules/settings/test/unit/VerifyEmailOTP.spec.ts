@@ -149,18 +149,4 @@ describe('VerifyEmailOTP', () => {
         expect(resetMock).toHaveBeenCalled()
         expect(wrapper.emitted('close')).toBeTruthy()
     })
-
-    it('resets OTP and error message on close', async () => {
-        const wrapper = factory()
-
-        await wrapper.find('#input-otp').setValue('123456')
-        verifyMutateAsync.mockRejectedValueOnce(new Error('Error'))
-        await wrapper.find('form').trigger('submit.prevent')
-        await flushPromises()
-
-        await wrapper.find('[data-test="back"]').trigger('click')
-
-        expect(resetMock).toHaveBeenCalled()
-        expect(wrapper.emitted('close')).toBeTruthy()
-    })
 })

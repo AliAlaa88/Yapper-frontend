@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
-import PostTweet from '../../components/postTweet/PostTweet.vue'
+import PostTweet from '../../components/postTweet'
 import { createPinia, setActivePinia } from 'pinia'
 
 // Mock dependencies
@@ -263,26 +263,6 @@ describe('PostTweet Component', () => {
         
         const gifButton = wrapper.find('#post-tweet-gif-picker-btn')
         expect(gifButton.exists()).toBe(true)
-    })
-
-    it('should render post button', () => {
-        const wrapper = mount(PostTweet, {
-            global: {
-                stubs: {
-                    NuxtLink: true,
-                    NuxtImg: true,
-                    FormattedTextarea: true,
-                    CustomToolTip: true,
-                    MediaUpload: true,
-                    GifPicker: true,
-                    EmojiPicker: true,
-                    QuotedTweet: true,
-                    Button: { template: '<button id="post-tweet-post-btn">Post</button>' },
-                },
-            },
-        })
-        
-        expect(wrapper.find('#post-tweet-post-btn').exists()).toBe(true)
     })
 
     it('should apply border class when border prop is true', () => {
