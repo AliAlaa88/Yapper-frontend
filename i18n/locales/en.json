@@ -1045,6 +1045,7 @@
         }
     },
     "userActions": {
+        "loggingOut": "Logging out...",
         "addExistingAccount": "Add an existing account",
         "logout": "Log out",
         "logoutUsername": "Log out {username}",
