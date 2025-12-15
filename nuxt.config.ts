@@ -13,6 +13,14 @@ export default defineNuxtConfig({
     ssr: false,
     css: ['~/assets/css/main.css'],
 
+    // Remove console logs in production
+    vite: {
+        plugins: [tailwindcss()],
+        esbuild: {
+            drop: process.env.NUXT_ENV === 'production' ? ['console', 'debugger'] : [],
+        },
+    },
+
     app: {
         head: {
             charset: 'utf-8',
@@ -33,9 +41,6 @@ export default defineNuxtConfig({
         },
     },
 
-    vite: {
-        plugins: [tailwindcss()],
-    },
     runtimeConfig: {
         public: {
             apiUrl: process.env.NUXT_PUBLIC_API_URL,

@@ -48,7 +48,7 @@
             <div class="flex items-center justify-between mt-6 pt-4 border-t border-primary">
                 <!-- Selection Counter -->
                 <p class="text-muted text-sm">
-                    {{ selectedInterests.length }} {{ $t('auth.interests.selected') || 'of 1 selected' }}
+                    {{ selectedInterests.length }} {{ $t('auth.interests.selected')}}
                 </p>
                 
                 <!-- Next Button -->
@@ -152,7 +152,6 @@ const onNext = () => {
         errorMessage.value = '' // Clear previous errors
         // categoryIds are the selected interest ids
         const categoryIds = selectedInterests.value.map(id => parseInt(id))
-        console.log('Category IDs:', categoryIds)
         interestsMutation.mutate({ categoryIds })
     }
 }
