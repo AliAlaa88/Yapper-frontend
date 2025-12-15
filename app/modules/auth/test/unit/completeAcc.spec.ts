@@ -39,6 +39,11 @@ const mockUserStore = {
     setAuth: vi.fn(),
     setUser: vi.fn(),
     user: null,
+    getUser: vi.fn(() => ({
+        user_id: 'test-user-id',
+        username: 'testuser',
+        name: 'Test User',
+    })),
 }
 vi.mock('~/modules/auth/stores/userStore', () => ({
     useUserStore: () => mockUserStore,
@@ -160,6 +165,13 @@ vi.mock('#app', () => ({
         $authService: {
             getUserData: vi.fn(() => Promise.resolve({ id: 1, name: 'Test User' })),
         },
+        $queryClient: {
+            invalidateQueries: vi.fn(),
+        },
+        $userInfoService: {
+            followUser: vi.fn(() => Promise.resolve({ success: true })),
+            unfollowUser: vi.fn(() => Promise.resolve({ success: true })),
+        },
         runWithContext: (fn: any) => fn(),
         callHook: vi.fn(),
     }),
@@ -170,6 +182,66 @@ vi.mock('#app', () => ({
         },
     }),
     useCookie: () => mockCookie,
+}))
+
+// Mock profile composables for ProfileFollowAction
+vi.mock('~/modules/profile/composables/useFollow', () => ({
+    useFollow: () => ({
+        buttonClass: 'test-class',
+        buttonText: ref('Follow'),
+        handleMouseOver: vi.fn(),
+        handleMouseOut: vi.fn(),
+    }),
+}))
+
+vi.mock('~/modules/profile/composables/useUserInfo', () => ({
+    useUserInfo: () => ({
+        isBlocked: ref(false),
+        isFollowing: ref(false),
+        id: ref('test-id'),
+        username: ref('testuser'),
+    }),
+}))
+
+vi.mock('~/modules/profile/composables/useUserInteractions', () => ({
+    useUserInteractions: () => ({
+        handleFollowAction: vi.fn(),
+        handleUnfollowWithConfirmation: vi.fn(),
+        isFollowLoading: ref(false),
+    }),
+}))
+
+vi.mock('~/modules/profile/composables/useSnackbar', () => ({
+    useSnackbar: () => ({
+        showSnackbar: ref(false),
+        snackbar: ref({}),
+        handleShowSnackbar: vi.fn(),
+    }),
+}))
+
+vi.mock('~/modules/profile/composables/useConfirmation', () => ({
+    useConfirmation: () => ({
+        showConfirmation: ref(false),
+        confirmData: ref({}),
+        handleShowConfirmation: vi.fn(),
+    }),
+}))
+
+// Mock WhoToFollowList to avoid ProfileFollowAction complexity
+vi.mock('~/modules/explore/components/common/WhoToFollowList.vue', () => ({
+    default: {
+        name: 'WhoToFollowList',
+        props: ['users', 'hideBio'],
+        template: `
+            <div class="who-to-follow-list">
+                <div v-for="user in users" :key="user.user_id" class="user-card">
+                    <span class="user-name">{{ user.name }}</span>
+                    <span class="user-username">@{{ user.username }}</span>
+                    <button class="follow-button">Follow</button>
+                </div>
+            </div>
+        `,
+    },
 }))
 
 function mountCompleteAccount(props = {}) {

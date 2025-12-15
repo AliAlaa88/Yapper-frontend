@@ -5,7 +5,7 @@
         :hasCloseButton="false"
         contentClass="sm:max-w-2xl w-full"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
-        slotClass="pt-4 px-8 pb-8 sm:pt-6 sm:px-10 sm:pb-10"
+        slotClass="pt-4 px-8 pb-0 sm:pt-6 sm:px-10 sm:pb-0 flex flex-col"
         @back="$emit('back')"
         :hasBackButton="true"
     >
@@ -19,12 +19,12 @@
             <p class="text-muted text-sm mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.info') }}</p>
 
             <!-- Error Message -->
-            <div v-if="errorMessage" class="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg mb-4">
+            <p v-if="errorMessage" class="text-red-500 text-sm mb-4" :class="isArabic ? 'text-right' : 'text-left'">
                 {{ errorMessage }}
-            </div>
+            </p>
 
             <!-- Interests Grid -->
-            <div class="max-h-80 overflow-y-auto mb-4 custom-scrollbar">
+            <div class="max-h-72 overflow-y-auto mb-4 custom-scrollbar">
                 <div class="grid grid-cols-3 gap-3">
                     <button
                         v-for="interest in interests"
@@ -44,8 +44,9 @@
                 </div>
             </div>
 
-            <!-- Footer with selection counter and next button -->
-            <div class="flex items-center justify-between mt-6 pt-4 border-t border-primary">
+        <!-- Fixed Footer with selection counter and next button -->
+        <div class="sticky bottom-0 bg-primary pt-4 pb-8 -mx-8 px-8 sm:-mx-10 sm:px-10 border-t border-primary z-10">
+            <div class="flex items-center justify-between">
                 <!-- Selection Counter -->
                 <p class="text-muted text-sm">
                     {{ selectedInterests.length }} {{ $t('auth.interests.selected')}}
@@ -68,6 +69,7 @@
                     {{ $t('auth.common.next') }}
                 </Button>
             </div>
+        </div>
     </Popup>
 </template>
 

@@ -40,7 +40,11 @@ export default defineNuxtPlugin(() => {
         async (error) => {
             const requestUrl = error.config?.url || ''
             const isAuthEndpoint = requestUrl.includes('/auth/')
-
+            if(requestUrl == '/auth/refresh') {
+                userStore.logout() // logout handles both store and cookie
+                navigateTo('/auth/login')
+                return Promise.reject(error)
+            }
             if (error.response?.status === 401 && isAuthEndpoint) {
                 if (process.client) {
                     userStore.logout() // logout handles both store and cookie
@@ -64,18 +68,14 @@ export default defineNuxtPlugin(() => {
                         const authService = nuxtApp.$authService
                         const response = await authService.GetAccessToken()
                         const access_token = response.data.access_token
-                        // Update cookie (will sync to store via watch)
                         const token = useCookie('access_token')
                         token.value = access_token
-                        // Also update store directly for immediate availability
                         userStore.setAccessToken(access_token)
-                        // Retry the original request with the new token
                         const originalRequest = error.config
                         originalRequest.headers['Authorization'] = `Bearer ${access_token}`
                         return yapperApi(originalRequest)
                     } catch (refreshError) {
-                        // Refresh failed, clear access token and redirect
-                        userStore.logout() // logout handles both store and cookie
+                        userStore.logout() 
                         navigateTo('/auth/login')
                         return Promise.reject(refreshError)
                     }
