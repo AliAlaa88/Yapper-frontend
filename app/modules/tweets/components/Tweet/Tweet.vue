@@ -520,6 +520,7 @@ const parentContent = computed(() => {
             props.tweet.parent_tweet.type === 'quote'
                 ? props.tweet.parent_tweet.parent_tweet
                 : undefined,
+        mentions: props.tweet.parent_tweet.mentions || [],
     }
 })
 
