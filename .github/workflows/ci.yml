@@ -33,16 +33,19 @@ jobs:
               run: npm run test:coverage
 
             - name: SonarCloud Scan
-              uses: SonarSource/sonarcloud-github-action@master
+              uses: SonarSource/sonarqube-scan-action@v4
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
             - name: 🏗️ Build Nuxt app
               run: npm run build
 
             - name: 🎨 Check Prettier formatting
-              run: npx prettier --check "**/*.{js,ts,vue,json,css,md}"
+              run: npm run format:check
+
+            - name: 🎨 Check Prettier formatting
+              run: npm run format
 
             - name: 🧹 Run ESLint
               run: npm run lint
