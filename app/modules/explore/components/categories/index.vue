@@ -11,7 +11,11 @@
             class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary"
         >
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
-            <button id="btn-retry-categories" @click="() => trendsQuery.refetch()" class="text-accent hover:underline cursor-pointer">
+            <button
+                id="btn-retry-categories"
+                class="text-accent hover:underline cursor-pointer"
+                @click="() => trendsQuery.refetch()"
+            >
                 {{ t('explore.tryAgain') }}
             </button>
         </div>

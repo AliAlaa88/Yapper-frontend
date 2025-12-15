@@ -9,15 +9,14 @@
                         type="password"
                         :placeholder="$t('settings.currentPassword')"
                         :disabled="useChangePassword.isPending.value"
-                        class="w-full border border-primary py-3 px-3
-                        transition text-muted bg-transparent focus:outline-none rounded-md
-                        focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full border border-primary py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                         required
                     >
                     <NuxtLink
                         id="settings-forgot-password"
                         to="/auth/forgot-password"
-                        class="mt-3 pl-1 text-accent hover:underline">
+                        class="mt-3 pl-1 text-accent hover:underline"
+                    >
                         {{ $t('settings.forgot_password') }}
                     </NuxtLink>
                 </div>
@@ -29,13 +28,14 @@
                             type="password"
                             :placeholder="$t('settings.newPassword')"
                             :disabled="useChangePassword.isPending.value"
-                            class="w-full border border-primary py-3 px-3
-                            transition text-muted bg-transparent focus:outline-none rounded-md
-                            focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="w-full border border-primary py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                             required
                             minlength="8"
                         >
-                        <p v-if="newPassword && !isPasswordStrong" class="text-red text-xs mt-1 pl-1">
+                        <p
+                            v-if="newPassword && !isPasswordStrong"
+                            class="text-red text-xs mt-1 pl-1"
+                        >
                             {{ $t('settings.passwordRequirements') }}
                         </p>
                     </div>
@@ -47,12 +47,13 @@
                             type="password"
                             :placeholder="$t('settings.confirmPassword')"
                             :disabled="useChangePassword.isPending.value"
-                            class="w-full border border-primary py-3 px-3
-                            transition text-muted bg-transparent focus:outline-none rounded-md
-                            focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="w-full border border-primary py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                             required
                         >
-                        <p v-if="confirmPassword && !passwordsMatch" class="text-red text-xs mt-1 pl-1">
+                        <p
+                            v-if="confirmPassword && !passwordsMatch"
+                            class="text-red text-xs mt-1 pl-1"
+                        >
                             {{ $t('settings.passwordsDoNotMatch') }}
                         </p>
                     </div>
@@ -83,9 +84,7 @@ import DetailedPanel from '../DetailedPanel.vue'
 import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import type { useSnackbar } from '../../../profile/composables/useSnackbar'
 import { inject } from 'vue'
-const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
-    typeof useSnackbar
->
+const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<typeof useSnackbar>
 
 const { useChangePassword } = userSettingsQueries()
 
@@ -129,9 +128,7 @@ const handleSubmit = async () => {
             newPassword: newPassword.value,
         })
         showSnackbar.value = true
-        handleShowSnackbar(
-            'Your password has been successfully updated.',
-        )
+        handleShowSnackbar('Your password has been successfully updated.')
         setTimeout(() => {
             currentPassword.value = ''
             newPassword.value = ''

@@ -1,10 +1,8 @@
 import { useNuxtApp } from '#app'
 import { useQuery } from '@tanstack/vue-query'
-import { watch, type Ref } from 'vue'
+import type { Ref } from 'vue'
 
-export function useGetExploreQuery(
-    enabled: Ref<boolean> | boolean = false,
-) {
+export function useGetExploreQuery(enabled: Ref<boolean> | boolean = false) {
     const { $exploreService } = useNuxtApp()
     const query = useQuery({
         queryKey: ['getExplore'],
@@ -18,7 +16,7 @@ export function useGetExploreQuery(
 }
 
 export function useGetTrendsQuery(
-    category?: String,
+    category?: string,
     enabled: Ref<boolean> | boolean = false,
     limit?: number,
 ) {
@@ -35,9 +33,7 @@ export function useGetTrendsQuery(
     return query
 }
 
-export function useGetWhoToFollowQuery(
-    enabled: Ref<boolean> | boolean = false,
-) {
+export function useGetWhoToFollowQuery(enabled: Ref<boolean> | boolean = false) {
     const { $exploreService } = useNuxtApp()
     const query = useQuery({
         queryKey: ['who-to-follow'],

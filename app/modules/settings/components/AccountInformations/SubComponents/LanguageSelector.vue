@@ -49,7 +49,6 @@ import { useI18n } from 'vue-i18n'
 import { LOCALE_COOKIE_KEY } from '~/modules/Common/constants/localStorageConstants'
 const { t, locale } = useI18n()
 
-
 const { useChangeLanguage } = userSettingsQueries()
 const selected = ref<'en' | 'ar'>((locale.value as 'en' | 'ar') || 'en')
 

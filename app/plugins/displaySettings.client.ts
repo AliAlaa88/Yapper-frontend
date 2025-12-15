@@ -27,7 +27,6 @@ export default defineNuxtPlugin(() => {
             root.setAttribute('data-color', color)
         }
 
-
         const applyBackground = () => {
             const root = document.documentElement
             const useSystem = localStorage.getItem(STORAGE_KEYS.USE_SYSTEM) === 'true'
@@ -46,7 +45,6 @@ export default defineNuxtPlugin(() => {
                 }
             }
         }
-
 
         const applyInitialSettings = () => {
             applyFontSize()

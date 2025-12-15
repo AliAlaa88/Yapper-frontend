@@ -9,40 +9,45 @@
                         type="text"
                         :placeholder="t('settings.accountInfo.username')"
                         :disabled="updateUsernameMutation.isPending.value"
-                        class="w-full border py-3 px-3
-                        transition text-muted bg-transparent focus:outline-none rounded-md
-                        focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full border py-3 px-3 transition text-muted bg-transparent focus:outline-none rounded-md focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
                         :class="{
-                            'border-red-500 focus:ring-red-500': updateUsernameMutation.isError.value,
-                            'border-primary': !updateUsernameMutation.isError.value
+                            'border-red-500 focus:ring-red-500':
+                                updateUsernameMutation.isError.value,
+                            'border-primary': !updateUsernameMutation.isError.value,
                         }"
                         required
                         minlength="3"
                         maxlength="30"
                         pattern="[a-zA-Z0-9_]+"
-                        @input="validateUsername" >
+                        @input="validateUsername"
+                    >
 
-                    <div v-if="updateUsernameMutation.isError.value" class="mb-4 bg-red/10 rounded-lg pt-1">
+                    <div
+                        v-if="updateUsernameMutation.isError.value"
+                        class="mb-4 bg-red/10 rounded-lg pt-1"
+                    >
                         <p class="text-red text-sm">
                             {{ updateUsernameMutation.error.value?.message }}
                         </p>
                     </div>
-
                 </div>
-                <div
-                    class="w-full border-t border-b border-primary px-4 py-3 mb-2 space-y-4">
-                    <h1 class="font-bold text-xl pb-2">{{ t('settings.accountInfo.suggestions') }}</h1>
+                <div class="w-full border-t border-b border-primary px-4 py-3 mb-2 space-y-4">
+                    <h1 class="font-bold text-xl pb-2">
+                        {{ t('settings.accountInfo.suggestions') }}
+                    </h1>
                     <div
                         v-if="usernameRecommendation.isLoading.value"
-                        class="flex w-full justify-center items-center py-4">
-                        <LoadingSpinner/>
+                        class="flex w-full justify-center items-center py-4"
+                    >
+                        <LoadingSpinner />
                     </div>
                     <div
                         v-for="suggestion in usernameRecommendation.data.value.data.recommendations"
                         v-else-if="usernameRecommendation.data.value"
                         :key="suggestion"
                         class="text-accent cursor-pointer hover:underline"
-                        @click="selectFromSuggestions(suggestion)">
+                        @click="selectFromSuggestions(suggestion)"
+                    >
                         {{ suggestion }}
                     </div>
                 </div>

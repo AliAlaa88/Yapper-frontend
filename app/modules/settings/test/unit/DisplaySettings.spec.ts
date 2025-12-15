@@ -69,7 +69,6 @@ describe('DisplaySettings', () => {
             global: { mocks: { $t: (str: string) => str } },
         })
 
-
     it('renders all main sections', () => {
         const wrapper = mountComponent()
         expect(wrapper.text()).toContain('settings.color')
@@ -79,7 +78,7 @@ describe('DisplaySettings', () => {
 
     it('updates selected color when clicking a color option', async () => {
         const wrapper = mountComponent()
-        const redBtn = wrapper.find('#btn-color-red') 
+        const redBtn = wrapper.find('#btn-color-red')
         await redBtn.trigger('click')
 
         expect(color.value).toBe('red')
@@ -87,7 +86,7 @@ describe('DisplaySettings', () => {
 
     it('updates background when clicking a background button', async () => {
         const wrapper = mountComponent()
-        const darkBtn = wrapper.find('#btn-background-dark') 
+        const darkBtn = wrapper.find('#btn-background-dark')
         await darkBtn.trigger('click')
 
         expect(background.value).toBe('dark')

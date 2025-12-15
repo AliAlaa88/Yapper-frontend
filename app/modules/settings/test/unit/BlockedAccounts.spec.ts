@@ -149,5 +149,4 @@ describe('BlockedAccounts.vue', () => {
         await nextTick()
         expect(wrapper.vm.users).toHaveLength(3)
     })
-
 })

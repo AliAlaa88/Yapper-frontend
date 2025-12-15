@@ -1,7 +1,7 @@
 <template>
     <DetailedPanel :title="t('settings.display')">
         <div class="w-full">
-            <div class="relative w-full pb-4  px-5 py-2">
+            <div class="relative w-full pb-4 px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
                     {{ t('settings.display_desc2') }}
                 </p>
@@ -11,8 +11,8 @@
             <div class="px-4 py-5 border-b border-primary">
                 <h2 class="text-lg font-bold text-primary mb-5">{{ t('settings.color') }}</h2>
                 <div
-                    class="grid grid-cols-3 place-items-center
-                    justify-center sm:flex sm:justify-between px-3 gap-3">
+                    class="grid grid-cols-3 place-items-center justify-center sm:flex sm:justify-between px-3 gap-3"
+                >
                     <button
                         v-for="y_color in colorOptions"
                         :id="`btn-color-${y_color.value}`"
@@ -36,7 +36,7 @@
 
             <div class="px-4 py-5">
                 <h2 class="text-lg font-bold text-primary mb-5">{{ t('settings.background') }}</h2>
-                <div class="flex flex-col sm:flex-row  sm:justify-center gap-5 sm:gap-10 mb-5">
+                <div class="flex flex-col sm:flex-row sm:justify-center gap-5 sm:gap-10 mb-5">
                     <button
                         v-for="bg in backgroundOptions"
                         :id="`btn-background-${bg.value}`"
@@ -47,7 +47,7 @@
                                 ? 'border-accent'
                                 : 'border-primary hover:border-secondary',
                             bg.value === 'light' ? 'bg-white' : '',
-                            bg.value === 'dark' ? 'bg-black' : ''
+                            bg.value === 'dark' ? 'bg-black' : '',
                         ]"
                         @click="background = bg.value"
                     >
@@ -55,24 +55,29 @@
                             :class="[
                                 'absolute left-4 top-5 w-5 h-5 rounded-full flex items-center justify-center',
                                 background === bg.value
-                                    ? 'border-none bg-accent' : 'border border-primary'
-                            ]">
+                                    ? 'border-none bg-accent'
+                                    : 'border border-primary',
+                            ]"
+                        >
                             <Check
                                 v-if="background === bg.value"
                                 color="#f6f5f4"
                                 :stroke-width="2.5"
-                                class="absolute w-3 h-3 top-1/2 left-1/2
-                                -translate-x-1/2 -translate-y-1/2"
+                                class="absolute w-3 h-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                             />
                         </div>
                         <span
                             :class="[
                                 'text-sm font-semibold',
-                                background === bg.value ?
-                                    bg.value === 'light' ? 'text-black' :
-                                    bg.value === 'dark' ?
-                                        'text-primary' : 'text-primary' : 'text-white'
-                            ]">
+                                background === bg.value
+                                    ? bg.value === 'light'
+                                        ? 'text-black'
+                                        : bg.value === 'dark'
+                                            ? 'text-primary'
+                                            : 'text-primary'
+                                    : 'text-white',
+                            ]"
+                        >
                             {{ bg.description }}
                         </span>
                     </button>
@@ -95,23 +100,17 @@
                     id="btn-use-system-theme"
                     :class="[
                         'relative w-10 h-4 rounded-full transition-colors cursor-pointer',
-                        useSystemTheme ? 'bg-accent/60' : 'bg-gray'
+                        useSystemTheme ? 'bg-accent/60' : 'bg-gray',
                     ]"
                     role="switch"
                     :aria-checked="useSystemTheme"
                     @click="useSystemTheme = !useSystemTheme"
                 >
                     <span
-                        class="
-                            absolute top-[-2px]
-                            w-5 h-5
-                            shadow shadow-gray-400
-                            rounded-full
-                            transition-all
-                        "
+                        class="absolute top-[-2px] w-5 h-5 shadow shadow-gray-400 rounded-full transition-all"
                         :class="[
                             'absolute top-[-2px] w-5 h-5 shadow shadow-gray-400 rounded-full transition-transform',
-                            useSystemTheme ? 'end-0 bg-accent' : 'start-0 bg-white'
+                            useSystemTheme ? 'end-0 bg-accent' : 'start-0 bg-white',
                         ]"
                     />
                 </button>
@@ -128,12 +127,5 @@ import SlideBar from './SubComponents/SlideBar.vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
-const {
-    color,
-    background,
-    useSystemTheme,
-    colorOptions,
-    backgroundOptions,
-} = useDisplaySettings()
+const { color, background, useSystemTheme, colorOptions, backgroundOptions } = useDisplaySettings()
 </script>
-

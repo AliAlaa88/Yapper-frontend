@@ -51,10 +51,7 @@ function mountAuthHomePage() {
 
     return mount(AuthHomePage, {
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             stubs: {
                 NuxtLink: {
                     template: '<a><slot /></a>',
@@ -135,7 +132,6 @@ describe('Auth Home Page', () => {
             expect(createButton.exists()).toBe(true)
             expect(createButton.text()).toBe('Create account')
         })
-
 
         it('should navigate to signup page when create account is clicked', async () => {
             const wrapper = mountAuthHomePage()
@@ -342,5 +338,4 @@ describe('Auth Home Page', () => {
             expect(wrapper.html()).toBeTruthy()
         })
     })
-
 })

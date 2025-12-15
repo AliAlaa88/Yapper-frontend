@@ -8,10 +8,7 @@
         @close="handleClose"
     >
         <!-- <BackButton @close="handleClose" /> -->
-        <Logo
-            img-class="relative z-10 w-8 lg:w-10 mb-3"
-            div-class="flex justify-center mb-6"
-        />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-3" div-class="flex justify-center mb-6" />
 
         <h2 class="text-3xl font-bold mb-3">{{ $t('settings.accountInfo.we_sent_code') }}</h2>
         <p class="text-muted mb-9 text-xs">
@@ -28,9 +25,8 @@
                 :disabled="verifyEmailOTPMutation.isPending.value"
                 required
                 autofocus
-                class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-2
-                focus:outline-none focus:border-accent mb-4 shadow-sm transition-colors
-                disabled:opacity-50 disabled:cursor-not-allowed" >
+                class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-accent mb-4 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
 
             <Button
                 id="reset-otp-button"
@@ -120,5 +116,4 @@ watch(otp, () => {
         errorMessage.value = ''
     }
 })
-
 </script>

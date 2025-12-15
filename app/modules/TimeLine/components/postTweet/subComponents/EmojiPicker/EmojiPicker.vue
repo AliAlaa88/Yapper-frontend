@@ -1,31 +1,24 @@
 <template>
     <!-- Mobile: Bottom sheet overlay -->
-    <div
-        v-if="isOpen"
-        class="fixed inset-0 bg-black/50 z-50"
-        @click="$emit('close')"
-    ></div>
+    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"/>
     <div
         v-if="isOpen"
         ref="emojiPickerRef"
-        class="fixed z-60 bg-primary border border-primary shadow-lg overflow-hidden
-               md:rounded-lg rounded-t-2xl rounded-b-none
-               inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto
-               w-full md:w-auto"
+        class="fixed z-60 bg-primary border border-primary shadow-lg overflow-hidden md:rounded-lg rounded-t-2xl rounded-b-none inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto w-full md:w-auto"
         :style="pickerStyle"
         @click.stop
     >
         <div class="p-2 border-b border-primary flex justify-between items-center">
             <span class="text-primary font-semibold text-sm">Emoji</span>
             <button
-                @click="$emit('close')"
-                class="text-muted hover:text-primary"
                 id="close-emoji-picker-btn"
+                class="text-muted hover:text-primary"
+                @click="$emit('close')"
             >
                 <X class="w-4 h-4" />
             </button>
         </div>
-        <EmojiPicker @select="onSelect" :theme="emojiTheme" />
+        <EmojiPicker :theme="emojiTheme" @select="onSelect" />
     </div>
 </template>
 
@@ -55,14 +48,14 @@ const pickerStyle = computed(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
         return {}
     }
-    
+
     if (!triggerRect.value) {
         return {}
     }
-    
+
     const rect = triggerRect.value
     const pickerWidth = 352 // emoji picker default width
-    
+
     if (props.position === 'top') {
         return {
             left: `${Math.max(8, rect.left - pickerWidth / 2 + rect.width / 2)}px`,

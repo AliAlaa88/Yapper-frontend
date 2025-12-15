@@ -103,8 +103,13 @@ describe('ConversationItem Component', () => {
             expect(avatarImg.exists()).toBe(true)
             expect(avatarImg.attributes('src')).toBe('https://example.com/avatar.jpg')
             // Verify the fallback mechanism exists for when avatar_url is null
-            const conversationNoAvatar = { ...mockConversation, participant: { ...mockConversation.participant, avatar_url: null } }
-            const wrapper2 = mount(ConversationItem, { props: { conversation: conversationNoAvatar } })
+            const conversationNoAvatar = {
+                ...mockConversation,
+                participant: { ...mockConversation.participant, avatar_url: null },
+            }
+            const wrapper2 = mount(ConversationItem, {
+                props: { conversation: conversationNoAvatar },
+            })
             const fallbackImg = wrapper2.find('img')
             expect(fallbackImg.attributes('src')).toContain('ui-avatars.com')
         })

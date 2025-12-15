@@ -20,24 +20,24 @@
                     <!-- The close button, with larger size -->
                     <button
                         v-if="hasCloseButton"
+                        id="close-popup-btn"
                         class="cursor-pointer hover:bg-hover mx-4 mt-2 flex items-center justify-center border-none w-7 h-7 rounded-full transition"
                         @click="handleClose"
-                        id="close-popup-btn"
                     >
                         <X class="w-5 h-5 text-primary hover:text-primary/80" />
                     </button>
                     <button
                         v-if="hasBackButton"
+                        id="back-popup-btn"
                         class="cursor-pointer hover:bg-hover mx-4 mt-2 flex items-center justify-center border-none w-7 h-7 rounded-full transition"
                         @click="$emit('back')"
-                        id="back-popup-btn"
                     >
                         <ArrowLeft class="w-5 h-5 text-primary hover:text-primary/80" />
                     </button>
                     <h1 v-if="title" class="text-xl font-bold text-primary flex-1 text-center mr-5">
                         {{ title }}
                     </h1>
-                    <div v-if="hasCloseButton" class="w-5"></div>
+                    <div v-if="hasCloseButton" class="w-5"/>
                 </div>
 
                 <div class="overflow-y-auto" :class="slotClass">

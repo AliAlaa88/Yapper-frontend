@@ -59,7 +59,10 @@ describe('ProfileDataProvider Component', () => {
 
     it('manages profile updates', () => {
         const store = useProfileStore()
-        store.setProfile({ user_id: 'user-789', username: 'bob', followers_count: 100 } as any, false)
+        store.setProfile(
+            { user_id: 'user-789', username: 'bob', followers_count: 100 } as any,
+            false,
+        )
 
         expect(store.profile?.followers_count).toBe(100)
     })

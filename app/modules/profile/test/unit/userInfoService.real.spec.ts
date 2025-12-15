@@ -144,9 +144,7 @@ describe('userInfoServiceReal', () => {
         })
 
         it('throws error when userId is not provided', async () => {
-            await expect(userInfoServiceReal.getUserByID('')).rejects.toThrow(
-                'User ID is required',
-            )
+            await expect(userInfoServiceReal.getUserByID('')).rejects.toThrow('User ID is required')
         })
 
         it('throws error on 404 status', async () => {

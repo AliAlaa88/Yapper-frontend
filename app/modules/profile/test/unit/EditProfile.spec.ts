@@ -42,32 +42,32 @@ vi.mock('../../components/EditProfile/SubComponents/EditProfileHeader.vue', () =
         name: 'EditProfileHeader',
         template: '<div @click="$emit(\'save\')">Header</div>',
         props: ['isValid', 'isSaving'],
-        emits: ['close', 'save']
-    }
+        emits: ['close', 'save'],
+    },
 }))
 vi.mock('../../components/EditProfile/SubComponents/EditProfileCover.vue', () => ({
     default: {
         name: 'EditProfileCover',
         template: '<div @click="$emit(\'upload\')">Cover</div>',
         props: ['coverUrl'],
-        emits: ['upload', 'remove']
-    }
+        emits: ['upload', 'remove'],
+    },
 }))
 vi.mock('../../components/EditProfile/SubComponents/EditProfileAvatar.vue', () => ({
     default: {
         name: 'EditProfileAvatar',
         template: '<div @click="$emit(\'upload\')">Avatar</div>',
         props: ['avatarUrl'],
-        emits: ['upload', 'remove']
-    }
+        emits: ['upload', 'remove'],
+    },
 }))
 vi.mock('../../components/EditProfile/SubComponents/EditProfileForm.vue', () => ({
     default: {
         name: 'EditProfileForm',
         template: '<input v-model="modelValue.name" id="edit-profile-name-input" />',
         props: ['modelValue'],
-        emits: ['update:modelValue']
-    }
+        emits: ['update:modelValue'],
+    },
 }))
 
 describe('EditProfile', () => {
@@ -81,15 +81,18 @@ describe('EditProfile', () => {
 
     it('renders modal and initializes data from store', async () => {
         const store = useProfileStore()
-        store.setProfile({
-            user_id: '1',
-            name: 'Ali',
-            bio: 'Test',
-            country: 'EG',
-            birth_date: '2020-01-01',
-            avatar_url: 'https://example.com/avatar.jpg',
-            cover_url: 'https://example.com/cover.jpg',
-        } as any, true)
+        store.setProfile(
+            {
+                user_id: '1',
+                name: 'Ali',
+                bio: 'Test',
+                country: 'EG',
+                birth_date: '2020-01-01',
+                avatar_url: 'https://example.com/avatar.jpg',
+                cover_url: 'https://example.com/cover.jpg',
+            } as any,
+            true,
+        )
 
         const wrapper = mount(EditProfile)
         await flushPromises()

@@ -1,10 +1,9 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        :headerClass="
+        :is-open="true"
+        :has-close-button="true"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        :header-class="
             isArabic
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
@@ -34,7 +33,7 @@
                     :src="previewImage"
                     alt="Profile Preview"
                     class="w-full h-full object-cover"
-                />
+                >
                 <div v-else class="w-full h-full flex items-center justify-center text-muted">
                     <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -57,7 +56,7 @@
                 accept="image/*"
                 class="hidden"
                 @change="onFileChange"
-            />
+            >
             {{ $t('auth.profilePicture.chooseImage') }}
         </label>
 
@@ -72,9 +71,9 @@
 
         <!-- Next Button -->
         <Button
-            id="button-next-profile-picture"
             v-if="previewImage"
-            buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
+            id="button-next-profile-picture"
+            button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition duration-200 mb-3"
             :loading-text="$t('auth.common.loading')"
             :is-loading="loading"
             @click="onNext"
@@ -179,7 +178,7 @@ const updateProfileMutation = useUpdateProfileMutation(
 const uploadMutation = useUpdateProfilePictureMutation(
     (data) => {
         const avatarUrl = data.data?.image_url || data.image_url
-        if (config.public.env === 'development') console.log(avatarUrl);
+        if (config.public.env === 'development') console.log(avatarUrl)
         if (avatarUrl) {
             updateProfileMutation.mutate({
                 image_url: avatarUrl,

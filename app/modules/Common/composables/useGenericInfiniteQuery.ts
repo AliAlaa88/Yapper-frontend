@@ -18,9 +18,11 @@ export function useGenericInfiniteQuery<TPage, TItem>(
     } = options
 
     const query = useInfiniteQuery<TPage>({
-        queryKey: typeof queryKey === 'function' || 'value' in queryKey ? queryKey : toRef(() => queryKey),
-        queryFn: ({ pageParam = initialPageParam }) =>
-            queryFn({ pageParam: pageParam as string }),
+        queryKey:
+            typeof queryKey === 'function' || 'value' in queryKey
+                ? queryKey
+                : toRef(() => queryKey),
+        queryFn: ({ pageParam = initialPageParam }) => queryFn({ pageParam: pageParam as string }),
         getNextPageParam: (lastPage) => getNextPageParam(lastPage) ?? undefined,
         initialPageParam,
         staleTime,

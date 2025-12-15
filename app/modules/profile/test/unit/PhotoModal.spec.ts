@@ -31,12 +31,15 @@ describe('PhotoModal', () => {
 
     it('renders the photo modal with image', () => {
         const store = useProfileStore()
-        store.setProfile({
-            user_id: '1',
-            username: 'testuser',
-            name: 'Test User',
-            avatar_url: 'https://example.com/photo.jpg'
-        } as any, true)
+        store.setProfile(
+            {
+                user_id: '1',
+                username: 'testuser',
+                name: 'Test User',
+                avatar_url: 'https://example.com/photo.jpg',
+            } as any,
+            true,
+        )
 
         const wrapper = mount(PhotoModal)
 
@@ -46,12 +49,15 @@ describe('PhotoModal', () => {
 
     it('closes modal when close button is clicked', async () => {
         const store = useProfileStore()
-        store.setProfile({
-            user_id: '1',
-            username: 'testuser',
-            name: 'Test User',
-            avatar_url: 'https://example.com/photo.jpg'
-        } as any, true)
+        store.setProfile(
+            {
+                user_id: '1',
+                username: 'testuser',
+                name: 'Test User',
+                avatar_url: 'https://example.com/photo.jpg',
+            } as any,
+            true,
+        )
 
         const wrapper = mount(PhotoModal)
         await wrapper.find('button').trigger('click')

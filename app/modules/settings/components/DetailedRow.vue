@@ -3,8 +3,7 @@
         id="detailed-link"
         :key="category.href"
         :to="category.href"
-        class="block relative px-5 py-3 rounded hover:bg-hover
-        transition-colors text-primary"
+        class="block relative px-5 py-3 rounded hover:bg-hover transition-colors text-primary"
     >
         <div class="flex justify-between items-center">
             <div>
@@ -17,7 +16,8 @@
             <component
                 :is="locale === 'ar' ? ChevronLeft : ChevronRight"
                 class="opacity-40 group-hover:text-white absolute transition-colors"
-                :class="locale === 'ar' ? 'left-3' : 'right-3'" />
+                :class="locale === 'ar' ? 'left-3' : 'right-3'"
+            />
         </div>
     </NuxtLink>
 </template>
@@ -27,12 +27,11 @@ import { ChevronRight, ChevronLeft } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 const { locale } = useI18n()
 interface Category {
-    label: string,
-    content?: string | null,
+    label: string
+    content?: string | null
     href: string
 }
 defineProps<{
     category: Category
 }>()
-
 </script>

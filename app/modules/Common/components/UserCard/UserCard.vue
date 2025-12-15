@@ -15,7 +15,7 @@
                             <span
                                 v-if="user.is_follower"
                                 class="ml-1 text-xs bg-gray-200 dark:bg-gray-700 text-muted px-1.5 py-0.5 rounded"
-                                >Follows you</span
+                            >Follows you</span
                             >
                         </p>
                     </div>

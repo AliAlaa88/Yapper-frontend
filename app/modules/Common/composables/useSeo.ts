@@ -82,7 +82,12 @@ export function useSeo(options: SeoOptions = {}) {
     })
 }
 
-export function useProfileSeo(profile: { name?: string; username?: string; bio?: string; profile_image?: string }) {
+export function useProfileSeo(profile: {
+    name?: string
+    username?: string
+    bio?: string
+    profile_image?: string
+}) {
     const { t } = useI18n()
 
     if (!profile.name || !profile.username) {
@@ -94,7 +99,7 @@ export function useProfileSeo(profile: { name?: string; username?: string; bio?:
     const description = t('seo.profile.description', {
         name: profile.name,
         username: profile.username,
-        bio: profile.bio || ''
+        bio: profile.bio || '',
     })
     const keywords = t('seo.profile.keywords', { username: profile.username })
 
@@ -107,7 +112,11 @@ export function useProfileSeo(profile: { name?: string; username?: string; bio?:
     })
 }
 
-export function useTweetSeo(tweet: { user?: { name?: string; username?: string }; content?: string; media?: any[] }) {
+export function useTweetSeo(tweet: {
+    user?: { name?: string; username?: string }
+    content?: string
+    media?: any[]
+}) {
     const { t } = useI18n()
 
     if (!tweet.user?.name || !tweet.content) {
@@ -116,13 +125,12 @@ export function useTweetSeo(tweet: { user?: { name?: string; username?: string }
     }
 
     // Truncate tweet text for title (max 50 chars)
-    const truncatedText = tweet.content.length > 50
-        ? tweet.content.substring(0, 50) + '...'
-        : tweet.content
+    const truncatedText =
+        tweet.content.length > 50 ? tweet.content.substring(0, 50) + '...' : tweet.content
 
     const title = t('seo.tweet.title', {
         name: tweet.user.name,
-        text: truncatedText
+        text: truncatedText,
     })
     const description = tweet.content
     const keywords = t('seo.tweet.keywords', { username: tweet.user.username })

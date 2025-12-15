@@ -35,7 +35,7 @@
                                 :src="userAvatar"
                                 :alt="user?.name"
                                 class="w-10 h-10 rounded-full"
-                            />
+                            >
                             <div class="flex-1">
                                 <FormattedTextarea
                                     id="edit-tweet-textarea"

@@ -2,7 +2,7 @@
     <DetailedPanel :title="$t('settings.deleteAccount.title')">
         <div class="w-full text-primary">
             <div class="flex items-start px-4 py-3 transition">
-                <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover">
+                <img :src="user?.avatar_url ?? ''" class="w-10 h-10 rounded-full object-cover" >
 
                 <div class="flex-1 ml-3 space-y-1">
                     <div class="flex items-left flex-col justify-between">
@@ -16,7 +16,9 @@
                     {{ $t('settings.deleteAccount.warningTitle') }}
                 </h1>
                 <p class="text-[13px] text-muted max-w-lg ml-5 mb-4">
-                    {{ $t('settings.deleteAccount.description', '@' + { username: user?.username }) }}
+                    {{
+                        $t('settings.deleteAccount.description', '@' + { username: user?.username })
+                    }}
                 </p>
             </div>
             <Button
@@ -24,7 +26,8 @@
                 button-class="w-full hover:bg-red-500/10 h-13 mt-2 text-red bg-primary"
                 :button-text="$t('settings.deleteAccount.button')"
                 :is-loading="useDeleteAccount.isPending.value"
-                @click="handleDelete" />
+                @click="handleDelete"
+            />
         </div>
     </DetailedPanel>
 </template>

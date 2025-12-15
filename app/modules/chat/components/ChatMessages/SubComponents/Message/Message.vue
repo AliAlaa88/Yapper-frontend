@@ -17,7 +17,7 @@
                         :src="message.image_url"
                         alt="Message image"
                         class="max-w-full max-h-[300px] object-contain h-auto rounded-xl"
-                    />
+                    >
                 </div>
                 <div v-if="message.content">
                     <p

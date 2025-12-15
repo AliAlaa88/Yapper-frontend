@@ -18,12 +18,12 @@
         <TweetsList
             v-if="
                 !isBlocked &&
-                userId &&
-                ((currentTab === 'likes' && isMyProfile) ||
-                    currentTab === 'posts' ||
-                    currentTab === 'replies')
+                    userId &&
+                    ((currentTab === 'likes' && isMyProfile) ||
+                        currentTab === 'posts' ||
+                        currentTab === 'replies')
             "
-            :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
+            :fetching-source="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
             class="min-h-[650px] w-full"
             :compact="currentTab === 'likes'"
         />

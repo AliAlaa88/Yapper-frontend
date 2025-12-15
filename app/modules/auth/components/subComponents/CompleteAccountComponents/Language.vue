@@ -1,8 +1,12 @@
 <template>
     <Popup
-        :isOpen="true"
+        :is-open="true"
+        :has-close-button="false"
+        :has-back-button="true"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        header-class=""
+        slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
         @close="$emit('close')"
-        :hasCloseButton="false"
         @back="$emit('back')"
         :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"

@@ -1,5 +1,5 @@
 <template>
-    <img :src="logoWhite" alt="Yapper logo white" :class="imgClass" />
+    <img :src="logoWhite" alt="Yapper logo white" :class="imgClass" >
 </template>
 
 <script setup lang="ts">

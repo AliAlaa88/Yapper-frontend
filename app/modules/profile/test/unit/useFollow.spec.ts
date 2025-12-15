@@ -67,7 +67,7 @@ describe('useFollow Composable', () => {
             mockUserInfoRef.isFollowing.value = false
 
             const userId = ref('12')
-            const {buttonText} = useFollow(userId)
+            const { buttonText } = useFollow(userId)
             expect(buttonText.value).toBe('profile.followButton')
         })
 

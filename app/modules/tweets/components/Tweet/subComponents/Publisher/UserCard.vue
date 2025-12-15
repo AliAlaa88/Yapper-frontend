@@ -10,7 +10,7 @@
                     :alt="name"
                     class="w-16 h-16 rounded-full hover:opacity-90 transition-opacity"
                     @error="(event) => handleImageError(name, event)"
-                />
+                >
                 <div v-else class="w-16 h-16 rounded-full bg-hover animate-pulse" />
             </NuxtLink>
             <ProfileFollowAction :user-id="id" :username="username" :enabled="isOpen" />

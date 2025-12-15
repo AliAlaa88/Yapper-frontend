@@ -2,19 +2,21 @@
     <div class="min-h-svh grid grid-cols-1 md:grid-cols-2 bg-primary text-primary">
         <!-- Left section (hidden on mobile) -->
         <div class="hidden md:flex items-center justify-center relative bg-cover bg-center">
-            <Logo imgClass="relative z-10 w-32 lg:w-40" />
+            <Logo img-class="relative z-10 w-32 lg:w-40" />
         </div>
 
         <!-- Right section -->
         <div class="flex items-center justify-center p-6 sm:p-10">
             <div class="w-full max-w-md">
-                <Logo imgClass="w-10 mb-8 md:hidden" />
+                <Logo img-class="w-10 mb-8 md:hidden" />
                 <h1
                     class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-primary"
                 >
                     {{ $t('auth.home.happeningNow') }}
                 </h1>
-                <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-primary">{{ $t('auth.home.joinToday') }}</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-primary">
+                    {{ $t('auth.home.joinToday') }}
+                </h2>
 
                 <div class="flex flex-col gap-3 max-w-90">
                     <OAuth />
@@ -36,7 +38,9 @@
                         {{ $t('auth.home.terms') }}
                     </p>
                     <div class="mt-10">
-                        <h3 class=" font-semibold mb-3 text-primary">{{ $t('auth.home.alreadyHaveAccount') }}</h3>
+                        <h3 class="font-semibold mb-3 text-primary">
+                            {{ $t('auth.home.alreadyHaveAccount') }}
+                        </h3>
                         <button
                             id="btn-sign-in"
                             class="cursor-pointer border border-alternate hover:bg-hover hover:border-blue text-primary font-bold py-2.5 rounded-full w-full"

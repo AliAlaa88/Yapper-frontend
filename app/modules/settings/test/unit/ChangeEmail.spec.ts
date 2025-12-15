@@ -42,7 +42,7 @@ describe('ChangeEmail.vue', () => {
     it('renders update email link correctly', () => {
         const link = wrapper.findComponent(NuxtLinkStub)
         expect(link.exists()).toBe(true)
-        expect(link.attributes('href')).toBe('/settings/add_email') 
+        expect(link.attributes('href')).toBe('/settings/add_email')
         expect(link.text()).toBe('settings.accountInfo.update_email_address')
     })
 })

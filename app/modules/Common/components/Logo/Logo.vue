@@ -1,6 +1,6 @@
 <template>
     <div :class="divClass">
-        <component :is="isDark ? LogoWhite : LogoBlack" :imgClass="imgClass" />
+        <component :is="isDark ? LogoWhite : LogoBlack" :img-class="imgClass" />
     </div>
 </template>
 

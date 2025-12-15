@@ -21,7 +21,7 @@
                     :src="photoUrl"
                     :alt="`${route.params.username}'s profile photo`"
                     class="h-100 w-100 object-contain rounded-full"
-                />
+                >
             </div>
         </div>
     </div>

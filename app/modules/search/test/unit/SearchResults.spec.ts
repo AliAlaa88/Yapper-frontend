@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
 
 // Mock dependencies
 const mockRouterPush = vi.fn()
@@ -30,34 +29,57 @@ vi.mock('lucide-vue-next', () => ({
 
 // Stub child components
 vi.mock('~/modules/search/components/SearchBar.vue', () => ({
-    default: { template: '<div class="mock-search-bar">SearchBar</div>', props: ['hasArrow'] }
+    default: { template: '<div class="mock-search-bar">SearchBar</div>', props: ['hasArrow'] },
 }))
 
 vi.mock('~/modules/Common/components/Tabs/Tabs.vue', () => ({
-    default: { 
-        template: '<div class="mock-tabs"><slot /></div>', 
+    default: {
+        template: '<div class="mock-tabs"><slot /></div>',
         props: ['tabs', 'activeTab', 'onChange'],
-    }
+    },
 }))
 
 vi.mock('~/modules/tweets/components/TweetsList/TweetsList.vue', () => ({
-    default: { template: '<div class="mock-tweets-list">TweetsList</div>', props: ['fetchingSource', 'compact'] }
+    default: {
+        template: '<div class="mock-tweets-list">TweetsList</div>',
+        props: ['fetchingSource', 'compact'],
+    },
 }))
 
 vi.mock('~/modules/Common/components/UserList', () => ({
-    UserList: { template: '<div class="mock-user-list"><slot :users="[]" /></div>', props: ['fetchingSource', 'queryKeyPrefix', 'loadingText', 'errorText', 'retryText', 'emptyTitle', 'emptyDescription'] }
+    UserList: {
+        template: '<div class="mock-user-list"><slot :users="[]" /></div>',
+        props: [
+            'fetchingSource',
+            'queryKeyPrefix',
+            'loadingText',
+            'errorText',
+            'retryText',
+            'emptyTitle',
+            'emptyDescription',
+        ],
+    },
 }))
 
 vi.mock('~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vue', () => ({
-    default: { template: '<div class="mock-empty-state">EmptyState</div>', props: ['icon', 'title', 'description'] }
+    default: {
+        template: '<div class="mock-empty-state">EmptyState</div>',
+        props: ['icon', 'title', 'description'],
+    },
 }))
 
 vi.mock('~/modules/Common/components/UserCard/UserCard.vue', () => ({
-    default: { template: '<div class="mock-user-card">UserCard</div>', props: ['user', 'showTooltip'] }
+    default: {
+        template: '<div class="mock-user-card">UserCard</div>',
+        props: ['user', 'showTooltip'],
+    },
 }))
 
 vi.mock('~/modules/Common/components/MediaGrid/MediaGrid.vue', () => ({
-    default: { template: '<div class="mock-media-grid">MediaGrid</div>', props: ['fetchingSource'] }
+    default: {
+        template: '<div class="mock-media-grid">MediaGrid</div>',
+        props: ['fetchingSource'],
+    },
 }))
 
 describe('SearchResults', () => {
@@ -74,16 +96,34 @@ describe('SearchResults', () => {
                     $t: (key: string) => key,
                 },
                 stubs: {
-                    SearchBar: { template: '<div class="mock-search-bar">SearchBar</div>', props: ['hasArrow'] },
-                    Tabs: { 
-                        template: '<div class="mock-tabs"><slot /></div>', 
+                    SearchBar: {
+                        template: '<div class="mock-search-bar">SearchBar</div>',
+                        props: ['hasArrow'],
+                    },
+                    Tabs: {
+                        template: '<div class="mock-tabs"><slot /></div>',
                         props: ['tabs', 'activeTab', 'onChange'],
                     },
-                    TweetsList: { template: '<div class="mock-tweets-list">TweetsList</div>', props: ['fetchingSource', 'compact'] },
-                    UserList: { template: '<div class="mock-user-list"><slot :users="[]" /></div>', props: ['fetchingSource'] },
-                    EmptyState: { template: '<div class="mock-empty-state">EmptyState</div>', props: ['icon', 'title', 'description'] },
-                    FollowListUserCard: { template: '<div class="mock-user-card">UserCard</div>', props: ['user', 'showTooltip'] },
-                    MediaGrid: { template: '<div class="mock-media-grid">MediaGrid</div>', props: ['fetchingSource'] },
+                    TweetsList: {
+                        template: '<div class="mock-tweets-list">TweetsList</div>',
+                        props: ['fetchingSource', 'compact'],
+                    },
+                    UserList: {
+                        template: '<div class="mock-user-list"><slot :users="[]" /></div>',
+                        props: ['fetchingSource'],
+                    },
+                    EmptyState: {
+                        template: '<div class="mock-empty-state">EmptyState</div>',
+                        props: ['icon', 'title', 'description'],
+                    },
+                    FollowListUserCard: {
+                        template: '<div class="mock-user-card">UserCard</div>',
+                        props: ['user', 'showTooltip'],
+                    },
+                    MediaGrid: {
+                        template: '<div class="mock-media-grid">MediaGrid</div>',
+                        props: ['fetchingSource'],
+                    },
                     ArrowLeft: true,
                 },
             },
@@ -138,7 +178,7 @@ describe('SearchResults', () => {
         it('extracts username from from:username format', async () => {
             mockRouteQuery.q = 'from:johndoe test query'
             const wrapper = await mountComponent()
-            
+
             // The component should have extracted 'johndoe' as fromUsername
             // and 'test query' as the search query for API
             expect(wrapper.find('.mock-tweets-list').exists()).toBe(true)

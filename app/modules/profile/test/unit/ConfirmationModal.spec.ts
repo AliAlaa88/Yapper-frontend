@@ -18,17 +18,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: 'testuser',
-                            handleClick: vi.fn()
-                        })
-                    }
+                            handleClick: vi.fn(),
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class'],
+                    },
+                },
+            },
         })
 
         expect(wrapper.find('.fixed.inset-0').exists()).toBe(false)
@@ -48,17 +48,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: 'testuser',
-                            handleClick: vi.fn()
-                        })
-                    }
+                            handleClick: vi.fn(),
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class'],
+                    },
+                },
+            },
         })
 
         expect(wrapper.find('.fixed.inset-0').exists()).toBe(true)
@@ -85,17 +85,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: 'testuser',
-                            handleClick: handleClickMock
-                        })
-                    }
+                            handleClick: handleClickMock,
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button :id="id" @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class', 'id']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class', 'id'],
+                    },
+                },
+            },
         })
 
         await wrapper.find('#confirm-button').trigger('click')
@@ -120,17 +120,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: 'testuser',
-                            handleClick: vi.fn()
-                        })
-                    }
+                            handleClick: vi.fn(),
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button :id="id" @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class', 'id']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class', 'id'],
+                    },
+                },
+            },
         })
 
         await wrapper.find('#cancel-confirm-button').trigger('click')
@@ -154,17 +154,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: 'testuser',
-                            handleClick: vi.fn()
-                        })
-                    }
+                            handleClick: vi.fn(),
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class'],
+                    },
+                },
+            },
         })
 
         await wrapper.find('.fixed.inset-0').trigger('click')
@@ -186,17 +186,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: '',
-                            handleClick: vi.fn()
-                        })
-                    }
+                            handleClick: vi.fn(),
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class'],
+                    },
+                },
+            },
         })
 
         expect(wrapper.text()).not.toContain('@')
@@ -219,17 +219,17 @@ describe('ConfirmationModal', () => {
                             text: 'text-white',
                             message: 'Test message',
                             username: 'testuser',
-                            handleClick: vi.fn()
-                        })
-                    }
+                            handleClick: vi.fn(),
+                        }),
+                    },
                 },
                 stubs: {
                     Button: {
                         template: '<button @click="$emit(\'click\')"><slot /></button>',
-                        props: ['buttonClass', 'class']
-                    }
-                }
-            }
+                        props: ['buttonClass', 'class'],
+                    },
+                },
+            },
         })
 
         await wrapper.find('.bg-primary.text-primary').trigger('click')

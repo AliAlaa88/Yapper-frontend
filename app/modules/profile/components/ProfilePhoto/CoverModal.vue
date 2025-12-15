@@ -12,16 +12,13 @@
                 </button>
             </div>
 
-            <div
-                class="w-full h-full flex items-center justify-center"
-                @click.self="closeModal"
-            >
+            <div class="w-full h-full flex items-center justify-center" @click.self="closeModal">
                 <img
                     v-if="coverUrl"
                     :src="coverUrl"
                     :alt="`${route.params.username}'s cover photo`"
                     class="max-h-180 w-full object-cover"
-                />
+                >
             </div>
         </div>
     </div>

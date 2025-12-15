@@ -62,7 +62,8 @@ describe('ProfileCountDisplay Component', () => {
                 },
                 mocks: {
                     $t: (key: string, params?: any) => {
-                        if (key === 'profile.counts.replies') return `Replies: ${params?.count || 0}`
+                        if (key === 'profile.counts.replies')
+                            return `Replies: ${params?.count || 0}`
                         return key
                     },
                     $route: {

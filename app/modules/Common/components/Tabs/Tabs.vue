@@ -6,11 +6,11 @@
     >
         <!-- Left Arrow -->
         <button
-            id="btn-scroll-tabs-left"
             v-if="canScrollLeft && isHovering"
-            @click="scrollLeft"
+            id="btn-scroll-tabs-left"
             class="absolute left-0 top-0 bottom-0 z-10 flex items-center justify-center w-10 bg-linear-to-r from-x-background via-x-background to-transparent cursor-pointer transition-opacity duration-200"
             aria-label="Scroll left"
+            @click="scrollLeft"
         >
             <ChevronLeft class="w-5 h-5 text-primary" />
         </button>
@@ -24,10 +24,10 @@
             <ul class="flex w-full">
                 <li
                     v-for="tab in tabs"
+                    :id="tab.test_id"
                     :key="tab.value"
                     class="flex-1 text-center cursor-pointer transition-all duration-200 hover:bg-hover"
                     @click="handleChange(tab.value)"
-                    :id="tab.test_id"
                 >
                     <button
                         class="relative cursor-pointer w-full px-4 py-4 text-base font-medium transition-colors duration-200 whitespace-nowrap"
@@ -45,11 +45,11 @@
 
         <!-- Right Arrow -->
         <button
-            id="btn-scroll-tabs-right"
             v-if="canScrollRight && isHovering"
-            @click="scrollRight"
+            id="btn-scroll-tabs-right"
             class="absolute right-0 top-0 bottom-0 z-10 flex items-center justify-center w-10 bg-linear-to-l from-x-background via-x-background to-transparent cursor-pointer transition-opacity duration-200"
             aria-label="Scroll right"
+            @click="scrollRight"
         >
             <ChevronRight class="w-5 h-5 text-primary" />
         </button>

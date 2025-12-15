@@ -71,19 +71,12 @@ const fetchingSourceRef = toRef(props, 'fetchingSource')
 const { $listService } = useNuxtApp()
 
 // Use the generic infinite query composable
-const {
-    items,
-    isFetching,
-    error,
-    refetch,
-    isFetchingNextPage,
-    isPending,
-    loadMoreTrigger,
-} = useGenericInfiniteQuery<Page<T>, T>({
-    queryKey: computed(() => [props.queryKeyPrefix, fetchingSourceRef.value ?? '']),
-    queryFn: ({ pageParam }) =>
-        ($listService as any).fetchList(fetchingSourceRef.value ?? '', pageParam),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    getPageData: (page) => page.data,
-})
+const { items, isFetching, error, refetch, isFetchingNextPage, isPending, loadMoreTrigger } =
+    useGenericInfiniteQuery<Page<T>, T>({
+        queryKey: computed(() => [props.queryKeyPrefix, fetchingSourceRef.value ?? '']),
+        queryFn: ({ pageParam }) =>
+            ($listService as any).fetchList(fetchingSourceRef.value ?? '', pageParam),
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        getPageData: (page) => page.data,
+    })
 </script>

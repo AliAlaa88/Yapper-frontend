@@ -31,12 +31,15 @@ describe('CoverModal', () => {
 
     it('renders the cover modal with image', () => {
         const store = useProfileStore()
-        store.setProfile({
-            user_id: '1',
-            username: 'testuser',
-            name: 'Test User',
-            cover_url: 'https://example.com/cover.jpg'
-        } as any, true)
+        store.setProfile(
+            {
+                user_id: '1',
+                username: 'testuser',
+                name: 'Test User',
+                cover_url: 'https://example.com/cover.jpg',
+            } as any,
+            true,
+        )
 
         const wrapper = mount(CoverModal)
 
@@ -46,12 +49,15 @@ describe('CoverModal', () => {
 
     it('closes modal when close button is clicked', async () => {
         const store = useProfileStore()
-        store.setProfile({
-            user_id: '1',
-            username: 'testuser',
-            name: 'Test User',
-            cover_url: 'https://example.com/cover.jpg'
-        } as any, true)
+        store.setProfile(
+            {
+                user_id: '1',
+                username: 'testuser',
+                name: 'Test User',
+                cover_url: 'https://example.com/cover.jpg',
+            } as any,
+            true,
+        )
 
         const wrapper = mount(CoverModal)
         await wrapper.find('button').trigger('click')

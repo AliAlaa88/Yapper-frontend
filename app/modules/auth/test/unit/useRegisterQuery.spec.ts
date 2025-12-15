@@ -5,7 +5,6 @@ import {
     useRegisterS1Query,
     useRegisterS2Query,
     useRegisterS3Query,
-    useResendOTPQuery,
 } from '../../queries/useRegisterQuery'
 
 const mockAuthService = {
@@ -28,7 +27,8 @@ vi.mock('@tanstack/vue-query', () => ({
     useMutation: (options: any) => {
         return {
             mutate: (data: any) => {
-                return options.mutationFn(data)
+                return options
+                    .mutationFn(data)
                     .then((result: any) => options.onSuccess?.(result))
                     .catch((error: any) => options.onError?.(error))
             },

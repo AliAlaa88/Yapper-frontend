@@ -1,9 +1,9 @@
 export function getIdentifierType(identifier: string): 'email' | 'phone' | 'username' {
-  if (!identifier || typeof identifier !== 'string') {
-    return 'username';
-  }
+    if (!identifier || typeof identifier !== 'string') {
+        return 'username'
+    }
 
-  const trimmed = identifier.trim();
+    const trimmed = identifier.trim()
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (emailRegex.test(trimmed)) {
@@ -18,5 +18,9 @@ export function getIdentifierType(identifier: string): 'email' | 'phone' | 'user
     return 'phone';
   }
 
-  return 'username';
+    if (phoneRegex.test(trimmed) && digitsOnly.length >= 10 && digitsOnly.length <= 15) {
+        return 'phone'
+    }
+
+    return 'username'
 }

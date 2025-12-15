@@ -53,7 +53,6 @@ export interface UpdateUsernameResponse {
     message: string
 }
 
-
 export interface UsernameRecommendationsResponse {
     data: {
         recommendations: string[]
@@ -87,4 +86,3 @@ export interface VerifyEmailOTPResponse {
     count: number
     message: string
 }
-

@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import ChatList from '../../components/ChatList/ChatList.vue'
-import type { Conversation } from '../../types'
 
 // Mock ConversationItem component
 vi.mock('../../components/ChatList/subComponents/ConversationItem/ConversationItem.vue', () => ({

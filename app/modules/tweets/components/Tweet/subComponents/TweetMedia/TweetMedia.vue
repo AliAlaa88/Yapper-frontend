@@ -4,7 +4,7 @@
         :modules="[Pagination]"
         :pagination="{ clickable: true }"
         class="rounded-2xl border border-primary tweet-media-swiper max-h-[500px]"
-        @slideChange="onSlideChange"
+        @slide-change="onSlideChange"
     >
         <SwiperSlide
             v-for="(media, index) in mediaArray"

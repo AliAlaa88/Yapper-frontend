@@ -25,9 +25,13 @@ export default defineNuxtConfig({
         head: {
             charset: 'utf-8',
             viewport: 'width=device-width, initial-scale=1',
-            title: 'Yapper. It\'s what\'s happening',
+            title: "Yapper. It's what's happening",
             meta: [
-                { name: 'description', content: 'From breaking news and entertainment to sports and politics, get the full story with all the live commentary.' },
+                {
+                    name: 'description',
+                    content:
+                        'From breaking news and entertainment to sports and politics, get the full story with all the live commentary.',
+                },
                 { name: 'format-detection', content: 'telephone=no' },
                 { name: 'theme-color', content: '#1DA1F2' },
                 { property: 'og:site_name', content: 'Yapper' },
@@ -35,9 +39,7 @@ export default defineNuxtConfig({
                 { name: 'twitter:card', content: 'summary_large_image' },
                 { name: 'twitter:site', content: '@yapper' },
             ],
-            link: [
-                { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            ],
+            link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         },
     },
 
