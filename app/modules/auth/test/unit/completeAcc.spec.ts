@@ -558,7 +558,7 @@ describe('CompleteAccount Component', () => {
 
             const interestsComponent = wrapper.findComponent(Interests)
 
-            expect(interestsComponent.text()).toContain('0 of 1 selected')
+            expect(interestsComponent.text()).toContain('0 selected')
         })
 
         it('should require at least 3 interests message', async () => {
