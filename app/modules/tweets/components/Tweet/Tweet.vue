@@ -307,6 +307,7 @@
         :tweet-id="tweet.tweet_id"
         :initial-content="tweet.content"
         :is-loading="isUpdateLoading"
+        :mentions="props.tweet.mentions"
         @close="handleCloseEditModal"
         @save="handleSaveEdit"
     />
