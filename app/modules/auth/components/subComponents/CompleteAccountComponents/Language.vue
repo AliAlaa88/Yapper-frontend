@@ -1,18 +1,18 @@
 <template>
     <Popup
-        :isOpen="true"
+        :is-open="true"
+        :has-close-button="false"
+        :has-back-button="true"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        header-class=""
+        slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
         @close="$emit('close')"
-        :hasCloseButton="false"
         @back="$emit('back')"
-        :hasBackButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        headerClass=""
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
 
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -24,8 +24,8 @@
         <div class="mb-6">
             <button
                 v-for="lang in languages"
-                :key="lang.code"
                 :id="`button-language-${lang.code}`"
+                :key="lang.code"
                 :class="[
                     'w-full text-left px-4 py-3 rounded-lg transition duration-200 flex items-center justify-between',
                     selectedLanguage === lang.code
@@ -54,7 +54,7 @@
         <Button
             id="button-next-language"
             :disabled="!selectedLanguage"
-            buttonClass="w-full font-semibold rounded-full py-2 transition mb-3"
+            button-class="w-full font-semibold rounded-full py-2 transition mb-3"
             :class="[
                 selectedLanguage
                     ? 'bg-alternate hover:bg-hover-alternate text-alternate'

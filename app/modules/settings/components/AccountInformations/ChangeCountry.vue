@@ -7,13 +7,17 @@
                 class="custom-select peer w-full pt-7 pb-3 px-4 border border-primary rounded-md bg-transparent focus:outline-none focus:ring-2 focus:ring-accent transition-colors"
                 @change="onSelectCountry"
             >
-                <option v-for="count in countries" :key="count" :value="count" class="bg-primary">
+                <option
+                    v-for="count in countries"
+                    :key="count"
+                    :value="count"
+                    class="bg-primary">
                     {{ t(`countries.${count}`) }}
                 </option>
             </select>
             <label
                 class="peer-focus:text-accent absolute start-3 top-1 text-xs text-muted pointer-events-none px-1 py-1"
-                >{{ t('settings.accountInfo.country') }}</label
+            >{{ t('settings.accountInfo.country') }}</label
             >
             <ChevronDown
                 :size="25"

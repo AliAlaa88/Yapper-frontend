@@ -8,7 +8,7 @@ export const exploreServiceReal = () => {
             const response = await $yapperApi.get(`${API_URL}/explore`)
             return response.data
         },
-        getTrending: async (category?: String, limit?: number) => {
+        getTrending: async (category?: string, limit?: number) => {
             const params = category ? { category } : {}
             const response = await $yapperApi.get(`${API_URL}/trend`, {
                 params: { ...params, limit },

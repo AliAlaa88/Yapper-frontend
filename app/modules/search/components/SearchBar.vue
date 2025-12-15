@@ -2,8 +2,8 @@
     <div class="relative w-full">
         <div class="flex items-center w-full">
             <button
-                id="btn-back-search"
                 v-if="isFocused && hasArrow"
+                id="btn-back-search"
                 type="button"
                 class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors shrink-0 cursor-pointer"
                 :aria-label="$t('navigation.back')"
@@ -19,21 +19,21 @@
                 <input
                     id="input-search-bar"
                     ref="inputRef"
+                    v-model="searchQueryInput"
                     type="text"
                     class="bg-transparent outline-none ml-2 text-primary flex-1"
                     :placeholder="$t('search.searchPlaceholder')"
                     style="unicode-bidi: plaintext"
                     @focus="handleFocus"
                     @blur="handleBlur"
-                    v-model="searchQueryInput"
                     @keydown.enter="handleSearchSubmit(searchQueryInput)"
-                />
+                >
                 <CircleX
-                    id="btn-clear-search"
                     v-if="isFocused && searchQueryInput !== ''"
+                    id="btn-clear-search"
                     :size="20"
-                    @click="handleClearQuery"
                     class="cursor-pointer"
+                    @click="handleClearQuery"
                 />
             </div>
         </div>
@@ -43,11 +43,11 @@
             :class="[isFocused ? 'shadow-secondary' : '']"
             @mousedown.prevent
         >
-            <SearchHistory v-if="searchQuery === ''" @handleSearchSubmit="handleSearchSubmit" />
+            <SearchHistory v-if="searchQuery === ''" @handle-search-submit="handleSearchSubmit" />
             <SearchSuggestions
                 v-else
-                :searchQuery="searchQuery"
-                @handleSearchSubmit="handleSearchSubmit"
+                :search-query="searchQuery"
+                @handle-search-submit="handleSearchSubmit"
             />
         </div>
     </div>
@@ -120,7 +120,7 @@ const handleSearchSubmit = (
 
     try {
         const stored = localStorage.getItem(STORAGE_KEY)
-        let searchHistory = stored ? JSON.parse(stored) : []
+        const searchHistory = stored ? JSON.parse(stored) : []
 
         const existingIndex = searchHistory.findIndex(
             (item: any) => item.type === 'query' && item.query === query,

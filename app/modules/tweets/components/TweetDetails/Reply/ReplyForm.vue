@@ -7,13 +7,13 @@
                 :src="user.avatar_url"
                 :alt="user.name"
                 class="w-10 h-10 object-cover rounded-full"
-            />
+            >
             <img
                 v-else
                 :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
                 :alt="user?.name"
                 class="w-10 h-10 object-cover rounded-full"
-            />
+            >
             <span class="text-secondary text-lg flex-1">
                 {{ $t('timeline.postTweet.replyPlaceholder') }}
             </span>

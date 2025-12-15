@@ -4,7 +4,11 @@
         :to="link"
         class="flex gap-3 border-b border-primary p-5 hover:bg-hover transition"
     >
-        <component :is="icon" :color="iconColor" :fill="fillColor" :size="28" />
+        <component
+            :is="icon"
+            :color="iconColor"
+            :fill="fillColor"
+            :size="28" />
 
         <div class="flex flex-1 gap-3 min-w-0">
             <div class="flex-1 min-w-0">
@@ -76,7 +80,7 @@
                             <template v-if="hiddenCount > 0">
                                 {{ $t('notifications.content.and') }}
                                 <span class="font-bold"
-                                    >{{ hiddenCount }}
+                                >{{ hiddenCount }}
                                     {{ $t('notifications.content.others') }}</span
                                 >
                             </template>

@@ -20,7 +20,7 @@
                         maxlength="30"
                         pattern="[a-zA-Z0-9_]+"
                         @input="validateUsername"
-                    />
+                    >
 
                     <div
                         v-if="updateUsernameMutation.isError.value"

@@ -1,5 +1,9 @@
 <template>
-    <TransitionGroup name="notification" tag="div" class="flex flex-col" appear>
+    <TransitionGroup
+        name="notification"
+        tag="div"
+        class="flex flex-col"
+        appear>
         <NotificationItem v-for="noti in notifications" :key="noti.id" :notification="noti" />
     </TransitionGroup>
     <div v-if="hasNextPage" ref="loadMore" class="flex justify-center py-4">

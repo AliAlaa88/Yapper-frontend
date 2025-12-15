@@ -10,7 +10,7 @@
                 style="unicode-bidi: plaintext"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
-            />
+            >
             <label
                 for="edit-profile-name-input"
                 class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
@@ -54,7 +54,7 @@
                 style="unicode-bidi: plaintext"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
-            />
+            >
             <label
                 for="edit-profile-location-input"
                 class="absolute start-3 top-2 text-muted text-[13px] pointer-events-none peer-focus:text-accent"
@@ -86,7 +86,7 @@
                     </select>
                     <span
                         class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -101,7 +101,7 @@
                     </select>
                     <span
                         class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -118,7 +118,7 @@
                     </select>
                     <span
                         class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
             </div>

@@ -3,9 +3,9 @@
     <RecaptchaV2
         v-else
         size="visible"
-        @widgetId="onWidgetId"
-        @loadCallback="onVerify"
-        @errorCallback="onError"
+        @widget-id="onWidgetId"
+        @load-callback="onVerify"
+        @error-callback="onError"
     />
 </template>
 

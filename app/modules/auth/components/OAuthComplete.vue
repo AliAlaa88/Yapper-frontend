@@ -10,7 +10,7 @@
     />
     <CompleteAccount
         v-if="showCompleteAccount"
-        :skipImg="true"
+        :skip-img="true"
         :Recommendations="recommendations"
         @close="onCompleteClose"
         @finish="onCompleteFinish"

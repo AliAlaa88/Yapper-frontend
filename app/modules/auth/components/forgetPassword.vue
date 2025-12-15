@@ -16,7 +16,7 @@
     <forgetPasswordStep3
         v-if="showStep3"
         v-model:password="forgotPasswordData.password"
-        v-model:confirmPassword="forgotPasswordData.confirmPassword"
+        v-model:confirm-password="forgotPasswordData.confirmPassword"
         :identifier="forgotPasswordData.identifier"
         :reset_token="forgotPasswordData.resetToken"
         @back="onBackToS2"

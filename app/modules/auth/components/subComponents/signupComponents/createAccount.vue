@@ -1,19 +1,19 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="true"
+        :is-open="true"
+        :has-close-button="true"
         container-class="bg-auth-popup"
-        contentClass="sm:max-w-xl w-full"
-        :headerClass="
+        content-class="sm:max-w-xl w-full"
+        :header-class="
             isArabic
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
         "
-        slotClass="py-8 px-10 sm:px-10 md:px-12 lg:px-14"
+        slot-class="py-8 px-10 sm:px-10 md:px-12 lg:px-14"
+        @close="$emit('close')"
     >
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2
@@ -28,16 +28,16 @@
             <div class="mb-4">
                 <input
                     id="input-name-signup-s1"
+                    v-model="name"
                     type="text"
                     :placeholder="$t('auth.signup.namePlaceholder')"
-                    v-model="name"
-                    @blur="validateNameField"
-                    @input="clearNameError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         nameError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validateNameField"
+                    @input="clearNameError"
+                >
                 <p v-if="nameError" class="text-red text-xs mt-1">{{ nameError }}</p>
             </div>
 
@@ -45,16 +45,16 @@
             <div class="mb-4">
                 <input
                     id="input-email-signup-s1"
+                    v-model="email"
                     type="email"
                     :placeholder="$t('auth.signup.emailPlaceholder')"
-                    v-model="email"
-                    @blur="validateEmailField"
-                    @input="clearEmailError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         emailError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validateEmailField"
+                    @input="clearEmailError"
+                >
                 <p v-if="emailError" class="text-red text-xs mt-1">{{ emailError }}</p>
             </div>
             <h3 class="text-l font-bold" :class="isArabic ? 'text-right' : 'text-left'">
@@ -91,7 +91,7 @@
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -122,7 +122,7 @@
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -153,14 +153,14 @@
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
             </div>
             <!-- Next Button -->
             <Button
                 id="button-next-signup-s1"
-                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
                 :loading-text="t('auth.common.loading')"
                 :is-loading="loading"
                 type="submit"
@@ -177,10 +177,10 @@
                 @error="onCaptchaError"
             />
         </div>
-        <h3 id="error-message-signup-s1" class="text-red text-sm mt-2" v-if="error">
+        <h3 v-if="error" id="error-message-signup-s1" class="text-red text-sm mt-2">
             {{ error }}
         </h3>
-        <h3 class="text-green text-sm mt-2" v-if="success">{{ success }}</h3>
+        <h3 v-if="success" class="text-green text-sm mt-2">{{ success }}</h3>
     </Popup>
 </template>
 <script setup lang="ts">

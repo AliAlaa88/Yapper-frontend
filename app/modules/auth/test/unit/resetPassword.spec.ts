@@ -6,6 +6,11 @@ import { ref } from 'vue' // Added ref
 import enMessages from '../../../../../i18n/locales/en.json'
 import arMessages from '../../../../../i18n/locales/ar.json'
 
+import ForgetPassword from '../../components/forgetPassword.vue'
+import ForgetPasswordStep1 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep1.vue'
+import ForgetPasswordStep2 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep2.vue'
+import ForgetPasswordStep3 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep3.vue'
+
 // Stub global Nuxt composables
 vi.stubGlobal('useRuntimeConfig', () => ({
     public: {
@@ -15,11 +20,6 @@ vi.stubGlobal('useRuntimeConfig', () => ({
     },
 }))
 vi.stubGlobal('navigateTo', vi.fn())
-
-import ForgetPassword from '../../components/forgetPassword.vue'
-import ForgetPasswordStep1 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep1.vue'
-import ForgetPasswordStep2 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep2.vue'
-import ForgetPasswordStep3 from '../../components/subComponents/forgetPasswordComponents/forgetPasswordStep3.vue'
 
 const i18n = createI18n({
     legacy: false,

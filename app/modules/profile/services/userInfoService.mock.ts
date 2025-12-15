@@ -1,4 +1,3 @@
-import type { FollowUser } from '../types/user'
 import type { UserAction } from '~/mockServer/types/userTypes'
 import { useNuxtApp } from 'nuxt/app'
 

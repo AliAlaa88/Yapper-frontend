@@ -15,24 +15,24 @@
     <verifyOtp
         v-if="showVerifyOtp"
         v-model:otp="signupData.otp"
-        @close="onCloseVerify"
         :Email="signupData.email"
+        @close="onCloseVerify"
         @next="onFinal"
     />
     <FinalRegister
         v-if="showFinalStep"
         v-model:password="signupData.password"
         v-model:language="signupData.language"
-        @close="onCloseFinal"
         :username="username"
         :Email="signupData.email"
+        @close="onCloseFinal"
         @finish="onSignupFinish"
     />
     <CompleteAccount
         v-if="showCompleteAccount"
+        :Recommendations="Recommendations"
         @close="onCompleteAccountClose"
         @finish="onCompleteAccountFinish"
-        :Recommendations="Recommendations"
     />
 </template>
 

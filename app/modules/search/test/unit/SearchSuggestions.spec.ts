@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, nextTick, defineComponent, h } from 'vue'
+import { ref, nextTick } from 'vue'
 
 // Mock dependencies
 const mockRouterPush = vi.fn()

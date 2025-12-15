@@ -62,7 +62,7 @@
                                     <span
                                         v-if="
                                             link.href === '/notifications' &&
-                                            totalUnreadNotifications > 0
+                                                totalUnreadNotifications > 0
                                         "
                                         class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
                                     >
@@ -102,7 +102,7 @@
                                 <span
                                     v-if="
                                         link.href === '/notifications' &&
-                                        totalUnreadNotifications > 0
+                                            totalUnreadNotifications > 0
                                     "
                                     class="absolute -top-1 -right-1 bg-accent text-primary text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center"
                                 >
@@ -164,13 +164,13 @@
 
         <!-- Popup -->
         <Popup
-            :isOpen="isOpen"
+            :is-open="isOpen"
             :title="t('timeline.sidebar.postTweet')"
+            bg-color="bg-popup/20"
+            :slot-class="'w-full'"
             @close="handleClose"
-            bgColor="bg-popup/20"
-            :slotClass="'w-full'"
         >
-            <PostTweet :border="false" :handleClose="handleClose" />
+            <PostTweet :border="false" :handle-close="handleClose" />
         </Popup>
     </aside>
 </template>

@@ -8,7 +8,7 @@
                 id="menu-button"
                 class="text-primary text-xl font-bold leading-none"
                 @click.stop="toggleList"
-                >⋯</span
+            >⋯</span
             >
         </button>
 

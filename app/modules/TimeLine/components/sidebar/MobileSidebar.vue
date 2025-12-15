@@ -6,8 +6,8 @@
                 <!-- Avatar Trigger -->
                 <button
                     id="btn-open-mobile-sidebar"
-                    @click="isOpen = true"
                     class="rounded-full overflow-hidden size-10 cursor-pointer"
+                    @click="isOpen = true"
                 >
                     <UserImage :image-url="user?.avatar_url" :name="user?.name" :size="40" />
                 </button>
@@ -15,11 +15,11 @@
 
             <!-- Logo -->
             <div class="absolute left-1/2 -translate-x-1/2">
-                <Logo imgClass="w-8 h-8 object-contain" />
+                <Logo img-class="w-8 h-8 object-contain" />
             </div>
 
             <!-- Settings/Placeholder (to balance layout) -->
-            <div class="w-8"></div>
+            <div class="w-8"/>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
                 v-if="isOpen"
                 class="fixed inset-0 z-9998 bg-black/50"
                 @click="isOpen = false"
-            ></div>
+            />
         </Transition>
 
         <!-- Drawer -->
@@ -50,13 +50,13 @@
                     </div>
                     <div class="flex gap-4 mt-3 text-sm">
                         <span class="text-primary font-bold"
-                            >{{ user?.following_count || 0 }}
+                        >{{ user?.following_count || 0 }}
                             <span class="text-muted font-normal">{{
                                 t('profile.following')
                             }}</span></span
                         >
                         <span class="text-primary font-bold"
-                            >{{ user?.followers_count || 0 }}
+                        >{{ user?.followers_count || 0 }}
                             <span class="text-muted font-normal">{{
                                 t('profile.followers')
                             }}</span></span
@@ -68,11 +68,11 @@
                 <div class="flex flex-col py-2">
                     <NuxtLink
                         v-for="link in navLinks"
-                        :key="link.href"
                         :id="`mobile-sidebar-link-${link.href}`"
+                        :key="link.href"
                         :to="link.href"
-                        @click="isOpen = false"
                         class="flex items-center gap-4 px-4 py-3 hover:bg-muted transition-colors text-primary rounded-full relative"
+                        @click="isOpen = false"
                     >
                         <div class="relative">
                             <component :is="link.icon" class="w-6 h-6" />

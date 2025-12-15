@@ -1,18 +1,18 @@
 <template>
     <Popup
-        :isOpen="true"
+        :is-open="true"
+        :has-close-button="false"
+        :has-back-button="true"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        header-class=""
+        slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
         @close="$emit('close')"
-        :hasCloseButton="false"
         @back="$emit('back')"
-        :hasBackButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        headerClass=""
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
 
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -28,7 +28,7 @@
                 <span
                     class="absolute top-1/2 -translate-y-1/2 text-muted"
                     :class="isArabic ? 'right-4' : 'left-4'"
-                    >@</span
+                >@</span
                 >
                 <input
                     id="input-username-complete"
@@ -38,7 +38,7 @@
                     class="w-full bg-primary text-primary border border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
                     :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
                     maxlength="25"
-                />
+                >
             </div>
             <div class="flex justify-between mt-2 px-4">
                 <p v-if="errorMessage" id="error-message-username" class="text-red text-sm">
@@ -66,8 +66,8 @@
             <ul class="mt-1 flex flex-wrap gap-2">
                 <li
                     v-for="(suggestion, index) in props.Recommendations"
-                    :key="index"
                     :id="`recommendation-${index}-username`"
+                    :key="index"
                     class="px-2 py-1 border border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
                     @click="username = suggestion"
                 >
@@ -80,7 +80,7 @@
         <Button
             id="button-next-username"
             :disabled="!isValid"
-            buttonClass="w-full font-semibold rounded-full py-2 transition my-3 duration-200"
+            button-class="w-full font-semibold rounded-full py-2 transition my-3 duration-200"
             :class="[
                 isValid
                     ? 'bg-alternate hover:bg-hover-alternate text-alternate'

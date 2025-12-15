@@ -47,7 +47,7 @@ describe('LanguageSelector', () => {
                         template: '<div><slot /></div>',
                     },
                     Button: {
-                        template: `<button @click="$emit('click')"><slot /></button>`,
+                        template: '<button @click="$emit(\'click\')"><slot /></button>',
                     },
                     Circle: true,
                     CheckCircle2: true,

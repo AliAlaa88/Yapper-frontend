@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { MapPin, Calendar, Cake, User } from 'lucide-vue-next'
+import { MapPin, Calendar, Cake } from 'lucide-vue-next'
 import type { Me, OtherUser } from '../../../types/user'
 import ProfileMuteMessage from './ProfileMuteMessage.vue'
 import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'

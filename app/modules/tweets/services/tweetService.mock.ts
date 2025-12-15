@@ -1,4 +1,4 @@
-import type { Tweet, TweetDetails, User } from '../types'
+import type { Tweet, TweetDetails } from '../types'
 import { useNuxtApp } from '#app'
 
 // Map JSON server tweet structure to our Tweet type
@@ -62,7 +62,7 @@ export const tweetServiceMock = {
         const response = await $axios.get(path)
 
         // Client-side filtering for media tweets (json-server limitation)
-        let tweets = response.data
+        const tweets = response.data
         const tweetsWithUserData = await enhanceWithUserData(tweets)
         return tweetsWithUserData.map(mapTweetFromServer)
     },
@@ -96,7 +96,7 @@ export const tweetServiceMock = {
         // Fetch replies for the specific tweet
         const response = await $axios.get(`/api/tweets/${tweetId}/replies`)
 
-        let replies = response.data
+        const replies = response.data
         const repliesWithUserData = await enhanceWithUserData(replies)
         return repliesWithUserData.map(mapTweetFromServer)
     },

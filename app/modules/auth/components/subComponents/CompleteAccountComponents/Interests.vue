@@ -1,22 +1,22 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="false"
-        contentClass="sm:max-w-xl w-full"
-        :headerClass="
+        :is-open="true"
+        :has-close-button="false"
+        content-class="sm:max-w-xl w-full"
+        :header-class="
             isArabic
                 ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
                 : 'absolute top-4 left-4 z-10 bg-transparent p-0'
         "
-        slotClass="py-2 px-10 sm:px-10 md:px-12 lg:px-14"
+        slot-class="py-2 px-10 sm:px-10 md:px-12 lg:px-14"
+        :has-back-button="true"
+        @close="$emit('close')"
         @back="$emit('back')"
-        :hasBackButton="true"
     >
         <!-- Back Button -->
 
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -29,8 +29,8 @@
             <div class="grid grid-cols-2 gap-3">
                 <button
                     v-for="interest in interests"
-                    :key="interest.id"
                     :id="`button-interest-${interest.id}`"
+                    :key="interest.id"
                     :class="[
                         'px-4 py-3 rounded-full text-sm font-medium transition shadow-sm',
                         selectedInterests.includes(interest.id)
@@ -56,7 +56,7 @@
         <Button
             id="button-next-interests"
             :disabled="selectedInterests.length < 3"
-            buttonClass="w-full font-semibold rounded-full py-2 transition mb-3"
+            button-class="w-full font-semibold rounded-full py-2 transition mb-3"
             :class="[
                 selectedInterests.length >= 3
                     ? 'bg-alternate hover:bg-hover-alternate text-alternate'

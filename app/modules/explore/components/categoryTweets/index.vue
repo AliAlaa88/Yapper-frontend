@@ -34,8 +34,8 @@
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
             <button
                 id="btn-retry-category-tweets"
-                @click="refetch"
                 class="text-accent hover:underline cursor-pointer"
+                @click="refetch"
             >
                 {{ t('explore.tryAgain') }}
             </button>
@@ -53,8 +53,8 @@
         <div v-else class="w-full">
             <Tweet
                 v-for="tweet in tweets"
-                :key="tweet.tweet_id"
                 :id="tweet.tweet_id"
+                :key="tweet.tweet_id"
                 :tweet="tweet"
             />
 
@@ -168,7 +168,7 @@ watch(
 let observer: IntersectionObserver | null = null
 
 onMounted(() => {
-    if (process.client && loadMoreTrigger.value) {
+    if (import.meta.client && loadMoreTrigger.value) {
         observer = new IntersectionObserver(
             (entries) => {
                 const entry = entries[0]
@@ -195,7 +195,7 @@ watch(
             observer.disconnect()
         }
 
-        if (el && process.client) {
+        if (el && import.meta.client) {
             observer = new IntersectionObserver(
                 (entries) => {
                     const entry = entries[0]

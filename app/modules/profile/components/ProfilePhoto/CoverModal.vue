@@ -18,7 +18,7 @@
                     :src="coverUrl"
                     :alt="`${route.params.username}'s cover photo`"
                     class="max-h-180 w-full object-cover"
-                />
+                >
             </div>
         </div>
     </div>

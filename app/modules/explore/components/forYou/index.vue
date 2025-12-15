@@ -13,8 +13,8 @@
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
             <Button
                 id="btn-retry-explore-for-you"
-                @click="exploreQuery.refetch()"
                 class="text-accent hover:underline"
+                @click="exploreQuery.refetch()"
             >
                 {{ t('explore.tryAgain') }}
             </Button>
@@ -24,9 +24,9 @@
         <div
             v-else-if="
                 !exploreData ||
-                (!exploreData.trending?.data?.length &&
-                    !exploreData.who_to_follow?.length &&
-                    !exploreData.for_you?.length)
+                    (!exploreData.trending?.data?.length &&
+                        !exploreData.who_to_follow?.length &&
+                        !exploreData.for_you?.length)
             "
             class="flex items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary"
         >
@@ -49,8 +49,8 @@
                 <WhoToFollowList :users="exploreData.who_to_follow.slice(0, 3)" />
                 <button
                     id="btn-show-more-who-to-follow"
-                    @click="router.push('/explore/who-to-follow')"
                     class="w-full px-4 py-3 text-start text-sm text-accent hover:bg-hover transition-colors cursor-pointer"
+                    @click="router.push('/explore/who-to-follow')"
                 >
                     {{ t('timeline.banner.showMore') }}
                 </button>
@@ -88,7 +88,6 @@
 
 <script setup lang="ts">
 import { useGetExploreQuery } from '../../queries/useGetExploreQuery'
-import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronRight } from 'lucide-vue-next'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'

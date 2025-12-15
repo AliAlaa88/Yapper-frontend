@@ -13,8 +13,8 @@
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
             <button
                 id="btn-retry-categories"
-                @click="() => trendsQuery.refetch()"
                 class="text-accent hover:underline cursor-pointer"
+                @click="() => trendsQuery.refetch()"
             >
                 {{ t('explore.tryAgain') }}
             </button>

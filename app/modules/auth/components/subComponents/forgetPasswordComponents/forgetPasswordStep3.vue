@@ -1,18 +1,18 @@
 <template>
     <Popup
-        :isOpen="true"
+        :is-open="true"
+        :has-close-button="false"
+        :has-back-button="true"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        header-class=""
+        slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
         @close="$emit('close')"
-        :hasCloseButton="false"
         @back="$emit('back')"
-        :hasBackButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        headerClass=""
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
 
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -26,29 +26,29 @@
             <div class="mb-4">
                 <input
                     id="input-password-forgot-password-s3"
+                    v-model="password"
                     type="password"
                     :placeholder="$t('auth.forgotPassword.passwordPlaceholder')"
-                    v-model="password"
-                    @blur="validatePasswordField"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         passwordError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validatePasswordField"
+                >
                 <p v-if="passwordError" class="text-red text-xs mt-1">{{ passwordError }}</p>
             </div>
 
             <div class="mb-4">
                 <input
                     id="input-verify-password-forgot-password-s3"
+                    v-model="verifyPassword"
                     type="password"
                     :placeholder="$t('auth.forgotPassword.verifyPasswordPlaceholder')"
-                    v-model="verifyPassword"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         matchError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                >
                 <p v-if="matchError" class="text-red text-xs mt-1">{{ matchError }}</p>
                 <p
                     v-if="!matchError && verifyPassword && password === verifyPassword"
@@ -70,7 +70,7 @@
             <!-- Next Button -->
             <Button
                 id="button-reset-password-forgot-password-s3"
-                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
+                button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
                 :loading-text="t('auth.common.loading')"
                 :is-loading="loading"
                 type="submit"

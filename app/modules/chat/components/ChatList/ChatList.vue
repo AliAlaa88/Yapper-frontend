@@ -52,7 +52,7 @@
                 <p class="text-sm text-muted">{{ $t('chat.noMessagesYetDescription') }}</p>
             </div>
         </div>
-        <CreateConversation :isOpen="isCreateConversationOpen" @close="closeCreateConversation" />
+        <CreateConversation :is-open="isCreateConversationOpen" @close="closeCreateConversation" />
     </div>
 </template>
 

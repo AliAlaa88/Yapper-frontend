@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useNuxtApp } from 'nuxt/app'
-import type { Me, OtherUser, FollowUsersPage } from '../types/user'
-import { options } from 'happy-dom/lib/PropertySymbol.js'
+import type { Me, OtherUser } from '../types/user'
 
 export const userInfoServiceReal = {
     async getMe(): Promise<Me> {

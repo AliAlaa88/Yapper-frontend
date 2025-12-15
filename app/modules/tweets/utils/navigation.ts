@@ -1,4 +1,4 @@
-import type { User, Tweet } from '../types'
+import type { Tweet } from '../types'
 
 export const getProfileUrl = (user: { username: string | null; link: string | null }): string => {
     return user.link || (user.username ? `/${user.username}` : '#')

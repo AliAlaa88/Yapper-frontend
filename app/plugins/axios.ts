@@ -22,7 +22,7 @@ export default defineNuxtPlugin(() => {
 
     yapperApi.interceptors.request.use(
         (config) => {
-            if (process.client) {
+            if (import.meta.client) {
                 const token = useCookie('access_token')
                 if (token) {
                     config.headers.Authorization = `Bearer ${token.value}`
@@ -42,7 +42,7 @@ export default defineNuxtPlugin(() => {
             const isAuthEndpoint = requestUrl.includes('/auth/')
 
             if (error.response?.status === 401 && isAuthEndpoint) {
-                if (process.client) {
+                if (import.meta.client) {
                     userStore.logout() // logout handles both store and cookie
                     if (window.location.pathname !== '/auth/login') {
                         navigateTo('/auth/login')
@@ -53,7 +53,7 @@ export default defineNuxtPlugin(() => {
 
             if (error.response?.status === 401 && !isAuthEndpoint) {
                 if (
-                    process.client &&
+                    import.meta.client &&
                     window.location.pathname !== '/auth/login' &&
                     !error.config?._retry
                 ) {

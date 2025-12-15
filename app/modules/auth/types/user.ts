@@ -1,4 +1,4 @@
-import { type User } from '~/modules/Common/types/user'
+import type { User } from '~/modules/Common/types/user'
 
 export type { User }
 

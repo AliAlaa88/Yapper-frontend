@@ -8,7 +8,6 @@
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { ArrowLeft } from 'lucide-vue-next'
 import CategoryPage from '~/modules/explore/components/categoryTweets/index.vue'
 
 const route = useRoute()

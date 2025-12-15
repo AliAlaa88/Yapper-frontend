@@ -8,7 +8,7 @@
                 :src="avatarUrl"
                 alt="Profile photo"
                 class="w-full h-full rounded-full object-cover"
-            />
+            >
             <div
                 class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center gap-2"
             >

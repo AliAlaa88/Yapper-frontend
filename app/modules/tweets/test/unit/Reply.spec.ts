@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+import { mount } from '@vue/test-utils'
+import { shallowReactive } from 'vue'
+import Reply from '../../components/TweetDetails/Reply/Reply.vue'
+
 // Mock Nuxt composables FIRST
 vi.mock('#app', () => ({
     navigateTo: vi.fn(),
@@ -28,10 +32,6 @@ vi.mock('../../queries/useTweetQueries', () => ({
     useDeleteTweetMutation: () => ({ mutateAsync: vi.fn() }),
     useUpdateTweetMutation: () => ({ mutateAsync: vi.fn() }),
 }))
-
-import { mount, shallowMount } from '@vue/test-utils'
-import { shallowReactive } from 'vue'
-import Reply from '../../components/TweetDetails/Reply/Reply.vue'
 
 // Mock NuxtLink and CustomToolTip
 const stubs = {

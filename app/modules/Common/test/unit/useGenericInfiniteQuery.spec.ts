@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useGenericInfiniteQuery } from '../../composables/useGenericInfiniteQuery'
 
 // Mock useInfiniteScroll

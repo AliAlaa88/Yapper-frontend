@@ -10,7 +10,7 @@
                 :alt="displayName"
                 class="h-full w-full rounded-full object-cover"
                 @error="handleImageError"
-            />
+            >
         </NuxtLink>
 
         <img
@@ -18,7 +18,7 @@
             :src="`https://ui-avatars.com/api/?name=${displayName}&background=random`"
             :alt="displayName"
             class="flex h-[85px] w-[85px] sm:h-[133px] sm:w-[133px] items-center justify-center rounded-full border-4 border-black bg-[#71767b] text-3xl sm:text-5xl font-bold text-white"
-        />
+        >
     </div>
 </template>
 

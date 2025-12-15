@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
-import { ref, watch } from 'vue' // Added ref and watch
+import { ref } from 'vue'
 import enMessages from '../../../../../i18n/locales/en.json'
 import arMessages from '../../../../../i18n/locales/ar.json'
 import CompleteAccount from '../../components/CompleteAccount.vue'

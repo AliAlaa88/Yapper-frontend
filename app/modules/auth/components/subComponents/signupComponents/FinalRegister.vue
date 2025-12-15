@@ -1,19 +1,19 @@
 <template>
     <Popup
-        :isOpen="true"
+        :is-open="true"
+        :has-close-button="false"
+        :has-back-button="true"
+        container-class="bg-auth-popup"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        header-class=""
+        slot-class="p-8 sm:min-w-lg sm:p-10 md:p-14 lg:p-20"
         @close="$emit('close')"
         @back="$emit('close')"
-        :hasCloseButton="false"
-        :hasBackButton="true"
-        container-class="bg-auth-popup"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        headerClass=""
-        slotClass="p-8 sm:min-w-lg sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
 
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
         <!-- Title -->
         <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
@@ -38,16 +38,16 @@
             <div class="mb-4">
                 <input
                     id="input-password-signup-s3"
+                    v-model="password"
                     type="password"
                     :placeholder="$t('auth.finalRegister.passwordPlaceholder')"
-                    v-model="password"
-                    @blur="validatePasswordField"
-                    @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         passwordError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validatePasswordField"
+                    @input="clearPasswordError"
+                >
                 <p
                     v-if="passwordError"
                     class="text-red text-xs mt-1"
@@ -63,7 +63,7 @@
             <!-- Next Button -->
             <Button
                 id="button-signup-s3"
-                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
+                button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
                 :loading-text="t('auth.common.loading')"
                 :is-loading="loading"
                 type="submit"

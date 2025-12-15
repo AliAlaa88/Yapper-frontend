@@ -1,14 +1,14 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 
+import Content from '../../components/Tweet/subComponents/Content/Content.vue'
+import type { Content as ContentType } from '../../types'
+
 // Mock Nuxt composables
 vi.mock('#app', () => ({
     navigateTo: vi.fn(),
     useRouter: () => ({ push: vi.fn() }),
 }))
-
-import Content from '../../components/Tweet/subComponents/Content/Content.vue'
-import type { Content as ContentType } from '../../types'
 
 describe('Content Component', () => {
     describe('Text Rendering', () => {

@@ -1,6 +1,6 @@
 <template>
     <!-- Mobile: Bottom sheet overlay -->
-    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"></div>
+    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"/>
     <div
         v-if="isOpen"
         ref="emojiPickerRef"
@@ -11,14 +11,14 @@
         <div class="p-2 border-b border-primary flex justify-between items-center">
             <span class="text-primary font-semibold text-sm">Emoji</span>
             <button
-                @click="$emit('close')"
-                class="text-muted hover:text-primary"
                 id="close-emoji-picker-btn"
+                class="text-muted hover:text-primary"
+                @click="$emit('close')"
             >
                 <X class="w-4 h-4" />
             </button>
         </div>
-        <EmojiPicker @select="onSelect" :theme="emojiTheme" />
+        <EmojiPicker :theme="emojiTheme" @select="onSelect" />
     </div>
 </template>
 

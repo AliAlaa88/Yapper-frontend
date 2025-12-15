@@ -259,7 +259,7 @@ export const exploreServiceMock = () => {
                 message: 'Explore page data retrieved successfully',
             }
         },
-        getTrending: async (category: String, country: String) => {
+        getTrending: async (category: string, country: string) => {
             return {
                 data: [
                     {
@@ -302,7 +302,7 @@ export const exploreServiceMock = () => {
                 message: 'Explore trending items retrieved successfully',
             }
         },
-        getExploreCategories: async (category: String) => {
+        getExploreCategories: async (category: string) => {
             if (category === 'sports') {
                 return {
                     data: [
