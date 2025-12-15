@@ -76,7 +76,7 @@
                 button-class="w-full cursor-pointer border border-primary text-center
                 font-semibold py-2.5 hover:bg-hover rounded-full transition mt-2 mb-3
                 text-primary sm:hidden"
-                @click="showList = false"
+                @click="closeMenu"
             >
                 {{ $t('profile.cancelButton') }}
             </Button>
@@ -104,6 +104,10 @@ const emit = defineEmits<{
 }>()
 
 const showList = inject<Ref<boolean>>('show-list')!
+
+const closeMenu = () => {
+    showList.value = false
+}
 
 const profileStore = useProfileStore()
 const userStore = useUserStore()

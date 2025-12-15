@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
-import { useNuxtApp } from 'nuxt/app'
+// import { useNuxtApp } from 'nuxt/app'
 import type { OtherUser } from '../types/user'
 import { computed, ref } from 'vue'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
