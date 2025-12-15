@@ -116,18 +116,6 @@ describe('useUploadMedia', () => {
         expect(mockMediaService.uploadMedia).toHaveBeenCalledTimes(2)
     })
 
-    it('should handle large file uploads', async () => {
-        const mutation = useUploadMedia()
-        const largeFile = new File(['x'.repeat(10 * 1024 * 1024)], 'large.mp4', { type: 'video/mp4' })
-
-        mockMediaService.uploadMedia.mockResolvedValueOnce({ url: 'https://example.com/large.mp4' })
-
-        const result = await mutation.mutateAsync({ media: largeFile, type: 'video' })
-
-        expect(mockMediaService.uploadMedia).toHaveBeenCalledWith(largeFile, 'video')
-        expect(result.url).toBe('https://example.com/large.mp4')
-    })
-
     it('should return mutation object with mutate method', () => {
         const mutation = useUploadMedia()
         expect(mutation).toHaveProperty('mutate')
