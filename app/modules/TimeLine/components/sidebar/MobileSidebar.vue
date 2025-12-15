@@ -134,6 +134,7 @@
                     <div class="px-4 pb-4">
                         <!-- Logout -->
                         <button
+                            id="mob-logout-btn"
                             class="w-full px-4 py-3 text-left cursor-pointer text-primary hover:bg-hover transition-colors text-sm"
                             @click="handleLogoutClick"
                         >
