@@ -191,7 +191,7 @@ const onInterestsBack = () => {
 }
 
 // Who to Follow handlers
-const onWhoToFollowFinish = (followedUsers: string[]) => {
+const onWhoToFollowFinish = () => {
     showWhoToFollow.value = false
     showLoading.value = true
     enableUserQuery.value = true
