@@ -105,8 +105,10 @@ import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import { useUserStore } from '~/modules/auth/stores/userStore';
+import { validateDateOfBirth } from '../../../utils/validators'
+import { y } from 'happy-dom/lib/PropertySymbol.js'
 const userStore = useUserStore()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
 const month = ref('')
@@ -159,11 +161,14 @@ const oauthCompleteStep1Mutation = useOAuthCompleteStep1Query(
     },
     (error: any) => {
         console.error('OAuth Step 1 Complete Error:', error)
-        const errorMsg =
-            error?.response?.data?.message || 'An unexpected error occurred. Please try again.'
-
-        if (Array.isArray(errorMsg)) errorMessage.value = errorMsg[0]
-        else errorMessage.value = errorMsg
+        const apiMessage = error?.response?.data?.message
+        
+        // If API returns a string message, use it directly (don't translate backend errors)
+        if (apiMessage) {
+            errorMessage.value = apiMessage
+        } else {
+            errorMessage.value = t('messages.error')
+        }
         loading.value = false
     },
 )
@@ -192,9 +197,13 @@ const onNext = async () => {
         month.value && day.value && year.value
             ? `${year.value}-${month.value.padStart(2, '0')}-${day.value.toString().padStart(2, '0')}`
             : ''
-
+    const validation = validateDateOfBirth(year.value, month.value, day.value)
+    if (!validation.valid) {
+        errorMessage.value = validation.messageKey ? t(validation.messageKey) : t('auth.validation.dobInvalid')
+        return
+    }
     if (!month.value || !day.value || !year.value) {
-        errorMessage.value = 'Please select your complete birth date.'
+        errorMessage.value = t('auth.validation.dobRequired')
         return
     }
 

@@ -1032,6 +1032,7 @@
     },
     "userActions": {
         "addExistingAccount": "إضافة حساب موجود",
+        "loggingOut": "جاري تسجيل الخروج...",
         "logout": "تسجيل الخروج",
         "logoutUsername": "تسجيل الخروج {username}",
         "logoutTitle": "تسجيل الخروج من Yapper؟",

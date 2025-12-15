@@ -249,11 +249,11 @@
                 <div class="flex flex-col gap-3 w-full">
                     <!-- Log out Button -->
                     <button
-                        id ="confirm-logout-btn"
+                        id="confirm-logout-btn"
                         class="w-full py-3 px-6 bg-white text-black text-[15px] font-bold rounded-full hover:bg-gray-200 transition-colors"
                         @click="confirmLogout"
                     >
-                        {{ $t('userActions.logout') }}
+                        {{ isLoggingOut ? $t('userActions.loggingOut') : $t('userActions.logout') }}
                     </button>
 
                     <!-- Cancel Button -->
@@ -306,7 +306,15 @@ const tooltipSide = computed(() => (isRTL.value ? 'left' : 'right'))
 const isPopupOpen = ref(false)
 const isLogoutConfirmOpen = ref(false)
 
-const { mutate: logout } = useLogoutQuery()
+const onLogoutSuccess = () => {
+    closeLogoutConfirm()
+}
+
+const onLogoutError = () => {
+    closeLogoutConfirm()
+}
+
+const { mutate: logout, isPending: isLoggingOut } = useLogoutQuery(onLogoutSuccess, onLogoutError)
 
 const togglePopup = () => {
     isPopupOpen.value = !isPopupOpen.value
@@ -333,6 +341,5 @@ const closeLogoutConfirm = () => {
 
 const confirmLogout = () => {
     logout()
-    closeLogoutConfirm()
 }
 </script>

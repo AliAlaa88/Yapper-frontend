@@ -5,8 +5,8 @@
     >
         <div class="shrink-0">
             <UserImage
-                :image-url="conversation.participant.avatar_url ?? ''"
-                :name="conversation.participant.name"
+                :image-url="conversation.participant?.avatar_url ?? ''"
+                :name="conversation.participant?.name ?? ''"
                 :size="12"
                 :compact="false"
             />
@@ -15,10 +15,10 @@
             <div class="flex items-center justify-between gap-1">
                 <div class="flex items-center gap-1 truncate">
                     <span class="font-bold text-primary truncate">{{
-                        shorterName(conversation.participant.name)
+                        shorterName(conversation.participant?.name ?? '')
                     }}</span>
                     <span class="text-secondary text-sm truncate"
-                        >@{{ conversation.participant.username }}</span
+                        >@{{ conversation.participant?.username ?? '' }}</span
                     >
                     <span class="text-secondary text-sm">·</span>
                     <span class="text-secondary text-sm">{{
@@ -57,6 +57,8 @@ const props = defineProps<{
 
 const userStore = useUserStore()
 const { t } = useI18n()
+
+console.log('conversation', toRaw(props.conversation))
 
 const lastMessagePreview = computed(() => {
     const lastMessage = props.conversation?.last_message

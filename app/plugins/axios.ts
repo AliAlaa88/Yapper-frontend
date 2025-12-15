@@ -40,7 +40,7 @@ export default defineNuxtPlugin(() => {
         async (error) => {
             const requestUrl = error.config?.url || ''
             const isAuthEndpoint = requestUrl.includes('/auth/')
-            if(requestUrl == '/auth/refresh') {
+            if(requestUrl == '/auth/refresh' || requestUrl == '/auth/logout'){ 
                 userStore.logout() // logout handles both store and cookie
                 navigateTo('/auth/login')
                 return Promise.reject(error)
