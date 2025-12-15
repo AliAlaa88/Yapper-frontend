@@ -6,7 +6,7 @@
         :button-class="buttonClass"
         @click="handleClick"
     >
-        <MegaphoneOff  v-if="isMuted" :size="16" />
+        <MegaphoneOff v-if="isMuted" :size="16" />
         <Megaphone v-else :size="16" />
     </Button>
 </template>
@@ -23,12 +23,8 @@ const props = defineProps<{
 
 const userIdRef = ref(props.userId)
 const isMutedRef = computed(() => props.isMuted)
-const {
-    handleMuteWithSnackbar,
-    handleUnmuteWithSnackbar,
-    isMuteLoading,
-    isUnmuteLoading,
-} = useUserInteractions(userIdRef)
+const { handleMuteWithSnackbar, handleUnmuteWithSnackbar, isMuteLoading, isUnmuteLoading } =
+    useUserInteractions(userIdRef)
 
 const buttonClass = computed(() => {
     if (isMutedRef.value) {

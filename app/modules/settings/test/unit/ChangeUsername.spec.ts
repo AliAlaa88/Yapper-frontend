@@ -81,7 +81,7 @@ describe('ChangeUsername.vue', () => {
         const comp = wrapper.vm as any
         comp.newUsername = 'oldUsername'
         expect(comp.canSubmit).toBe(false)
-        comp.newUsername = 'ab' 
+        comp.newUsername = 'ab'
         expect(comp.canSubmit).toBe(false)
     })
 

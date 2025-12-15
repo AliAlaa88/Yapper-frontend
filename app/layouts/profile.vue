@@ -27,8 +27,8 @@
                             type="button"
                             class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-hover transition-colors"
                             :aria-label="$t('timeline.banner.search')"
-                            @click="router.push({ name: 'explore', state: {user: username}})"
-                            >
+                            @click="router.push({ name: 'explore', state: { user: username } })"
+                        >
                             <Search :size="24" class="text-primary" />
                         </button>
                     </div>

@@ -1,7 +1,5 @@
 <template>
-    <div
-        v-if="isShow"
-        class="my-7">
+    <div v-if="isShow" class="my-7">
         <div class="px-6 pt-2 pb-3 space-y-4 border-b border-primary">
             <h2 class="text-xl font-bold text-primary">
                 {{ t('settings.confirm_password') }}
@@ -19,20 +17,21 @@
                         type="password"
                         :placeholder="t('settings.password')"
                         :disabled="isLoading"
-                        class="w-full py-3 px-3
-                            transition text-muted border bg-transparent focus:outline-none rounded-md
-                            disabled:opacity-50 focus:ring-2
-                            disabled:cursor-not-allowed"
+                        class="w-full py-3 px-3 transition text-muted border bg-transparent focus:outline-none rounded-md disabled:opacity-50 focus:ring-2 disabled:cursor-not-allowed"
                         :class="{
-                            'border-primary focus:ring-accent' : !errorMessage && !showNoPasswordWarning,
-                            'border-red-500 focus:ring-red-500' : errorMessage || showNoPasswordWarning
+                            'border-primary focus:ring-accent':
+                                !errorMessage && !showNoPasswordWarning,
+                            'border-red-500 focus:ring-red-500':
+                                errorMessage || showNoPasswordWarning,
                         }"
                         required
-                        autofocus>
+                        autofocus
+                    />
                     <NuxtLink
                         id="settings-link-forgot-password1"
                         to="/auth/forgot-password"
-                        class="mt-3 pl-1 text-accent hover:underline">
+                        class="mt-3 pl-1 text-accent hover:underline"
+                    >
                         {{ t('settings.forgot_password') }}
                     </NuxtLink>
                     <p v-if="errorMessage" class="text-red pl-1 text-sm font-medium">
@@ -41,14 +40,21 @@
                 </div>
             </div>
 
-            <div v-if="showNoPasswordWarning" class="bg-red-500/10 border border-red-500/20 mx-4 rounded-lg p-4">
+            <div
+                v-if="showNoPasswordWarning"
+                class="bg-red-500/10 border border-red-500/20 mx-4 rounded-lg p-4"
+            >
                 <p class="text-red dark:text-red-400 text-sm font-medium mb-2">
                     {{ t('settings.noPasswordSetTitle') }}
                 </p>
                 <p class="text-muted text-sm mb-3">
                     {{ t('settings.noPasswordSetDescription') }}
                 </p>
-                <NuxtLink id="settings-link-forgot-password2" to="/auth/forgot-password" class="text-accent hover:underline text-sm font-medium">
+                <NuxtLink
+                    id="settings-link-forgot-password2"
+                    to="/auth/forgot-password"
+                    class="text-accent hover:underline text-sm font-medium"
+                >
                     {{ t('settings.setUpPassword') }}
                 </NuxtLink>
             </div>
@@ -57,12 +63,15 @@
                 <Button
                     id="confirm-password-button"
                     type="submit"
-                    :disabled="!password || showNoPasswordWarning || errorMessage.includes('incorrect')"
+                    :disabled="
+                        !password || showNoPasswordWarning || errorMessage.includes('incorrect')
+                    "
                     :is-loading="isLoading"
                     :button-text="t('settings.confirm')"
                     button-class="bg-accent text-primary font-medium py-2 px-6 rounded-3xl
                         hover:bg-accent-dark transition disabled:opacity-50
-                        disabled:cursor-not-allowed" />
+                        disabled:cursor-not-allowed"
+                />
             </div>
         </form>
     </div>
@@ -101,12 +110,15 @@ const handleConfirm = async () => {
     }
 }
 
-watch(() => props.isShow, (isShow) => {
-    if (isShow) {
-        password.value = ''
-        showNoPasswordWarning.value = false
-    }
-})
+watch(
+    () => props.isShow,
+    (isShow) => {
+        if (isShow) {
+            password.value = ''
+            showNoPasswordWarning.value = false
+        }
+    },
+)
 
 watch(password, () => {
     errorMessage.value = ''

@@ -17,7 +17,7 @@ export const exploreServiceReal = () => {
         },
         getExploreCategories: async (category_id: string, page: number = 1, limit: number = 20) => {
             const response = await $yapperApi.get(`${API_URL}/explore/category/${category_id}`, {
-                params: { page, limit }
+                params: { page, limit },
             })
             return response.data
         },

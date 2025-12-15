@@ -141,7 +141,7 @@ describe('Categories Component', () => {
         it('should maintain props throughout lifecycle', async () => {
             const wrapper = mountCategories('news')
             expect(wrapper.props('category')).toBe('news')
-            
+
             await wrapper.vm.$nextTick()
             expect(wrapper.props('category')).toBe('news')
         })

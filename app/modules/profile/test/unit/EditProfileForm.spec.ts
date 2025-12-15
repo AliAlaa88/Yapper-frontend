@@ -37,8 +37,8 @@ describe('EditProfileForm', () => {
         expect((wrapper.find('#edit-profile-name-input').element as HTMLInputElement).value).toBe(
             'Ali Alaa',
         )
-        expect(
-            (wrapper.find('#edit-profile-bio-input').element as HTMLTextAreaElement).value,
-        ).toBe('Bio')
+        expect((wrapper.find('#edit-profile-bio-input').element as HTMLTextAreaElement).value).toBe(
+            'Bio',
+        )
     })
 })

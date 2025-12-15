@@ -40,7 +40,6 @@ vi.mock('../../composables/useUserActions', () => ({
     useUserActions: vi.fn(),
 }))
 
-
 describe('useUserInteractions', () => {
     let mockUserInfo: {
         id: ReturnType<typeof computed<string>>
@@ -65,7 +64,6 @@ describe('useUserInteractions', () => {
         handleRemoveFollower: ReturnType<typeof vi.fn>
         handleFollow: ReturnType<typeof vi.fn>
     }
-
 
     beforeEach(() => {
         mockUserActions = {

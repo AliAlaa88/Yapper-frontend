@@ -150,7 +150,6 @@ describe('useDisplaySettings composable', () => {
         expect(document.documentElement.style.fontSize).toBe('16px')
     })
 
-
     it('reacts to system theme change event', async () => {
         const media = mockMatchMedia(true)
         window.matchMedia = vi.fn().mockReturnValue(media)
@@ -164,6 +163,4 @@ describe('useDisplaySettings composable', () => {
 
         expect(document.documentElement.classList.contains('dark')).toBe(false)
     })
-
 })
-

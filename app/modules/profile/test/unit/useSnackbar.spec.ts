@@ -2,7 +2,6 @@ import { it, expect, vi, describe, afterEach } from 'vitest'
 import { useSnackbar } from '../../composables/useSnackbar'
 
 describe('useSnackbar', () => {
-
     afterEach(() => {
         vi.resetAllMocks()
     })

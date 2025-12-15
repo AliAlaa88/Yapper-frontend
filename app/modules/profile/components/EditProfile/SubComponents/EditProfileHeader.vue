@@ -11,7 +11,9 @@
             >
                 <X :size="20" />
             </button>
-            <h2 class="text-primary text-xl font-bold">{{ $t('profile.editProfileModal.title') }}</h2>
+            <h2 class="text-primary text-xl font-bold">
+                {{ $t('profile.editProfileModal.title') }}
+            </h2>
         </div>
         <button
             id="edit-profile-save-button"

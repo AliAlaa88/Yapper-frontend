@@ -120,7 +120,8 @@ describe('Content Component', () => {
             // For media-related assertions, assert that TweetMedia receives the correct props
             const TweetMediaStub = {
                 props: ['images', 'videos'],
-                template: '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
+                template:
+                    '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
             }
 
             const wrapper = mount(Content, {
@@ -142,7 +143,8 @@ describe('Content Component', () => {
 
             const TweetMediaStub = {
                 props: ['images', 'videos'],
-                template: '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
+                template:
+                    '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
             }
 
             const wrapper = mount(Content, {
@@ -199,7 +201,7 @@ describe('Content Component', () => {
             expect(stub.text()).toBe('2')
         })
     })
-    
+
     describe('Image Container CSS', () => {
         it('applies correct border and styling classes', () => {
             const content: ContentType = {

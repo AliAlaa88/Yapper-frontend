@@ -32,14 +32,15 @@ export const usePasswordConfirmationStore = defineStore('passwordConfirmaiton', 
         },
 
         checkSession(): boolean {
-            if(this.isSessionValid) {
+            if (this.isSessionValid) {
                 return true
             }
             this.invalidateSession()
             return false
         },
 
-        requireReconfirmation() {   // after change password
+        requireReconfirmation() {
+            // after change password
             this.invalidateSession()
             console.log('reconfirm password')
         },

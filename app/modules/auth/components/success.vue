@@ -2,19 +2,19 @@
     <AuthLoadingPage v-if="isLoading" />
 </template>
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
-import { useUserStore } from '~/modules/auth/stores/userStore';
-import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery';
-import { useRouter } from 'vue-router';
-import { useExchangeTokenQuery } from '~/modules/auth/queries/useOAuthQuery';
-import { useCookie } from '#app';
-import AuthLoadingPage from './AuthLoadingPage.vue';
-const router = useRouter();
-const userStore = useUserStore();
-const urlParams = new URLSearchParams(window.location.search);
-const exchange_token = ref(urlParams.get('exchange_token') || '');
-const isLoading = ref(true);
-const enableUserQuery = ref(false);
+import { ref, watch, onMounted } from 'vue'
+import { useUserStore } from '~/modules/auth/stores/userStore'
+import { useGetUserQuery } from '~/modules/auth/queries/useGetuserQuery'
+import { useRouter } from 'vue-router'
+import { useExchangeTokenQuery } from '~/modules/auth/queries/useOAuthQuery'
+import { useCookie } from '#app'
+import AuthLoadingPage from './AuthLoadingPage.vue'
+const router = useRouter()
+const userStore = useUserStore()
+const urlParams = new URLSearchParams(window.location.search)
+const exchange_token = ref(urlParams.get('exchange_token') || '')
+const isLoading = ref(true)
+const enableUserQuery = ref(false)
 
 const exchangeTokenMutation = useExchangeTokenQuery(
     (data: any) => {

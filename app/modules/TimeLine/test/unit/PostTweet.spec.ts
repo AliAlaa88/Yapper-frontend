@@ -95,7 +95,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.exists()).toBe(true)
     })
 
@@ -115,7 +115,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('form').exists()).toBe(true)
     })
 
@@ -135,7 +135,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('img').exists()).toBe(true)
     })
 
@@ -145,7 +145,9 @@ describe('PostTweet Component', () => {
                 stubs: {
                     NuxtLink: true,
                     NuxtImg: true,
-                    FormattedTextarea: { template: '<textarea class="formatted-textarea"></textarea>' },
+                    FormattedTextarea: {
+                        template: '<textarea class="formatted-textarea"></textarea>',
+                    },
                     CustomToolTip: true,
                     MediaUpload: true,
                     GifPicker: true,
@@ -155,7 +157,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.formatted-textarea').exists()).toBe(true)
     })
 
@@ -178,7 +180,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).toContain('Replying to')
         expect(wrapper.text()).toContain('@johndoe')
     })
@@ -199,7 +201,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).not.toContain('Replying to')
     })
 
@@ -219,7 +221,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.media-upload-btn').exists()).toBe(true)
     })
 
@@ -239,7 +241,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         const emojiButton = wrapper.find('#post-tweet-emoji-picker-btn')
         expect(emojiButton.exists()).toBe(true)
     })
@@ -260,7 +262,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         const gifButton = wrapper.find('#post-tweet-gif-picker-btn')
         expect(gifButton.exists()).toBe(true)
     })
@@ -284,7 +286,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         const form = wrapper.find('form')
         expect(form.classes()).toContain('border-b')
     })
@@ -308,7 +310,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         const form = wrapper.find('form')
         expect(form.classes()).not.toContain('border-b')
     })
@@ -319,7 +321,7 @@ describe('PostTweet Component', () => {
             content: 'Test tweet',
             user: { username: 'testuser', name: 'Test User' },
         }
-        
+
         const wrapper = mount(PostTweet, {
             props: {
                 quotedTweet: mockTweet,
@@ -338,7 +340,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.quoted-tweet').exists()).toBe(true)
     })
 
@@ -361,7 +363,7 @@ describe('PostTweet Component', () => {
                 },
             },
         })
-        
+
         // Component renders avatar with compact sizing
         expect(wrapper.find('.avatar').exists()).toBe(true)
     })

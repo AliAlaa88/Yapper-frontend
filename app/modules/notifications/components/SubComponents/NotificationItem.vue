@@ -1,4 +1,3 @@
-
 <template>
     <div :class="['notification-item', { 'is-new': isNew }]">
         <Tweet
@@ -20,14 +19,17 @@
     </div>
 </template>
 
-
 <script setup lang="ts">
 import Tweet from '~/modules/tweets/components/Tweet/Tweet.vue'
 import NotificationCard from './NotificationCard.vue'
 import type { ApiNotification } from '../../types/notifications'
 import { Repeat2, Heart, UserRound, MessageCircle } from 'lucide-vue-next'
 import { useUserStore } from '~/modules/auth/stores/userStore'
-import { mapNotificationToTweet, shouldUseCardComponent, shouldUseTweetComponent } from '../../utils/notificationMapper'
+import {
+    mapNotificationToTweet,
+    shouldUseCardComponent,
+    shouldUseTweetComponent,
+} from '../../utils/notificationMapper'
 const props = defineProps<{
     notification: ApiNotification
 }>()
@@ -36,9 +38,8 @@ const route = useRoute()
 const shouldUseTweet = computed(() => shouldUseTweetComponent(props.notification))
 const shouldUseCard = computed(() => shouldUseCardComponent(props.notification))
 
-
 const tweetData = computed(() => {
-    const mapping =  mapNotificationToTweet(props.notification)
+    const mapping = mapNotificationToTweet(props.notification)
     console.log('mapppping', mapping)
     return mapping
 })
@@ -104,7 +105,7 @@ const notificationIconColor = computed(() => {
             return '#f91880'
         case 'repost':
             return '#00ba7c'
-        case 'message' :
+        case 'message':
             return '#7856ff'
         default:
             return ''
@@ -161,7 +162,6 @@ const notificationMessage = computed(() => {
     }
 })
 
-
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
@@ -210,16 +210,19 @@ onMounted(() => {
     }
 })
 
-watch(() => props.notification.created_at, () => {
-    const now = Date.now()
-    const createdAt = new Date(props.notification.created_at).getTime()
-    if (now - createdAt < 60000 && route.path === '/notifications') {
-        isNew.value = true
-        setTimeout(() => {
-            isNew.value = false
-        }, 10000)
-    }
-})
+watch(
+    () => props.notification.created_at,
+    () => {
+        const now = Date.now()
+        const createdAt = new Date(props.notification.created_at).getTime()
+        if (now - createdAt < 60000 && route.path === '/notifications') {
+            isNew.value = true
+            setTimeout(() => {
+                isNew.value = false
+            }, 10000)
+        }
+    },
+)
 </script>
 
 <style scoped>
@@ -228,7 +231,6 @@ watch(() => props.notification.created_at, () => {
 }
 
 .notification-item.is-new {
-    background:rgba(0, 209, 178, 0.08);
+    background: rgba(0, 209, 178, 0.08);
 }
-
 </style>

@@ -11,7 +11,7 @@ vi.stubGlobal('useRuntimeConfig', () => ({
     public: {
         apiUrl: 'http://localhost:3000',
         recaptcha: 'test-key',
-        env: 'test'
+        env: 'test',
     },
 }))
 vi.stubGlobal('navigateTo', vi.fn())
@@ -70,7 +70,10 @@ vi.mock('~/modules/auth/queries/useForgetPasswordQuery', () => ({
     useVerifyForgotPasswordOTPQuery: vi.fn((onSuccess, onError) => ({
         mutate: vi.fn(async (payload) => {
             try {
-                const result = await mockAuthService.verifyForgotPasswordOTP(payload.identifier, payload.token)
+                const result = await mockAuthService.verifyForgotPasswordOTP(
+                    payload.identifier,
+                    payload.token,
+                )
                 await Promise.resolve()
                 onSuccess?.(result)
             } catch (error) {
@@ -83,7 +86,11 @@ vi.mock('~/modules/auth/queries/useForgetPasswordQuery', () => ({
     useResetPasswordQuery: vi.fn((onSuccess, onError) => ({
         mutate: vi.fn(async (payload) => {
             try {
-                const result = await mockAuthService.resetPassword(payload.identifier, payload.newPassword, payload.reset_token)
+                const result = await mockAuthService.resetPassword(
+                    payload.identifier,
+                    payload.newPassword,
+                    payload.reset_token,
+                )
                 await Promise.resolve()
                 onSuccess?.(result)
             } catch (error) {
@@ -105,14 +112,11 @@ function mountResetPassword() {
 
     return mount(ForgetPassword, {
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             stubs: {
-                'logo': true,
-                'closeButton': true,
-                'Popup': {
+                logo: true,
+                closeButton: true,
+                Popup: {
                     template: '<div class="popup-mock"><slot /></div>',
                 },
                 NuxtLink: { template: '<a><slot /></a>' },
@@ -148,7 +152,7 @@ describe('Reset Password Flow', () => {
 
         it('should have Next button in step 1', () => {
             const wrapper = mountResetPassword()
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
             expect(nextButton).toBeTruthy()
         })
     })
@@ -701,8 +705,15 @@ describe('Reset Password Flow', () => {
             await flushPromises()
 
             expect(wrapper.emitted('finish')).toBeTruthy()
-            expect(mockAuthService.verifyForgotPasswordOTP).toHaveBeenCalledWith('user@example.com', '123456')
-            expect(mockAuthService.resetPassword).toHaveBeenCalledWith('user@example.com', 'NewPassword123!', 'test-reset-token-123')
+            expect(mockAuthService.verifyForgotPasswordOTP).toHaveBeenCalledWith(
+                'user@example.com',
+                '123456',
+            )
+            expect(mockAuthService.resetPassword).toHaveBeenCalledWith(
+                'user@example.com',
+                'NewPassword123!',
+                'test-reset-token-123',
+            )
         })
 
         it('should handle different identifier types throughout the flow', async () => {
@@ -753,7 +764,11 @@ describe('Reset Password Flow', () => {
 
                 expect(forgotPasswordSpy).toHaveBeenCalledWith(identifier)
                 expect(verifyOTPSpy).toHaveBeenCalledWith(identifier, '123456')
-                expect(resetPasswordSpy).toHaveBeenCalledWith(identifier, 'NewPass123!', 'test-token')
+                expect(resetPasswordSpy).toHaveBeenCalledWith(
+                    identifier,
+                    'NewPass123!',
+                    'test-token',
+                )
             }
         })
     })

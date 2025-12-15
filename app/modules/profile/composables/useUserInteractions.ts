@@ -7,7 +7,12 @@ import { inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { queryKeys } from '~/modules/Common/queries/queryKeys'
 
-export function useUserInteractions(userId: Ref<string | undefined>, userName: Ref<string | undefined>, meId: Ref<string | undefined>, enabled: Ref<boolean> = ref(true)) {
+export function useUserInteractions(
+    userId: Ref<string | undefined>,
+    userName: Ref<string | undefined>,
+    meId: Ref<string | undefined>,
+    enabled: Ref<boolean> = ref(true),
+) {
     const { $queryClient } = useNuxtApp()
     const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
         typeof useSnackbar
@@ -131,7 +136,7 @@ export function useUserInteractions(userId: Ref<string | undefined>, userName: R
     async function handleMuteWithSnackbar(showList?: Ref<boolean>) {
         try {
             await handleMute()
-            if(userId.value) cacheInvalidation.toggleMutedInCache($queryClient, userId.value, true)
+            if (userId.value) cacheInvalidation.toggleMutedInCache($queryClient, userId.value, true)
             showSnackbar.value = true
             handleShowSnackbar(
                 t('profile.actions.mute.snackbar', { username: '@' + username.value }),

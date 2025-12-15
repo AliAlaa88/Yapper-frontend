@@ -72,9 +72,7 @@ describe('useGenericInfiniteQuery', () => {
     it('flattens pages into items correctly', () => {
         // Set up mock data with pages
         mockQueryResult.data.value = {
-            pages: [
-                { data: [{ id: 1 }, { id: 2 }], nextCursor: null },
-            ],
+            pages: [{ data: [{ id: 1 }, { id: 2 }], nextCursor: null }],
         }
 
         const result = useGenericInfiniteQuery({

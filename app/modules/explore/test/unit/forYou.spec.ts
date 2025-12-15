@@ -140,7 +140,7 @@ describe('ForYou Component', () => {
                     trending: { data: [] },
                     who_to_follow: [],
                     for_you: [],
-                }
+                },
             }
             const wrapper = mountForYou()
             const errorText = wrapper.text()
@@ -171,9 +171,7 @@ describe('ForYou Component', () => {
                     for_you: [
                         {
                             category: { id: 'cat1', name: 'Category 1' },
-                            tweets: [
-                                { tweet_id: '1', content: 'Tweet 1' },
-                            ],
+                            tweets: [{ tweet_id: '1', content: 'Tweet 1' }],
                         },
                     ],
                 },

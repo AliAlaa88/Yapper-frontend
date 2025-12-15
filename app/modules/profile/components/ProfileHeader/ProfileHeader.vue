@@ -42,7 +42,7 @@ import ProfileInfo from './SubComponents/ProfileInfo.vue'
 import { useProfileStore } from '../../stores/profileStore'
 import { storeToRefs } from 'pinia'
 const config = useRuntimeConfig()
-if (config.public.env === 'development') console.log("ProfileHeader loaded")
+if (config.public.env === 'development') console.log('ProfileHeader loaded')
 const profileStore = useProfileStore()
 const { profile: user, isMyProfile: isMee } = storeToRefs(profileStore)
 </script>

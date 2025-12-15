@@ -58,8 +58,8 @@ const globalMocks = {
             if (key === 'profile.muted.message') return 'You have muted posts from this account.'
             if (key === 'profile.muted.action') return 'Unmute'
             return key
-        }
-    }
+        },
+    },
 }
 
 describe('ProfileMuteMessage Component', () => {
@@ -87,7 +87,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
 
@@ -100,7 +100,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
 
@@ -120,7 +120,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
 
@@ -140,7 +140,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
 
@@ -153,13 +153,12 @@ describe('ProfileMuteMessage Component', () => {
     })
 
     it('should hide message when isMuted changes to false', async () => {
-
         const wrapper = mount(ProfileMuteMessage, {
             global: {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
         mockUserInfoRef.isMuted.value = true
@@ -179,7 +178,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
 
@@ -204,7 +203,7 @@ describe('ProfileMuteMessage Component', () => {
                 provide: {
                     'user-id': ref('12'),
                 },
-                ...globalMocks
+                ...globalMocks,
             },
         })
 

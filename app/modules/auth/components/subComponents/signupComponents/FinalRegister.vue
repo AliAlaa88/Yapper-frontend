@@ -15,17 +15,26 @@
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.title') }}</h2>
-            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.info') }}</p>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.finalRegister.title') }}
+        </h2>
+        <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.finalRegister.info') }}
+        </p>
 
-            <!-- Error Message -->
-            <p v-if="errorMessage" id="error-message-signup-s3" class="text-red text-sm mb-4" :class="isArabic ? 'text-right' : 'text-left'">
-                {{ errorMessage }}
-            </p>
+        <!-- Error Message -->
+        <p
+            v-if="errorMessage"
+            id="error-message-signup-s3"
+            class="text-red text-sm mb-4"
+            :class="isArabic ? 'text-right' : 'text-left'"
+        >
+            {{ errorMessage }}
+        </p>
 
-            <!-- Password Input -->
-            <form @submit.prevent="onNext">
+        <!-- Password Input -->
+        <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-password-signup-s3"
@@ -36,13 +45,21 @@
                     @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        passwordError ? 'border-red focus:border-red' : ''
+                        passwordError ? 'border-red focus:border-red' : '',
                     ]"
                 />
-                <p v-if="passwordError" class="text-red text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">{{ passwordError }}</p>
+                <p
+                    v-if="passwordError"
+                    class="text-red text-xs mt-1"
+                    :class="isArabic ? 'text-right' : 'text-left'"
+                >
+                    {{ passwordError }}
+                </p>
             </div>
 
-            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.finalRegister.passwordHint') }}</p>
+            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+                {{ $t('auth.finalRegister.passwordHint') }}
+            </p>
             <!-- Next Button -->
             <Button
                 id="button-signup-s3"
@@ -53,7 +70,7 @@
             >
                 {{ $t('auth.finalRegister.signUpButton') }}
             </Button>
-            </form>
+        </form>
     </Popup>
 </template>
 
@@ -110,7 +127,7 @@ const { t } = useI18n()
 
 const validatePasswordField = () => {
     const result = validatePassword(password.value)
-    passwordError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    passwordError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     return result.valid
 }
 

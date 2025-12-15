@@ -95,10 +95,7 @@ function mountLogin() {
 
     return mount(Login, {
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             stubs: {
                 closeButton: true,
                 logo: true,
@@ -145,7 +142,7 @@ describe('Login Component', () => {
 
         it('has Next button', () => {
             const wrapper = mountLogin()
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
             expect(nextButton?.exists()).toBe(true)
         })
 
@@ -211,7 +208,7 @@ describe('Login Component', () => {
 
         it('emits switch event when Sign up is clicked', async () => {
             const wrapper = mountLogin()
-            const signupButton = wrapper.findAll('button').find(btn => btn.text() === 'Sign up')
+            const signupButton = wrapper.findAll('button').find((btn) => btn.text() === 'Sign up')
 
             await signupButton?.trigger('click')
             expect(wrapper.emitted('switch')).toBeTruthy()
@@ -241,7 +238,7 @@ describe('Login Component', () => {
         it('shows password input in step 2', async () => {
             const wrapper = mountLogin()
             const input = wrapper.find('input[type="text"]')
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
 
             await input.setValue('user@example.com')
             await nextButton?.trigger('click')
@@ -278,14 +275,14 @@ describe('Login Component', () => {
 
             const wrapper = mountLogin()
             const input = wrapper.find('input[type="text"]')
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
 
             await input.setValue('user@example.com')
             await nextButton?.trigger('click')
             await flushPromises()
 
             const passwordInput = wrapper.find('input[type="password"]')
-            const loginButton = wrapper.findAll('button').find(btn => btn.text() === 'Login')
+            const loginButton = wrapper.findAll('button').find((btn) => btn.text() === 'Login')
             if (passwordInput && loginButton) {
                 await passwordInput.setValue('wrongpassword')
                 await loginButton.trigger('click')
@@ -315,14 +312,14 @@ describe('Login Component', () => {
 
             const wrapper = mountLogin()
             const input = wrapper.find('input[type="text"]')
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
 
             await input.setValue('validuser@gmail.com')
             await nextButton?.trigger('click')
             await flushPromises()
 
             const passwordInput = wrapper.find('input[type="password"]')
-            const loginButton = wrapper.findAll('button').find(btn => btn.text() === 'Login')
+            const loginButton = wrapper.findAll('button').find((btn) => btn.text() === 'Login')
 
             if (passwordInput && loginButton) {
                 await passwordInput.setValue('ValidPass#123')
@@ -364,21 +361,23 @@ describe('Login Component', () => {
             const identifierInput = wrapper.find('input[type="text"]')
             await identifierInput.setValue('user@example.com')
 
-            const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+            const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
             await nextButton?.trigger('click')
             await flushPromises()
 
             expect(wrapper.findComponent(loginStep2).exists()).toBe(true)
 
             const passwordInput = wrapper.find('input[type="password"]')
-            const loginButton = wrapper.findAll('button').find(btn => btn.text() === 'Login')
+            const loginButton = wrapper.findAll('button').find((btn) => btn.text() === 'Login')
 
             if (passwordInput && loginButton) {
                 await passwordInput.setValue('password123')
                 await loginButton.trigger('click')
                 await flushPromises()
 
-                expect(mockAuthService.checkIdentifierAvailability).toHaveBeenCalledWith('user@example.com')
+                expect(mockAuthService.checkIdentifierAvailability).toHaveBeenCalledWith(
+                    'user@example.com',
+                )
                 expect(mockAuthService.login).toHaveBeenCalledWith(
                     'user@example.com',
                     'password123',
@@ -414,11 +413,13 @@ describe('Login Component', () => {
                 const identifierInput = wrapper.find('input[type="text"]')
                 await identifierInput.setValue(testCase.identifier)
 
-                const nextButton = wrapper.findAll('button').find(btn => btn.text() === 'Next')
+                const nextButton = wrapper.findAll('button').find((btn) => btn.text() === 'Next')
                 await nextButton?.trigger('click')
                 await flushPromises()
 
-                expect(mockAuthService.checkIdentifierAvailability).toHaveBeenCalledWith(testCase.identifier)
+                expect(mockAuthService.checkIdentifierAvailability).toHaveBeenCalledWith(
+                    testCase.identifier,
+                )
             }
         })
     })

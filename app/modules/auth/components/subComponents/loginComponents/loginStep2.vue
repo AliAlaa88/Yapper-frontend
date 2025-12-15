@@ -7,7 +7,11 @@
         :hasBackButton="true"
         contentClass="sm:max-w-xl w-full"
         container-class="bg-auth-popup"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        :headerClass="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
         slotClass="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
     >
         <!-- Back Button -->
@@ -15,11 +19,13 @@
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.login.title') }}</h2>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.login.title') }}
+        </h2>
 
-            <!-- Email -->
-            <form @submit.prevent="onNext">
+        <!-- Email -->
+        <form @submit.prevent="onNext">
             <input
                 id="input-identifier-readonly-login-s2"
                 type="text"
@@ -40,14 +46,25 @@
                     @input="clearPasswordError"
                     :class="[
                         'w-full bg-primary text-primary border border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        passwordError ? 'border-red focus:border-red' : ''
+                        passwordError ? 'border-red focus:border-red' : '',
                     ]"
                 />
-                <p v-if="passwordError" class="text-red text-xs mt-1" :class="isArabic ? 'text-right' : 'text-left'">{{ passwordError }}</p>
+                <p
+                    v-if="passwordError"
+                    class="text-red text-xs mt-1"
+                    :class="isArabic ? 'text-right' : 'text-left'"
+                >
+                    {{ passwordError }}
+                </p>
             </div>
 
             <!-- Error Message -->
-            <p v-if="errorMessage" id="error-message-login-s2" class="text-red text-sm mb-4" :class="isArabic ? 'text-right' : 'text-left'">
+            <p
+                v-if="errorMessage"
+                id="error-message-login-s2"
+                class="text-red text-sm mb-4"
+                :class="isArabic ? 'text-right' : 'text-left'"
+            >
                 {{ errorMessage }}
             </p>
 
@@ -71,17 +88,17 @@
             >
                 {{ $t('auth.common.signIn') }}
             </Button>
-            </form>
-            <p class="text-center text-primary text-sm">
-                {{ $t('auth.login.switchPrompt') }}
-                <Button
-                    id="button-switch-to-signup-login-s2"
-                    class="text-accent hover:underline font-semibold transition duration-200"
-                    @click="$emit('switch')"
-                >
-                    {{ $t('auth.common.signUp') }}
-                </Button>
-            </p>
+        </form>
+        <p class="text-center text-primary text-sm">
+            {{ $t('auth.login.switchPrompt') }}
+            <Button
+                id="button-switch-to-signup-login-s2"
+                class="text-accent hover:underline font-semibold transition duration-200"
+                @click="$emit('switch')"
+            >
+                {{ $t('auth.common.signUp') }}
+            </Button>
+        </p>
     </Popup>
 </template>
 
@@ -140,7 +157,7 @@ const { t } = useI18n()
 
 const validatePasswordField = () => {
     const result = validatePassword(password.value)
-    passwordError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    passwordError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     return result.valid
 }
 

@@ -7,13 +7,13 @@
 
             <div class="flex-1 relative">
                 <div
-                    class="absolute inset-0 top-1/2 -translate-y-1/2 h-1
-                    bg-accent/60 rounded-full" />
+                    class="absolute inset-0 top-1/2 -translate-y-1/2 h-1 bg-accent/60 rounded-full"
+                />
 
                 <div
-                    class="absolute top-1/2 -translate-y-1/2 h-1 bg-accent
-                    rounded-full transition-all duration-150"
-                    :style="{ width: `${progressPercentage}%` }" />
+                    class="absolute top-1/2 -translate-y-1/2 h-1 bg-accent rounded-full transition-all duration-150"
+                    :style="{ width: `${progressPercentage}%` }"
+                />
 
                 <div class="relative h-10 flex items-center justify-between">
                     <button
@@ -21,8 +21,7 @@
                         :key="size.value"
                         :id="`btn-font-size-${size.value}`"
                         :aria-label="`Font size ${size.label}`"
-                        class="relative z-10 flex items-center justify-center
-                        transition-transform hover:scale-110 cursor-pointer"
+                        class="relative z-10 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer"
                         @click="fontSize = size.value"
                     >
                         <div
@@ -31,17 +30,20 @@
                                 'shadow-[0_0_6px_rgba(0,0,0,0.15),0_1px_2px_rgba(0,0,0,0.2)]',
                                 fontSize === size.value
                                     ? 'border-accent bg-transparent scale-0'
-                                    : fontSize <= size.value ? 'border-none bg-accent/80'
-                                        : 'border-none bg-accent'
-                            ]" />
+                                    : fontSize <= size.value
+                                      ? 'border-none bg-accent/80'
+                                      : 'border-none bg-accent',
+                            ]"
+                        />
 
                         <div
                             :class="[
                                 'absolute w-5 h-5 rounded-full transition-all duration-150',
                                 fontSize === size.value
                                     ? 'bg-accent scale-100'
-                                    : 'bg-transparent scale-0'
-                            ]" />
+                                    : 'bg-transparent scale-0',
+                            ]"
+                        />
                     </button>
                 </div>
 
@@ -83,12 +85,12 @@ const progressPercentage = computed(() => {
 
 <style scoped>
 /* Remove default slider styling */
-input[type="range"] {
+input[type='range'] {
     -webkit-appearance: none;
     appearance: none;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
@@ -97,7 +99,7 @@ input[type="range"]::-webkit-slider-thumb {
     opacity: 0;
 }
 
-input[type="range"]::-moz-range-thumb {
+input[type='range']::-moz-range-thumb {
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -106,12 +108,12 @@ input[type="range"]::-moz-range-thumb {
     background: transparent;
 }
 
-input[type="range"]:focus {
+input[type='range']:focus {
     outline: none;
 }
 
 /* Focus visible for keyboard navigation */
-input[type="range"]:focus-visible+.dots-container button:nth-child(var(--focused-index)) {
+input[type='range']:focus-visible + .dots-container button:nth-child(var(--focused-index)) {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
 }

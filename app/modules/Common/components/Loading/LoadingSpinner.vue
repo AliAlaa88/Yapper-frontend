@@ -5,7 +5,7 @@
         :style="{
             borderColor: 'var(--accent-color)',
             borderTopColor: 'transparent',
-            borderRightColor: 'transparent'
+            borderRightColor: 'transparent',
         }"
     />
 </template>
@@ -34,5 +34,4 @@ const sizeClasses = computed(() => {
     }
     return sizes[props.size]
 })
-
 </script>

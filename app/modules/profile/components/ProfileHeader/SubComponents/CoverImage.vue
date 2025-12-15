@@ -32,7 +32,10 @@ const handleImageError = () => {
     imageError.value = true
 }
 
-watch(() => props.coverUrl, () => {
-    imageError.value = false
-})
+watch(
+    () => props.coverUrl,
+    () => {
+        imageError.value = false
+    },
+)
 </script>

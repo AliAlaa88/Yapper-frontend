@@ -1,19 +1,8 @@
 <template>
-    <TransitionGroup
-        name="notification"
-        tag="div"
-        class="flex flex-col"
-        appear>
-        <NotificationItem
-            v-for="noti in notifications"
-            :key="noti.id"
-            :notification="noti"
-        />
+    <TransitionGroup name="notification" tag="div" class="flex flex-col" appear>
+        <NotificationItem v-for="noti in notifications" :key="noti.id" :notification="noti" />
     </TransitionGroup>
-    <div
-        v-if="hasNextPage"
-        ref="loadMore"
-        class="flex justify-center py-4">
+    <div v-if="hasNextPage" ref="loadMore" class="flex justify-center py-4">
         <LoadingSpinner />
     </div>
 </template>
@@ -29,8 +18,6 @@ const props = defineProps<{
     fetchNextPage: () => unknown | Promise<void>
 }>()
 
-
-
 const loadMore = ref<HTMLElement | null>(null)
 
 onMounted(() => {
@@ -43,11 +30,7 @@ onMounted(() => {
                 isFetching: props.isFetchingNextPage,
             })
 
-            if (
-                entry?.isIntersecting &&
-                props.hasNextPage &&
-                !props.isFetchingNextPage
-            ) {
+            if (entry?.isIntersecting && props.hasNextPage && !props.isFetchingNextPage) {
                 props.fetchNextPage()
             }
         },
@@ -57,34 +40,37 @@ onMounted(() => {
         },
     )
 
-    watch(loadMore, (newVal) => {
-        if (newVal) {
-            observer.observe(newVal)
-        }
-    }, { immediate: true })
+    watch(
+        loadMore,
+        (newVal) => {
+            if (newVal) {
+                observer.observe(newVal)
+            }
+        },
+        { immediate: true },
+    )
 
     onUnmounted(() => {
         observer.disconnect()
     })
 })
-
 </script>
 <style lang="css" scoped>
-    .notification-enter-from {
+.notification-enter-from {
     opacity: 0;
     transform: translateY(-10px);
-    }
+}
 
-    .notification-enter-to {
+.notification-enter-to {
     background-color: transparent;
     opacity: 1;
     transform: translateY(0);
-    }
+}
 
-    .notification-enter-active {
+.notification-enter-active {
     transition:
-    opacity 0.4s ease,
-    transform 0.4s ease,
-    background-color 1s ease;
-    }
+        opacity 0.4s ease,
+        transform 0.4s ease,
+        background-color 1s ease;
+}
 </style>

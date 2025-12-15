@@ -72,7 +72,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.exists()).toBe(true)
     })
 
@@ -90,7 +90,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('aside').exists()).toBe(true)
     })
 
@@ -108,7 +108,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         // Logo is inside a stubbed NuxtLink, so we verify the structure is rendered
         const aside = wrapper.find('aside')
         expect(aside.exists()).toBe(true)
@@ -128,7 +128,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         const navLinks = wrapper.findAll('nuxt-link-stub')
         expect(navLinks.length).toBeGreaterThan(0)
     })
@@ -147,7 +147,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.user-actions').exists()).toBe(true)
     })
 
@@ -165,7 +165,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         const aside = wrapper.find('aside')
         expect(aside.exists()).toBe(true)
         const classes = aside.classes()
@@ -186,7 +186,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('nav').exists()).toBe(true)
     })
 
@@ -204,7 +204,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         const aside = wrapper.find('aside')
         expect(aside.classes()).toContain('flex')
         expect(aside.classes()).toContain('flex-col')
@@ -224,7 +224,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         const aside = wrapper.find('aside')
         expect(aside.classes()).toContain('bg-primary')
         expect(aside.classes()).toContain('h-full')
@@ -244,7 +244,7 @@ describe('Sidebar Component', () => {
                 },
             },
         })
-        
+
         // Popup component is rendered (PostTweet is inside it)
         expect(wrapper.find('popup-stub').exists()).toBe(true)
     })

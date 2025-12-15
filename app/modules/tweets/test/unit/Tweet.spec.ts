@@ -161,7 +161,11 @@ describe('Tweet Component', () => {
         handleShowSnackbar: vi.fn(),
     }
     it('renders repost badge for reposted tweets', async () => {
-        const tweet = { ...mockTweet, type: 'repost', reposted_by: { repost_id: 'r1', id: 'u2', name: 'Bob', reposted_at: '2020-01-02' } }
+        const tweet = {
+            ...mockTweet,
+            type: 'repost',
+            reposted_by: { repost_id: 'r1', id: 'u2', name: 'Bob', reposted_at: '2020-01-02' },
+        }
         const wrapper = mount(Tweet, {
             props: { tweet },
             global: {
@@ -213,7 +217,6 @@ describe('Tweet Component', () => {
         expect(wrapper.find('.quote-modal').exists()).toBe(true)
     })
 
-
     it('shows UserCard tooltip on avatar hover', async () => {
         const wrapper = mount(Tweet, {
             props: { tweet: mockTweet },
@@ -227,7 +230,9 @@ describe('Tweet Component', () => {
                     ...defaultStubs,
                     NuxtLink: { template: '<a><slot /></a>' },
                     UserCard: { template: '<div class="user-card">UserCard</div>' },
-                    CustomToolTip: { template: '<div><slot name="trigger" /><slot name="content" /></div>' },
+                    CustomToolTip: {
+                        template: '<div><slot name="trigger" /><slot name="content" /></div>',
+                    },
                 },
                 mocks: { $t: (key) => key },
             },
@@ -359,15 +364,15 @@ describe('Tweet Component', () => {
         it('stops propagation when avatar link is clicked', async () => {
             const { navigateTo } = await import('#app')
             vi.mocked(navigateTo).mockClear()
-            
+
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: { ...defaultGlobal },
             })
-            
+
             const link = wrapper.find('#tweet-avatar-link-t1')
             await link.trigger('click')
-            
+
             // The @click.stop should prevent the article click from firing
             expect(navigateTo).not.toHaveBeenCalled()
         })
@@ -378,7 +383,7 @@ describe('Tweet Component', () => {
 
             const { navigateTo } = await import('#app')
             vi.mocked(navigateTo).mockClear()
-            
+
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
                 global: { ...defaultGlobal },
@@ -567,7 +572,9 @@ describe('Tweet Component', () => {
         it('computes profileUrl correctly', async () => {
             // Reset the mock to default behavior
             const { getProfileUrl } = await import('../../utils/navigation')
-            vi.mocked(getProfileUrl).mockImplementation((user) => user.link || `/profile/${user.username}` || '#')
+            vi.mocked(getProfileUrl).mockImplementation(
+                (user) => user.link || `/profile/${user.username}` || '#',
+            )
 
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
@@ -582,7 +589,9 @@ describe('Tweet Component', () => {
             // Reset mocks to default behavior
             const { navigateTo } = await import('#app')
             const { getTweetUrl } = await import('../../utils/navigation')
-            vi.mocked(getTweetUrl).mockImplementation((tweet) => `/${tweet.user.username}/status/${tweet.tweet_id}`)
+            vi.mocked(getTweetUrl).mockImplementation(
+                (tweet) => `/${tweet.user.username}/status/${tweet.tweet_id}`,
+            )
             vi.mocked(navigateTo).mockClear()
 
             const wrapper = mount(Tweet, {

@@ -10,7 +10,7 @@
     >
         <template #default="{ users }">
             <FollowListUserCard
-                v-for="user in (users as FollowUser[])"
+                v-for="user in users as FollowUser[]"
                 :key="user.user_id"
                 :user="user"
             />

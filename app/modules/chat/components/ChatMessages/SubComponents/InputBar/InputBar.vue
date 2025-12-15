@@ -114,7 +114,7 @@
                     v-model="content"
                     placeholder="Type a message..."
                     class="w-full bg-transparent border-none outline-none resize-none text-primary placeholder:text-muted px-2 py-1 max-h-32 overflow-y-auto"
-                    style="unicode-bidi: plaintext;"
+                    style="unicode-bidi: plaintext"
                     rows="1"
                     @input="handleTextareaInput"
                 />
@@ -159,7 +159,6 @@ const props = defineProps<{
 
 const { $chatSocketService } = useNuxtApp()
 
-
 const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
 
 const content = ref('')
@@ -185,13 +184,13 @@ const handleSelectMedia = async (files: File[]) => {
     // Only take the first file
     const media = files[0]
     if (!media) return
-    
+
     // Only accept images, not videos
     if (!media.type.includes('image')) {
         snackbar?.handleShowSnackbar('Only images are allowed')
         return
     }
-    
+
     try {
         const response = await uploadMedia.mutateAsync({ media, type: 'image' })
         processUploadResponse(response)
@@ -235,7 +234,6 @@ const handleTextareaInput = (event: Event) => {
     // Trigger typing indicator
     $chatSocketService.handleTyping()
 }
-
 
 watch(
     () => content.value,

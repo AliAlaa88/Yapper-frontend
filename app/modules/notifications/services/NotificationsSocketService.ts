@@ -1,7 +1,4 @@
-import {
-    SOCKET_EVENTS,
-    type NotificationEvent,
-} from '../types/notificationsSocketEvents'
+import { SOCKET_EVENTS, type NotificationEvent } from '../types/notificationsSocketEvents'
 import type { createSocketService } from '~/modules/Common/services/socketServices'
 import {
     isFollowEvent,
@@ -161,8 +158,8 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                         const match = isAggregatedByTweet
                             ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
                             : isAggregatedByPerson
-                                ? n.likers[0]?.id === notification.likers[0]?.id
-                                : false
+                              ? n.likers[0]?.id === notification.likers[0]?.id
+                              : false
 
                         if (match) {
                             found = true
@@ -178,8 +175,8 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
                         const match = isAggregatedByTweet
                             ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
                             : isAggregatedByPerson
-                                ? n.reposters[0]?.id === notification.reposters[0]?.id
-                                : false
+                              ? n.reposters[0]?.id === notification.reposters[0]?.id
+                              : false
                         if (match) {
                             found = true
                             return notification
@@ -302,7 +299,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         return null
     }
-
 
     return {
         initializeListeners,

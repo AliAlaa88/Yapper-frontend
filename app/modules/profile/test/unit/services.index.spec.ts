@@ -1,17 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createUserInfoService } from '../../services/index'
 
-const { mockUserInfoServiceReal, mockUserInfoServiceMock, mockUseRuntimeConfig } = vi.hoisted(() => ({
-    mockUserInfoServiceReal: {
-        getMe: vi.fn(),
-        getUserInfoByUsername: vi.fn(),
-    },
-    mockUserInfoServiceMock: {
-        getMe: vi.fn(),
-        getUserInfoByUsername: vi.fn(),
-    },
-    mockUseRuntimeConfig: vi.fn()
-}))
+const { mockUserInfoServiceReal, mockUserInfoServiceMock, mockUseRuntimeConfig } = vi.hoisted(
+    () => ({
+        mockUserInfoServiceReal: {
+            getMe: vi.fn(),
+            getUserInfoByUsername: vi.fn(),
+        },
+        mockUserInfoServiceMock: {
+            getMe: vi.fn(),
+            getUserInfoByUsername: vi.fn(),
+        },
+        mockUseRuntimeConfig: vi.fn(),
+    }),
+)
 
 vi.mock('../../services/userInfoService.real', () => ({
     userInfoServiceReal: mockUserInfoServiceReal,
@@ -22,7 +24,7 @@ vi.mock('../../services/userInfoService.mock', () => ({
 }))
 
 vi.mock('#app', () => ({
-    useRuntimeConfig: mockUseRuntimeConfig
+    useRuntimeConfig: mockUseRuntimeConfig,
 }))
 
 describe('createUserInfoService', () => {

@@ -150,7 +150,10 @@ export const cacheInvalidation = {
                                     ...tweet,
                                     user: {
                                         ...tweet.user,
-                                        followers: Math.max(0, (tweet.user.followers || 0) + followerDelta),
+                                        followers: Math.max(
+                                            0,
+                                            (tweet.user.followers || 0) + followerDelta,
+                                        ),
                                     },
                                 }
                             }
@@ -162,7 +165,11 @@ export const cacheInvalidation = {
                                         ...tweet.parent_tweet,
                                         user: {
                                             ...tweet.parent_tweet.user,
-                                            followers: Math.max(0, (tweet.parent_tweet.user.followers || 0) + followerDelta),
+                                            followers: Math.max(
+                                                0,
+                                                (tweet.parent_tweet.user.followers || 0) +
+                                                    followerDelta,
+                                            ),
                                         },
                                     },
                                 }
@@ -181,7 +188,7 @@ export const cacheInvalidation = {
         // queryClient.invalidateQueries({ queryKey: queryKeys.settings.blockedUsers() })
         // queryClient.invalidateQueries({ queryKey: queryKeys.tweets.all })
         queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all })
-        queryClient.invalidateQueries({ queryKey: queryKeys.notifications.mentions})
+        queryClient.invalidateQueries({ queryKey: queryKeys.notifications.mentions })
     },
 
     onMuteChange: (queryClient: QueryClient, targetUserId: string) => {

@@ -84,7 +84,8 @@ vi.mock('~/modules/Common/components/Tabs/Tabs.vue', () => {
                 activeTab: { type: String, required: true },
                 onChange: { type: Function, required: true },
             },
-            template: '<div class="tabs-stub" @click="onChange(tabs[0]?.value)">{{ tabs.map(t => t.value).join(",") }}</div>',
+            template:
+                '<div class="tabs-stub" @click="onChange(tabs[0]?.value)">{{ tabs.map(t => t.value).join(",") }}</div>',
         }),
     }
 })
@@ -94,11 +95,16 @@ vi.mock('~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 }))
 
 vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue', () => ({
-    default: defineComponent({ name: 'ConfirmtionModal', template: '<div class="confirm-modal-stub" />' }),
+    default: defineComponent({
+        name: 'ConfirmtionModal',
+        template: '<div class="confirm-modal-stub" />',
+    }),
 }))
 
 vi.mock('~/modules/profile/composables/useProfile', () => ({ useProfile: vi.fn() }))
-vi.mock('~/modules/profile/composables/useProfileProviders', () => ({ useProfileProviders: vi.fn() }))
+vi.mock('~/modules/profile/composables/useProfileProviders', () => ({
+    useProfileProviders: vi.fn(),
+}))
 
 vi.mock('~/modules/Common/components/UserList', () => {
     return {
@@ -122,7 +128,12 @@ vi.mock('~/modules/Common/components/UserList', () => {
                             'data-fetching-source': props.fetchingSource,
                             'data-query-key': props.queryKeyPrefix,
                         },
-                        [slots.default?.({ users: [{ user_id: '1', username: 'alice', name: 'Alice' }] }), slots.empty?.()]
+                        [
+                            slots.default?.({
+                                users: [{ user_id: '1', username: 'alice', name: 'Alice' }],
+                            }),
+                            slots.empty?.(),
+                        ],
                     )
             },
         }),
@@ -147,7 +158,9 @@ vi.mock('~/modules/profile/components/ProfileContent/SubComponents/EmptyState.vu
     }),
 }))
 
-vi.mock('lucide-vue-next', () => ({ ArrowLeft: defineComponent({ name: 'ArrowLeft', template: '<svg />' }) }))
+vi.mock('lucide-vue-next', () => ({
+    ArrowLeft: defineComponent({ name: 'ArrowLeft', template: '<svg />' }),
+}))
 
 const globalMount = {
     global: {
@@ -175,7 +188,7 @@ const setProfileStore = (isMine = true) => {
             username: 'jane',
             name: 'Jane Doe',
         } as any,
-        isMine
+        isMine,
     )
 }
 

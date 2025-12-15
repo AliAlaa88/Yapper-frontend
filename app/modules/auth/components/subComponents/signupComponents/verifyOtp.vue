@@ -15,12 +15,16 @@
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.verifyOtp.title') }}</h2>
-            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.verifyOtp.info') }}</p>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.verifyOtp.title') }}
+        </h2>
+        <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.verifyOtp.info') }}
+        </p>
 
-            <!-- OTP Input -->
-            <form @submit.prevent="onNext">
+        <!-- OTP Input -->
+        <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-otp-signup-s2"
@@ -32,7 +36,7 @@
                     @blur="validateOtpField"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors text-center text-2xl tracking-widest shadow-sm',
-                        otpError ? 'border-red focus:border-red' : ''
+                        otpError ? 'border-red focus:border-red' : '',
                     ]"
                 />
                 <p v-if="otpError" class="text-red text-xs mt-1 text-center">{{ otpError }}</p>
@@ -53,33 +57,33 @@
             >
                 {{ $t('auth.common.next') }}
             </Button>
-            </form>
-            <p class="text-center text-primary text-sm">
-                {{ $t('auth.verifyOtp.resendPrompt') }}
-                <Button
-                    id="button-resend-code-signup-s2"
-                    class="text-blue hover:underline font-semibold transition duration-200"
-                    @click="onResendCode"
-                >
-                    {{ $t('auth.common.resendCode') }}
-                </Button>
+        </form>
+        <p class="text-center text-primary text-sm">
+            {{ $t('auth.verifyOtp.resendPrompt') }}
+            <Button
+                id="button-resend-code-signup-s2"
+                class="text-blue hover:underline font-semibold transition duration-200"
+                @click="onResendCode"
+            >
+                {{ $t('auth.common.resendCode') }}
+            </Button>
+        </p>
+        <div class="mt-4">
+            <p
+                v-if="resendCodeSuccess"
+                id="success-message-resend-signup-s2"
+                class="text-green text-sm text-center"
+            >
+                {{ resendCodeSuccess }}
             </p>
-            <div class="mt-4">
-                <p
-                    v-if="resendCodeSuccess"
-                    id="success-message-resend-signup-s2"
-                    class="text-green text-sm text-center"
-                >
-                    {{ resendCodeSuccess }}
-                </p>
-                <p
-                    v-if="resendCodeFailure"
-                    id="error-message-resend-signup-s2"
-                    class="text-red text-sm text-center"
-                >
-                    {{ resendCodeFailure }}
-                </p>
-            </div>
+            <p
+                v-if="resendCodeFailure"
+                id="error-message-resend-signup-s2"
+                class="text-red text-sm text-center"
+            >
+                {{ resendCodeFailure }}
+            </p>
+        </div>
     </Popup>
 </template>
 
@@ -161,7 +165,7 @@ const { t } = useI18n()
 
 const validateOtpField = () => {
     const result = validateOtp(otp.value)
-    otpError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    otpError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     return result.valid
 }
 

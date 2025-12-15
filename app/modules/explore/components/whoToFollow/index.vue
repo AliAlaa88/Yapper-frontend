@@ -4,7 +4,11 @@
             <!-- Header with back button and title -->
             <div class="sticky top-0 bg-primary/95 backdrop-blur-sm z-10 border-b border-primary">
                 <div class="flex items-center gap-8 px-4 py-3 rtl:flex-row-reverse">
-                    <button id="btn-back-who-to-follow" @click="router.back()" class="hover:bg-hover rounded-full p-2 transition-colors cursor-pointer">
+                    <button
+                        id="btn-back-who-to-follow"
+                        @click="router.back()"
+                        class="hover:bg-hover rounded-full p-2 transition-colors cursor-pointer"
+                    >
                         <ArrowLeft class="w-5 h-5 text-primary rtl:rotate-180" />
                     </button>
                     <h1 class="text-xl font-bold text-primary">{{ t('explore.connect') }}</h1>
@@ -29,7 +33,10 @@
             </div>
 
             <!-- Error state -->
-            <div v-else-if="isError" class="flex items-center justify-center min-h-[calc(100vh-120px)]">
+            <div
+                v-else-if="isError"
+                class="flex items-center justify-center min-h-[calc(100vh-120px)]"
+            >
                 <div class="text-center">
                     <p class="text-muted">{{ t('explore.errorLoading') }}</p>
                     <button
@@ -43,7 +50,10 @@
             </div>
 
             <!-- Empty state -->
-            <div v-else-if="!users?.length" class="flex items-center justify-center min-h-[calc(100vh-120px)]">
+            <div
+                v-else-if="!users?.length"
+                class="flex items-center justify-center min-h-[calc(100vh-120px)]"
+            >
                 <p class="text-muted text-lg">{{ t('explore.noUsersFound') }}</p>
             </div>
 

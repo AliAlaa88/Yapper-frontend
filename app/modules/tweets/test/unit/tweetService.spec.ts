@@ -102,7 +102,10 @@ describe('tweetService', () => {
             const result = await tweetServiceMock.fetchTweets('/tweets')
 
             expect(result).toHaveLength(1)
-            expect(consoleSpy).toHaveBeenCalledWith('Failed to fetch user data for tweet:', 'tweet1')
+            expect(consoleSpy).toHaveBeenCalledWith(
+                'Failed to fetch user data for tweet:',
+                'tweet1',
+            )
 
             consoleSpy.mockRestore()
         })
@@ -126,9 +129,9 @@ describe('tweetService', () => {
                 },
             ]
 
-            mockAxios.get
-                .mockResolvedValueOnce({ data: serverTweets })
-                .mockResolvedValueOnce({ data: [{ user_id: 'user2', name: 'Jane', username: 'jane' }] })
+            mockAxios.get.mockResolvedValueOnce({ data: serverTweets }).mockResolvedValueOnce({
+                data: [{ user_id: 'user2', name: 'Jane', username: 'jane' }],
+            })
 
             const result = await tweetServiceMock.fetchTweets('/tweets')
 
@@ -177,9 +180,13 @@ describe('tweetService', () => {
 
             mockAxios.get
                 .mockResolvedValueOnce({ data: mainTweet })
-                .mockResolvedValueOnce({ data: [{ user_id: 'user999', name: 'Main User', username: 'mainuser' }] })
+                .mockResolvedValueOnce({
+                    data: [{ user_id: 'user999', name: 'Main User', username: 'mainuser' }],
+                })
                 .mockResolvedValueOnce({ data: replies })
-                .mockResolvedValueOnce({ data: [{ user_id: 'user1', name: 'Reply User', username: 'replyuser1' }] })
+                .mockResolvedValueOnce({
+                    data: [{ user_id: 'user1', name: 'Reply User', username: 'replyuser1' }],
+                })
 
             const result = await tweetServiceMock.fetchTweetDetails('tweet999')
 
@@ -248,9 +255,9 @@ describe('tweetService', () => {
                 },
             ]
 
-            mockAxios.get
-                .mockResolvedValueOnce({ data: replies })
-                .mockResolvedValueOnce({ data: [{ user_id: 'user1', name: 'Reply User', username: 'replyuser' }] })
+            mockAxios.get.mockResolvedValueOnce({ data: replies }).mockResolvedValueOnce({
+                data: [{ user_id: 'user1', name: 'Reply User', username: 'replyuser' }],
+            })
 
             const result = await tweetServiceMock.fetchRepliesForTweet('tweet123')
 
