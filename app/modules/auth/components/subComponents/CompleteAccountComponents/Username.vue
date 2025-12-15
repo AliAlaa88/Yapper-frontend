@@ -7,68 +7,87 @@
         :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        slotClass="pt-4 px-8 pb-8 sm:pt-6 sm:px-10 sm:pb-10"
     >
-        <!-- Back Button -->
-
-        <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo at top -->
+        <div class="flex justify-center mb-6">
+            <Logo imgClass="w-8 lg:w-10" />
+        </div>
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.title') }}</h2>
-            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.info') }}</p>
+            <h2 class="text-2xl font-bold mb-2" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.title') }}</h2>
+            <p class="text-muted text-sm mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.info') }}</p>
 
             <!-- Username Input -->
             <div class="mb-6">
+                <label class="block text-blue text-sm font-medium mb-2">{{ $t('auth.username.label') || 'Username' }}</label>
                 <div class="relative">
-                    <span
-                        class="absolute top-1/2 -translate-y-1/2 text-muted"
-                        :class="isArabic ? 'right-4' : 'left-4'"
-                    >@</span>
                     <input
                         id="input-username-complete"
                         v-model="username"
                         type="text"
-                        :placeholder="$t('auth.username.placeholder')"
-                        class="w-full bg-primary text-primary border border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
-                        :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
-                        maxlength="25"
+                        :placeholder="'@' + $t('auth.username.placeholder')"
+                        class="w-full bg-primary text-primary border-2 border-primary focus:border-blue rounded-lg py-3 px-4 focus:outline-none transition-colors placeholder-muted"
+                        :class="isArabic ? 'text-right' : 'text-left'"
+                        maxlength="20"
                     />
+                    <!-- Checkmark for valid username -->
+                    <svg
+                        v-if="isValid && !errorMessage"
+                        class="absolute top-1/2 -translate-y-1/2 w-6 h-6 text-green"
+                        :class="isArabic ? 'left-4' : 'right-4'"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
                 </div>
-                <div class="flex justify-between mt-2 px-4">
-                    <p v-if="errorMessage" id="error-message-username" class="text-red text-sm">
+                <div class="flex justify-end mt-2 px-1">
+                    <p class="text-muted text-sm">{{ username?.length || 0 }}/20</p>
+                </div>
+                <div v-if="errorMessage" class="px-1 mt-1">
+                    <p id="error-message-username" class="text-red text-sm">
                         {{ errorMessage }}
                     </p>
-                    <p
-                        v-else-if="username && username.length > 0"
-                        id="success-message-username"
-                        class="text-green text-sm"
-                    >
-                        {{ $t('auth.username.available') }}
-                    </p>
-                    <p v-else class="text-transparent text-sm">.</p>
-                    <p class="text-muted text-sm">{{ username?.length || 0 }}/25</p>
                 </div>
             </div>
 
             <!-- Recommendations -->
             <div
                 v-if="props.Recommendations && props.Recommendations.length"
-                class="my-2 text-sm text-muted"
-                :class="isArabic ? 'text-right' : 'text-left'"
+                class="mb-6 text-sm"
             >
-                <p>{{ $t('auth.username.recommendations') }}</p>
-                <ul class="mt-1 flex flex-wrap gap-2">
+                <p class="text-muted mb-3">{{ $t('auth.username.recommendations') }}</p>
+                <ul class="flex flex-wrap gap-2">
                     <li
-                        v-for="(suggestion, index) in props.Recommendations"
+                        v-for="(suggestion, index) in displayedRecommendations"
                         :key="index"
                         :id="`recommendation-${index}-username`"
-                        class="px-2 py-1 border border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
+                        class="text-blue hover:text-blue-light cursor-pointer transition duration-200"
                         @click="username = suggestion"
                     >
-                        {{ suggestion }}
+                        @{{ suggestion }}
                     </li>
                 </ul>
+                <!-- Show More button -->
+                <button
+                    v-if="!showAllRecommendations && props.Recommendations.length > recommendationsToShow"
+                    @click="showAllRecommendations = true"
+                    class="mt-3 text-blue hover:text-blue-light transition duration-200 text-sm"
+                >
+                    {{ $t('auth.username.showMore') || 'Show more' }}
+                </button>
+                <button
+                    v-else-if="showAllRecommendations && props.Recommendations.length > recommendationsToShow"
+                    @click="showAllRecommendations = false"
+                    class="mt-3 text-blue hover:text-blue-light transition duration-200 text-sm"
+                >
+                    {{ $t('auth.username.showLess') || 'Show less' }}
+                </button>
             </div>
 
             <!-- Next Button -->
@@ -121,6 +140,8 @@ const debouncedUsername = useDebounce(username, 500)
 const errorMessage = ref('')
 const isSubmitting = ref(false)
 const loading = ref(false)
+const showAllRecommendations = ref(false)
+const recommendationsToShow = 2 // Show 2 recommendations initially
 
 const emit = defineEmits<{
     (e: 'next', username: string): void
@@ -168,8 +189,8 @@ const validateUsername = (value: string | null) => {
         return
     }
 
-    if (value.length > 25){
-        errorMessage.value = 'Username must be shorter than 25 characters'
+    if (value.length > 20){
+        errorMessage.value = 'Username must be shorter than 20 characters'
         return
     }
 
@@ -196,6 +217,14 @@ watch(debouncedUsername, (newValue) => {
 
 const isValid = computed(() => {
     return username.value && username.value.length >= 3 && !errorMessage.value
+})
+
+const displayedRecommendations = computed(() => {
+    if (!props.Recommendations) return []
+    if (showAllRecommendations.value) {
+        return props.Recommendations
+    }
+    return props.Recommendations.slice(0, recommendationsToShow)
 })
 
 const usernameMutation = useUpdateUsernameMutation(

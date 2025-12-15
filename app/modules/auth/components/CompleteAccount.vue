@@ -26,9 +26,15 @@
     <Interests
         v-if="showInterests"
         v-model:selectedInterests="profileData.interests"
-        @finish="onInterestsFinish"
+        @next="onInterestsNext"
         @skip="onInterestsSkip"
         @back="onInterestsBack"
+        @close="onClose"
+    />
+    <WhoToFollow
+        v-if="showWhoToFollow"
+        @finish="onWhoToFollowFinish"
+        @back="onWhoToFollowBack"
         @close="onClose"
     />
     <!-- Loading screen while fetching user data -->
@@ -47,6 +53,7 @@ import ProfilePicture from './subComponents/CompleteAccountComponents/ProfilePic
 import Username from './subComponents/CompleteAccountComponents/Username.vue'
 import Language from './subComponents/CompleteAccountComponents/Language.vue'
 import Interests from './subComponents/CompleteAccountComponents/Interests.vue'
+import WhoToFollow from './subComponents/CompleteAccountComponents/WhoToFollow.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useRouter } from 'vue-router'
 import { useGetUserQuery } from '../queries/useGetuserQuery'
@@ -57,6 +64,7 @@ const showProfilePicture = ref(false)
 const showUsername = ref(false)
 const showLanguage = ref(false)
 const showInterests = ref(false)
+const showWhoToFollow = ref(false)
 const showLoading = ref(false)
 const enableUserQuery = ref(false)
 import { useI18n } from 'vue-i18n'
@@ -165,24 +173,33 @@ const getUserQuery = useGetUserQuery(
 )
 
 // Interests handlers
-const onInterestsFinish = (interests: string[]) => {
+const onInterestsNext = (interests: string[]) => {
     profileData.interests = interests
     showInterests.value = false
-    showLoading.value = true
-
-    enableUserQuery.value = true
+    showWhoToFollow.value = true
 }
 
 const onInterestsSkip = () => {
     profileData.interests = []
     showInterests.value = false
-    showLoading.value = true
-    enableUserQuery.value = true
+    showWhoToFollow.value = true
 }
 
 const onInterestsBack = () => {
     showInterests.value = false
     showLanguage.value = true
+}
+
+// Who to Follow handlers
+const onWhoToFollowFinish = (followedUsers: string[]) => {
+    showWhoToFollow.value = false
+    showLoading.value = true
+    enableUserQuery.value = true
+}
+
+const onWhoToFollowBack = () => {
+    showWhoToFollow.value = false
+    showInterests.value = true
 }
 
 const onClose = () => {

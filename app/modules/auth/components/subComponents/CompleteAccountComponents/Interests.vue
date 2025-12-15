@@ -3,33 +3,39 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="false"
-        contentClass="sm:max-w-xl w-full"
+        contentClass="sm:max-w-2xl w-full"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
-        slotClass="py-2 px-10 sm:px-10 md:px-12 lg:px-14"
+        slotClass="pt-4 px-8 pb-8 sm:pt-6 sm:px-10 sm:pb-10"
         @back="$emit('back')"
         :hasBackButton="true"
     >
-        <!-- Back Button -->
-
-        <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <!-- Logo at top -->
+        <div class="flex justify-center mb-6">
+            <Logo imgClass="w-8 lg:w-10" />
+        </div>
 
             <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.title') }}</h2>
-            <p class="text-muted mb-6">{{ $t('auth.interests.info') }}</p>
+            <h2 class="text-2xl font-bold mb-2" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.title') }}</h2>
+            <p class="text-muted text-sm mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.interests.info') }}</p>
+
+            <!-- Error Message -->
+            <div v-if="errorMessage" class="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg mb-4">
+                {{ errorMessage }}
+            </div>
 
             <!-- Interests Grid -->
-            <div class="max-h-64 overflow-y-auto mb-6 custom-scrollbar">
-                <div class="grid grid-cols-2 gap-3">
+            <div class="max-h-80 overflow-y-auto mb-4 custom-scrollbar">
+                <div class="grid grid-cols-3 gap-3">
                     <button
                         v-for="interest in interests"
                         :key="interest.id"
                         :id="`button-interest-${interest.id}`"
                         :class="[
-                            'px-4 py-3 rounded-full text-sm font-medium transition shadow-sm',
+                            'aspect-square rounded-xl text-sm font-medium transition border flex items-end p-4',
                             selectedInterests.includes(interest.id)
-                                ? 'bg-alternate text-alternate border border-transparent'
-                                : 'border border-primary text-primary hover:bg-hover',
+                                ? 'bg-alternate text-alternate border-alternate'
+                                : 'border-primary text-primary hover:border-blue hover:text-blue',
+                            isArabic ? 'justify-end text-right' : 'justify-start text-left'
                         ]"
                         @click="toggleInterest(interest.id)"
                     >
@@ -38,39 +44,30 @@
                 </div>
             </div>
 
-            <!-- Selection Counter -->
-            <p class="text-center text-muted text-sm mb-6">
-                {{ selectedInterests.length }} {{ $t('auth.common.selectedSuffix') }}
-                <span v-if="selectedInterests.length < 3" class="text-red-400">
-                    ({{ 3 - selectedInterests.length }} {{ $t('auth.common.neededMoreSuffix') }})
-                </span>
-            </p>
-
-            <!-- Next Button -->
-            <Button
-                id="button-next-interests"
-                :disabled="selectedInterests.length < 3"
-                buttonClass="w-full font-semibold rounded-full py-2 transition mb-3"
-                :class="[
-                    selectedInterests.length >= 3
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
-                        : 'bg-alternate text-alternate',
-                ]"
-                :loading-text="$t('auth.common.loading')"
-                :is-loading="loading"
-                @click="onNext"
-            >
-                {{ $t('auth.common.next') }}
-            </Button>
-
-            <!-- Skip Button -->
-            <Button
-                id="button-skip-interests"
-                class="w-full text-primary hover:text-blue transition duration-200"
-                @click="onSkip"
-            >
-                {{ $t('auth.common.skip') }}
-            </Button>
+            <!-- Footer with selection counter and next button -->
+            <div class="flex items-center justify-between mt-6 pt-4 border-t border-primary">
+                <!-- Selection Counter -->
+                <p class="text-muted text-sm">
+                    {{ selectedInterests.length }} {{ $t('auth.interests.selected') || 'of 1 selected' }}
+                </p>
+                
+                <!-- Next Button -->
+                <Button
+                    id="button-next-interests"
+                    :disabled="selectedInterests.length < 1"
+                    buttonClass="px-8 py-2 font-semibold rounded-full transition"
+                    :class="[
+                        selectedInterests.length >= 1
+                            ? 'bg-alternate hover:bg-hover-alternate text-alternate'
+                            : 'bg-muted text-muted opacity-50 cursor-not-allowed',
+                    ]"
+                    :loading-text="$t('auth.common.loading')"
+                    :is-loading="loading"
+                    @click="onNext"
+                >
+                    {{ $t('auth.common.next') }}
+                </Button>
+            </div>
     </Popup>
 </template>
 
@@ -132,10 +129,11 @@ const toggleInterest = (id: string) => {
 
 const interestsMutation = useUpdateInterestsMutation(
     (data) => {
+        console.log('Interests update success:', data)
         isSubmitting.value = false
         loading.value = false
         errorMessage.value = ''
-        emit('finish', selectedInterests.value)
+        emit('next', selectedInterests.value)
     },
     (error) => {
         console.error('Interests update error:', error)
@@ -147,11 +145,14 @@ const interestsMutation = useUpdateInterestsMutation(
 )
 
 const onNext = () => {
-    if (selectedInterests.value.length >= 3 && !isSubmitting.value) {
+    if (selectedInterests.value.length >= 1 && !isSubmitting.value) {
+        console.log('Submitting interests:', selectedInterests.value)
         isSubmitting.value = true
         loading.value = true
+        errorMessage.value = '' // Clear previous errors
         // categoryIds are the selected interest ids
         const categoryIds = selectedInterests.value.map(id => parseInt(id))
+        console.log('Category IDs:', categoryIds)
         interestsMutation.mutate({ categoryIds })
     }
 }

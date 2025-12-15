@@ -1,7 +1,4 @@
-import {
-    SOCKET_EVENTS,
-    type NotificationEvent,
-} from '../types/notificationsSocketEvents'
+import { SOCKET_EVENTS, type NotificationEvent } from '../types/notificationsSocketEvents'
 import type { createSocketService } from '~/modules/Common/services/socketServices'
 import {
     isFollowEvent,
@@ -102,7 +99,11 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
         } else if (isAggregateAction(event)) {
             const apiNotification = convertWebSocketToApi(event)
             if (apiNotification) {
-                replaceNotificationInCache(['notifications'], apiNotification)
+                replaceNotificationInCache(
+                    ['notifications'],
+                    apiNotification,
+                    event.old_notification.id,
+                )
                 incrementUnreadCount()
             }
         }
@@ -138,60 +139,41 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
     const replaceNotificationInCache = (
         queryKey: string[],
-        notification: ApiNotification,
+        newNotification: ApiNotification,
+        oldNotificationId?: string,
     ): void => {
         queryClient.setQueryData(queryKey, (oldData: any) => {
             if (!oldData?.pages) return oldData
-            let found = false
+
+            let replaced = false
+            const targetId = oldNotificationId ?? newNotification.id
+
             const newPages = oldData.pages.map((page: any) => {
-                const notifications = page.notifications.map((n: ApiNotification) => {
-                    if (notification.type === 'follow' && n.type === 'follow') {
-                        const match = n.followers[0]?.id === notification.followers[0]?.id
-                        if (match) {
-                            found = true
-                            return notification
-                        }
+                const filteredNotifications = page.notifications.filter((n: ApiNotification) => {
+                    if (n.id === targetId) {
+                        replaced = true
+                        return false
                     }
-
-                    if (notification.type === 'like' && n.type === 'like') {
-                        const isAggregatedByPerson =
-                            notification.likers.length === 1 && notification.tweets.length > 1
-                        const isAggregatedByTweet =
-                            notification.likers.length > 1 && notification.tweets.length === 1
-                        const match = isAggregatedByTweet
-                            ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
-                            : isAggregatedByPerson
-                                ? n.likers[0]?.id === notification.likers[0]?.id
-                                : false
-
-                        if (match) {
-                            found = true
-                            return notification
-                        }
-                    }
-
-                    if (notification.type === 'repost' && n.type === 'repost') {
-                        const isAggregatedByPerson =
-                            notification.reposters.length === 1 && notification.tweets.length > 1
-                        const isAggregatedByTweet =
-                            notification.reposters.length > 1 && notification.tweets.length === 1
-                        const match = isAggregatedByTweet
-                            ? n.tweets[0]?.tweet_id === notification.tweets[0]?.tweet_id
-                            : isAggregatedByPerson
-                                ? n.reposters[0]?.id === notification.reposters[0]?.id
-                                : false
-                        if (match) {
-                            found = true
-                            return notification
-                        }
-                    }
-                    return n
+                    return true
                 })
-                return { ...page, notifications }
+
+                return {
+                    ...page,
+                    notifications: filteredNotifications,
+                }
             })
-            if (!found) {
-                newPages[0].notifications.unshift(notification)
-                newPages[0].total += 1
+
+            if (replaced) {
+                newPages[0] = {
+                    ...newPages[0],
+                    notifications: [newNotification, ...newPages[0].notifications],
+                }
+            } else {
+                newPages[0] = {
+                    ...newPages[0],
+                    notifications: [newNotification, ...newPages[0].notifications],
+                    total: newPages[0].total + 1,
+                }
             }
 
             return { ...oldData, pages: newPages }
@@ -302,7 +284,6 @@ export const createNotificationsSocketService = (deps: NotificationSocketService
 
         return null
     }
-
 
     return {
         initializeListeners,
