@@ -82,7 +82,7 @@ import Button from '~/modules/Common/components/Button/Button.vue'
 import DetailedPanel from '../DetailedPanel.vue'
 import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import type { useSnackbar } from '../../../profile/composables/useSnackbar'
-
+import { inject } from 'vue'
 const { showSnackbar, handleShowSnackbar } = inject('snackbar') as ReturnType<
     typeof useSnackbar
 >

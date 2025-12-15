@@ -1,9 +1,11 @@
 import type { Socket } from 'socket.io-client'
+import { ref } from 'vue'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 
 export const createSocketService = () => {
     const { $socket } = useNuxtApp()
     let socket: Socket | null = null
+    const connected = ref(false)
 
     const connect = () => {
         const userStore = useUserStore()
@@ -20,18 +22,22 @@ export const createSocketService = () => {
         }
 
         socket = $socket.create()
+        connected.value = false
 
         socket.connect()
 
         socket.on('connect', () => {
+            connected.value = true
             console.log('[SocketService] Connected to server')
         })
 
         socket.on('disconnect', (reason: string) => {
+            connected.value = false
             console.log('[SocketService] Disconnected:', reason)
         })
 
         socket.on('connect_error', (error: Error) => {
+            connected.value = false
             console.error('[SocketService] Connection error:', error.message)
         })
     }
@@ -42,6 +48,7 @@ export const createSocketService = () => {
             socket.disconnect()
             socket = null
         }
+        connected.value = false
     }
 
     const emit = (event: string, ...args: any[]) => {
@@ -79,7 +86,7 @@ export const createSocketService = () => {
     }
 
     const isConnected = (): boolean => {
-        return socket?.connected ?? false
+        return connected.value
     }
 
     const getSocket = (): Socket | null => socket
@@ -93,5 +100,6 @@ export const createSocketService = () => {
         once,
         isConnected,
         getSocket,
+        connected,
     }
 }

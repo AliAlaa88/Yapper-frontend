@@ -184,6 +184,8 @@ const validateUsername = (value: string | null) => {
     }
 
     errorMessage.value = ''
+    if(value === props.Recommendations[0])
+        return
     checkIdentifierMutation.mutate(value)
 }
 
@@ -218,7 +220,14 @@ const onNext = () => {
     if (isValid.value && username.value && !isSubmitting.value) {
         isSubmitting.value = true
         loading.value = true
-        usernameMutation.mutate({ username: username.value })
+        if (username.value === props.Recommendations[0]){
+            loading.value = false
+            errorMessage.value = ''
+            isSubmitting.value = false
+            emit('next', username.value)
+        }
+        else
+            usernameMutation.mutate({ username: username.value })
     }
 }
 

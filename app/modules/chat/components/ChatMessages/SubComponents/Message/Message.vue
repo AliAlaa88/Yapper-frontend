@@ -24,11 +24,7 @@
                         class="text-[15px] leading-5 whitespace-pre-wrap wrap-break-word"
                         style="unicode-bidi: plaintext"
                         v-html="
-                            parseLinks(
-                                isExpanded ? message.content : truncatedContent,
-                                isOwnMessage,
-                                false,
-                            )
+                            parseLinks(isExpanded ? message.content : truncatedContent, true, false)
                         "
                     />
                     <button

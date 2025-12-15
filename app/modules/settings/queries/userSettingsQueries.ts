@@ -1,5 +1,4 @@
 import { useMutation, useInfiniteQuery, useQuery } from '@tanstack/vue-query'
-import { useNuxtApp } from 'nuxt/app'
 import { useI18n } from 'vue-i18n'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 import { useUserStore } from '~/modules/auth/stores/userStore'

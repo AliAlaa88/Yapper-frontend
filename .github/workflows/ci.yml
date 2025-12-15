@@ -2,7 +2,7 @@ name: CI
 
 on:
     pull_request:
-        branches: [main, dev]
+        branches: [main, development]
 
 permissions:
     contents: read
@@ -33,13 +33,14 @@ jobs:
             - name: 🧹 Run ESLint
               run: npm run lint
 
-            - name: 🧪 Run unit tests (if available)
-              run: |
-                  if npm run | grep -q "test"; then
-                    npm run test
-                  else
-                    echo "No tests configured — skipping."
-                  fi
+            - name: 🧪 Run unit tests with coverage
+              run: npm run test:coverage
+
+            - name: SonarCloud Scan
+              uses: SonarSource/sonarcloud-github-action@master
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
             - name: 🏗️ Build Nuxt app
               run: npm run build

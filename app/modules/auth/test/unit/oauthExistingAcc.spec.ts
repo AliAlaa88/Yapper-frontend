@@ -33,6 +33,10 @@ const mockUserStore = {
         mockUserStore.user = data.user
     }),
     setUser: vi.fn(),
+    setAccessToken: vi.fn((token: string | null) => {
+        mockUserStore.accessToken = token
+    }),
+    getAccessToken: vi.fn(() => mockUserStore.accessToken),
     updateUser: vi.fn(),
     logout: vi.fn(),
     initAuth: vi.fn(),

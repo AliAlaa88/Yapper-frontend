@@ -66,14 +66,17 @@ import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 const snackbar = useSnackbar()
 provide('snackbar', snackbar)
 
+const router = useRouter()
+
 const props = defineProps<{
     chatId?: string
 }>()
 
-const { $chatSocketService } = useNuxtApp()
+const { $chatSocketService, $socketService } = useNuxtApp()
 
 const selectedConversation = ref<Conversation | null>(null)
 const isCreateConversationOpen = ref(false)
+const isChatSocketConnected = $socketService.connected
 
 const openCreateConversation = () => {
     isCreateConversationOpen.value = true
@@ -97,9 +100,11 @@ watch(
 )
 
 watch(
-    conversationByIdData,
-    async (conversation) => {
-        if (props.chatId && conversation) {
+    [conversationByIdData, isChatSocketConnected],
+    async ([conversation, isConnected]) => {
+        console.log('conversation', conversation)
+        console.log('isConnected', isConnected)
+        if (props.chatId && conversation && isConnected) {
             selectedConversation.value = conversation
             try {
                 await $chatSocketService.enterChat(conversation.id)
@@ -126,6 +131,8 @@ const handleSelectConversation = async (conversation: Conversation) => {
 const handleEscapeKey = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && selectedConversation.value) {
         selectedConversation.value = null
+        $chatSocketService.leaveChat()
+        router.push('/messages')
     }
 }
 

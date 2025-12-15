@@ -188,11 +188,16 @@ export const settingsService = {
             return response.data
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
+                const backendMessage = error.response?.data?.message || error.response?.data?.error
+
+                if (backendMessage) {
+                    throw new Error(backendMessage)
+                }
                 if (error.response?.status === 401) {
                     throw new Error('Invalid or expired token')
                 } else if (error.response?.status === 404) {
                     throw new Error('User not found')
-                } else if (error.response?.status === 409) {
+                } else if (error.response?.status === 400) {
                     throw new Error('Email already exists')
                 } else if (error.response?.status === 500) {
                     throw new Error('Failed to send OTP email')
@@ -216,6 +221,11 @@ export const settingsService = {
             return response.data
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
+                const backendMessage = error.response?.data?.message || error.response?.data?.error
+
+                if (backendMessage) {
+                    throw new Error(backendMessage)
+                }
                 if (error.response?.status === 400) {
                     throw new Error('Invalid or expired OTP')
                 } else if (error.response?.status === 401) {

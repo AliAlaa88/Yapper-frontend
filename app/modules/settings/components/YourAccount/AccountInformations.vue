@@ -41,7 +41,7 @@ const { t } = useI18n()
 const categories = computed(() => [
     { label: t('settings.accountInfo.username'), content: user.value?.username, href: '/settings/screen_name' },
     { label: t('settings.accountInfo.email'), content: user.value?.email, href:'/settings/email' },
-    { label: t('settings.accountInfo.country'), content: user.value?.country, href: '/settings/country' },
+    { label: t('settings.accountInfo.country'), content:  t(`countries.${user.value?.country}`), href: '/settings/country' },
     { label: t('settings.accountInfo.languages'), content: 'English, Arabic', href: '/settings/languages' },
     { label: t('settings.accountInfo.birthDate'), content: formatDate(user.value?.birth_date ?? ''), href: `/${user.value?.username}/settings/profile` },
     { label: t('settings.accountInfo.age'), content: calculateAge(user.value?.birth_date ?? '').toString(), href: '/settings/your_yapper_data/age' },
