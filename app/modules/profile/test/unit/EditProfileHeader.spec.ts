@@ -8,15 +8,15 @@ vi.mock('lucide-vue-next', () => ({
 
 const globalMocks = {
     mocks: {
-        $t: (key: string) => key
-    }
+        $t: (key: string) => key,
+    },
 }
 
 describe('EditProfileHeader', () => {
     it('renders header with title', () => {
         const wrapper = mount(EditProfileHeader, {
             props: { isValid: true, isSaving: false },
-            global: globalMocks
+            global: globalMocks,
         })
         expect(wrapper.text()).toContain('profile.editProfileModal.title')
     })
@@ -24,11 +24,11 @@ describe('EditProfileHeader', () => {
     it('disables save button when invalid or saving', () => {
         const invalid = mount(EditProfileHeader, {
             props: { isValid: false, isSaving: false },
-            global: globalMocks
+            global: globalMocks,
         })
         const saving = mount(EditProfileHeader, {
             props: { isValid: true, isSaving: true },
-            global: globalMocks
+            global: globalMocks,
         })
 
         expect(invalid.findAll('button')[1]?.attributes('disabled')).toBeDefined()

@@ -1,7 +1,7 @@
 import { useUserStore } from '../modules/auth/stores/userStore'
 export default defineNuxtRouteMiddleware(async (to) => {
     const authPages = ['/auth/login', '/auth/register', '/auth']
-    const isAuthPage = authPages.some(page => to.path.startsWith(page))
+    const isAuthPage = authPages.some((page) => to.path.startsWith(page))
 
     const userStore = useUserStore()
     const token = userStore.getAccessToken()

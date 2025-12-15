@@ -35,7 +35,7 @@ const props = defineProps<{
 
 // Map API response to FollowUser interface expected by UserCard
 const mappedUsers = computed<FollowUser[]>(() => {
-    return props.users.map(user => ({
+    return props.users.map((user) => ({
         user_id: user.user_id || user.id,
         name: user.name,
         username: user.username,

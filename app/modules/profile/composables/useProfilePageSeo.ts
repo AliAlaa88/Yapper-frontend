@@ -1,7 +1,7 @@
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
 
 export function useProfilePageSeo(
-    section: 'profile' | 'likes' | 'media' | 'replies' | 'followers' | 'following'
+    section: 'profile' | 'likes' | 'media' | 'replies' | 'followers' | 'following',
 ) {
     const { t, locale } = useI18n()
     const route = useRoute()
@@ -39,11 +39,14 @@ export function useProfilePageSeo(
 
         if (section === 'profile') {
             return {
-                title: t('seo.profile.title', { name: newProfile.name, username: newProfile.username }),
+                title: t('seo.profile.title', {
+                    name: newProfile.name,
+                    username: newProfile.username,
+                }),
                 description: t('seo.profile.description', {
                     name: newProfile.name,
                     username: newProfile.username,
-                    bio: newProfile.bio || ''
+                    bio: newProfile.bio || '',
                 }),
                 keywords: t('seo.profile.keywords', { username: newProfile.username }),
                 ogImage: newProfile.avatar_url || `${baseUrl}/og-image.png`,
@@ -92,8 +95,6 @@ export function useProfilePageSeo(
             { name: 'robots', content: 'index, follow' },
             { name: 'author', content: 'Yapper' },
         ],
-        link: [
-            { rel: 'canonical', href: currentUrl },
-        ],
+        link: [{ rel: 'canonical', href: currentUrl }],
     })
 }

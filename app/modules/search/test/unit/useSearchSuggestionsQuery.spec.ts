@@ -39,7 +39,7 @@ describe('useSearchSuggestionsQuery', () => {
         expect(mockUseQuery).toHaveBeenCalledWith(
             expect.objectContaining({
                 queryKey: ['search-suggestions', query],
-            })
+            }),
         )
     })
 
@@ -51,7 +51,7 @@ describe('useSearchSuggestionsQuery', () => {
         expect(mockUseQuery).toHaveBeenCalledWith(
             expect.objectContaining({
                 enabled,
-            })
+            }),
         )
     })
 

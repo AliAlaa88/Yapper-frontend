@@ -19,7 +19,7 @@ vi.mock('../../composables/useUserInfo', () => ({
         isFollowing: ref(false),
         isMuted: ref(false),
         isBlocked: ref(false),
-    }))
+    })),
 }))
 
 vi.mock('../../composables/useUserInteractions', () => ({
@@ -28,7 +28,7 @@ vi.mock('../../composables/useUserInteractions', () => ({
         handleUnblockWithConfirmation: vi.fn(),
         handleMuteWithSnackbarWithAction: vi.fn(),
         handleUnmuteWithConfirmation: vi.fn(),
-    }))
+    })),
 }))
 
 describe('ProfileInfo Component', () => {
@@ -42,34 +42,34 @@ describe('ProfileInfo Component', () => {
         following_count: 10,
         followers_count: 20,
         mutual_followers_count: 0,
-        top_mutual_followers: []
+        top_mutual_followers: [],
     }
 
     it('renders user info correctly', () => {
         const wrapper = mount(ProfileInfo, {
             props: {
                 user: mockUser,
-                isMyProfile: false
+                isMyProfile: false,
             },
             global: {
                 plugins: [VueQueryPlugin],
                 provide: {
                     snackbar: {
-                        showSnackbar: vi.fn()
+                        showSnackbar: vi.fn(),
                     },
                     confirmation: {
-                        showConfirmation: vi.fn()
-                    }
+                        showConfirmation: vi.fn(),
+                    },
                 },
                 stubs: {
                     NuxtLink: {
-                        template: '<a><slot /></a>'
-                    }
+                        template: '<a><slot /></a>',
+                    },
                 },
                 mocks: {
-                    $t: (key: string) => key
-                }
-            }
+                    $t: (key: string) => key,
+                },
+            },
         })
 
         expect(wrapper.find('h1').text()).toBe('Mohamed Hassan')

@@ -95,10 +95,7 @@ describe('timelineService', () => {
 
             const result = await timelineService.createReply(tweetData, parentTweetId)
 
-            expect(mockAxios.post).toHaveBeenCalledWith(
-                `tweets/${parentTweetId}/reply`,
-                tweetData
-            )
+            expect(mockAxios.post).toHaveBeenCalledWith(`tweets/${parentTweetId}/reply`, tweetData)
             expect(result).toEqual(expectedResponse)
         })
 
@@ -121,10 +118,7 @@ describe('timelineService', () => {
 
             const result = await timelineService.createReply(tweetData, parentTweetId)
 
-            expect(mockAxios.post).toHaveBeenCalledWith(
-                `tweets/${parentTweetId}/reply`,
-                tweetData
-            )
+            expect(mockAxios.post).toHaveBeenCalledWith(`tweets/${parentTweetId}/reply`, tweetData)
             expect(result.images).toEqual(['reply-image.jpg'])
         })
 
@@ -139,7 +133,7 @@ describe('timelineService', () => {
             mockAxios.post.mockRejectedValueOnce(error)
 
             await expect(timelineService.createReply(tweetData, 'parent-1')).rejects.toThrow(
-                'Server error'
+                'Server error',
             )
         })
     })
@@ -166,10 +160,7 @@ describe('timelineService', () => {
 
             const result = await timelineService.createQuote(tweetData, parentTweetId)
 
-            expect(mockAxios.post).toHaveBeenCalledWith(
-                `tweets/${parentTweetId}/quote`,
-                tweetData
-            )
+            expect(mockAxios.post).toHaveBeenCalledWith(`tweets/${parentTweetId}/quote`, tweetData)
             expect(result).toEqual(expectedResponse)
         })
 
@@ -193,10 +184,7 @@ describe('timelineService', () => {
 
             const result = await timelineService.createQuote(tweetData, parentTweetId)
 
-            expect(mockAxios.post).toHaveBeenCalledWith(
-                `tweets/${parentTweetId}/quote`,
-                tweetData
-            )
+            expect(mockAxios.post).toHaveBeenCalledWith(`tweets/${parentTweetId}/quote`, tweetData)
             expect(result.images.length).toBe(2)
         })
 
@@ -211,7 +199,7 @@ describe('timelineService', () => {
             mockAxios.post.mockRejectedValueOnce(error)
 
             await expect(timelineService.createQuote(tweetData, 'parent-1')).rejects.toThrow(
-                'Quote creation failed'
+                'Quote creation failed',
             )
         })
     })

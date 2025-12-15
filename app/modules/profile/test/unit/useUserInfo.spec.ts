@@ -117,6 +117,5 @@ describe('useUserInfo', () => {
         expect(userInfo.followersCount.value).toBe('')
         expect(userInfo.followingCount.value).toBe('')
         expect(userInfo.coverUrl.value).toBe('')
-
     })
 })

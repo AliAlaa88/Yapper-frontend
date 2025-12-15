@@ -131,17 +131,17 @@ describe('TweetDetails Component', () => {
                             back: vi.fn(),
                         },
                         $t: (msg) => {
-                            if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                            if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                            return msg;
-                        }
+                            if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                            if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                            return msg
+                        },
                     },
                     config: {
                         globalProperties: {
                             $t: (msg) => {
-                                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                                return msg;
+                                if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                                if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                                return msg
                             },
                         },
                     },
@@ -149,135 +149,135 @@ describe('TweetDetails Component', () => {
             })
 
             wrapper.vm.t = (msg) => {
-                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                return msg;
+                if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                return msg
             }
             await wrapper.vm.$forceUpdate?.()
             expect(wrapper.find('.animate-spin').exists()).toBe(true)
             expect(wrapper.text()).toContain('Loading')
         })
 
-    describe('Error State', () => {
-        it('displays error message when error exists', async () => {
-            const { useTweetDetails } = await import('../../composables/useTweetDetails')
-            vi.mocked(useTweetDetails).mockReturnValue({
-                tweetDetails: ref(null),
-                isLoading: ref(false),
-                error: ref(new Error('Failed to load tweet')),
-                replies: ref([]),
-                fetchTweetDetails: vi.fn(),
-            } as any)
+        describe('Error State', () => {
+            it('displays error message when error exists', async () => {
+                const { useTweetDetails } = await import('../../composables/useTweetDetails')
+                vi.mocked(useTweetDetails).mockReturnValue({
+                    tweetDetails: ref(null),
+                    isLoading: ref(false),
+                    error: ref(new Error('Failed to load tweet')),
+                    replies: ref([]),
+                    fetchTweetDetails: vi.fn(),
+                } as any)
 
-            const wrapper = mount(TweetDetails, {
-                global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
-                    provide: {
-                        snackbar: {
-                            showSnackbar: vi.fn(),
-                            handleShowSnackbar: vi.fn(),
+                const wrapper = mount(TweetDetails, {
+                    global: {
+                        stubs: {
+                            NuxtLink: true,
+                            Publisher: true,
+                            Content: true,
+                            Stats: true,
                         },
-                        confirmation: {
-                            showConfirmation: vi.fn(),
-                            handleShowConfirmation: vi.fn(),
+                        provide: {
+                            snackbar: {
+                                showSnackbar: vi.fn(),
+                                handleShowSnackbar: vi.fn(),
+                            },
+                            confirmation: {
+                                showConfirmation: vi.fn(),
+                                handleShowConfirmation: vi.fn(),
+                            },
                         },
-                    },
-                    mocks: {
-                        $router: {
-                            back: vi.fn(),
+                        mocks: {
+                            $router: {
+                                back: vi.fn(),
+                            },
+                            t: (msg) => {
+                                if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                                if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                                return msg
+                            },
                         },
-                        t: (msg) => {
-                            if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                            if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                            return msg;
-                        },
-                    },
-                    config: {
-                        globalProperties: {
-                            $t: (msg) => {
-                                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                                return msg;
+                        config: {
+                            globalProperties: {
+                                $t: (msg) => {
+                                    if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                                    if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                                    return msg
+                                },
                             },
                         },
                     },
-                },
+                })
+
+                wrapper.vm.t = (msg) => {
+                    if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                    if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                    return msg
+                }
+                await wrapper.vm.$forceUpdate?.()
+                expect(wrapper.text()).toContain('Failed to load tweet')
             })
 
-            wrapper.vm.t = (msg) => {
-                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                return msg;
-            }
-            await wrapper.vm.$forceUpdate?.()
-            expect(wrapper.text()).toContain('Failed to load tweet')
-        })
+            it('calls fetchTweetDetails when retry button is clicked', async () => {
+                const fetchTweetDetailsMock = vi.fn()
+                const { useTweetDetails } = await import('../../composables/useTweetDetails')
+                vi.mocked(useTweetDetails).mockReturnValue({
+                    tweetDetails: ref(null),
+                    isLoading: ref(false),
+                    error: ref(new Error('Failed to load tweet')),
+                    replies: ref([]),
+                    fetchTweetDetails: fetchTweetDetailsMock,
+                } as any)
 
-        it('calls fetchTweetDetails when retry button is clicked', async () => {
-            const fetchTweetDetailsMock = vi.fn()
-            const { useTweetDetails } = await import('../../composables/useTweetDetails')
-            vi.mocked(useTweetDetails).mockReturnValue({
-                tweetDetails: ref(null),
-                isLoading: ref(false),
-                error: ref(new Error('Failed to load tweet')),
-                replies: ref([]),
-                fetchTweetDetails: fetchTweetDetailsMock,
-            } as any)
-
-            const wrapper = mount(TweetDetails, {
-                global: {
-                    stubs: {
-                        NuxtLink: true,
-                        Publisher: true,
-                        Content: true,
-                        Stats: true,
-                    },
-                    provide: {
-                        snackbar: {
-                            showSnackbar: vi.fn(),
-                            handleShowSnackbar: vi.fn(),
+                const wrapper = mount(TweetDetails, {
+                    global: {
+                        stubs: {
+                            NuxtLink: true,
+                            Publisher: true,
+                            Content: true,
+                            Stats: true,
                         },
-                        confirmation: {
-                            showConfirmation: vi.fn(),
-                            handleShowConfirmation: vi.fn(),
+                        provide: {
+                            snackbar: {
+                                showSnackbar: vi.fn(),
+                                handleShowSnackbar: vi.fn(),
+                            },
+                            confirmation: {
+                                showConfirmation: vi.fn(),
+                                handleShowConfirmation: vi.fn(),
+                            },
                         },
-                    },
-                    mocks: {
-                        $router: {
-                            back: vi.fn(),
-                        },
-                        $t: (msg) => {
-                            if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                            if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                            return msg;
-                        },
-                    },
-                    config: {
-                        globalProperties: {
+                        mocks: {
+                            $router: {
+                                back: vi.fn(),
+                            },
                             $t: (msg) => {
-                                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                                return msg;
+                                if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                                if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                                return msg
+                            },
+                        },
+                        config: {
+                            globalProperties: {
+                                $t: (msg) => {
+                                    if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                                    if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                                    return msg
+                                },
                             },
                         },
                     },
-                },
-            })
+                })
 
-            wrapper.vm.t = (msg) => {
-                if (msg === 'tweets.loading.tweetDetails') return 'Loading';
-                if (msg === 'tweets.errors.tryAgain') return 'Try Again';
-                return msg;
-            }
-            await wrapper.vm.$forceUpdate?.()
-            await wrapper.find('#tweet-detail-retry-button').trigger('click')
-            expect(fetchTweetDetailsMock).toHaveBeenCalled()
+                wrapper.vm.t = (msg) => {
+                    if (msg === 'tweets.loading.tweetDetails') return 'Loading'
+                    if (msg === 'tweets.errors.tryAgain') return 'Try Again'
+                    return msg
+                }
+                await wrapper.vm.$forceUpdate?.()
+                await wrapper.find('#tweet-detail-retry-button').trigger('click')
+                expect(fetchTweetDetailsMock).toHaveBeenCalled()
+            })
         })
     })
-    })
-    })
+})

@@ -18,8 +18,15 @@ useSeo({
 definePageMeta({ layout: 'settings' })
 
 const panelItems = {
-    title: $t('settings.privacyAndSafety'), description: $t('settings.privacyAndSafety_desc'), categories: [
-        { label: $t('settings.muteAndBlock'), description: $t('settings.muteAndBlock'), icon: MegaphoneOff , href: '/settings/mute_and_block' },
+    title: $t('settings.privacyAndSafety'),
+    description: $t('settings.privacyAndSafety_desc'),
+    categories: [
+        {
+            label: $t('settings.muteAndBlock'),
+            description: $t('settings.muteAndBlock'),
+            icon: MegaphoneOff,
+            href: '/settings/mute_and_block',
+        },
     ],
 }
 </script>

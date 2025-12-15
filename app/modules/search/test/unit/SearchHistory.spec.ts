@@ -36,12 +36,16 @@ describe('SearchHistory', () => {
 
     beforeEach(() => {
         vi.clearAllMocks()
-        Object.keys(mockLocalStorage).forEach(key => delete mockLocalStorage[key])
+        Object.keys(mockLocalStorage).forEach((key) => delete mockLocalStorage[key])
 
         vi.stubGlobal('localStorage', {
             getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
-            setItem: vi.fn((key: string, value: string) => { mockLocalStorage[key] = value }),
-            removeItem: vi.fn((key: string) => { delete mockLocalStorage[key] }),
+            setItem: vi.fn((key: string, value: string) => {
+                mockLocalStorage[key] = value
+            }),
+            removeItem: vi.fn((key: string) => {
+                delete mockLocalStorage[key]
+            }),
             clear: vi.fn(),
         })
     })
@@ -157,7 +161,10 @@ describe('SearchHistory', () => {
             await wrapper.find('.flex-1.min-w-0.cursor-pointer').trigger('click')
 
             expect(wrapper.emitted('handleSearchSubmit')).toBeTruthy()
-            expect(wrapper.emitted('handleSearchSubmit')![0]).toEqual(['test query', 'recent_search_click'])
+            expect(wrapper.emitted('handleSearchSubmit')![0]).toEqual([
+                'test query',
+                'recent_search_click',
+            ])
         })
 
         it('navigates to user profile when user item clicked', async () => {
@@ -181,12 +188,15 @@ describe('SearchHistory', () => {
 
             expect(localStorage.setItem).toHaveBeenCalledWith(
                 'yapper-search-history',
-                JSON.stringify([])
+                JSON.stringify([]),
             )
         })
 
         it('clears all history when clear all button clicked', async () => {
-            mockLocalStorage['yapper-search-history'] = JSON.stringify([mockQueryItem, mockUserItem])
+            mockLocalStorage['yapper-search-history'] = JSON.stringify([
+                mockQueryItem,
+                mockUserItem,
+            ])
 
             const wrapper = await mountComponent()
             await nextTick()
@@ -195,7 +205,7 @@ describe('SearchHistory', () => {
 
             expect(localStorage.setItem).toHaveBeenCalledWith(
                 'yapper-search-history',
-                JSON.stringify([])
+                JSON.stringify([]),
             )
         })
     })
@@ -203,7 +213,7 @@ describe('SearchHistory', () => {
     describe('data migration', () => {
         it('migrates old format without type field', async () => {
             mockLocalStorage['yapper-search-history'] = JSON.stringify([
-                { query: 'old format query' }
+                { query: 'old format query' },
             ])
 
             const wrapper = await mountComponent()
@@ -229,7 +239,9 @@ describe('SearchHistory', () => {
         it('handles localStorage save error gracefully', async () => {
             mockLocalStorage['yapper-search-history'] = JSON.stringify([mockQueryItem])
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-            vi.mocked(localStorage.setItem).mockImplementation(() => { throw new Error('Storage full') })
+            vi.mocked(localStorage.setItem).mockImplementation(() => {
+                throw new Error('Storage full')
+            })
 
             const wrapper = await mountComponent()
             await nextTick()

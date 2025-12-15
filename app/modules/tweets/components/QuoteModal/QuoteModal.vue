@@ -9,27 +9,27 @@
                 class="quote-modal relative w-full max-w-[600px] bg-primary rounded-2xl mx-4"
                 @click.stop
             >
-                    <!-- Header -->
-                    <div class="flex items-center p-4 border-b border-primary">
-                        <button
-                            id="btn-close-quote-modal"
-                            class="p-2 rounded-full hover:bg-hover transition-colors cursor-pointer"
-                            @click="closeModal"
-                        >
-                            <X :size="20" class="text-primary" />
-                        </button>
-                    </div>
-
-                    <!-- Quote Tweet Form -->
-                    <PostTweet
-                        :border="false"
-                        :quoted-tweet="quotedTweet"
-                        :inlineborder="false"
-                        :compact="true"
-                        @success="handleSuccess"
-                    />
+                <!-- Header -->
+                <div class="flex items-center p-4 border-b border-primary">
+                    <button
+                        id="btn-close-quote-modal"
+                        class="p-2 rounded-full hover:bg-hover transition-colors cursor-pointer"
+                        @click="closeModal"
+                    >
+                        <X :size="20" class="text-primary" />
+                    </button>
                 </div>
+
+                <!-- Quote Tweet Form -->
+                <PostTweet
+                    :border="false"
+                    :quoted-tweet="quotedTweet"
+                    :inlineborder="false"
+                    :compact="true"
+                    @success="handleSuccess"
+                />
             </div>
+        </div>
     </Teleport>
 </template>
 

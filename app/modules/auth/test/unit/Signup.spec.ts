@@ -33,18 +33,17 @@ const mockAuthService = {
 
 // Mock the Nuxt app
 vi.mock('#app', () => ({
-  useNuxtApp: () => ({
-    $authService: mockAuthService,
-  }),
-  useRuntimeConfig: () => ({
-    public: {
-      apiUrl: 'http://localhost:3000',
-      recaptcha: 'test-key',
-      env: 'test',
-    },
-  }),
+    useNuxtApp: () => ({
+        $authService: mockAuthService,
+    }),
+    useRuntimeConfig: () => ({
+        public: {
+            apiUrl: 'http://localhost:3000',
+            recaptcha: 'test-key',
+            env: 'test',
+        },
+    }),
 }))
-
 
 // Mock register queries - call mockAuthService and handle callbacks properly
 vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
@@ -116,19 +115,18 @@ vi.mock('~/modules/auth/queries/useRegisterQuery', () => ({
 }))
 
 vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
-  useGetUserQuery: () => ({
-    data: ref({
-      user: {
-        id: 1,
-        email: 'Safan@Developer.com',
-        name: 'Safan Test',
-      },
+    useGetUserQuery: () => ({
+        data: ref({
+            user: {
+                id: 1,
+                email: 'Safan@Developer.com',
+                name: 'Safan Test',
+            },
+        }),
+        isLoading: ref(false),
+        isError: ref(false),
     }),
-    isLoading: ref(false),
-    isError: ref(false),
-  }),
 }))
-
 
 // Mock the user store
 const mockUserStore = {
@@ -165,10 +163,7 @@ function mountSignup() {
 
     return mount(Signup, {
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             stubs: {
                 logo: true,
                 closeButton: true,
@@ -607,7 +602,7 @@ describe('Signup Component', () => {
                         access_token: 'test-token',
                         user: { id: 1, email: 'Safan@Developer.com', name: 'Safan Test' },
                     },
-                }
+                },
             })
             mockAuthService.registerStep3 = registerStep3Spy
 

@@ -15,15 +15,21 @@ vi.mock('vue-router', () => ({
 }))
 
 vi.mock('~/modules/search/components/SearchHistory.vue', () => ({
-    default: { template: '<div class="mock-search-history" @click="$emit(\'handleSearchSubmit\', \'history-query\', \'recent_search_click\')">SearchHistory</div>' }
+    default: {
+        template:
+            "<div class=\"mock-search-history\" @click=\"$emit('handleSearchSubmit', 'history-query', 'recent_search_click')\">SearchHistory</div>",
+    },
 }))
 
 vi.mock('~/modules/search/components/SearchSuggestions.vue', () => ({
-    default: { template: '<div class="mock-search-suggestions">SearchSuggestions</div>', props: ['searchQuery'] }
+    default: {
+        template: '<div class="mock-search-suggestions">SearchSuggestions</div>',
+        props: ['searchQuery'],
+    },
 }))
 
 vi.mock('~/modules/Common/composables/useDebounce', () => ({
-    useDebounce: (value: any) => value
+    useDebounce: (value: any) => value,
 }))
 
 vi.mock('lucide-vue-next', () => ({
@@ -38,14 +44,20 @@ describe('SearchBar', () => {
     beforeEach(() => {
         vi.clearAllMocks()
         vi.useFakeTimers()
-        Object.keys(mockLocalStorage).forEach(key => delete mockLocalStorage[key])
+        Object.keys(mockLocalStorage).forEach((key) => delete mockLocalStorage[key])
 
         // Mock localStorage
         vi.stubGlobal('localStorage', {
             getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
-            setItem: vi.fn((key: string, value: string) => { mockLocalStorage[key] = value }),
-            removeItem: vi.fn((key: string) => { delete mockLocalStorage[key] }),
-            clear: vi.fn(() => { Object.keys(mockLocalStorage).forEach(key => delete mockLocalStorage[key]) }),
+            setItem: vi.fn((key: string, value: string) => {
+                mockLocalStorage[key] = value
+            }),
+            removeItem: vi.fn((key: string) => {
+                delete mockLocalStorage[key]
+            }),
+            clear: vi.fn(() => {
+                Object.keys(mockLocalStorage).forEach((key) => delete mockLocalStorage[key])
+            }),
         })
 
         // Mock history.state
@@ -66,8 +78,14 @@ describe('SearchBar', () => {
                     $t: (key: string) => key,
                 },
                 stubs: {
-                    SearchHistory: { template: '<div class="mock-search-history" @click="$emit(\'handleSearchSubmit\', \'history-query\', \'recent_search_click\')">SearchHistory</div>' },
-                    SearchSuggestions: { template: '<div class="mock-search-suggestions">SearchSuggestions</div>', props: ['searchQuery'] },
+                    SearchHistory: {
+                        template:
+                            "<div class=\"mock-search-history\" @click=\"$emit('handleSearchSubmit', 'history-query', 'recent_search_click')\">SearchHistory</div>",
+                    },
+                    SearchSuggestions: {
+                        template: '<div class="mock-search-suggestions">SearchSuggestions</div>',
+                        props: ['searchQuery'],
+                    },
                     ArrowLeft: true,
                     Search: true,
                     CircleX: true,
@@ -201,7 +219,7 @@ describe('SearchBar', () => {
 
         it('removes duplicate from history before adding', async () => {
             mockLocalStorage['yapper-search-history'] = JSON.stringify([
-                { type: 'query', query: 'test search', timestamp: 1000 }
+                { type: 'query', query: 'test search', timestamp: 1000 },
             ])
 
             const wrapper = await mountComponent()
@@ -243,7 +261,9 @@ describe('SearchBar', () => {
     describe('error handling', () => {
         it('handles localStorage error gracefully', async () => {
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-            vi.mocked(localStorage.getItem).mockImplementation(() => { throw new Error('Storage error') })
+            vi.mocked(localStorage.getItem).mockImplementation(() => {
+                throw new Error('Storage error')
+            })
 
             const wrapper = await mountComponent()
             const input = wrapper.find('#input-search-bar')

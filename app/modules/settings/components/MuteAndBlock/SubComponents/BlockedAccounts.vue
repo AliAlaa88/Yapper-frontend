@@ -1,23 +1,18 @@
 <template>
     <DetailedPanel :title="$t('settings.blockedAccounts')">
         <div class="w-full text-primary">
-            <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
+            <div class="relative w-full border-b border-primary pb-4 px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
                     {{ $t('settings.blockedAccounts_desc') }}
                 </p>
             </div>
-            <div
-                v-if="myBlockedUsersQuery.isLoading.value"
-                class="flex justify-center py-6">
+            <div v-if="myBlockedUsersQuery.isLoading.value" class="flex justify-center py-6">
                 <div
                     class="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"
                 />
             </div>
             <div v-else-if="myBlockedUsersQuery.isSuccess.value && users.length > 0">
-                <UserAccountItem
-                    v-for="user in users"
-                    :key="user.user_id"
-                    :account="user">
+                <UserAccountItem v-for="user in users" :key="user.user_id" :account="user">
                     <SettingsBlockedButton :user-id="user.user_id" :is-blocked="user.is_blocked" />
                 </UserAccountItem>
             </div>
@@ -57,21 +52,26 @@ import SettingsBlockedButton from '~/modules/settings/components/MuteAndBlock/Su
 const { myBlockedUsersQuery } = userSettingsQueries()
 const { $queryClient } = useNuxtApp()
 console.log('hahaga', myBlockedUsersQuery)
-watch(() => myBlockedUsersQuery.data.value, (val) => {
-    console.log('Blocked users response:', val)
-})
+watch(
+    () => myBlockedUsersQuery.data.value,
+    (val) => {
+        console.log('Blocked users response:', val)
+    },
+)
 
-watch(() => myBlockedUsersQuery.data.value, (val) => {
-    console.log('Blocked users response:', val)
-    if (val?.pages) {
-        console.log('Total pages loaded:', val.pages.length)
-        console.log('All pages:', val.pages)
-    }
-})
+watch(
+    () => myBlockedUsersQuery.data.value,
+    (val) => {
+        console.log('Blocked users response:', val)
+        if (val?.pages) {
+            console.log('Total pages loaded:', val.pages.length)
+            console.log('All pages:', val.pages)
+        }
+    },
+)
 
-const users = computed(() =>
-    myBlockedUsersQuery.data.value?.pages
-        .flatMap(page => page.data.data) ?? [],
+const users = computed(
+    () => myBlockedUsersQuery.data.value?.pages.flatMap((page) => page.data.data) ?? [],
 )
 
 const loadMore = ref<HTMLElement | null>(null)
@@ -101,12 +101,16 @@ onMounted(() => {
         },
     )
 
-    watch(loadMore, (newVal) => {
-        if (newVal) {
-            console.log('Observing loadMore')
-            observer.observe(newVal)
-        }
-    }, { immediate: true })
+    watch(
+        loadMore,
+        (newVal) => {
+            if (newVal) {
+                console.log('Observing loadMore')
+                observer.observe(newVal)
+            }
+        },
+        { immediate: true },
+    )
 
     onUnmounted(() => {
         observer.disconnect()

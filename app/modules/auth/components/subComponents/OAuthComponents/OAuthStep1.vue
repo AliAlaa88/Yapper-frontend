@@ -5,19 +5,25 @@
         :hasCloseButton="true"
         container-class="bg-auth-popup"
         contentClass="max-w-lg sm:max-w-xl w-full"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        :headerClass="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.oauth.dobTitle') }}</h2>
-            <!-- Description -->
-            <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.oauth.dobTitle') }}
+        </h2>
+        <!-- Description -->
+        <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
 
-            <!-- Date of Birth Dropdowns -->
-             <form @submit.prevent="onNext">
+        <!-- Date of Birth Dropdowns -->
+        <form @submit.prevent="onNext">
             <div class="flex gap-3 mb-4">
                 <!-- Month -->
                 <div class="flex-1 relative">
@@ -92,7 +98,7 @@
             >
                 {{ $t('auth.common.next') }}
             </Button>
-            </form>
+        </form>
     </Popup>
 </template>
 
@@ -104,7 +110,7 @@ import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery
 import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { useUserStore } from '~/modules/auth/stores/userStore';
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

@@ -253,7 +253,13 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
 const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
-const btnId = computed(() => (props.parentTweetId ? 'reply-tweet-btn' : props.quotedTweet ? 'quote-tweet-btn' : 'post-tweet-btn'))
+const btnId = computed(() =>
+    props.parentTweetId
+        ? 'reply-tweet-btn'
+        : props.quotedTweet
+          ? 'quote-tweet-btn'
+          : 'post-tweet-btn',
+)
 interface MediaItem {
     url: string
     type: 'image' | 'video'

@@ -19,7 +19,10 @@
         </div>
 
         <!-- Loading state -->
-        <div v-if="isLoading && currentPage === 1" class="flex justify-center py-8 min-h-[calc(100vh-60px)]">
+        <div
+            v-if="isLoading && currentPage === 1"
+            class="flex justify-center py-8 min-h-[calc(100vh-60px)]"
+        >
             <LoadingSpinner size="xl" />
         </div>
 
@@ -29,7 +32,11 @@
             class="flex flex-col items-center justify-center min-h-[calc(100vh-60px)] border-t border-primary gap-2"
         >
             <p class="text-muted">{{ t('explore.errorLoading') }}</p>
-            <button id="btn-retry-category-tweets" @click="refetch" class="text-accent hover:underline cursor-pointer">
+            <button
+                id="btn-retry-category-tweets"
+                @click="refetch"
+                class="text-accent hover:underline cursor-pointer"
+            >
                 {{ t('explore.tryAgain') }}
             </button>
         </div>
@@ -60,7 +67,10 @@
             <div ref="loadMoreTrigger" class="h-1 w-full" />
 
             <!-- End of results message -->
-            <div v-if="!hasMore && tweets.length > 0" class="border-t border-primary py-8 text-center">
+            <div
+                v-if="!hasMore && tweets.length > 0"
+                class="border-t border-primary py-8 text-center"
+            >
                 <p class="text-muted text-sm">{{ t('explore.endOfResults') }}</p>
             </div>
         </div>
@@ -101,7 +111,7 @@ const categoryQuery = useGetExploreCategoriesQuery(
     computed(() => props.categoryId),
     currentPage,
     limit,
-    true
+    true,
 )
 
 const isLoading = computed(() => categoryQuery.isLoading.value)
@@ -134,7 +144,7 @@ watch(
             hasMore.value = newData.data.pagination?.hasMore || false
         }
     },
-    { immediate: true }
+    { immediate: true },
 )
 
 // Refetch function
@@ -151,7 +161,7 @@ watch(
         currentPage.value = 1
         allTweets.value = []
         hasMore.value = false
-    }
+    },
 )
 
 // Intersection Observer for auto-pagination
@@ -170,7 +180,7 @@ onMounted(() => {
                 root: null,
                 rootMargin: '200px',
                 threshold: 0.1,
-            }
+            },
         )
 
         observer.observe(loadMoreTrigger.value)
@@ -197,12 +207,12 @@ watch(
                     root: null,
                     rootMargin: '200px',
                     threshold: 0.1,
-                }
+                },
             )
 
             observer.observe(el)
         }
-    }
+    },
 )
 
 onUnmounted(() => {

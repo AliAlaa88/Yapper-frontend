@@ -15,7 +15,7 @@ import Interests from '../../components/subComponents/CompleteAccountComponents/
 vi.stubGlobal('useRuntimeConfig', () => ({
     public: {
         apiUrl: 'http://localhost:3000',
-        env: 'test'
+        env: 'test',
     },
 }))
 vi.stubGlobal('navigateTo', vi.fn())
@@ -47,7 +47,7 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
 vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
     useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
         const data = ref({ id: 1, name: 'Test User' })
-        
+
         if (enableRef?.value) {
             onSuccess?.({ data: { id: 1, name: 'Test User' } })
         }
@@ -150,12 +150,9 @@ function mountCompleteAccount(props = {}) {
     return mount(CompleteAccount, {
         props: defaultProps,
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             stubs: {
-                'Popup': {
+                Popup: {
                     template: '<div class="popup-mock"><slot /></div>',
                 },
                 NuxtLink: { template: '<a><slot /></a>' },
@@ -406,7 +403,9 @@ describe('CompleteAccount Component', () => {
 
             const languageComponent = wrapper.findComponent(Language)
             expect(languageComponent.text()).toContain('Select your language')
-            expect(languageComponent.text()).toContain('This will help us personalize your Yapper experience')
+            expect(languageComponent.text()).toContain(
+                'This will help us personalize your Yapper experience',
+            )
         })
 
         it('should display English and Arabic language options', async () => {
@@ -526,7 +525,9 @@ describe('CompleteAccount Component', () => {
 
             const interestsComponent = wrapper.findComponent(Interests)
             expect(interestsComponent.text()).toContain('What are you interested in?')
-            expect(interestsComponent.text()).toContain('Select at least 3 interests to help us tailor your feed')
+            expect(interestsComponent.text()).toContain(
+                'Select at least 3 interests to help us tailor your feed',
+            )
         })
 
         it('should show selection counter', async () => {
@@ -595,7 +596,6 @@ describe('CompleteAccount Component', () => {
             expect(skipButton.exists()).toBe(true)
             expect(skipButton.text()).toBe('Skip for now')
         })
-
 
         it('should emit finish with null/empty values when all steps are skipped', async () => {
             const wrapper = mountCompleteAccount({ skipImg: true })

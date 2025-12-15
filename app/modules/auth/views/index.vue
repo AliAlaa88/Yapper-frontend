@@ -14,7 +14,9 @@
                 >
                     {{ $t('auth.home.happeningNow') }}
                 </h1>
-                <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-primary">{{ $t('auth.home.joinToday') }}</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-primary">
+                    {{ $t('auth.home.joinToday') }}
+                </h2>
 
                 <div class="flex flex-col gap-3 max-w-90">
                     <OAuth />
@@ -36,7 +38,9 @@
                         {{ $t('auth.home.terms') }}
                     </p>
                     <div class="mt-10">
-                        <h3 class=" font-semibold mb-3 text-primary">{{ $t('auth.home.alreadyHaveAccount') }}</h3>
+                        <h3 class="font-semibold mb-3 text-primary">
+                            {{ $t('auth.home.alreadyHaveAccount') }}
+                        </h3>
                         <button
                             id="btn-sign-in"
                             class="cursor-pointer border border-alternate hover:bg-hover hover:border-blue text-primary font-bold py-2.5 rounded-full w-full"

@@ -1,12 +1,12 @@
 <template>
     <Button
         id="settings-block-button"
-        class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
-        justify-center whitespace-nowrap rounded-full transition-colors duration-200"
+        class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200"
         :button-class="buttonClass"
         :button-text="buttonText"
         :is-loading="isLoading"
-        @click="handleClick" />
+        @click="handleClick"
+    />
 </template>
 
 <script setup lang="ts">
@@ -20,17 +20,18 @@ const props = defineProps<{
 
 const userIdRef = ref(props.userId)
 const isBlockedRef = computed(() => props.isBlocked)
-watch(()=> isBlockedRef.value , (val) => {
-    console.log('is blockedkkkk', val)
-})
-const {
-    handleBlockWithSnackbar,
-    handleUnblockWithSnackbar,
-    isBlockLoading,
-    isUnblockLoading,
-} = useUserInteractions(userIdRef)
+watch(
+    () => isBlockedRef.value,
+    (val) => {
+        console.log('is blockedkkkk', val)
+    },
+)
+const { handleBlockWithSnackbar, handleUnblockWithSnackbar, isBlockLoading, isUnblockLoading } =
+    useUserInteractions(userIdRef)
 
-const buttonText = computed(() => isBlockedRef.value ? $t('profile.blockedButton') : $t('profile.blockButton'))
+const buttonText = computed(() =>
+    isBlockedRef.value ? $t('profile.blockedButton') : $t('profile.blockButton'),
+)
 
 const buttonClass = computed(() => {
     if (isBlockedRef.value) {
@@ -44,10 +45,8 @@ const isLoading = computed(() => isBlockLoading.value || isUnblockLoading.value)
 const handleClick = async () => {
     if (isBlockedRef.value) {
         await handleUnblockWithSnackbar()
-
     } else {
         await handleBlockWithSnackbar()
     }
 }
-
 </script>

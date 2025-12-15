@@ -177,7 +177,7 @@ const updateProfileMutation = useUpdateProfileMutation(
 const uploadMutation = useUpdateProfilePictureMutation(
     (data) => {
         const avatarUrl = data.data?.image_url || data.image_url
-        if (config.public.env === 'development') console.log(avatarUrl);
+        if (config.public.env === 'development') console.log(avatarUrl)
         if (avatarUrl) {
             updateProfileMutation.mutate({
                 image_url: avatarUrl,

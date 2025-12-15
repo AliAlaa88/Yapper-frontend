@@ -156,5 +156,4 @@ describe('AccountInformation Component', () => {
 
         expect(accountSection.findComponent({ name: 'ChevronRight' }).exists()).toBe(true)
     })
-
 })

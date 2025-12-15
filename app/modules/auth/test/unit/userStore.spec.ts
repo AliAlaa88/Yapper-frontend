@@ -57,7 +57,12 @@ describe('userStore', () => {
 
         it('returns user when user is set', () => {
             const store = useUserStore()
-            const mockUser = { id: '1', username: 'test', name: 'Test User', email: 'test@test.com' } as any
+            const mockUser = {
+                id: '1',
+                username: 'test',
+                name: 'Test User',
+                email: 'test@test.com',
+            } as any
             store.setUser(mockUser)
             expect(store.getUser()).toEqual(mockUser)
         })
@@ -96,7 +101,12 @@ describe('userStore', () => {
             const store = useUserStore()
             const authData = {
                 access_token: 'auth-token-123',
-                user: { id: '1', username: 'testuser', name: 'Test', email: 'test@example.com' } as any,
+                user: {
+                    id: '1',
+                    username: 'testuser',
+                    name: 'Test',
+                    email: 'test@example.com',
+                } as any,
             }
             store.setAuth(authData)
             expect(store.accessToken).toBe('auth-token-123')
@@ -116,7 +126,12 @@ describe('userStore', () => {
     describe('setUser', () => {
         it('sets user correctly', () => {
             const store = useUserStore()
-            const mockUser = { id: '2', username: 'user2', name: 'User Two', email: 'user2@test.com' } as any
+            const mockUser = {
+                id: '2',
+                username: 'user2',
+                name: 'User Two',
+                email: 'user2@test.com',
+            } as any
             store.setUser(mockUser)
             expect(store.user).toEqual(mockUser)
         })
@@ -125,7 +140,12 @@ describe('userStore', () => {
     describe('updateUser', () => {
         it('updates user with partial data', () => {
             const store = useUserStore()
-            const mockUser = { id: '1', username: 'original', name: 'Original Name', email: 'original@test.com' } as any
+            const mockUser = {
+                id: '1',
+                username: 'original',
+                name: 'Original Name',
+                email: 'original@test.com',
+            } as any
             store.setUser(mockUser)
             store.updateUser({ name: 'Updated Name' })
             expect(store.user?.name).toBe('Updated Name')
@@ -146,16 +166,18 @@ describe('userStore', () => {
                 access_token: 'token',
                 user: { id: '1', username: 'test', name: 'Test', email: 'test@test.com' } as any,
             })
-            
+
             // Mock localStorage
-            const removeItemSpy = vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {})
-            
+            const removeItemSpy = vi
+                .spyOn(Storage.prototype, 'removeItem')
+                .mockImplementation(() => {})
+
             store.logout()
-            
+
             expect(store.user).toBeNull()
             expect(store.accessToken).toBeNull()
             expect(removeItemSpy).toHaveBeenCalledWith('yapper-search-history')
-            
+
             removeItemSpy.mockRestore()
         })
     })
@@ -172,7 +194,12 @@ describe('userStore', () => {
 
         it('returns false when only user is set', () => {
             const store = useUserStore()
-            store.setUser({ id: '1', username: 'test', name: 'Test', email: 'test@test.com' } as any)
+            store.setUser({
+                id: '1',
+                username: 'test',
+                name: 'Test',
+                email: 'test@test.com',
+            } as any)
             expect(store.isLoggedIn).toBe(false)
         })
 

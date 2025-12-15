@@ -16,7 +16,8 @@
                     <NuxtLink
                         id="profile-link"
                         :to="profileRoute"
-                        class="text-accent hover:underline">
+                        class="text-accent hover:underline"
+                    >
                         {{ $t('settings.accountInfo.profile') }}
                     </NuxtLink>
                     {{ $t('settings.accountInfo.age_notRight2') }}
@@ -35,5 +36,4 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 const age = computed(() => calculateAge(user.value?.birth_date ?? ''))
 const profileRoute = computed(() => '/' + user.value?.username + '/settings/profile')
-
 </script>

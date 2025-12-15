@@ -14,88 +14,93 @@
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.title') }}</h2>
-            <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.username.info') }}</p>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.username.title') }}
+        </h2>
+        <p class="text-muted mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.username.info') }}
+        </p>
 
-            <!-- Username Input -->
-            <div class="mb-6">
-                <div class="relative">
-                    <span
-                        class="absolute top-1/2 -translate-y-1/2 text-muted"
-                        :class="isArabic ? 'right-4' : 'left-4'"
-                    >@</span>
-                    <input
-                        id="input-username-complete"
-                        v-model="username"
-                        type="text"
-                        :placeholder="$t('auth.username.placeholder')"
-                        class="w-full bg-primary text-primary border border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
-                        :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
-                        maxlength="25"
-                    />
-                </div>
-                <div class="flex justify-between mt-2 px-4">
-                    <p v-if="errorMessage" id="error-message-username" class="text-red text-sm">
-                        {{ errorMessage }}
-                    </p>
-                    <p
-                        v-else-if="username && username.length > 0"
-                        id="success-message-username"
-                        class="text-green text-sm"
-                    >
-                        {{ $t('auth.username.available') }}
-                    </p>
-                    <p v-else class="text-transparent text-sm">.</p>
-                    <p class="text-muted text-sm">{{ username?.length || 0 }}/25</p>
-                </div>
+        <!-- Username Input -->
+        <div class="mb-6">
+            <div class="relative">
+                <span
+                    class="absolute top-1/2 -translate-y-1/2 text-muted"
+                    :class="isArabic ? 'right-4' : 'left-4'"
+                    >@</span
+                >
+                <input
+                    id="input-username-complete"
+                    v-model="username"
+                    type="text"
+                    :placeholder="$t('auth.username.placeholder')"
+                    class="w-full bg-primary text-primary border border-primary rounded-full py-2.5 focus:outline-none focus:border-blue transition-colors shadow-sm"
+                    :class="isArabic ? 'pr-8 pl-4' : 'pl-8 pr-4'"
+                    maxlength="25"
+                />
             </div>
-
-            <!-- Recommendations -->
-            <div
-                v-if="props.Recommendations && props.Recommendations.length"
-                class="my-2 text-sm text-muted"
-                :class="isArabic ? 'text-right' : 'text-left'"
-            >
-                <p>{{ $t('auth.username.recommendations') }}</p>
-                <ul class="mt-1 flex flex-wrap gap-2">
-                    <li
-                        v-for="(suggestion, index) in props.Recommendations"
-                        :key="index"
-                        :id="`recommendation-${index}-username`"
-                        class="px-2 py-1 border border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
-                        @click="username = suggestion"
-                    >
-                        {{ suggestion }}
-                    </li>
-                </ul>
+            <div class="flex justify-between mt-2 px-4">
+                <p v-if="errorMessage" id="error-message-username" class="text-red text-sm">
+                    {{ errorMessage }}
+                </p>
+                <p
+                    v-else-if="username && username.length > 0"
+                    id="success-message-username"
+                    class="text-green text-sm"
+                >
+                    {{ $t('auth.username.available') }}
+                </p>
+                <p v-else class="text-transparent text-sm">.</p>
+                <p class="text-muted text-sm">{{ username?.length || 0 }}/25</p>
             </div>
+        </div>
 
-            <!-- Next Button -->
-            <Button
-                id="button-next-username"
-                :disabled="!isValid"
-                buttonClass="w-full font-semibold rounded-full py-2 transition my-3 duration-200"
-                :class="[
-                    isValid
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
-                        : 'bg-alternate text-alternate opacity-50',
-                ]"
-                :loading-text="$t('auth.common.loading')"
-                :is-loading="loading"
-                @click="onNext"
-            >
-                {{ $t('auth.common.next') }}
-            </Button>
+        <!-- Recommendations -->
+        <div
+            v-if="props.Recommendations && props.Recommendations.length"
+            class="my-2 text-sm text-muted"
+            :class="isArabic ? 'text-right' : 'text-left'"
+        >
+            <p>{{ $t('auth.username.recommendations') }}</p>
+            <ul class="mt-1 flex flex-wrap gap-2">
+                <li
+                    v-for="(suggestion, index) in props.Recommendations"
+                    :key="index"
+                    :id="`recommendation-${index}-username`"
+                    class="px-2 py-1 border border-primary text-primary rounded-md cursor-pointer hover:bg-hover transition duration-200 shadow-sm"
+                    @click="username = suggestion"
+                >
+                    {{ suggestion }}
+                </li>
+            </ul>
+        </div>
 
-            <!-- Skip Button -->
-            <Button
-                id="button-skip-username"
-                class="w-full text-primary hover:text-blue transition duration-200"
-                @click="onSkip"
-            >
-                {{ $t('auth.common.skip') }}
-            </Button>
+        <!-- Next Button -->
+        <Button
+            id="button-next-username"
+            :disabled="!isValid"
+            buttonClass="w-full font-semibold rounded-full py-2 transition my-3 duration-200"
+            :class="[
+                isValid
+                    ? 'bg-alternate hover:bg-hover-alternate text-alternate'
+                    : 'bg-alternate text-alternate opacity-50',
+            ]"
+            :loading-text="$t('auth.common.loading')"
+            :is-loading="loading"
+            @click="onNext"
+        >
+            {{ $t('auth.common.next') }}
+        </Button>
+
+        <!-- Skip Button -->
+        <Button
+            id="button-skip-username"
+            class="w-full text-primary hover:text-blue transition duration-200"
+            @click="onSkip"
+        >
+            {{ $t('auth.common.skip') }}
+        </Button>
     </Popup>
 </template>
 
@@ -133,26 +138,21 @@ const props = defineProps<{
     Recommendations: string[]
 }>()
 
-
 const checkIdentifierMutation = checkIdentifier(
     (data) => {
-        if(data.data.identifier_type === 'username'){
-            if(errorMessage.value === '')
-                errorMessage.value = 'this username is already in use.'
-        }
-        else
-            if(errorMessage.value === '')
-                errorMessage.value = 'invalid username format.'
+        if (data.data.identifier_type === 'username') {
+            if (errorMessage.value === '') errorMessage.value = 'this username is already in use.'
+        } else if (errorMessage.value === '') errorMessage.value = 'invalid username format.'
     },
     (err: any) => {
         const errorMsg =
-            err?.response?.data?.message || err?.message || 'Identifier check failed. Please try again.'
-        if(errorMsg.includes('Username not found')){
-            if(errorMessage.value === '')
-                errorMessage.value = ''
+            err?.response?.data?.message ||
+            err?.message ||
+            'Identifier check failed. Please try again.'
+        if (errorMsg.includes('Username not found')) {
+            if (errorMessage.value === '') errorMessage.value = ''
         } else {
-            if(errorMessage.value === '')
-                errorMessage.value = 'invalid username format.'
+            if (errorMessage.value === '') errorMessage.value = 'invalid username format.'
         }
     },
 )
@@ -168,7 +168,7 @@ const validateUsername = (value: string | null) => {
         return
     }
 
-    if (value.length > 25){
+    if (value.length > 25) {
         errorMessage.value = 'Username must be shorter than 25 characters'
         return
     }
@@ -184,8 +184,7 @@ const validateUsername = (value: string | null) => {
     }
 
     errorMessage.value = ''
-    if(value === props.Recommendations[0])
-        return
+    if (value === props.Recommendations[0]) return
     checkIdentifierMutation.mutate(value)
 }
 
@@ -207,27 +206,26 @@ const usernameMutation = useUpdateUsernameMutation(
         emit('next', username.value!)
     },
     (error) => {
-        console.error('error');
+        console.error('error')
         console.error('Username update error:', error)
         isSubmitting.value = false
         loading.value = false
-        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update username'
+        const errorMsg =
+            error?.response?.data?.message || error?.message || 'Failed to update username'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
-    }
+    },
 )
 
 const onNext = () => {
     if (isValid.value && username.value && !isSubmitting.value) {
         isSubmitting.value = true
         loading.value = true
-        if (username.value === props.Recommendations[0]){
+        if (username.value === props.Recommendations[0]) {
             loading.value = false
             errorMessage.value = ''
             isSubmitting.value = false
             emit('next', username.value)
-        }
-        else
-            usernameMutation.mutate({ username: username.value })
+        } else usernameMutation.mutate({ username: username.value })
     }
 }
 

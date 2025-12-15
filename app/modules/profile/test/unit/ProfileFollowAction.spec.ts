@@ -73,8 +73,9 @@ describe('ProfileFollowAction Component', () => {
         vi.clearAllMocks()
         vi.mocked(useUserInfo).mockReturnValue(mockUserInfo)
         vi.mocked(useUserInteractions).mockReturnValue(mockUserInteractions)
-        vi.mocked(useFollow)
-            .mockReturnValue(mockUseFollow as unknown as ReturnType<typeof useFollow>)
+        vi.mocked(useFollow).mockReturnValue(
+            mockUseFollow as unknown as ReturnType<typeof useFollow>,
+        )
         mockUserInfoRef.isMuted.value = false
         mockUserInfoRef.id.value = '12'
         mockUserInfoRef.username.value = 'hagar'
@@ -125,7 +126,6 @@ describe('ProfileFollowAction Component', () => {
         await nextTick()
 
         expect(wrapper.find('div').exists()).toBe(false)
-
     })
 
     it('should show/hide button when isBlocked changes', async () => {
@@ -157,7 +157,6 @@ describe('ProfileFollowAction Component', () => {
     })
 
     it('should display correct button text', async () => {
-
         const wrapper = mount(ProfileFollowAction, {
             props: {
                 userId: '12',

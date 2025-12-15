@@ -81,7 +81,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.exists()).toBe(true)
     })
 
@@ -97,7 +97,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         const container = wrapper.find('div')
         expect(container.classes()).toContain('bg-primary')
     })
@@ -114,14 +114,14 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.search-bar').exists()).toBe(true)
     })
 
     it('should not render SearchBar when in search mode', () => {
         // Set route to search path
         mockRoute.value = { path: '/search/test' }
-        
+
         const wrapper = mount(Banner, {
             global: {
                 stubs: {
@@ -133,7 +133,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.search-bar').exists()).toBe(false)
     })
 
@@ -149,7 +149,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).toContain('Trending')
     })
 
@@ -165,7 +165,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).toContain('Who to follow')
     })
 
@@ -173,7 +173,10 @@ describe('Banner Component', () => {
         const wrapper = mount(Banner, {
             global: {
                 stubs: {
-                    NuxtLink: { template: '<a :to="to" :id="id"><slot /></a>', props: ['to', 'id'] },
+                    NuxtLink: {
+                        template: '<a :to="to" :id="id"><slot /></a>',
+                        props: ['to', 'id'],
+                    },
                     SearchBar: true,
                     LoadingSpinner: true,
                     TrendsList: true,
@@ -181,7 +184,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         const showMoreLink = wrapper.find('#link-show-more-trends')
         expect(showMoreLink.exists()).toBe(true)
         expect(showMoreLink.text()).toContain('Show more')
@@ -199,7 +202,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         const trendingSection = wrapper.findAll('.rounded-2xl')[0]
         expect(trendingSection.exists()).toBe(true)
     })
@@ -207,7 +210,7 @@ describe('Banner Component', () => {
     it('should not render who to follow section when in search mode', () => {
         // Set route to search path
         mockRoute.value = { path: '/search/test' }
-        
+
         const wrapper = mount(Banner, {
             global: {
                 stubs: {
@@ -219,14 +222,14 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).not.toContain('Who to follow')
     })
 
     it('should render trending section when isConnect is true even in search mode', () => {
         // Set route to who-to-follow path (which sets isConnect to true)
         mockRoute.value = { path: '/explore/who-to-follow' }
-        
+
         const wrapper = mount(Banner, {
             global: {
                 stubs: {
@@ -238,7 +241,7 @@ describe('Banner Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).toContain('Trending')
     })
 })

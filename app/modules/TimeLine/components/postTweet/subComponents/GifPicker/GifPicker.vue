@@ -1,17 +1,10 @@
 <template>
     <!-- Mobile: Bottom sheet overlay -->
-    <div
-        v-if="isOpen"
-        class="fixed inset-0 bg-black/50 z-50"
-        @click="$emit('close')"
-    ></div>
+    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"></div>
     <div
         v-if="isOpen"
         ref="gifPickerRef"
-        class="fixed z-60 bg-primary border border-primary shadow-lg overflow-hidden
-               md:rounded-lg rounded-t-2xl rounded-b-none
-               inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto
-               w-full md:w-72 h-[60vh] md:h-80"
+        class="fixed z-60 bg-primary border border-primary shadow-lg overflow-hidden md:rounded-lg rounded-t-2xl rounded-b-none inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto w-full md:w-72 h-[60vh] md:h-80"
         :style="pickerStyle"
         @click.stop
     >
@@ -89,15 +82,15 @@ const pickerStyle = computed(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
         return {}
     }
-    
+
     if (!triggerRect.value) {
         return {}
     }
-    
+
     const rect = triggerRect.value
     const pickerHeight = 320 // md:h-80 = 320px
     const pickerWidth = 288 // md:w-72 = 288px
-    
+
     if (props.position === 'top') {
         return {
             left: `${rect.left}px`,

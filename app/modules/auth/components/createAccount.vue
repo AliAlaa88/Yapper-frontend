@@ -1,23 +1,23 @@
 <template>
     <!-- Auth Loading Page -->
     <AuthLoadingPage v-if="showLoadingPage" />
-    
-    <createAccount 
-        v-if="showSignupStep1" 
+
+    <createAccount
+        v-if="showSignupStep1"
         v-model:name="signupData.name"
         v-model:email="signupData.email"
         v-model:month="signupData.month"
         v-model:day="signupData.day"
         v-model:year="signupData.year"
-        @next="onNext" 
-        @close="goBack()" 
+        @next="onNext"
+        @close="goBack()"
     />
-    <verifyOtp 
-        v-if="showVerifyOtp" 
+    <verifyOtp
+        v-if="showVerifyOtp"
         v-model:otp="signupData.otp"
-        @close="onCloseVerify" 
-        :Email="signupData.email" 
-        @next="onFinal" 
+        @close="onCloseVerify"
+        :Email="signupData.email"
+        @next="onFinal"
     />
     <FinalRegister
         v-if="showFinalStep"
@@ -63,7 +63,7 @@ const signupData = reactive({
     year: '',
     otp: '',
     password: '',
-    language: 'en'
+    language: 'en',
 })
 
 const onNext = async (email: string) => {

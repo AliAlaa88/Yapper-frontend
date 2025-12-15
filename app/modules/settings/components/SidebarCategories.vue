@@ -20,11 +20,11 @@
                 :id="`link-settings-${category.href.split('/').pop()}`"
                 :key="category.href"
                 :to="category.href"
-                class="block relative px-5 py-3 rounded hover:bg-hover
-                transition-colors text-primary cursor-pointer"
+                class="block relative px-5 py-3 rounded hover:bg-hover transition-colors text-primary cursor-pointer"
                 :class="{
-                    'bg-hover text-primary': selectedCategory(category.href)
-                }">
+                    'bg-hover text-primary': selectedCategory(category.href),
+                }"
+            >
                 <div
                     v-if="selectedCategory(category.href)"
                     class="absolute right-0 top-0 h-full w-[3px] bg-accent rounded-l"
@@ -35,7 +35,8 @@
                     </span>
                     <component
                         :is="locale === 'ar' ? ChevronLeft : ChevronRight"
-                        class="opacity-40 group-hover:text-white transition-colors" />
+                        class="opacity-40 group-hover:text-white transition-colors"
+                    />
                 </div>
             </NuxtLink>
         </div>

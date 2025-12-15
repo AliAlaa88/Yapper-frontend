@@ -1,13 +1,13 @@
 <template>
     <!-- Auth Loading Page -->
     <AuthLoadingPage v-if="showLoadingPage" />
-    
-    <loginStep1 
-        v-if="showStep1" 
+
+    <loginStep1
+        v-if="showStep1"
         v-model:identifier="loginData.identifier"
-        @next="onNext" 
-        @close="$emit('close')" 
-        @switch="$emit('switch')" 
+        @next="onNext"
+        @close="$emit('close')"
+        @switch="$emit('switch')"
     />
     <loginStep2
         v-if="showStep2"
@@ -37,7 +37,7 @@ const router = useRouter()
 const loginData = reactive({
     identifier: '',
     type: '',
-    password: ''
+    password: '',
 })
 
 const onNext = (Identifier: string, Type: string) => {
@@ -57,12 +57,12 @@ const onFinish = () => {
     showStep2.value = false
     showStep1.value = false
     showLoadingPage.value = true
-    
+
     // Reset state after successful login
     loginData.identifier = ''
     loginData.type = ''
     loginData.password = ''
-    
+
     // Navigate to home
     router.push('/')
 }

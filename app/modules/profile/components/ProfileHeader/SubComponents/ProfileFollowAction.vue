@@ -2,8 +2,7 @@
     <div v-if="!isBlocked && me?.user_id !== userId" class="md:pb-3">
         <Button
             id="follow-button"
-            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
-            justify-center whitespace-nowrap rounded-full transition-colors duration-200"
+            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200"
             :button-class="buttonClass"
             :button-text="buttonText"
             :is-loading="isFollowLoading"
@@ -21,7 +20,7 @@ import { useFollow } from '../../../composables/useFollow'
 import { useUserInfo } from '../../../composables/useUserInfo'
 import { useUserInteractions } from '../../../composables/useUserInteractions'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import {useUserStore} from '~/modules/auth/stores/userStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const me = userStore.getUser()
 
@@ -29,7 +28,6 @@ const props = defineProps<{
     userId: string
     username: string
     enabled?: boolean
-
 }>()
 
 const userId = computed(() => props.userId)

@@ -38,11 +38,11 @@ export const queryKeys = {
         all: ['notifications'] as const,
         mentions: ['mentions'] as const,
     },
-    
+
     search: {
         all: ['tweets', '/search'] as const,
     },
-    
+
     bookmarks: {
         all: ['tweets', 'tweets/bookmarks'] as const,
     },

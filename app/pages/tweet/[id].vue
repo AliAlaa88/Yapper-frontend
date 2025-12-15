@@ -10,7 +10,7 @@
                         @click="$router.back()"
                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[var(--color-x-gray-light)] transition-colors"
                     >
-                        <ArrowLeft :size="20" class="cursor-pointer x-"/>
+                        <ArrowLeft :size="20" class="cursor-pointer x-" />
                     </button>
                     <h1 class="text-l font-bold text-white">Tweet</h1>
                 </div>

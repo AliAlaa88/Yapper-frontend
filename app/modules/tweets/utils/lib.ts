@@ -8,16 +8,19 @@ export const formatDate = (date: string, locale: string = 'en') => {
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`
 
-    return tweetDate.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })
+    return tweetDate.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US', {
+        month: 'short',
+        day: 'numeric',
+    })
 }
 
 export const formatCount = (count: number | string, locale: string = 'en') => {
     const countNumber = typeof count === 'string' ? parseInt(count) : count
     if (countNumber === 0) return ''
-    
+
     // Use locale-aware number formatting
     const localeCode = locale === 'ar' ? 'ar-EG' : 'en-US'
-    
+
     if (countNumber < 1000) {
         return new Intl.NumberFormat(localeCode).format(countNumber)
     }
@@ -53,4 +56,3 @@ export const formatDetailDate = (date: string, locale: string = 'en') => {
 
     return `${time} · ${dateFormatted}`
 }
-

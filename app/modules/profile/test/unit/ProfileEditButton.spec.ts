@@ -4,11 +4,11 @@ import ProfileEditButton from '../../components/ProfileHeader/SubComponents/Prof
 
 vi.mock('#app', () => ({
     useRoute: vi.fn(() => ({
-        params: { username: 'testuser' }
+        params: { username: 'testuser' },
     })),
     useRouter: vi.fn(() => ({
-        push: vi.fn()
-    }))
+        push: vi.fn(),
+    })),
 }))
 
 describe('ProfileEditButton', () => {
@@ -16,9 +16,9 @@ describe('ProfileEditButton', () => {
         const wrapper = mount(ProfileEditButton, {
             global: {
                 mocks: {
-                    $t: (key: string) => key
-                }
-            }
+                    $t: (key: string) => key,
+                },
+            },
         })
 
         expect(wrapper.find('#btn-edit-profile').exists()).toBe(true)
@@ -33,9 +33,9 @@ describe('ProfileEditButton', () => {
         const wrapper = mount(ProfileEditButton, {
             global: {
                 mocks: {
-                    $t: (key: string) => key
-                }
-            }
+                    $t: (key: string) => key,
+                },
+            },
         })
 
         await wrapper.find('#btn-edit-profile').trigger('click')

@@ -5,27 +5,33 @@
         :hasCloseButton="true"
         contentClass="sm:max-w-xl w-full"
         container-class="bg-auth-popup"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        :headerClass="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
         slotClass="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
     >
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.login.title') }}</h2>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.login.title') }}
+        </h2>
 
-            <!--OAuth Buttons-->
-            <OAuth />
+        <!--OAuth Buttons-->
+        <OAuth />
 
-            <!-- OR Divider -->
-            <div class="flex items-center my-4 w-full">
-                <div class="flex-1 h-px border-t border-primary"></div>
-                <span class="px-3 text-muted text-sm">{{ $t('auth.common.or') }}</span>
-                <div class="flex-1 h-px border-t border-primary"></div>
-            </div>
+        <!-- OR Divider -->
+        <div class="flex items-center my-4 w-full">
+            <div class="flex-1 h-px border-t border-primary"></div>
+            <span class="px-3 text-muted text-sm">{{ $t('auth.common.or') }}</span>
+            <div class="flex-1 h-px border-t border-primary"></div>
+        </div>
 
-            <!-- Input -->
-            <form @submit.prevent="onNext">
+        <!-- Input -->
+        <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-identifier-login"
@@ -36,7 +42,7 @@
                     @input="clearValidationError"
                     :class="[
                         'w-full bg-primary text-primary border border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        validationError ? 'border-red focus:border-red' : ''
+                        validationError ? 'border-red focus:border-red' : '',
                     ]"
                 />
                 <p v-if="validationError" class="text-red text-xs mt-1">{{ validationError }}</p>
@@ -54,27 +60,27 @@
             >
                 {{ $t('auth.common.next') }}
             </Button>
-            </form>
-            <!-- Forgot password -->
-            <Button
-                id="button-forgot-password-login"
-                class="w-full border border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
-                @click="onForgotPassword"
-                :is-loading="false"
-            >
-                {{ $t('auth.login.forgotPassword') }}
-            </Button>
+        </form>
+        <!-- Forgot password -->
+        <Button
+            id="button-forgot-password-login"
+            class="w-full border border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
+            @click="onForgotPassword"
+            :is-loading="false"
+        >
+            {{ $t('auth.login.forgotPassword') }}
+        </Button>
 
-            <p class="text-center text-primary text-sm">
-                {{ $t('auth.login.switchPrompt') }}
-                <Button
-                    id="button-switch-to-signup"
-                    buttonClass="text-accent hover:underline font-semibold transition duration-200"
-                    @click="$emit('switch')"
-                >
-                    {{ $t('auth.common.signUp') }}
-                </Button>
-            </p>
+        <p class="text-center text-primary text-sm">
+            {{ $t('auth.login.switchPrompt') }}
+            <Button
+                id="button-switch-to-signup"
+                buttonClass="text-accent hover:underline font-semibold transition duration-200"
+                @click="$emit('switch')"
+            >
+                {{ $t('auth.common.signUp') }}
+            </Button>
+        </p>
     </Popup>
 </template>
 
@@ -111,7 +117,6 @@ const checkMutation = useCheckIdentifierAvailabilityQuery(
         emit('next', identifier.value, Type)
     },
     (error: any) => {
-
         // Extract error message from response
         const errorMsg =
             error?.response?.data?.message ||
@@ -126,7 +131,7 @@ const { t } = useI18n()
 
 const validateIdentifierField = () => {
     const result = validateIdentifier(identifier.value)
-    validationError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    validationError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     return result.valid
 }
 

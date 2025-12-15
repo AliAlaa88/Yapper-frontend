@@ -47,7 +47,8 @@ vi.mock('@tanstack/vue-query', () => ({
         return {
             mutate: (data: any) => {
                 mockMutate(data)
-                return options.mutationFn(data)
+                return options
+                    .mutationFn(data)
                     .then((result: any) => options.onSuccess?.(result))
                     .catch((error: any) => options.onError?.(error))
             },

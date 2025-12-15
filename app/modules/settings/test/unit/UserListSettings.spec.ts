@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { ref, nextTick } from 'vue'
 import UserListSettings from '~/modules/settings/components/MuteAndBlock/SubComponents/UserListSettings.vue'
 
-
 let observerCallback: Function
 const observeMock = vi.fn()
 const disconnectMock = vi.fn()
