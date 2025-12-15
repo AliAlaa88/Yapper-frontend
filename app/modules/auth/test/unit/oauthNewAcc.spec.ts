@@ -327,15 +327,17 @@ describe('OAuth New Account Registration', () => {
             await flushPromises();
             const selects = wrapper.findAll('select');
 
+            // Use a valid birth date (at least 13 years old) - January 1, 2010
             await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
-            await selects[2]?.setValue('2020');
+            await selects[2]?.setValue('2010');
 
             const form = wrapper.find('form');
             await form.trigger('submit.prevent');
             await flushPromises();
 
-            expect(wrapper.text()).toContain('sa3fan tells you this is error');
+            const errorElement = wrapper.find('#error-message-oauth-s1');
+            expect(errorElement.text()).toContain('sa3fan tells you this is error');
         });
 
 
