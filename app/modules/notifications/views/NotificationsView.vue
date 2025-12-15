@@ -65,6 +65,7 @@ import NotificationsList from '~/modules/notifications/components/NotificationsL
 import { useGetNotificationsQuery } from '../queries/useGetNotificationsQuery'
 import { useGetMentionsQuery } from '../queries/useGetMentionsQuery'
 import { ArrowLeft } from 'lucide-vue-next'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const { $notificationsSocketService } = useNuxtApp()
 const activeTab = ref('all')

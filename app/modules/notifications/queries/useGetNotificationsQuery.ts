@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
-import { useNuxtApp } from 'nuxt/app'
+// import { useNuxtApp } from 'nuxt/app'
 import type { ApiNotification, NotificationsApiData } from '../types/notifications'
 
 export const useGetNotificationsQuery = () => {
