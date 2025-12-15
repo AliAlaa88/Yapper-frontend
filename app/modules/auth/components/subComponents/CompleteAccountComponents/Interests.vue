@@ -152,7 +152,6 @@ const onNext = () => {
         errorMessage.value = '' // Clear previous errors
         // categoryIds are the selected interest ids
         const categoryIds = selectedInterests.value.map(id => parseInt(id))
-        console.log('Category IDs:', categoryIds)
         interestsMutation.mutate({ categoryIds })
     }
 }

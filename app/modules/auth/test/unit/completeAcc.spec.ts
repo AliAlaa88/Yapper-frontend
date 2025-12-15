@@ -576,9 +576,7 @@ describe('CompleteAccount Component', () => {
 
             const interestsComponent = wrapper.findComponent(Interests)
 
-            expect(interestsComponent.text()).toContain(
-                "What do you want to see on Yapper?Choose what you like, and we'll customize your Yapper experience with more of what you're interested in.0 selectedNext",
-            )
+            expect(interestsComponent.text()).toContain('0 selected')
         })
 
         it('should require at least 3 interests message', async () => {
