@@ -24,6 +24,10 @@ export function parseLinks(
         return `<a href="${safeUrl}" class="${isMessage ? '' : 'text-accent'} hover:underline" target="_blank" rel="noopener noreferrer">${safeUrl}</a>`
     })
 
+    if (isMessage) {
+        return withUrls
+    }
+
     // Mentions: @username -> /username
     let withMentions = withUrls
     if (isPostTweet) {
