@@ -1,4 +1,11 @@
-export type NotificationType = 'follow' | 'like' | 'reply' | 'repost' | 'quote' | 'mention' | 'message'
+export type NotificationType =
+    | 'follow'
+    | 'like'
+    | 'reply'
+    | 'repost'
+    | 'quote'
+    | 'mention'
+    | 'message'
 export type NotificationAction = 'add' | 'remove' | 'aggregate'
 
 export interface User {
@@ -35,6 +42,7 @@ export interface BaseTweet {
     is_liked?: boolean
     is_reposted?: boolean
     is_bookmarked?: boolean
+    mentions?: string[]
 }
 
 export interface QuoteTweet extends BaseTweet {
@@ -48,7 +56,8 @@ export interface BaseEvent {
     created_at: string
 }
 
-export interface MessageAddEvent extends BaseEvent {  // done
+export interface MessageAddEvent extends BaseEvent {
+    // done
     type: 'message'
     action: 'add'
     sender: User
@@ -58,14 +67,16 @@ export interface MessageAddEvent extends BaseEvent {  // done
 
 export type MessageEvent = MessageAddEvent
 
-export interface FollowAddEvent extends BaseEvent {  //done
+export interface FollowAddEvent extends BaseEvent {
+    //done
     type: 'follow'
     action: 'add'
     id: string
     follower: User
 }
 
-export interface FollowRemoveEvent extends BaseEvent {  //done
+export interface FollowRemoveEvent extends BaseEvent {
+    //done
     type: 'follow'
     follower_id: string
     follower_name: string
@@ -74,7 +85,8 @@ export interface FollowRemoveEvent extends BaseEvent {  //done
     action: 'remove'
 }
 
-export interface FollowAggregateEvent extends BaseEvent { // done
+export interface FollowAggregateEvent extends BaseEvent {
+    // done
     type: 'follow'
     created_at: string
     followers: User[]
@@ -90,7 +102,8 @@ export interface FollowAggregateEvent extends BaseEvent { // done
 export type FollowEvent = FollowAddEvent | FollowRemoveEvent | FollowAggregateEvent
 
 // Like Events
-export interface LikeAddEvent extends BaseEvent {  // done
+export interface LikeAddEvent extends BaseEvent {
+    // done
     type: 'like'
     liker: User
     tweet: BaseTweet
@@ -99,7 +112,8 @@ export interface LikeAddEvent extends BaseEvent {  // done
     action: 'add'
 }
 
-export interface LikeAggregateEvent extends BaseEvent {  // done
+export interface LikeAggregateEvent extends BaseEvent {
+    // done
     type: 'like'
     created_at: string
     likers: User[]
@@ -114,7 +128,8 @@ export interface LikeAggregateEvent extends BaseEvent {  // done
     }
 }
 
-export interface LikeRemoveEvent extends BaseEvent {  //done
+export interface LikeRemoveEvent extends BaseEvent {
+    //done
     type: 'like'
     tweet_id: string
     like_to: string
@@ -147,7 +162,8 @@ export interface ReplyRemoveEvent extends BaseEvent {
 export type ReplyEvent = ReplyAddEvent | ReplyRemoveEvent //done
 
 // Repost Events
-export interface RepostAddEvent extends BaseEvent {  // done
+export interface RepostAddEvent extends BaseEvent {
+    // done
     type: 'repost'
     reposter: User
     repost_to: string
@@ -156,7 +172,8 @@ export interface RepostAddEvent extends BaseEvent {  // done
     action: 'add'
 }
 
-export interface RepostAggregateEvent extends BaseEvent {  // done
+export interface RepostAggregateEvent extends BaseEvent {
+    // done
     type: 'repost'
     created_at: string
     reposters: User[]
@@ -171,7 +188,8 @@ export interface RepostAggregateEvent extends BaseEvent {  // done
     }
 }
 
-export interface RepostRemoveEvent extends BaseEvent {  //done
+export interface RepostRemoveEvent extends BaseEvent {
+    //done
     type: 'repost'
     repost_to: string
     reposted_by: string
