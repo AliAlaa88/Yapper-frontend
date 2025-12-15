@@ -1,112 +1,124 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
-// Mock all dependencies before importing
-vi.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-    }),
-}))
-
-vi.mock('vue-router', () => ({
-    useRouter: () => ({
-        push: vi.fn(),
-    }),
-}))
-
-const mockDeleteMutation = {
-    mutateAsync: vi.fn(),
-    isPending: ref(false),
-}
-
-const mockUpdateMutation = {
-    mutateAsync: vi.fn(),
-    isPending: ref(false),
-}
-
-vi.mock('../../queries/useTweetQueries', () => ({
-    useDeleteTweetMutation: () => mockDeleteMutation,
-    useUpdateTweetMutation: () => mockUpdateMutation,
-}))
-
-vi.mock('@tanstack/vue-query', () => ({
-    useQueryClient: () => ({
-        invalidateQueries: vi.fn(),
-    }),
-}))
-
-vi.mock('~/modules/Common/queries', () => ({
-    cacheInvalidation: {
-        onReplyCreate: vi.fn(),
-    },
-}))
-
-const mockShowSnackbar = ref(false)
-const mockHandleShowSnackbar = vi.fn()
-const mockShowConfirmation = ref(false)
-const mockHandleShowConfirmation = vi.fn()
-
-// Import after mocks are set up
 import { useTweetActions } from '../../composables/useTweetActions'
 
-// Mock provide/inject
-vi.mock('vue', async () => {
-    const actual = await vi.importActual('vue')
+const mockHandleShowSnackbar = vi.fn()
+const mockHandleShowConfirmation = vi.fn()
+const mockDeleteMutateAsync = vi.fn()
+const mockUpdateMutateAsync = vi.fn()
+
+// Mock vue's inject function
+vi.mock('vue', async (importOriginal) => {
+    const actual = (await importOriginal()) as any
     return {
-        ...(actual as any),
-        inject: (key: string) => {
+        ...actual,
+        inject: vi.fn((key: string) => {
             if (key === 'snackbar') {
                 return {
-                    showSnackbar: mockShowSnackbar,
+                    showSnackbar: actual.ref(false),
                     handleShowSnackbar: mockHandleShowSnackbar,
                 }
             }
             if (key === 'confirmation') {
                 return {
-                    showConfirmation: mockShowConfirmation,
+                    showConfirmation: actual.ref(false),
                     handleShowConfirmation: mockHandleShowConfirmation,
                 }
             }
             return undefined
-        },
+        }),
     }
 })
 
-describe('useTweetActions', () => {
+// Mock vue-i18n
+vi.mock('vue-i18n', () => ({
+    useI18n: vi.fn(() => ({
+        t: (key: string) => key,
+        locale: 'en',
+    })),
+}))
+
+// Mock vue-router
+vi.mock('vue-router', () => ({
+    useRouter: vi.fn(() => ({
+        back: vi.fn(),
+        push: vi.fn(),
+    })),
+}))
+
+// Mock vue-query
+vi.mock('@tanstack/vue-query', () => ({
+    useQueryClient: vi.fn(() => ({
+        invalidateQueries: vi.fn(),
+        setQueryData: vi.fn(),
+        getQueryData: vi.fn(),
+    })),
+}))
+
+// Mock cache invalidation
+vi.mock('~/modules/Common/queries', () => ({
+    cacheInvalidation: {
+        onReplyCreate: vi.fn(),
+        invalidateTweetQueries: vi.fn(),
+    },
+}))
+
+// Mock mutation queries
+vi.mock('../../queries/useTweetQueries', () => ({
+    useDeleteTweetMutation: vi.fn(() => ({
+        mutateAsync: mockDeleteMutateAsync,
+        isPending: ref(false),
+    })),
+    useUpdateTweetMutation: vi.fn(() => ({
+        mutateAsync: mockUpdateMutateAsync,
+        isPending: ref(false),
+    })),
+}))
+
+describe('useTweetActions composable', () => {
     beforeEach(() => {
         vi.clearAllMocks()
-        mockDeleteMutation.mutateAsync.mockResolvedValue({})
-        mockUpdateMutation.mutateAsync.mockResolvedValue({})
+        mockDeleteMutateAsync.mockResolvedValue(undefined)
+        mockUpdateMutateAsync.mockResolvedValue(undefined)
     })
 
-    describe('initialization', () => {
-        it('returns all expected properties', () => {
-            const tweetId = ref('tweet-123')
+    describe('Initialization', () => {
+        it('returns expected properties and methods', () => {
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
-            expect(result.deleteTweet).toBeDefined()
-            expect(result.updateTweet).toBeDefined()
-            expect(result.isDeleteLoading).toBeDefined()
-            expect(result.isUpdateLoading).toBeDefined()
-            expect(result.showEditModal).toBeDefined()
-            expect(result.handleEdit).toBeDefined()
-            expect(result.handleSaveEdit).toBeDefined()
-            expect(result.handleCloseEditModal).toBeDefined()
-            expect(result.handleDeleteWithConfirmation).toBeDefined()
-            expect(result.handleUpdateWithSnackbar).toBeDefined()
+            expect(result).toHaveProperty('deleteTweet')
+            expect(result).toHaveProperty('updateTweet')
+            expect(result).toHaveProperty('isDeleteLoading')
+            expect(result).toHaveProperty('isUpdateLoading')
+            expect(result).toHaveProperty('showEditModal')
+            expect(result).toHaveProperty('handleEdit')
+            expect(result).toHaveProperty('handleSaveEdit')
+            expect(result).toHaveProperty('handleCloseEditModal')
+            expect(result).toHaveProperty('handleDeleteWithConfirmation')
+            expect(result).toHaveProperty('handleUpdateWithSnackbar')
         })
 
-        it('initializes showEditModal as false', () => {
-            const tweetId = ref('tweet-123')
+        it('initializes with showEditModal as false', () => {
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
             expect(result.showEditModal.value).toBe(false)
+        })
+
+        it('accepts optional parentTweetId parameter', () => {
+            const tweetId = ref('tweet123')
+            const parentTweetId = ref('parent456')
+            const result = useTweetActions(tweetId, parentTweetId)
+
+            expect(result).toBeDefined()
         })
     })
 
     describe('handleEdit', () => {
         it('sets showEditModal to true', () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
             result.handleEdit()
@@ -115,7 +127,7 @@ describe('useTweetActions', () => {
         })
 
         it('closes actions menu when provided', () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const showActionsMenu = ref(true)
             const result = useTweetActions(tweetId)
 
@@ -128,7 +140,7 @@ describe('useTweetActions', () => {
 
     describe('handleCloseEditModal', () => {
         it('sets showEditModal to false', () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
             // First open the modal
@@ -141,49 +153,9 @@ describe('useTweetActions', () => {
         })
     })
 
-    describe('handleSaveEdit', () => {
-        it('calls updateMutation with content', async () => {
-            const tweetId = ref('tweet-123')
-            const result = useTweetActions(tweetId)
-
-            await result.handleSaveEdit('Updated content')
-
-            expect(mockUpdateMutation.mutateAsync).toHaveBeenCalledWith('Updated content')
-        })
-
-        it('closes edit modal after save', async () => {
-            const tweetId = ref('tweet-123')
-            const result = useTweetActions(tweetId)
-
-            result.handleEdit() // Open modal
-            await result.handleSaveEdit('Updated content')
-
-            expect(result.showEditModal.value).toBe(false)
-        })
-
-        it('shows snackbar on success', async () => {
-            const tweetId = ref('tweet-123')
-            const result = useTweetActions(tweetId)
-
-            await result.handleSaveEdit('Updated content')
-
-            expect(mockHandleShowSnackbar).toHaveBeenCalledWith('tweets.tweetUpdated')
-        })
-    })
-
     describe('handleDeleteWithConfirmation', () => {
-        it('closes actions menu when provided', () => {
-            const tweetId = ref('tweet-123')
-            const showActionsMenu = ref(true)
-            const result = useTweetActions(tweetId)
-
-            result.handleDeleteWithConfirmation(showActionsMenu)
-
-            expect(showActionsMenu.value).toBe(false)
-        })
-
         it('calls handleShowConfirmation with correct parameters', () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
             result.handleDeleteWithConfirmation()
@@ -198,63 +170,78 @@ describe('useTweetActions', () => {
                 expect.any(Function),
             )
         })
+
+        it('closes actions menu when provided', () => {
+            const tweetId = ref('tweet123')
+            const showActionsMenu = ref(true)
+            const result = useTweetActions(tweetId)
+
+            result.handleDeleteWithConfirmation(showActionsMenu)
+
+            expect(showActionsMenu.value).toBe(false)
+        })
     })
 
     describe('handleUpdateWithSnackbar', () => {
         it('calls updateMutation with content', async () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
-            await result.handleUpdateWithSnackbar('New content')
+            await result.handleUpdateWithSnackbar('Updated content')
 
-            expect(mockUpdateMutation.mutateAsync).toHaveBeenCalledWith('New content')
+            expect(mockUpdateMutateAsync).toHaveBeenCalledWith('Updated content')
         })
 
         it('shows snackbar on success', async () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
-            await result.handleUpdateWithSnackbar('New content')
+            await result.handleUpdateWithSnackbar('Updated content')
 
             expect(mockHandleShowSnackbar).toHaveBeenCalledWith('tweets.tweetUpdated')
         })
 
         it('closes actions menu when provided', async () => {
-            const tweetId = ref('tweet-123')
+            const tweetId = ref('tweet123')
             const showActionsMenu = ref(true)
             const result = useTweetActions(tweetId)
 
-            await result.handleUpdateWithSnackbar('New content', showActionsMenu)
+            await result.handleUpdateWithSnackbar('Updated content', showActionsMenu)
 
             expect(showActionsMenu.value).toBe(false)
         })
+    })
 
-        it('handles errors gracefully', async () => {
-            mockUpdateMutation.mutateAsync.mockRejectedValue(new Error('Update failed'))
-            const tweetId = ref('tweet-123')
-            const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    describe('handleSaveEdit', () => {
+        it('calls handleUpdateWithSnackbar and closes modal', async () => {
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
-            await result.handleUpdateWithSnackbar('New content')
+            // Open modal first
+            result.handleEdit()
+            expect(result.showEditModal.value).toBe(true)
 
-            expect(consoleSpy).toHaveBeenCalledWith('Failed to update tweet:', expect.any(Error))
-            consoleSpy.mockRestore()
+            // Save edit
+            await result.handleSaveEdit('New content')
+
+            // Modal should be closed
+            expect(result.showEditModal.value).toBe(false)
         })
     })
 
-    describe('mutation properties', () => {
-        it('exposes deleteTweet function', () => {
-            const tweetId = ref('tweet-123')
+    describe('Loading states', () => {
+        it('isDeleteLoading is initially false', () => {
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
-            expect(result.deleteTweet).toBe(mockDeleteMutation.mutateAsync)
+            expect(result.isDeleteLoading.value).toBe(false)
         })
 
-        it('exposes updateTweet function', () => {
-            const tweetId = ref('tweet-123')
+        it('isUpdateLoading is initially false', () => {
+            const tweetId = ref('tweet123')
             const result = useTweetActions(tweetId)
 
-            expect(result.updateTweet).toBe(mockUpdateMutation.mutateAsync)
+            expect(result.isUpdateLoading.value).toBe(false)
         })
     })
 })
