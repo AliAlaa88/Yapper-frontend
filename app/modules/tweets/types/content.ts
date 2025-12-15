@@ -5,6 +5,7 @@ interface Content {
     images?: string[]
     videos?: string[]
     parentTweet?: Tweet | null
+    quotedTweet?: Tweet | null
 }
 
 export type { Content }
