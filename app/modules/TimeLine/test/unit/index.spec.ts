@@ -2,13 +2,15 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const mockTimelineService = {
     createTweet: vi.fn(),
+    createReply: vi.fn(),
+    createQuote: vi.fn(),
 }
 
-vi.mock('./timelineService', () => ({
+vi.mock('../../services/timelineService', () => ({
     timelineService: mockTimelineService,
 }))
 
-const { createTimelineService } = await import('./index')
+const { createTimelineService } = await import('../../services/index')
 
 describe('createTimelineService', () => {
     beforeEach(() => {
