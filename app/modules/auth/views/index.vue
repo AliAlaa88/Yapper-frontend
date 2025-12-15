@@ -26,7 +26,7 @@
                     </div>
 
                     <button
-                        data-testid="button-createAccount-authHome"
+                        id="btn-create-account"
                         class="bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200 w-full"
                         @click="goToSignup"
                     >
@@ -38,8 +38,8 @@
                     <div class="mt-10">
                         <h3 class=" font-semibold mb-3 text-primary">{{ $t('auth.home.alreadyHaveAccount') }}</h3>
                         <button
-                            data-testid="button-signIn-authHome"
-                            class="cursor-pointer border-2 border-alternate hover:bg-hover hover:border-blue text-primary font-bold py-2.5 rounded-full w-full"
+                            id="btn-sign-in"
+                            class="cursor-pointer border border-alternate hover:bg-hover hover:border-blue text-primary font-bold py-2.5 rounded-full w-full"
                             @click="goToLogin"
                         >
                             {{ $t('auth.common.signIn') }}
@@ -56,7 +56,6 @@
 import Logo from '~/modules/Common/components/Logo'
 import OAuth from '../components/subComponents/OAuth.vue'
 import { useRouter } from 'vue-router'
-import { isLoggedIn } from '~/utils/helpers'
 const router = useRouter()
 
 const goToLogin = () => {

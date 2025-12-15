@@ -1,25 +1,45 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Publisher from '../../components/Tweet/subComponents/Publisher/Publisher.vue'
-import type { User } from '../../types'
+
+// Mock Nuxt composables
+vi.mock('#app', () => ({
+    navigateTo: vi.fn(),
+    useRouter: () => ({ push: vi.fn() }),
+    useNuxtApp: () => ({
+        $queryClient: {},
+        $userInfoService: {},
+    }),
+}))
 
 // Mock the utility functions
 vi.mock('../../utils/lib', () => ({
     formatDate: vi.fn((date) => '2h'), // Mock return value
 }))
 
+import Publisher from '../../components/Tweet/subComponents/Publisher/Publisher.vue'
+import type { User } from '../../types'
+
 vi.mock('../../utils/navigation', () => ({
     getProfileUrl: vi.fn((user) => user.link || `/profile/${user.username}`),
 }))
 
 describe('Publisher Component', () => {
-    const mockPublisher: User = {
+    const mockPublisher = {
         id: 'user1',
         name: 'John Doe',
         username: 'johndoe',
         avatar_url: '/avatars/john.jpg',
-        link: '',
         verified: false,
+        is_following: null,
+        link: '',
+        bio: null,
+        followers_count: null,
+        following_count: null,
+        cover_url: null,
+        country: null,
+        created_at: '2025-01-01',
+        birth_date: null,
+        language: null,
     }
 
     const mockCreatedAt = '2025-10-17T12:00:00.000Z'
@@ -298,7 +318,7 @@ describe('Publisher Component', () => {
                 id: 'user1',
                 name: 'John Doe',
                 username: 'johndoe',
-                avatar: '/avatars/john.jpg',
+                avatar_url: '/avatars/john.jpg',
                 link: '',
             }
 
@@ -325,7 +345,7 @@ describe('Publisher Component', () => {
                 id: 'user2',
                 name: 'Jane Smith',
                 username: 'janesmith',
-                avatar: '/avatars/jane.jpg',
+                avatar_url: '/avatars/jane.jpg',
                 link: '',
             }
 
@@ -369,7 +389,7 @@ describe('Publisher Component', () => {
             })
 
             const nameLink = wrapper.find('a')
-            expect(nameLink.classes()).toContain('text-[15px]')
+            expect(nameLink.classes()).toContain('text-sm')
             expect(nameLink.classes()).toContain('font-bold')
             expect(nameLink.classes()).toContain('hover:underline')
         })

@@ -3,13 +3,14 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="false"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        headerClass=""
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        contentClass="sm:max-w-xl w-full"
+        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
+        slotClass="py-2 px-10 sm:px-10 md:px-12 lg:px-14"
+        @back="$emit('back')"
+        :hasBackButton="true"
     >
         <!-- Back Button -->
-        <backButton @close="$emit('back')" />
-        
+
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
@@ -27,8 +28,8 @@
                         :class="[
                             'px-4 py-3 rounded-full text-sm font-medium transition shadow-sm',
                             selectedInterests.includes(interest.id)
-                                ? 'bg-alternate text-alternate border-2 border-transparent'
-                                : 'border-2 border-primary text-primary hover:bg-hover',
+                                ? 'bg-alternate text-alternate border border-transparent'
+                                : 'border border-primary text-primary hover:bg-hover',
                         ]"
                         @click="toggleInterest(interest.id)"
                     >
@@ -46,28 +47,30 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-interests"
                 :disabled="selectedInterests.length < 3"
+                buttonClass="w-full font-semibold rounded-full py-2 transition mb-3"
                 :class="[
-                    'w-full font-semibold rounded-full py-2 transition mb-3',
                     selectedInterests.length >= 3
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate  cursor-pointer'
-                        : 'bg-alternate text-alternate cursor-not-allowed',
+                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
+                        : 'bg-alternate text-alternate',
                 ]"
+                :loading-text="$t('auth.common.loading')"
+                :is-loading="loading"
                 @click="onNext"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
 
             <!-- Skip Button -->
-            <button
+            <Button
                 id="button-skip-interests"
                 class="w-full text-primary hover:text-blue transition duration-200"
                 @click="onSkip"
             >
                 {{ $t('auth.common.skip') }}
-            </button>
+            </Button>
     </Popup>
 </template>
 
@@ -75,15 +78,16 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
-import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { useUpdateInterestsMutation } from '../../../queries/useCompleteProfileQuery'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useFetchInterests } from '~/modules/auth/queries/useCompleteProfileQuery'
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
 const errorMessage = ref('')
 const isSubmitting = ref(false)
+const loading = ref(false)
 
 interface Interest {
     id: string
@@ -93,7 +97,7 @@ interface Interest {
 const interests = ref<Interest[]>([])
 
 const fetchInterests = useFetchInterests((data: any) => {
-    
+
     interests.value = data.data.map((item: any, index: number) => ({
         // id is index + 1
         id: (index + 1).toString(),
@@ -129,12 +133,14 @@ const toggleInterest = (id: string) => {
 const interestsMutation = useUpdateInterestsMutation(
     (data) => {
         isSubmitting.value = false
+        loading.value = false
         errorMessage.value = ''
         emit('finish', selectedInterests.value)
     },
     (error) => {
         console.error('Interests update error:', error)
         isSubmitting.value = false
+        loading.value = false
         const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update interests'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
     }
@@ -143,6 +149,7 @@ const interestsMutation = useUpdateInterestsMutation(
 const onNext = () => {
     if (selectedInterests.value.length >= 3 && !isSubmitting.value) {
         isSubmitting.value = true
+        loading.value = true
         // categoryIds are the selected interest ids
         const categoryIds = selectedInterests.value.map(id => parseInt(id))
         interestsMutation.mutate({ categoryIds })

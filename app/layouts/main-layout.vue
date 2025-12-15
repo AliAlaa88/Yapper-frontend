@@ -1,57 +1,28 @@
 <template>
-    <main class="flex flex-row container mx-auto max-w-[1280px] relative">
-        <!-- Left Sidebar (LTR) / Right Sidebar (RTL) -->
+    <main class="flex flex-row justify-center container mx-auto relative">
+        <!-- Sidebar -->
         <aside
-            v-if="!isRTL"
-            class="hidden md:block w-[275px] min-w-[275px] shrink-0 fixed top-0 h-screen z-5"
-            :style="leftStyle"
+            class="hidden sticky top-0 h-screen sm:flex shrink-0 transition-all duration-300 ease-in-out order-1 z-10"
+            :style="{ width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
         >
             <Sidebar />
         </aside>
 
-        <!-- Right Banner (LTR) / Left Banner (RTL) -->
-        <aside
-            v-if="isRTL"
-            class="hidden lg:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
-            :style="bannerLeftStyle"
-        >
-            <Banner />
-        </aside>
-
         <!-- Main Content -->
         <div
-            :class="[
-                'border-l border-r border-primary w-full md:max-w-[600px]',
-                isRTL
-                    ? 'md:mr-[275px] lg:ml-[250px] xl:ml-[300px]'
-                    : 'md:ml-[275px] lg:mr-[250px] xl:mr-[300px]',
-            ]"
+            class="border-l border-r border-primary w-full md:w-[600px] md:min-w-[600px] md:max-w-[600px] transition-all duration-300 ease-in-out order-2"
         >
-            <div class="md:hidden block">
+            <div v-if="isSidebarVisible && !isSearch" class="sm:hidden block">
                 <MobileSidebar />
             </div>
             <slot />
         </div>
 
-        <!-- Right Sidebar (RTL) -->
-        <aside
-            v-if="isRTL"
-            class="hidden md:block w-[275px] min-w-[275px] shrink-0 fixed top-0 h-screen z-5"
-            :style="rightStyle"
-        >
-            <Sidebar />
-        </aside>
-
-        <!-- Right Banner (LTR) -->
-        <aside
-            v-if="!isRTL"
-            class="hidden lg:block min-w-0 w-[250px] xl:w-[300px] shrink-0 fixed top-0 h-screen z-5"
-            :style="rightStyle"
-        >
+        <!-- Banner -->
+        <aside class="hidden sticky top-0 h-full xl:flex min-w-0 shrink-0 order-3">
             <Banner />
         </aside>
 
-        <!-- Global Modals -->
         <SnackBar />
         <ConfirmationModal />
     </main>
@@ -67,58 +38,25 @@ import Banner from '~/modules/TimeLine/components/banner/Banner.vue'
 import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import ConfirmationModal from '~/modules/profile/components/ProfileHeader/SubComponents/ConfirmtionModal.vue'
 import { useProfileProviders } from '~/modules/profile/composables/useProfileProviders'
+import { useSidebarState } from '~/modules/TimeLine/composables/useSidebarState'
+import { useRoute } from 'vue-router'
 
-// Provide snackbar and confirmation globally
 useProfileProviders()
-
+const route = useRoute()
+const config = useRuntimeConfig()
+if (config.public.env === 'development') console.log(route)
+const isSidebarVisible = computed(
+    () => route.path === '/' || route.path === '/notifications' || route.path === '/explore',
+)
 const { width } = useWindowSize()
 const { locale, locales } = useI18n()
+const { sidebarWidth } = useSidebarState()
+const isSearch = computed(
+    () => route.path.startsWith('/explore') || route.path.startsWith('/search') || route.path.startsWith('/notifications'),
+)
 
 const isRTL = computed(() => {
     const currentLocaleObj = locales.value.find((l) => l.code === locale.value)
     return currentLocaleObj?.dir === 'rtl'
-})
-
-const leftStyle = computed(() => {
-    const viewportWidth = width.value
-    const containerWidth = Math.min(viewportWidth, 1280)
-    const containerLeft = (viewportWidth - containerWidth) / 2
-
-    return {
-        left: `${containerLeft}px`,
-    }
-})
-
-const rightStyle = computed(() => {
-    const viewportWidth = width.value
-    const containerWidth = Math.min(viewportWidth, 1280)
-    const containerLeft = (viewportWidth - containerWidth) / 2
-
-    if (isRTL.value) {
-        // In RTL, sidebar (275px wide) is on the right edge
-        // Position it from the right side - it's wider than banner (250px/300px)
-        // The sidebar aligns with the right edge of the container
-        return {
-            right: `${containerLeft}px`,
-        }
-    } else {
-        // In LTR, right sidebar (banner) starts after: containerLeft + leftSidebar (275px) + content (600px)
-        const rightSidebarLeft = containerLeft + 275 + 600
-        return {
-            left: `${rightSidebarLeft}px`,
-        }
-    }
-})
-
-// Style for RTL banner - positioned to be beside the content
-const bannerLeftStyle = computed(() => {
-    const viewportWidth = width.value
-    const containerWidth = Math.min(viewportWidth, 1280)
-    const containerLeft = (viewportWidth - containerWidth) / 2
-
-    // Banner is positioned at containerLeft in RTL
-    return {
-        left: `${containerLeft}px`,
-    }
 })
 </script>

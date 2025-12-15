@@ -1,74 +1,100 @@
-import type {User , AuthResponse} from '../types/user';
-import Cookies from 'js-cookie';
-import { toRaw } from 'vue';
+import { defineStore } from 'pinia'
+import type { User, AuthResponse } from '../types/user'
+import { ref, computed } from 'vue'
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    user: null as User | null,
-    accessToken: null as string | null,
-  }),
-  
-  getters: {
-    isLoggedIn: () => localStorage.getItem('user') !== null && useCookie('access_token').value !== undefined,
-  },
-  
-  actions: {
-    setAuth(authData: AuthResponse) {
-      this.user = authData.user;
-      this.accessToken = authData.access_token;
-      if (process.client) {
+export const useUserStore = defineStore('user', () => {
+    const user = ref<User | null>(null)
+    const accessToken = ref<string | null>(null)
+
+    const isLoggedIn = computed(() => !!user.value && !!accessToken.value)
+
+    const getUser = () => user.value
+
+    if (import.meta.client) {
         const token = useCookie('access_token')
-        token.value = authData.access_token;
-        // Unwrap Vue Proxy before stringifying
-        const rawUser = toRaw(authData.user);
-        localStorage.setItem('user', JSON.stringify(rawUser));
-      }
-    },
-    
-    setUser(userData: User) {
-      this.user = userData;
-      
-      if (process.client) {
-        const rawUser = toRaw(userData);
-        localStorage.setItem('user', JSON.stringify(rawUser));
-      }
-    },
-    
-    updateUser(updates: Partial<User>) {
-      if (this.user) {
-        this.user = { ...this.user, ...updates };
-        
-        if (process.client) {
-          localStorage.setItem('user', JSON.stringify(this.user));
+        if (token.value) {
+            accessToken.value = token.value
         }
-      }
-    },
-    
-    logout() {
-      this.user = null;
-      this.accessToken = null;
-      
-      if (process.client) {
-        Cookies.remove('access_token');
-        localStorage.removeItem('user');
-      }
-    },
-    
-    restoreSession() {
-      if (process.client) {
-        const token = useCookie('access_token')
-        const userStr = localStorage.getItem('user');
-        
-        if (token.value && userStr) {
-          try {
-            this.accessToken = token.value;
-            this.user = JSON.parse(userStr);
-          } catch (error) {
-            console.error('Failed to restore session:', error);
-            this.logout();
-          }
+    }
+
+    watch(accessToken, (newToken) => {
+        if (import.meta.client) {
+            const token = useCookie('access_token')
+            token.value = newToken
+            console.log('access token changed', newToken ? 'present' : 'null')
         }
-      }
-    },
-  },
-});
+    })
+
+    if (import.meta.client) {
+        const tokenCookie = useCookie('access_token')
+        watch(
+            () => tokenCookie.value,
+            (cookieToken) => {
+                const tokenValue = cookieToken ?? null
+                if (tokenValue !== accessToken.value) {
+                    accessToken.value = tokenValue
+                }
+            },
+        )
+    }
+
+    const getAccessToken = () => accessToken.value
+
+    const setAccessToken = (token: string | null) => {
+        accessToken.value = token
+    }
+
+    const setAuth = (authData: AuthResponse) => {
+        if (!authData.access_token) {
+            console.warn('[UserStore] setAuth called without access_token')
+            return
+        }
+        accessToken.value = authData.access_token
+        user.value = authData.user
+    }
+
+    const setUser = (userData: User) => {
+        user.value = userData
+    }
+
+    const updateUser = (updates: Partial<User>) => {
+        if (user.value) {
+            user.value = { ...user.value, ...updates }
+        }
+    }
+
+    const logout = () => {
+        user.value = null
+        accessToken.value = null
+        localStorage.removeItem('yapper-search-history')
+    }
+
+    const initAuth = async (fetchUserFn: () => Promise<User>) => {
+        if (import.meta.client) {
+            const token = useCookie('access_token')
+            if (token.value && !user.value) {
+                accessToken.value = token.value
+                try {
+                    user.value = await fetchUserFn()
+                } catch (error) {
+                    console.error('Failed to initialize auth:', error)
+                    logout()
+                }
+            }
+        }
+    }
+
+    return {
+        user,
+        accessToken,
+        isLoggedIn,
+        getUser,
+        getAccessToken,
+        setAccessToken,
+        setAuth,
+        setUser,
+        updateUser,
+        logout,
+        initAuth,
+    }
+})

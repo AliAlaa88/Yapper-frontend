@@ -3,9 +3,10 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="true"
-        contentClass="max-w-lg sm:max-w-xl w-full"
+        contentClass="sm:max-w-xl w-full"
+        container-class="bg-auth-popup"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        slotClass="py-8 md:min-w-lg px-12 md:px-16 lg:px-20"
     >
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
@@ -34,7 +35,7 @@
                     @blur="validateIdentifierField"
                     @input="clearValidationError"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        'w-full bg-primary text-primary border border-alternate rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         validationError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -44,32 +45,35 @@
                 {{ errorMessage }}
             </p>
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-next-login-s1"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3"
                 type="submit"
+                :is-loading="loading"
+                :loading-text="t('auth.common.loading')"
             >
                 {{ $t('auth.common.next') }}
-            </button>
+            </Button>
             </form>
             <!-- Forgot password -->
-            <button
+            <Button
                 id="button-forgot-password-login"
-                class="w-full border-2 border-alternate text-primary hover:bg-hover font-semibold cursor-pointer rounded-full py-2 transition mb-6 hover:border-blue"
+                class="w-full border border-alternate text-primary hover:bg-hover font-semibold rounded-full py-2 transition mb-6 hover:border-blue"
                 @click="onForgotPassword"
+                :is-loading="false"
             >
                 {{ $t('auth.login.forgotPassword') }}
-            </button>
+            </Button>
 
             <p class="text-center text-primary text-sm">
                 {{ $t('auth.login.switchPrompt') }}
-                <button
+                <Button
                     id="button-switch-to-signup"
-                    class="text-accent hover:underline font-semibold cursor-pointer transition duration-200"
+                    buttonClass="text-accent hover:underline font-semibold transition duration-200"
                     @click="$emit('switch')"
                 >
                     {{ $t('auth.common.signUp') }}
-                </button>
+                </Button>
             </p>
     </Popup>
 </template>
@@ -82,13 +86,14 @@ import OAuth from '../OAuth.vue'
 import { useCheckIdentifierAvailabilityQuery } from '~/modules/auth/queries/useLoginQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import { validateIdentifier } from '../../../utils/validators'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
 // Use v-model for identifier
 const identifier = defineModel<string>('identifier', { default: '' })
-
+const loading = ref(false)
 const errorMessage = ref('')
 const validationError = ref('')
 
@@ -102,6 +107,7 @@ const checkMutation = useCheckIdentifierAvailabilityQuery(
     (data: any) => {
         const Type = data?.data?.identifier_type
         errorMessage.value = ''
+        loading.value = false
         emit('next', identifier.value, Type)
     },
     (error: any) => {
@@ -112,6 +118,7 @@ const checkMutation = useCheckIdentifierAvailabilityQuery(
             'Identifier does not exist or error occurred. Please try again.'
         if (Array.isArray(errorMsg)) errorMessage.value = errorMsg[0]
         else errorMessage.value = errorMsg
+        loading.value = false
     },
 )
 
@@ -134,6 +141,7 @@ const onNext = () => {
         return
     }
     errorMessage.value = '' // Clear previous errors
+    loading.value = true
     checkMutation.mutate(identifier.value)
 }
 

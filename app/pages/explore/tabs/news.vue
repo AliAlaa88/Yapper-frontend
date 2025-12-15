@@ -1,0 +1,17 @@
+<template>
+    <div class="overflow-x-hidden h-screen">
+        <ExploreTabs />
+        <!-- News content -->
+        <Categories category="news" />
+    </div>
+</template>
+
+<script lang="ts" setup>
+import ExploreTabs from '~/modules/explore/components/exploreTabs.vue'
+import Categories from '~/modules/explore/components/categories/index.vue'
+import { definePageMeta } from '#imports'
+definePageMeta({
+    layout: 'main-layout',
+    middleware: ['auth'],
+})
+</script>

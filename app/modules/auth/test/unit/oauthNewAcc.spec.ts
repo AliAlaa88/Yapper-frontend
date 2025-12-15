@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query';
 import { createI18n } from 'vue-i18n';
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' };
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' };
+import { ref } from 'vue'; // Added ref
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 import OAuthComplete from '../../components/OAuthComplete.vue';
 import OAuthStep1 from '../../components/subComponents/OAuthComponents/OAuthStep1.vue';
 
@@ -27,6 +28,8 @@ const mockAuthService = {
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
+        runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
@@ -39,8 +42,13 @@ vi.mock('#app', () => ({
 // Mock the user store
 const mockUserStore = {
     setAuth: vi.fn(),
+    setUser: vi.fn(),
+    updateUser: vi.fn(),
+    logout: vi.fn(),
+    initAuth: vi.fn(),
     user: null,
     accessToken: null,
+    isLoggedIn: false,
 };
 
 vi.mock('~/modules/auth/stores/userStore', () => ({
@@ -55,6 +63,17 @@ const mockRouter = {
 vi.mock('vue-router', () => ({
     useRouter: () => mockRouter,
 }));
+
+// Mock useGetUserQuery
+vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
+    useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
+        return {
+            data: ref({}),
+            isLoading: ref(false),
+            isError: ref(false),
+        }
+    }),
+}))
 
 // Mock OAuth queries
 vi.mock('~/modules/auth/queries/useOAuthQuery', async (importOriginal) => {
@@ -132,7 +151,7 @@ function mountOAuthComplete(exchange_token = 'test-oauth-token-123') {
 describe('OAuth New Account Registration', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        
+
         // Mock ExchangeToken to return session_token
         mockAuthService.ExchangeToken.mockResolvedValue({
             session_token: 'test-session-token-123',
@@ -148,7 +167,7 @@ describe('OAuth New Account Registration', () => {
         it('should pass OAuth_session_token to step 1 after exchange', async () => {
             const wrapper = mountOAuthComplete();
             await flushPromises();
-            
+
             const step1 = wrapper.findComponent(OAuthStep1);
             expect(step1.props('OAuth_session_token')).toBe('test-session-token-123');
         });
@@ -185,7 +204,7 @@ describe('OAuth New Account Registration', () => {
             const wrapper = mountOAuthComplete();
             await flushPromises();
             const selects = wrapper.findAll('select');
-            
+
             await selects[0]?.setValue('5'); // May
             await selects[1]?.setValue('15'); // Day 15
             await selects[2]?.setValue('1990'); // Year 1990
@@ -197,27 +216,29 @@ describe('OAuth New Account Registration', () => {
 
         it('should call OAuthCompleteStep1 with correct data', async () => {
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data:{data: { 
-                    message: 'Birth date verified',
-                    usernames: ['s3fan_test', 's3fan123']
+                data: {
+                    data: {
+                        message: 'Birth date verified',
+                        usernames: ['s3fan_test', 's3fan123']
+                    }
                 }
-            }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
-                data:{data: {
-                    message: 'Username set successfully'
+                data: {
+                    data: {
+                        message: 'Username set successfully'
+                    }
                 }
-            }
             });
 
             const wrapper = mountOAuthComplete('oauth-token-789');
             await flushPromises();
             const selects = wrapper.findAll('select');
 
-            await selects[0]?.setValue('1'); 
-            await selects[1]?.setValue('1'); 
-            await selects[2]?.setValue('2005'); 
+            await selects[0]?.setValue('1');
+            await selects[1]?.setValue('1');
+            await selects[2]?.setValue('2005');
 
             const form = wrapper.find('form');
             await form.trigger('submit.prevent');
@@ -232,12 +253,12 @@ describe('OAuth New Account Registration', () => {
         it('should automatically call step2 after step1 succeeds', async () => {
             const recommendations = ['s3fan_test', 's3fan123'];
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data: { 
+                data: {
                     message: 'Birth date verified',
                     usernames: recommendations
                 }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
                 data: {
                     message: 'Username set successfully'
@@ -265,12 +286,12 @@ describe('OAuth New Account Registration', () => {
         it('should complete registration after successful step2', async () => {
             const recommendations = ['sa3fan_test', 'sa3fan123'];
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data: { 
+                data: {
                     message: 'Birth date verified',
                     usernames: recommendations
                 }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
                 data: {
                     message: 'Registration complete sa3fan is doing great work'
@@ -281,7 +302,7 @@ describe('OAuth New Account Registration', () => {
             await flushPromises();
             const selects = wrapper.findAll('select');
 
-            await selects[0]?.setValue('1'); 
+            await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
@@ -320,11 +341,11 @@ describe('OAuth New Account Registration', () => {
 
         it('should format single-digit month and day with leading zeros', async () => {
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data: { 
+                data: {
                     usernames: ['sa3fan_test']
                 }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
                 data: {
                     message: 'Success'
@@ -335,7 +356,7 @@ describe('OAuth New Account Registration', () => {
             await flushPromises();
             const selects = wrapper.findAll('select');
 
-            await selects[0]?.setValue('1'); 
+            await selects[0]?.setValue('1');
             await selects[1]?.setValue('1');
             await selects[2]?.setValue('2005');
 
@@ -354,12 +375,12 @@ describe('OAuth New Account Registration', () => {
         it('should call OAuthCompleteStep2 with first recommendation automatically', async () => {
             const recommendations = ['sa3fan_test', 'sa3fan123'];
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data: { 
+                data: {
                     message: 'Success',
                     usernames: recommendations
                 }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
                 data: {
                     message: 'Username set successfully'
@@ -388,7 +409,7 @@ describe('OAuth New Account Registration', () => {
         it('should complete full OAuth registration flow', async () => {
             const recommendations = ['sa3fan_test', 'sa3fan123'];
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
-                data: { 
+                data: {
                     usernames: recommendations
                 }
             });
@@ -429,7 +450,7 @@ describe('OAuth New Account Registration', () => {
             mockAuthService.OAuthCompleteStep1.mockResolvedValueOnce({
                 data: { usernames: ['retry_sa3fan'] }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockResolvedValue({
                 data: { message: 'Success' }
             });
@@ -466,7 +487,7 @@ describe('OAuth New Account Registration', () => {
             mockAuthService.OAuthCompleteStep1.mockResolvedValue({
                 data: { usernames: ['sa3fan_test'] }
             });
-            
+
             mockAuthService.OAuthCompleteStep2.mockRejectedValue({
                 response: {
                     data: {
@@ -478,7 +499,7 @@ describe('OAuth New Account Registration', () => {
             const wrapper = mountOAuthComplete();
             await flushPromises();
             const selects = wrapper.findAll('select');
-            
+
             await selects[0]?.setValue('5');
             await selects[1]?.setValue('15');
             await selects[2]?.setValue('1990');

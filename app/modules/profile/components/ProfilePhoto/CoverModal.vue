@@ -3,8 +3,9 @@
         <div class="relative w-full h-full">
             <div class="absolute top-0 left-0 right-0 p-4 flex items-center z-10">
                 <button
+                    id="btn-close-cover-modal"
                     aria-label="Close cover photo"
-                    class="text-white hover:bg-white/10 p-2 rounded-full transition-colors duration-200"
+                    class="text-primary hover:bg-white/10 p-2 rounded-full transition-colors duration-200 cursor-pointer"
                     @click="closeModal"
                 >
                     <X />

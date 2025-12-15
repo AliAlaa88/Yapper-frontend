@@ -7,6 +7,7 @@
                 type="text"
                 :placeholder="$t('profile.editProfileModal.namePlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
+                style="unicode-bidi: plaintext;"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
             >
@@ -28,6 +29,7 @@
                 rows="3"
                 :placeholder="$t('profile.editProfileModal.bioPlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200 resize-none"
+                style="unicode-bidi: plaintext;"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
             />
@@ -49,6 +51,7 @@
                 type="text"
                 :placeholder="$t('profile.editProfileModal.locationPlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
+                style="unicode-bidi: plaintext;"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
             >
@@ -111,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 interface FormData {
@@ -127,6 +130,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     'update:modelValue': [value: FormData]
+    'update:isBirthDateValid': [value: boolean]
 }>()
 
 const { t, locale } = useI18n()
@@ -205,8 +209,35 @@ const updateBirthDate = (part: 'month' | 'day' | 'year', value: string) => {
     const year = part === 'year' ? value : currentYear
 
     if (month && day && year) {
-        const birthDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+        const birthDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
         updateField('birth_date', birthDate)
     }
 }
+
+const MIN_AGE_YEARS = 6
+
+const isBirthDateValid = computed(() => {
+    if (!props.modelValue.birth_date) return true // Allow empty birth date
+
+    const birthDate = new Date(props.modelValue.birth_date)
+    const today = new Date()
+
+    // Calculate age
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--
+    }
+
+    return age >= MIN_AGE_YEARS
+})
+
+watch(
+    isBirthDateValid,
+    (isValid) => {
+        emit('update:isBirthDateValid', isValid)
+    },
+    { immediate: true }
+)
 </script>

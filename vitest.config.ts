@@ -5,10 +5,24 @@ import { resolve } from 'path'
 import path from 'path'
 
 export default defineConfig({
+    plugins: [vue()],
+    resolve: {
+        alias: {
+            '~': path.resolve(__dirname, './app'),
+            '@': path.resolve(__dirname, './app'),
+            '#app': path.resolve(__dirname, './node_modules/nuxt/dist/app'),
+            '#imports': resolve(__dirname, '.nuxt/imports'),
+        },
+    },
     test: {
         globals: true,
         environment: 'happy-dom',
         setupFiles: './tests/setup.ts',
+        include: [
+            'test/{e2e,unit}/*.{test,spec}.ts',
+            // include module-level unit tests (e.g., app/modules/**/test/unit)
+            'app/modules/**/test/unit/*.{test,spec}.ts',
+        ],
         coverage: {
             provider: 'v8', // or 'istanbul'
             reporter: ['text', 'html', 'lcov'],
@@ -16,38 +30,5 @@ export default defineConfig({
             include: ['app/**/*.{js,ts,vue}'],
             exclude: ['**/*.d.ts', 'dist/**', 'node_modules/**'],
         },
-        projects: [
-            {
-                plugins: [vue()],
-                resolve: {
-                    alias: {
-                        '~': path.resolve(__dirname, './app'),
-                        '@': path.resolve(__dirname, './app'),
-                        '#app': path.resolve(__dirname, './node_modules/nuxt/dist/app'),
-                        '#imports': resolve(__dirname, '.nuxt/imports'),
-                    },
-                },
-                test: {
-                    name: 'unit',
-                    include: ['test/{e2e,unit}/*.{test,spec}.ts'],
-                    environment: 'happy-dom',
-                    setupFiles: './tests/setup.ts',
-                },
-            },
-            await defineVitestProject({
-                test: {
-                    name: 'nuxt',
-                    include: [
-                        // 'test/nuxt/*.{test,spec}.ts',
-                        'app/modules/**/test/unit/*.{test,spec}.ts',
-                    ],
-                    exclude: [
-                        'app/modules/tweets/test/unit/*.{test,spec}.ts',
-                    ],
-                    environment: 'nuxt',
-                    setupFiles: './tests/setup.ts',
-                },
-            }),
-        ],
     },
 })

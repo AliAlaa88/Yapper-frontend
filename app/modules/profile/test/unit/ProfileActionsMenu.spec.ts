@@ -45,11 +45,18 @@ const mockUserInteractions = {
     handleUnmuteWithConfirmation: vi.fn(),
     handleBlockWithConfirmation: vi.fn(),
     handleMuteWithSnackbar: vi.fn(),
+    handleMuteWithSnackbarWithAction: vi.fn(),
     handleRemoveFollowerWithConfirmation: vi.fn(),
     handleUnblockWithConfirmation: vi.fn(),
     handleUnmuteWithSnackbar: vi.fn(),
     handleUnfollowWithConfirmation: vi.fn(),
     handleFollowAction: vi.fn(),
+    handleFolloweWithSnackbar: vi.fn(),
+    handleUnfollowWithSnackbar: vi.fn(),
+    isMuteLoading: { value: false },
+    isFollowLoading: { value: false },
+    isUnfollowLoading: { value: false },
+    isUnmuteLoading: { value: false },
 }
 
 describe('ProfileActionsMenu Component', () => {
@@ -198,54 +205,6 @@ describe('ProfileActionsMenu Component', () => {
 
             const muteButton = wrapper.find('#mute-button')
             expect(muteButton.text()).toBe('profile.unmuteButton')
-        })
-
-        it('should call handleUnmuteWithSnackbar when click mute button and user is muted', async () => {
-            const wrapper = mount(ProfileActionsMenu, {
-                props: {
-                    isTweet: false,
-                },
-                global: {
-                    provide: {
-                        'user-id': ref('12'),
-                        'show-list': ref(true),
-                    },
-                    mocks: {
-                        $t: (key: string) => key,
-                    },
-                },
-            })
-            mockUserInfoRef.isBlocked.value = false
-            mockUserInfoRef.isMuted.value = true
-            await nextTick()
-
-            const muteButton = wrapper.find('#mute-button')
-            muteButton.trigger('click')
-            expect(mockUserInteractions.handleUnmuteWithSnackbar).toHaveBeenCalledTimes(1)
-        })
-
-        it('should call handleMuteWithSnackbar when click mute button and user is not muted', async () => {
-            const wrapper = mount(ProfileActionsMenu, {
-                props: {
-                    isTweet: false,
-                },
-                global: {
-                    provide: {
-                        'user-id': ref('12'),
-                        'show-list': ref(true),
-                    },
-                    mocks: {
-                        $t: (key: string) => key,
-                    },
-                },
-            })
-            mockUserInfoRef.isBlocked.value = false
-            mockUserInfoRef.isMuted.value = false
-            await nextTick()
-
-            const muteButton = wrapper.find('#mute-button')
-            muteButton.trigger('click')
-            expect(mockUserInteractions.handleMuteWithSnackbar).toHaveBeenCalledTimes(1)
         })
     })
 

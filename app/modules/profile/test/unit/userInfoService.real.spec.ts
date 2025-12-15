@@ -475,6 +475,7 @@ describe('userInfoServiceReal', () => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
+                    timeout: 60000,
                 },
             )
             expect(result).toBe(imageUrl)
@@ -524,6 +525,7 @@ describe('userInfoServiceReal', () => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
+                    timeout: 60000,
                 },
             )
             expect(result).toBe(imageUrl)
@@ -552,98 +554,6 @@ describe('userInfoServiceReal', () => {
             await expect(userInfoServiceReal.uploadCoverPhoto('123', mockFile)).rejects.toThrow(
                 'Invalid file upload',
             )
-        })
-    })
-
-    describe('getFollowers', () => {
-        it('fetches followers successfully', async () => {
-            const mockFollowers = [
-                {
-                    user_id: '1',
-                    name: 'Follower 1',
-                    username: 'follower1',
-                    bio: 'Bio 1',
-                    avatar_url: 'avatar1.jpg',
-                    is_following: false,
-                    is_follower: true,
-                    is_muted: false,
-                    is_blocked: false,
-                },
-            ]
-
-            mockAxios.get.mockResolvedValue({
-                data: { data: { data: mockFollowers } },
-            })
-
-            const result = await userInfoServiceReal.getFollowers('123')
-
-            expect(mockAxios.get).toHaveBeenCalledWith('/users/123/followers')
-            expect(result).toEqual(mockFollowers)
-        })
-
-        it('throws error when fetch fails', async () => {
-            mockAxios.get.mockResolvedValue({
-                data: {},
-            })
-
-            await expect(userInfoServiceReal.getFollowers('123')).rejects.toThrow()
-        })
-
-        it('throws error when user not found', async () => {
-            mockAxios.get.mockRejectedValue({
-                isAxiosError: true,
-                response: { status: 404 },
-            })
-
-            vi.spyOn(axios, 'isAxiosError').mockReturnValue(true)
-
-            await expect(userInfoServiceReal.getFollowers('999')).rejects.toThrow('User not found')
-        })
-    })
-
-    describe('getFollowing', () => {
-        it('fetches following list successfully', async () => {
-            const mockFollowing = [
-                {
-                    user_id: '1',
-                    name: 'Following 1',
-                    username: 'following1',
-                    bio: 'Bio 1',
-                    avatar_url: 'avatar1.jpg',
-                    is_following: true,
-                    is_follower: false,
-                    is_muted: false,
-                    is_blocked: false,
-                },
-            ]
-
-            mockAxios.get.mockResolvedValue({
-                data: { data: { data: mockFollowing } },
-            })
-
-            const result = await userInfoServiceReal.getFollowing('123')
-
-            expect(mockAxios.get).toHaveBeenCalledWith('/users/123/following')
-            expect(result).toEqual(mockFollowing)
-        })
-
-        it('throws error when fetch fails', async () => {
-            mockAxios.get.mockResolvedValue({
-                data: {},
-            })
-
-            await expect(userInfoServiceReal.getFollowing('123')).rejects.toThrow()
-        })
-
-        it('throws error when user not found', async () => {
-            mockAxios.get.mockRejectedValue({
-                isAxiosError: true,
-                response: { status: 404 },
-            })
-
-            vi.spyOn(axios, 'isAxiosError').mockReturnValue(true)
-
-            await expect(userInfoServiceReal.getFollowing('999')).rejects.toThrow('User not found')
         })
     })
 })

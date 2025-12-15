@@ -1,15 +1,105 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { nextTick, ref } from 'vue'
 import Tweet from '../../components/Tweet/Tweet.vue'
 import Publisher from '../../components/Tweet/subComponents/Publisher/Publisher.vue'
 import Content from '../../components/Tweet/subComponents/Content/Content.vue'
 import Stats from '../../components/Tweet/subComponents/Stats/Stats.vue'
 import type { Tweet as TweetType } from '../../types'
 
-// Mock Nuxt composables
-vi.mock('#app', () => ({
-    navigateTo: vi.fn(),
+// Mock Nuxt composables and dependencies
+vi.mock('#app', () => {
+    const mock = {
+        useNuxtApp: () => ({ $queryClient: {}, $userInfoService: {}, $tweetService: {} }),
+        useRouter: () => ({ push: vi.fn(), replace: vi.fn(), go: vi.fn(), back: vi.fn() }),
+        useRoute: () => ({ params: {}, query: {}, path: '/', name: '', fullPath: '/', meta: {} }),
+        useI18n: () => ({ t: (key: string) => key, locale: 'en' }),
+        navigateTo: vi.fn(),
+    }
+    return { ...mock, default: mock }
+})
+
+vi.mock('vue-i18n', () => ({
+    useI18n: () => ({ t: (key: string) => key, locale: 'en' }),
 }))
+
+vi.mock('../../stores/tweetTransition', () => ({
+    useTweetTransitionStore: () => ({
+        setTransitionTweet: vi.fn(),
+    }),
+}))
+
+vi.mock('../../components/Tweet/subComponents/ProfileActionsMenu.vue', () => ({
+    default: {
+        template: '<div class="profile-actions-menu">ProfileActionsMenu</div>',
+    },
+}))
+
+// Mock usePostTweet composable for QuoteModal
+vi.mock('../../../TimeLine/queries/usePostTweet', () => ({
+    usePostTweet: () => ({
+        isPending: { value: false },
+        mutateAsync: vi.fn(),
+    }),
+}))
+
+// Mock useTweetQueries
+vi.mock('../../queries/useTweetQueries', () => ({
+    useTweetSummaryQuery: vi.fn(() => ({
+        data: { value: null },
+        isLoading: { value: false },
+        error: { value: null },
+        refetch: vi.fn(),
+    })),
+    useDeleteTweetMutation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: { value: false },
+    })),
+    useUpdateTweetMutation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: { value: false },
+    })),
+}))
+
+const mockTweet: TweetType = {
+    tweet_id: 't1',
+    type: 'tweet',
+    content: 'Hello world',
+    images: ['https://example.com/image1.jpg'],
+    videos: [],
+    gifs: [],
+    likes_count: 10,
+    reposts_count: 3,
+    views_count: 0,
+    quotes_count: 0,
+    replies_count: 5,
+    is_liked: false,
+    is_reposted: false,
+    is_bookmarked: false,
+    created_at: '2020-01-01',
+    updated_at: '2020-01-02',
+    user: {
+        id: 'u1',
+        name: 'Alice',
+        username: 'alice',
+        avatar_url: '/avatar.jpg',
+        verified: false,
+        is_following: null,
+        link: null,
+        bio: 'Test bio',
+        followers_count: 100,
+        following_count: 50,
+        cover_url: null,
+        country: null,
+        created_at: '2020-01-01',
+        birth_date: null,
+        language: null,
+        email: '',
+    },
+    reposted_by: undefined,
+    parent_tweet: null,
+    conversation_tweet: null,
+}
 
 // Mock navigation utilities
 vi.mock('../../utils/navigation', () => ({
@@ -18,7 +108,7 @@ vi.mock('../../utils/navigation', () => ({
 }))
 
 const defaultStubs = {
-    NuxtLink: true,
+    NuxtLink: { template: '<a><slot /></a>' },
     Publisher: true,
     Content: true,
     Stats: true,
@@ -26,39 +116,125 @@ const defaultStubs = {
     Tooltip: { template: '<div><slot /></div>' },
     TooltipTrigger: {
         template: '<div><slot /></div>',
-        props: ['asChild']
+        props: ['asChild'],
     },
     TooltipContent: true,
-    UserCard: true,
+    UserCard: { template: '<div class="user-card">UserCard</div>' },
+    ProfileActionsMenu: { template: '<div class="profile-actions-menu">ProfileActionsMenu</div>' },
+    FormattedTextarea: { template: '<textarea />' },
+    QuoteModal: { template: '<div class="quote-modal"></div>' },
+}
+
+const defaultGlobal = {
+    stubs: defaultStubs,
+    config: {
+        globalProperties: {
+            $t: (key: string) => key,
+        },
+    },
+    mocks: {
+        $t: (key: string) => key,
+    },
+    provide: {
+        $t: (key: string) => key,
+        snackbar: {
+            showSnackbar: vi.fn(),
+            handleShowSnackbar: vi.fn(),
+        },
+        confirmation: {
+            showConfirmation: vi.fn(),
+            handleShowConfirmation: vi.fn(),
+        },
+    },
+    // Ensure $t is available on the instance
+    plugins: [
+        {
+            install(app) {
+                app.config.globalProperties.$t = (key) => key
+            },
+        },
+    ],
 }
 
 describe('Tweet Component', () => {
-    const mockTweet: TweetType = {
-        tweet_id: 't1',
-        content: 'Hello world',
-        user: {
-            id: 'u1',
-            name: 'Alice',
-            username: 'alice',
-            avatar_url: '/avatar.jpg',
-            verified: false,
-            bio: 'Test bio',
-            followers: 100,
-            following: 50
-        },
-        images: [
-            "https://example.com/image1.jpg",
-        ],
-        likes_count: 10,
-        replies_count: 5,
-        reposts_count: 3,
-        views_count: 0,
-        qoutes_count: 0,
-        is_liked: false,
-        is_reposted: false,
-        created_at: '2020-01-01',
-        type: 'tweet',
+    const mockSnackbar = {
+        handleShowSnackbar: vi.fn(),
     }
+    it('renders repost badge for reposted tweets', async () => {
+        const tweet = { ...mockTweet, type: 'repost', reposted_by: { repost_id: 'r1', id: 'u2', name: 'Bob', reposted_at: '2020-01-02' } }
+        const wrapper = mount(Tweet, {
+            props: { tweet },
+            global: {
+                ...defaultGlobal,
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                },
+                mocks: { $t: (key) => key },
+            },
+        })
+        expect(wrapper.text().toLowerCase()).toContain('repost')
+    })
+
+    it('renders ProfileActionsMenu for actions', async () => {
+        const activeMenuTweetId = ref<string | null>(null)
+        const wrapper = mount(Tweet, {
+            props: { tweet: mockTweet },
+            global: {
+                ...defaultGlobal,
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                    activeMenuTweetId,
+                },
+                mocks: { $t: (key) => key },
+            },
+        })
+        activeMenuTweetId.value = mockTweet.tweet_id
+        await nextTick()
+        expect(wrapper.find('.profile-actions-menu').exists()).toBe(true)
+    })
+
+    it('shows QuoteModal when quoting', async () => {
+        const wrapper = mount(Tweet, {
+            props: { tweet: mockTweet },
+            global: {
+                ...defaultGlobal,
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                },
+            },
+        })
+        // Simulate quote action
+        // Use a workaround for non-extensible objects
+        wrapper.vm.showQuoteModal = true
+        await nextTick()
+        expect(wrapper.find('.quote-modal').exists()).toBe(true)
+    })
+
+
+    it('shows UserCard tooltip on avatar hover', async () => {
+        const wrapper = mount(Tweet, {
+            props: { tweet: mockTweet },
+            global: {
+                ...defaultGlobal,
+                provide: {
+                    ...defaultGlobal.provide,
+                    snackbar: mockSnackbar,
+                },
+                stubs: {
+                    ...defaultStubs,
+                    NuxtLink: { template: '<a><slot /></a>' },
+                    UserCard: { template: '<div class="user-card">UserCard</div>' },
+                    CustomToolTip: { template: '<div><slot name="trigger" /><slot name="content" /></div>' },
+                },
+                mocks: { $t: (key) => key },
+            },
+        })
+        // The UserCard should now be present in the DOM
+        expect(wrapper.find('.user-card').exists()).toBe(true)
+    })
 
     beforeEach(() => {
         vi.clearAllMocks()
@@ -68,9 +244,7 @@ describe('Tweet Component', () => {
         it('renders avatar image and NuxtLink to profile', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             // Check that the article element exists
@@ -89,9 +263,7 @@ describe('Tweet Component', () => {
         it('renders with correct CSS classes for article container', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const article = wrapper.find('article')
@@ -103,9 +275,7 @@ describe('Tweet Component', () => {
         it('renders with flex layout structure', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const flexContainer = wrapper.find('.flex.gap-3')
@@ -117,9 +287,7 @@ describe('Tweet Component', () => {
         it('renders Publisher component with correct props', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const publisher = wrapper.findComponent(Publisher)
@@ -136,9 +304,7 @@ describe('Tweet Component', () => {
         it('renders Content component with correct props', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const content = wrapper.findComponent(Content)
@@ -153,27 +319,23 @@ describe('Tweet Component', () => {
         it('renders Stats component with correct props', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const stats = wrapper.findComponent(Stats)
             expect(stats.exists()).toBe(true)
-            expect(stats.props('stats')).toEqual({
-                likes: mockTweet.likes_count,
-                replies: mockTweet.replies_count,
-                retweets: mockTweet.reposts_count,
-                views: mockTweet.views_count,
-            })
+            // The actual stats prop may include more fields, so check for a subset
+            const statsProps = stats.props('stats')
+            expect(statsProps.likes).toBe(mockTweet.likes_count)
+            expect(statsProps.replies).toBe(mockTweet.replies_count)
+            expect(statsProps.retweets).toBe(mockTweet.reposts_count)
+            expect(statsProps.views).toBe(mockTweet.views_count)
         })
 
         it('renders all three sub-components together', () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             expect(wrapper.findComponent(Publisher).exists()).toBe(true)
@@ -187,9 +349,7 @@ describe('Tweet Component', () => {
             const { navigateTo } = await import('#app')
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             await wrapper.find('article').trigger('click')
@@ -202,11 +362,9 @@ describe('Tweet Component', () => {
             
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
-
+            
             const link = wrapper.find('#tweet-avatar-link-t1')
             await link.trigger('click')
             
@@ -223,9 +381,7 @@ describe('Tweet Component', () => {
             
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             await wrapper.find('article').trigger('click')
@@ -248,9 +404,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithCustomLink },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const link = wrapper.find('#tweet-avatar-link-t1')
@@ -266,9 +420,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithMedia },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const content = wrapper.findComponent(Content)
@@ -287,9 +439,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithVideo },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const content = wrapper.findComponent(Content)
@@ -304,9 +454,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithViews },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const stats = wrapper.findComponent(Stats)
@@ -324,18 +472,15 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithZeroStats },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const stats = wrapper.findComponent(Stats)
-            expect(stats.props('stats')).toEqual({
-                likes: 0,
-                replies: 0,
-                retweets: 0,
-                views: 0,
-            })
+            const statsProps = stats.props('stats')
+            expect(statsProps.likes).toBe(0)
+            expect(statsProps.replies).toBe(0)
+            expect(statsProps.retweets).toBe(0)
+            expect(statsProps.views).toBe(0)
         })
     })
 
@@ -352,9 +497,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: tweetWithDifferentAvatar },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             // Verify that the user prop was passed correctly to Publisher component
@@ -367,9 +510,7 @@ describe('Tweet Component', () => {
         it('updates when tweet prop changes', async () => {
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const newTweet: TweetType = {
@@ -414,9 +555,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: minimalTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             expect(wrapper.exists()).toBe(true)
@@ -432,9 +571,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             const link = wrapper.find('#tweet-avatar-link-t1')
@@ -450,9 +587,7 @@ describe('Tweet Component', () => {
 
             const wrapper = mount(Tweet, {
                 props: { tweet: mockTweet },
-                global: {
-                    stubs: defaultStubs,
-                },
+                global: { ...defaultGlobal },
             })
 
             await wrapper.find('article').trigger('click')

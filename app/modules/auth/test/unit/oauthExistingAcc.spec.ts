@@ -2,11 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
-import enMessages from '../../../../i18n/locales/en.json' with { type: 'json' }
-import arMessages from '../../../../i18n/locales/ar.json' with { type: 'json' }
+import enMessages from '../../../../../i18n/locales/en.json'
+import arMessages from '../../../../../i18n/locales/ar.json'
 
 import SuccessPage from '~/modules/auth/components/success.vue'
-import { watch } from 'vue'
+import { watch, ref } from 'vue'
 
 const i18n = createI18n({
     legacy: false,
@@ -27,14 +27,31 @@ const mockRouter = {
 }
 
 const mockUserStore = {
-    setAuth: vi.fn(),
+    setAuth: vi.fn((data) => {
+        // Actually set the accessToken so tests can verify it
+        mockUserStore.accessToken = data.access_token
+        mockUserStore.user = data.user
+    }),
+    setUser: vi.fn(),
+    setAccessToken: vi.fn((token: string | null) => {
+        mockUserStore.accessToken = token
+    }),
+    getAccessToken: vi.fn(() => mockUserStore.accessToken),
+    updateUser: vi.fn(),
     logout: vi.fn(),
+    initAuth: vi.fn(),
     user: null,
     accessToken: null,
+    isLoggedIn: false,
+}
+
+const mockRoute = {
+    query: {} as Record<string, string>,
 }
 
 vi.mock('vue-router', () => ({
     useRouter: () => mockRouter,
+    useRoute: () => mockRoute,
 }))
 
 // Mock cookie storage
@@ -45,13 +62,17 @@ const mockCookie = {
 vi.mock('#app', () => ({
     useNuxtApp: () => ({
         $authService: mockAuthService,
+        runWithContext: (fn: any) => fn(),
+        callHook: vi.fn(),
     }),
     useRuntimeConfig: () => ({
         public: {
             apiUrl: 'http://localhost:3000',
+            env: 'test',
         },
     }),
     useRouter: () => mockRouter,
+    useRoute: () => mockRoute,
     useCookie: () => mockCookie,
 }))
 
@@ -67,44 +88,54 @@ vi.mock('~/modules/auth/stores/userStore', () => ({
     useUserStore: () => mockUserStore,
 }))
 
+// Mock useGetUserQuery
+vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
+    useGetUserQuery: vi.fn(() => ({
+        data: ref({ id: 1, name: 'Test User' }),
+        isLoading: ref(false),
+        isError: ref(false),
+        error: ref(null),
+    })),
+}))
+
 // Mock OAuth and user queries - return success immediately
 vi.mock('~/modules/auth/queries/useOAuthQuery', () => ({
     useExchangeTokenQuery: vi.fn((onSuccess, onError) => ({
-        mutate: vi.fn(async (payload) => {
-            try {
-                const token = payload.exchange_token
-                if (token) {
-                    await Promise.resolve()
-                    onSuccess?.({ access_token: token })
-                } else {
-                    throw new Error('No exchange token provided')
-                }
-            } catch (error) {
-                onError?.(error)
+        mutate: vi.fn((payload) => {
+            const token = payload.exchange_token
+            if (token) {
+                onSuccess?.({ access_token: token })
+            } else {
+                onError?.(new Error('No exchange token provided'))
             }
         }),
+        mutateAsync: vi.fn(),
+        isPending: ref(false),
     })),
 }))
 
 vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
     useGetUserQuery: vi.fn((enableRef, onSuccess, onError) => {
-        // Watch for enableRef to become true, then call getUserData and onSuccess
-        watch(() => enableRef.value, async (enabled) => {
-            if (enabled) {
-                try {
-                    const userData = await mockAuthService.getUserData()
-                    await Promise.resolve()
-                    onSuccess?.(userData)
-                } catch (error) {
-                    onError?.(error)
+        // Watch for enableRef to become true, then call onSuccess
+        watch(
+            () => enableRef.value,
+            async (enabled) => {
+                if (enabled) {
+                    try {
+                        const userData = await mockAuthService.getUserData()
+                        onSuccess?.(userData)
+                    } catch (error) {
+                        onError?.(error)
+                    }
                 }
-            }
-        }, { immediate: true })
-        
+            },
+            { immediate: true }
+        )
+
         return {
-            data: { value: { username: 'testuser', email: 'test@example.com' } },
-            isLoading: false,
-            isError: false,
+            data: ref({ username: 'testuser', email: 'test@example.com' }),
+            isLoading: ref(false),
+            isError: ref(false),
         }
     }),
 }))
@@ -137,6 +168,9 @@ window.location = {
 function mountSuccessPage(token: string = '') {
     window.location.search = token ? `?exchange_token=${token}` : ''
 
+    // Update mockRoute query params
+    mockRoute.query = token ? { exchange_token: token } : {}
+
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: { retry: false },
@@ -152,8 +186,11 @@ function mountSuccessPage(token: string = '') {
             ],
             mocks: {
                 useRouter: () => mockRouter,
+                useRoute: () => mockRoute,
                 useNuxtApp: () => ({
                     $authService: mockAuthService,
+                    runWithContext: (fn: any) => fn(),
+                    callHook: vi.fn(),
                 }),
                 useRuntimeConfig: () => ({
                     public: {
@@ -163,6 +200,7 @@ function mountSuccessPage(token: string = '') {
             },
             stubs: {
                 NuxtLink: { template: '<a><slot /></a>' },
+                AuthLoadingPage: { template: '<div class="fixed inset-0 bg-black/10 flex items-center justify-center"><p>Loading...</p></div>' },
             },
         },
     })
@@ -214,7 +252,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
             const token = 'oauth-access-token-123'
             mountSuccessPage(token)
             await flushPromises()
-            
+
             expect(mockUserStore.accessToken).toBe(token)
         })
 
@@ -271,7 +309,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
     describe('Error Handling', () => {
         it('should logout user when getUserData fails', async () => {
             const token = 'invalid-token'
-            
+
             mockAuthService.getUserData.mockRejectedValue({
                 response: {
                     status: 401,
@@ -310,7 +348,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
             mockAuthService.getUserData.mockResolvedValue(mockUserData)
 
             const wrapper = mountSuccessPage('test-token')
-            
+
             expect(wrapper.find('.fixed.inset-0').exists()).toBe(true)
         })
 

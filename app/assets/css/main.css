@@ -42,7 +42,7 @@
     --color-x-text-dark: #e7e9ea;
     --color-x-text-dark-secondary: #71767b;
     --color-x-hover-dark: #2f3336;
-
+    --color-x-dark-gray: #2f3336;
     --color-x-popup-bg: #242d34;
     /* ===========================
        🖋 FONT SETTINGS
@@ -127,6 +127,8 @@
         --color-x-hover-alternate: #ebebeb;
         --color-x-tooltip-bg: #cfd9de;
         --color-x-popup-bg: #999999;
+        --color-x-popup-auth-bg: #0000001a;
+        --color-x-dark-gray: #cfd9de;
     }
 
     :root.dark {
@@ -146,6 +148,8 @@
         --color-x-hover-alternate: #2f3336;
         --color-x-hover-dark: #16181c;
         --color-x-popup-bg: #242d34;
+        --color-x-popup-auth-bg: #ffffff1a;
+        --color-x-dark-gray: #2f3336;
     }
 }
 
@@ -202,12 +206,39 @@
         color: var(--accent-color);
     }
 
+    .hover\:glass-light:hover {
+        background-color: rgba(0, 0, 0, 0.05); /* slight dark tint */
+        backdrop-filter: blur(4px); /* softer glass */
+    }
+
+    /* 🔹 DARK MODE glass hover */
+    .dark .hover\:glass-light:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* brighter tint */
+        backdrop-filter: blur(12px); /* strong glass */
+    }
+
     .hover\:bg-accent:hover {
         background-color: var(--accent-color-hover);
     }
 
     .hover\:bg-accent\/10:hover {
         background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    }
+
+    .hover\:bg-accent\/30:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+    }
+
+    .hover\:bg-accent\/60:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 60%, transparent);
+    }
+
+    .hover\:bg-accent\/80:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 80%, transparent);
+    }
+
+    .hover\:bg-accent\/90:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 90%, transparent);
     }
 
     .hover\:border-accent:hover {
@@ -277,6 +308,14 @@
         background-color: var(--color-x-background);
     }
 
+    .bg-primary\/50 {
+        background-color: color-mix(in srgb, var(--color-x-background) 50%, transparent);
+    }
+
+    .bg-primary\/30 {
+        background-color: color-mix(in srgb, var(--color-x-background) 50%, transparent);
+    }
+
     .bg-alternate {
         background-color: var(--color-x-alternate);
     }
@@ -308,6 +347,9 @@
     .bg-gray {
         background-color: var(--color-x-gray);
     }
+    .bg-dark-gray {
+        background-color: var(--color-x-dark-gray);
+    }
 
     .bg-tooltip {
         background-color: var(--color-x-gray-light);
@@ -315,6 +357,17 @@
 
     .bg-popup {
         background-color: var(--color-x-popup-bg);
+    }
+
+    .bg-auth-popup {
+        background-color: var(--color-x-popup-auth-bg);
+    }
+
+    /* Shadow utilities */
+    .shadow-secondary {
+        box-shadow:
+            0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent),
+            0 0 6px 2px color-mix(in srgb, var(--color-x-gray-dark) 30%, transparent);
     }
 
     /* Border colors */
@@ -505,10 +558,17 @@
 
     .focus\:border-red:focus {
         border-color: var(--color-x-red-hover);
-        /* Animation classes */
-        .animate-like {
-            animation: like 0.6s ease-in-out;
-        }
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .scrollbar-hide {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
     }
 }
 
@@ -537,4 +597,9 @@
     100% {
         transform: scale(1);
     }
+}
+
+/* Global animation class for like heart */
+.animate-like {
+    animation: like 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }

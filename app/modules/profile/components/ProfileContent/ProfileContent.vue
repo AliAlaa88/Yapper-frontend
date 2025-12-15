@@ -6,9 +6,30 @@
             :active-tab="currentTab"
             :on-change="handleTabChange"
         />
+        <div
+            v-if="!isBlocked && currentTab === 'likes' && isMyProfile"
+            class="mx-4 my-3 flex items-center gap-3 rounded-lg bg-blue-500/10 px-4 py-3"
+        >
+            <Lock :size="20" class="flex-shrink-0 text-blue-500" />
+            <span class="text-sm text-blue-500">
+                {{ t('profile.privacy.likesPrivate') }}
+            </span>
+        </div>
         <TweetsList
-            v-if="!isBlocked && userId"
+            v-if="
+                !isBlocked &&
+                userId &&
+                ((currentTab === 'likes' && isMyProfile) ||
+                    currentTab === 'posts' ||
+                    currentTab === 'replies')
+            "
             :fetchingSource="`${currentTab === 'posts' || currentTab === 'replies' ? `/users/${userId}/${currentTab}` : `/users/me/liked-posts`}`"
+            class="min-h-[650px] w-full"
+            :compact="currentTab === 'likes'"
+        />
+        <MediaGrid
+            v-if="!isBlocked && userId && currentTab === 'media'"
+            :fetching-source="`/users/${userId}/media`"
             class="min-h-[650px] w-full"
         />
         <ProfileBlockedContent v-if="isBlocked" :username="username" />
@@ -19,6 +40,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { Lock } from 'lucide-vue-next'
 
 import Tabs from '~/modules/Common/components/Tabs/Tabs.vue'
 
@@ -26,8 +48,8 @@ import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useProfileStore } from '../../stores/profileStore'
 import ProfileBlockedContent from './SubComponents/ProfileBlockedContent.vue'
 import TweetsList from '~/modules/tweets/components/TweetsList/TweetsList.vue'
-
-
+import MediaGrid from '~/modules/Common/components/MediaGrid/MediaGrid.vue'
+import { storeToRefs } from 'pinia'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()

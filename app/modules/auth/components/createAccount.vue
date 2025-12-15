@@ -1,4 +1,7 @@
 <template>
+    <!-- Auth Loading Page -->
+    <AuthLoadingPage v-if="showLoadingPage" />
+    
     <createAccount 
         v-if="showSignupStep1" 
         v-model:name="signupData.name"
@@ -39,12 +42,14 @@ import verifyOtp from './subComponents/signupComponents/verifyOtp.vue'
 import createAccount from './subComponents/signupComponents/createAccount.vue'
 import FinalRegister from './subComponents/signupComponents/FinalRegister.vue'
 import CompleteAccount from './CompleteAccount.vue'
+import AuthLoadingPage from './AuthLoadingPage.vue'
 import { useRouter } from 'vue-router'
 
 const showSignupStep1 = ref(true)
 const showVerifyOtp = ref(false)
 const showFinalStep = ref(false)
 const showCompleteAccount = ref(false)
+const showLoadingPage = ref(false)
 const Recommendations = ref<string[]>([])
 const username = ref('')
 const router = useRouter()
@@ -87,7 +92,6 @@ const onCloseFinal = () => {
 const onSignupFinish = () => {
     showFinalStep.value = false
     showCompleteAccount.value = true
-    Recommendations.value = Recommendations.value.splice(1)
 }
 
 const onCompleteAccountClose = () => {
@@ -105,7 +109,8 @@ const goBack = () => {
 }
 
 const onFinish = () => {
-    // Signup complete, redirect back to auth or home
-    router.push('/auth')
+    // Show loading page during navigation
+    showLoadingPage.value = true
+    router.push('/')
 }
 </script>

@@ -3,12 +3,13 @@
         :isOpen="true"
         @close="$emit('close')"
         :hasCloseButton="false"
+        @back="$emit('back')"
+        :hasBackButton="true"
         contentClass="max-w-lg sm:max-w-xl w-full"
         headerClass=""
         slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
     >
         <!-- Back Button -->
-        <backButton @close="$emit('back')" />
 
         <!-- Logo -->
         <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
@@ -27,9 +28,8 @@
                     :placeholder="$t('auth.forgotPassword.passwordPlaceholder')"
                     v-model="password"
                     @blur="validatePasswordField"
-                    @input="clearPasswordError"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         passwordError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -42,9 +42,8 @@
                     type="password"
                     :placeholder="$t('auth.forgotPassword.verifyPasswordPlaceholder')"
                     v-model="verifyPassword"
-                    @input="clearMatchError"
                     :class="[
-                        'w-full bg-primary text-primary border-2 border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
+                        'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
                         matchError ? 'border-red focus:border-red' : ''
                     ]"
                 />
@@ -62,25 +61,27 @@
             </p>
 
             <!-- Next Button -->
-            <button
+            <Button
                 id="button-reset-password-forgot-password-s3"
-                class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3 duration-200"
+                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold rounded-full py-2 transition mb-3 duration-200"
+                :loading-text="t('auth.common.loading')"
+                :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.forgotPassword.resetButton') }}
-            </button>
+            </Button>
             </form>
     </Popup>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useResetPasswordQuery } from '../../../queries/useForgetPasswordQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
-import backButton from '../backButton.vue'
 import Logo from '~/modules/Common/components/Logo'
 import { validatePassword } from '../../../utils/validators'
+import Button from '~/modules/Common/components/Button/Button.vue'
 
 const { locale, t } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -92,6 +93,7 @@ const verifyPassword = defineModel<string>('confirmPassword', { default: '' })
 const errorMessage = ref('')
 const passwordError = ref('')
 const matchError = ref('')
+const loading = ref(false)
 
 const props = defineProps<{
     reset_token: string
@@ -107,6 +109,7 @@ const emit = defineEmits<{
 const resetPasswordMutation = useResetPasswordQuery(
     (data: any) => {
         errorMessage.value = ''
+        loading.value = false
         emit('finish')
     },
     (error: any) => {
@@ -114,6 +117,7 @@ const resetPasswordMutation = useResetPasswordQuery(
         const errorMsg = error?.response?.data?.message || 'An error occurred. Please try again.'
         if (Array.isArray(errorMsg)) errorMessage.value = errorMsg[0]
         else errorMessage.value = errorMsg
+        loading.value = false
     },
 )
 
@@ -132,6 +136,15 @@ const clearMatchError = () => {
     matchError.value = ''
 }
 
+const validatePasswordMatch = (pwd: string, confirmPwd: string) => {
+  if (!confirmPwd) return ''
+  return pwd === confirmPwd ? '' : 'Passwords do not match.'
+}
+
+watch([password, verifyPassword], ([pwd, confirmPwd]) => {
+  matchError.value = validatePasswordMatch(pwd, confirmPwd)
+})
+
 const onFinish = () => {
     errorMessage.value = '' // Clear previous errors
 
@@ -146,6 +159,7 @@ const onFinish = () => {
         return
     }
 
+    loading.value = true
     resetPasswordMutation.mutate({
         identifier: props.identifier,
         reset_token: props.reset_token,

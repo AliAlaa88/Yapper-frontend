@@ -2,15 +2,17 @@
     <div
         v-if="showList"
         ref="dropdownRef"
-        class="sm:absolute right-0 mt-2 bg-primary rounded-xl fixed bottom-0 sm:bottom-auto
-        sm:shadow-[0_0_7px_rgba(255,255,255,0.4)] shadow-none z-50 transition-allduration-200
-        sm:w-70 sm:top-[-8px] left-1/2 sm:left-auto transform sm:transform-none -translate-x-1/2
-        sm:translate-x-0 w-full sm:rounded-xl rounded-t-2xl sm:max-h-none max-h-[50vh]
-        overflow-y-auto"
+        data-menu-container
+        class="fixed bottom-0 inset-x-0 z-100 bg-primary
+        rounded-t-2xl max-h-[50vh] overflow-y-auto
+        sm:absolute sm:bottom-auto sm:top-[-8px]
+        sm:w-70 sm:rounded-xl
+        sm:shadow-[0_0_7px_rgba(255,255,255,0.4)]
+        ltr:sm:right-0 rtl:sm:left-0"
         @click.stop
     >
         <Button
-            v-if="isTweet"
+            v-if="isTweet && !isBlocked"
             id="follow-tweeet-button"
             button-class="cursor-pointer w-full text-primary font-semibold text-left
             px-4 py-3 hover:bg-hover transition flex items-center first:rounded-t-xl"
@@ -74,7 +76,7 @@
                 button-class="w-full cursor-pointer border border-primary text-center
                 font-semibold py-2.5 hover:bg-hover rounded-full transition mt-2 mb-3
                 text-primary sm:hidden"
-                @click="showList = false"
+                @click="closeMenu"
             >
                 {{ $t('profile.cancelButton') }}
             </Button>
@@ -88,8 +90,9 @@ import { useUserInfo } from '~/modules/profile/composables/useUserInfo'
 import { useUserInteractions } from '~/modules/profile/composables/useUserInteractions'
 import { ref, onMounted, onBeforeUnmount, inject, computed } from 'vue'
 import type { Ref } from 'vue'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/modules/Common/components/Button/Button.vue'
 import { useProfileStore } from '~/modules/profile/stores/profileStore'
+import { useUserStore } from '~/modules/auth/stores/userStore'
 
 const props = defineProps<{
     userid?: string | null,
@@ -102,15 +105,21 @@ const emit = defineEmits<{
 
 const showList = inject<Ref<boolean>>('show-list')!
 
+const closeMenu = () => {
+    showList.value = false
+}
+
 const profileStore = useProfileStore()
+const userStore = useUserStore()
 const userId = computed(() => props.userid ? props.userid : profileStore.getProfileId() || '')
-const { isBlocked, isMuted, isFollower, username,isFollowing } = useUserInfo(userId)
+const meId = computed(() => userStore.getUser()?.user_id)
+const { isBlocked, isMuted, isFollower, username, isFollowing } = useUserInfo(userId)
 const dropdownRef = ref<HTMLElement | null>(null)
 
-const userInteractions = useUserInteractions(userId)
+const userInteractions = useUserInteractions(userId, username, meId)
 const {
     handleBlockWithConfirmation,
-    handleMuteWithSnackbar,
+    handleMuteWithSnackbarWithAction,
     handleRemoveFollowerWithConfirmation,
     handleUnmuteWithSnackbar,
     handleUnblockWithConfirmation,
@@ -124,10 +133,10 @@ const {
 
 async function handleMuteAndUnmute() {
     if (isMuted.value) {
-        await handleUnmuteWithSnackbar(showList)
+        await handleUnmuteWithSnackbar(false, showList)
         emit('user-action', 'unmute')
     } else {
-        await handleMuteWithSnackbar(showList)
+        await handleMuteWithSnackbarWithAction()
         emit('user-action', 'mute')
     }
 }

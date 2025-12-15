@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center bg-black min-h-[650px]">
+    <div class="flex justify-center items-center bg-primary" style="height: calc(60vh - 64px);">
         <div class="flex flex-col items-start justify-start text-left px-10 py-[60px]">
             <h1 class="m-0 mb-2 text-4xl font-extrabold text-primary">
                 {{ $t('profile.blocked.title', { username }) }}
@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+
 defineProps<{
     username: string
 }>()
