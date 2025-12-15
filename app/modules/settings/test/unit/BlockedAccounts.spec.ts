@@ -37,8 +37,10 @@ const UserAccountItemStub = {
 const SettingsBlockedButtonStub = { template: '<button />' }
 
 const fetchNextPageMock = vi.fn()
+const dataRef = ref<any>(null)
+
 const myBlockedUsersQuery = {
-    data: ref(null),
+    data: dataRef,
     isLoading: ref(false),
     isSuccess: ref(false),
     hasNextPage: ref(false),
@@ -74,7 +76,7 @@ describe('BlockedAccounts.vue', () => {
         invalidateQueriesMock.mockClear()
         observeMock.mockClear()
         disconnectMock.mockClear()
-        myBlockedUsersQuery.data.value = null
+        dataRef.value = null
         myBlockedUsersQuery.isLoading.value = false
         myBlockedUsersQuery.isSuccess.value = false
         myBlockedUsersQuery.hasNextPage.value = false
@@ -82,9 +84,7 @@ describe('BlockedAccounts.vue', () => {
     })
 
     afterEach(() => {
-        if (wrapper) {
-            wrapper.unmount()
-        }
+        if (wrapper) wrapper.unmount()
     })
 
     it('renders loading spinner when query is loading', async () => {
@@ -96,7 +96,7 @@ describe('BlockedAccounts.vue', () => {
     it('renders blocked users when query has data', async () => {
         wrapper = factory({
             isSuccess: ref(true),
-            data: ref({ pages: [{ data: { data: [{ user_id: 1 }, { user_id: 2 }] } }] }),
+            data: ref({ pages: [{ data: { data: [{ user_id: 1, is_blocked: true }, { user_id: 2, is_blocked: true }] } }] }),
         })
         await nextTick()
         const users = wrapper.findAll('.user-item')
@@ -124,7 +124,7 @@ describe('BlockedAccounts.vue', () => {
         expect(fetchNextPageMock).toHaveBeenCalled()
     })
 
-    it('does not call fetchNextPage if already fetching next page', async () => {
+    it('does not call fetchNextPage if already fetching or not intersecting', async () => {
         wrapper = factory({
             isSuccess: ref(true),
             data: ref({ pages: [{ data: { data: [] } }] }),
@@ -133,6 +133,11 @@ describe('BlockedAccounts.vue', () => {
         })
         await nextTick()
         observerCallback([{ isIntersecting: true }])
+        expect(fetchNextPageMock).not.toHaveBeenCalled()
+        
+        fetchNextPageMock.mockClear()
+        myBlockedUsersQuery.isFetchingNextPage.value = false
+        observerCallback([{ isIntersecting: false }])
         expect(fetchNextPageMock).not.toHaveBeenCalled()
     })
 
@@ -150,4 +155,10 @@ describe('BlockedAccounts.vue', () => {
         expect(wrapper.vm.users).toHaveLength(3)
     })
 
+    it('disconnects observer on unmount', async () => {
+        wrapper = factory()
+        await nextTick()
+        wrapper.unmount()
+        expect(disconnectMock).toHaveBeenCalled()
+    })
 })
