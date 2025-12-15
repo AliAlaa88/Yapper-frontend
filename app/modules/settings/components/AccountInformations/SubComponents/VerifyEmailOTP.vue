@@ -115,5 +115,10 @@ const handleClose = () => {
     emit('close')
 }
 
+watch(otp, () => {
+    if (errorMessage.value) {
+        errorMessage.value = ''
+    }
+})
 
 </script>

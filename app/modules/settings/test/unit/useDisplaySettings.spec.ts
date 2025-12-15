@@ -92,5 +92,78 @@ describe('useDisplaySettings composable', () => {
 
         expect(media.addEventListener).toHaveBeenCalled()
     })
+
+    it('applies light mode when background is light', async () => {
+        const wrapper = mountComposable()
+        wrapper.vm.background = 'light'
+        await nextTick()
+
+        expect(document.documentElement.classList.contains('dark')).toBe(false)
+    })
+
+    it('disables system theme if background mismatches system preference', async () => {
+        window.matchMedia = vi.fn().mockImplementation(
+            () => mockMatchMedia(true), // system prefers dark
+        )
+
+        const wrapper = mountComposable()
+
+        wrapper.vm.useSystemTheme = true
+        await nextTick()
+
+        wrapper.vm.background = 'light'
+        await nextTick()
+
+        expect(wrapper.vm.useSystemTheme).toBe(false)
+        expect(localStorage.getItem('yapper-use-system-theme')).toBe('false')
+    })
+
+    it('applySystemTheme switches to light when system prefers light', async () => {
+        window.matchMedia = vi.fn().mockImplementation(() => mockMatchMedia(false))
+
+        const wrapper = mountComposable()
+        wrapper.vm.useSystemTheme = true
+        await nextTick()
+
+        expect(wrapper.vm.background).toBe('light')
+        expect(document.documentElement.classList.contains('dark')).toBe(false)
+    })
+
+    it('turning off system theme does not reapply system theme', async () => {
+        const wrapper = mountComposable()
+
+        wrapper.vm.useSystemTheme = true
+        await nextTick()
+
+        wrapper.vm.useSystemTheme = false
+        await nextTick()
+
+        expect(localStorage.getItem('yapper-use-system-theme')).toBe('false')
+    })
+
+    it('font size falls back to default when invalid value', async () => {
+        const wrapper = mountComposable()
+
+        wrapper.vm.fontSize = 99
+        await nextTick()
+
+        expect(document.documentElement.style.fontSize).toBe('16px')
+    })
+
+
+    it('reacts to system theme change event', async () => {
+        const media = mockMatchMedia(true)
+        window.matchMedia = vi.fn().mockReturnValue(media)
+
+        const wrapper = mountComposable()
+        wrapper.vm.useSystemTheme = true
+        await nextTick()
+
+        media.matches = false
+        media.addEventListener.mock.calls[0][1]()
+
+        expect(document.documentElement.classList.contains('dark')).toBe(false)
+    })
+
 })
 

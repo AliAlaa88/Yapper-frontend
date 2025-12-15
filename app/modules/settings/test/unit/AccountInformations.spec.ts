@@ -1,6 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AccountInformation from '../../components/AccountInformations.vue'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { ref } from 'vue'
+
+import AccountInformation from '~/modules/settings/components/YourAccount/AccountInformations.vue'
 
 const mockUser = {
     id: '123',
@@ -10,10 +12,6 @@ const mockUser = {
     birth_date: '1990-05-15',
     created_at: '2020-01-15T10:30:00Z',
 }
-
-vi.mock('~/utils/helpers', () => ({
-    getUser: () => mockUser,
-}))
 
 vi.mock('../../utils/calculations', () => ({
     formatFullDateTime: (_date: string) => 'January 15, 2020 at 10:30 AM',
@@ -27,6 +25,14 @@ vi.mock('vue-i18n', () => ({
     }),
 }))
 
+vi.mock('~/modules/auth/stores/userStore', () => {
+    return {
+        useUserStore: () => ({
+            user: ref(mockUser),
+        }),
+    }
+})
+
 interface AccountInformationInstance {
     categories: {
         label: string
@@ -34,7 +40,6 @@ interface AccountInformationInstance {
         href: string
     }[]
 }
-
 
 describe('AccountInformation Component', () => {
     let wrapper: ReturnType<typeof mount>
@@ -51,10 +56,10 @@ describe('AccountInformation Component', () => {
                     DetailedRow: {
                         props: ['category'],
                         template: `
-                            <div class="row" :data-label="category.label" :data-content="category.content" :data-href="category.href">
-                                <slot />
-                            </div>
-                        `,
+              <div class="row" :data-label="category.label" :data-content="category.content" :data-href="category.href">
+                <slot />
+              </div>
+            `,
                     },
                     ChevronRight: true,
                 },
@@ -70,10 +75,23 @@ describe('AccountInformation Component', () => {
 
         const rows = wrapper.findAll('.row')
         expect(rows.length).toBe(6)
+
         const expectedRows = [
-            { label: 'settings.accountInfo.username', content: 'hagar', href: '' },
-            { label: 'settings.accountInfo.email', content: 'hagar@gmail.com', href: '' },
-            { label: 'settings.accountInfo.country', content: 'Egypt', href: '' },
+            {
+                label: 'settings.accountInfo.username',
+                content: 'hagar',
+                href: '/settings/screen_name',
+            },
+            {
+                label: 'settings.accountInfo.email',
+                content: 'hagar@gmail.com',
+                href: '/settings/email',
+            },
+            {
+                label: 'settings.accountInfo.country',
+                content: 'countries.Egypt',
+                href: '/settings/country',
+            },
             {
                 label: 'settings.accountInfo.languages',
                 content: 'English, Arabic',
@@ -97,12 +115,14 @@ describe('AccountInformation Component', () => {
             expect(rows[index]?.attributes('data-href')).toBe(expected.href)
         })
 
+        // Check account creation section separately
         const accountSection = wrapper.find('.block.relative.px-5')
         expect(accountSection.exists()).toBe(true)
         expect(accountSection.text()).toContain('settings.accountInfo.accountCreation')
         expect(accountSection.text()).toContain('January 15, 2020 at 10:30 AM')
-        expect(accountSection.text()).toContain('Egypt')
-        expect(rows[4]?.text()).toContain('settings.accountInfo.birthDate_desc')
+
+        const countryRow = rows[2]
+        expect(countryRow?.attributes('data-content')).toBe('countries.Egypt')
     })
 
     it('computes categories with correct formatting and hrefs', () => {
@@ -110,9 +130,14 @@ describe('AccountInformation Component', () => {
         const categories = component.categories
 
         expect(categories).toHaveLength(7)
+        expect(categories[0]?.content).toBe('hagar')
+        expect(categories[1]?.content).toBe('hagar@gmail.com')
+        expect(categories[2]?.content).toBe('countries.Egypt')
+        expect(categories[3]?.content).toBe('English, Arabic')
         expect(categories[4]?.content).toBe('May 15, 1990')
         expect(categories[5]?.content).toBe('34')
         expect(categories[6]?.content).toBe('January 15, 2020 at 10:30 AM')
+
         expect(categories[3]?.href).toBe('/settings/languages')
         expect(categories[4]?.href).toBe('/hagar/settings/profile')
         expect(categories[5]?.href).toBe('/settings/your_yapper_data/age')
@@ -125,9 +150,11 @@ describe('AccountInformation Component', () => {
         expect(accountSection.classes()).toContain('border-b')
         expect(accountSection.classes()).toContain('border-primary')
 
-        const countryParagraphs = accountSection.findAll('p.text-muted')
-        expect(countryParagraphs.length).toBe(2)
-        expect(countryParagraphs[1]?.text()).toBe('Egypt')
+        const paragraphs = accountSection.findAll('p.text-muted')
+        expect(paragraphs.length).toBe(1)
+        expect(paragraphs[0]?.text()).toBe('January 15, 2020 at 10:30 AM')
+
         expect(accountSection.findComponent({ name: 'ChevronRight' }).exists()).toBe(true)
     })
+
 })
