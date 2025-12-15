@@ -1,8 +1,4 @@
-import type {
-    QuoteTweet,
-    BaseTweet,
-    User,
-} from '../types/notificationsSocketEvents'
+import type { QuoteTweet, BaseTweet, User } from '../types/notificationsSocketEvents'
 
 import type {
     ApiNotification,
@@ -36,16 +32,10 @@ export const mapNotificationUserToTweetUser = (u: User): Tweet['user'] => ({
 export const mapReplyNotificationToTweet = (n: ReplyNotification): Tweet => {
     const userStore = useUserStore()
 
-    const reply = mapBaseTweetToTweet(
-        n.reply_tweet,
-        mapNotificationUserToTweetUser(n.replier),
-    )
+    const reply = mapBaseTweetToTweet(n.reply_tweet, mapNotificationUserToTweetUser(n.replier))
 
     if (n.original_tweet && userStore.user) {
-        reply.parent_tweet = mapBaseTweetToTweet(
-            n.original_tweet,
-            userStore.user,
-        )
+        reply.parent_tweet = mapBaseTweetToTweet(n.original_tweet, userStore.user)
     }
 
     return reply
@@ -71,21 +61,16 @@ export const mapBaseTweetToTweet = (base: BaseTweet, user: Tweet['user']): Tweet
     user,
     parent_tweet: null,
     conversation_tweet: null,
+    mentions: base.mentions ?? [],
 })
 
 export const mapQuoteNotificationToTweet = (n: QuoteNotification): Tweet => {
     const userStore = useUserStore()
 
-    const quote = mapBaseTweetToTweet(
-        n.quote_tweet,
-        mapNotificationUserToTweetUser(n.quoter),
-    )
+    const quote = mapBaseTweetToTweet(n.quote_tweet, mapNotificationUserToTweetUser(n.quoter))
 
     if (n.quote_tweet.parent_tweet && userStore.user) {
-        quote.parent_tweet = mapBaseTweetToTweet(
-            n.quote_tweet.parent_tweet,
-            userStore.user,
-        )
+        quote.parent_tweet = mapBaseTweetToTweet(n.quote_tweet.parent_tweet, userStore.user)
     }
 
     return quote
@@ -94,18 +79,12 @@ export const mapQuoteNotificationToTweet = (n: QuoteNotification): Tweet => {
 export const mapMentionNotificationToTweet = (n: MentionNotification): Tweet => {
     const userStore = useUserStore()
 
-    const tweet = mapBaseTweetToTweet(
-        n.tweet,
-        mapNotificationUserToTweetUser(n.mentioner),
-    )
+    const tweet = mapBaseTweetToTweet(n.tweet, mapNotificationUserToTweetUser(n.mentioner))
 
     if (n.tweet.type === 'quote' && 'parent_tweet' in n.tweet && userStore.user) {
         const qt = n.tweet as QuoteTweet
         if (qt.parent_tweet) {
-            tweet.parent_tweet = mapBaseTweetToTweet(
-                qt.parent_tweet,
-                userStore.user,
-            )
+            tweet.parent_tweet = mapBaseTweetToTweet(qt.parent_tweet, userStore.user)
         }
     }
 
