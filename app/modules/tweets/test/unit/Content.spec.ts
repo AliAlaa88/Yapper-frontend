@@ -1,14 +1,19 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 
+import Content from '../../components/Tweet/subComponents/Content/Content.vue'
+import type { Content as ContentType } from '../../types'
+
 // Mock Nuxt composables
 vi.mock('#app', () => ({
     navigateTo: vi.fn(),
     useRouter: () => ({ push: vi.fn() }),
 }))
 
-import Content from '../../components/Tweet/subComponents/Content/Content.vue'
-import type { Content as ContentType } from '../../types'
+const mockPush = vi.fn()
+vi.mock('vue-router', () => ({
+    useRouter: () => ({ push: mockPush }),
+}))
 
 describe('Content Component', () => {
     describe('Text Rendering', () => {
@@ -120,7 +125,8 @@ describe('Content Component', () => {
             // For media-related assertions, assert that TweetMedia receives the correct props
             const TweetMediaStub = {
                 props: ['images', 'videos'],
-                template: '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
+                template:
+                    '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
             }
 
             const wrapper = mount(Content, {
@@ -142,7 +148,8 @@ describe('Content Component', () => {
 
             const TweetMediaStub = {
                 props: ['images', 'videos'],
-                template: '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
+                template:
+                    '<div class="tweet-media-stub">{{ images?.length }}|{{ videos?.length }}</div>',
             }
 
             const wrapper = mount(Content, {
@@ -199,7 +206,7 @@ describe('Content Component', () => {
             expect(stub.text()).toBe('2')
         })
     })
-    
+
     describe('Image Container CSS', () => {
         it('applies correct border and styling classes', () => {
             const content: ContentType = {
@@ -363,6 +370,173 @@ describe('Content Component', () => {
             expect(root.classes()).toContain('text-primary')
             expect(root.classes()).toContain('text-sm')
             expect(root.classes()).toContain('leading-5')
+        })
+    })
+
+    describe('Edge Cases', () => {
+        it('handles empty text with only images', () => {
+            const content: ContentType = {
+                text: '',
+                images: ['/img1.jpg'],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: { stubs: { TweetMedia: true, QuotedTweet: true } },
+            })
+
+            expect(wrapper.exists()).toBe(true)
+        })
+
+        it('handles content with all empty arrays', () => {
+            const content: ContentType = {
+                text: 'Only text content',
+                images: [],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: { stubs: { TweetMedia: true, QuotedTweet: true } },
+            })
+
+            expect(wrapper.text()).toContain('Only text content')
+        })
+
+        it('handles very long text content', () => {
+            const longText = 'A'.repeat(1000)
+            const content: ContentType = {
+                text: longText,
+                images: [],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: { stubs: { TweetMedia: true, QuotedTweet: true } },
+            })
+
+            expect(wrapper.text()).toContain('A'.repeat(100))
+        })
+
+        it('handles text with special characters', () => {
+            const content: ContentType = {
+                text: '<script>alert("xss")</script>',
+                images: [],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: { stubs: { TweetMedia: true, QuotedTweet: true } },
+            })
+
+            // Should be escaped/rendered as text, not executed
+            expect(wrapper.exists()).toBe(true)
+        })
+
+        it('handles text with emojis', () => {
+            const content: ContentType = {
+                text: 'Hello 👋 World 🌍!',
+                images: [],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: { stubs: { TweetMedia: true, QuotedTweet: true } },
+            })
+
+            expect(wrapper.text()).toContain('👋')
+            expect(wrapper.text()).toContain('🌍')
+        })
+    })
+
+    describe('Interaction Handling', () => {
+        it('navigates to search when hashtag is clicked', async () => {
+            const content: ContentType = {
+                text: 'Hello #world',
+                images: [],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: {
+                    stubs: {
+                        TweetMedia: true,
+                        QuotedTweet: true,
+                    },
+                },
+            })
+
+            // Simulate hashtag click by manually dispatching event on a mock element
+            // mimicking the structure created by parseLinks
+            const mockHashtag = document.createElement('a')
+            mockHashtag.setAttribute('data-hashtag', 'world')
+            mockHashtag.textContent = '#world'
+
+            // Append to wrapper element to properly bubble up
+            wrapper.element.appendChild(mockHashtag)
+
+            // Dispatch click event from the hashtag element
+            mockHashtag.dispatchEvent(
+                new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window,
+                }),
+            )
+
+            expect(mockPush).toHaveBeenCalledWith({ path: '/search', query: { q: '#world' } })
+        })
+    })
+
+    describe('Quoted Tweet', () => {
+        it('renders QuotedTweet stub when quotedTweet is provided', () => {
+            const content: ContentType = {
+                text: 'Check this out!',
+                images: [],
+                videos: [],
+                quotedTweet: {
+                    tweet_id: 'quoted1',
+                    content: { text: 'Original tweet', images: [], videos: [] },
+                    user: { id: 'u1', name: 'Alice', username: 'alice' },
+                } as any,
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: {
+                    stubs: {
+                        TweetMedia: true,
+                        QuotedTweet: { template: '<div class="quoted-tweet-stub"></div>' },
+                    },
+                },
+            })
+
+            expect(wrapper.find('.quoted-tweet-stub').exists()).toBe(true)
+        })
+
+        it('does not render QuotedTweet when quoted_tweet is undefined', () => {
+            const content: ContentType = {
+                text: 'No quoted tweet here',
+                images: [],
+                videos: [],
+            }
+
+            const wrapper = mount(Content, {
+                props: { content },
+                global: {
+                    stubs: {
+                        TweetMedia: true,
+                        QuotedTweet: { template: '<div class="quoted-tweet-stub"></div>' },
+                    },
+                },
+            })
+
+            expect(wrapper.find('.quoted-tweet-stub').exists()).toBe(false)
         })
     })
 })

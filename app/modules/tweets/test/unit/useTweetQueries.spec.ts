@@ -11,6 +11,14 @@ let useTweetDetailsQuery: unknown
 vi.mock('@tanstack/vue-query', () => ({
     useInfiniteQuery: mockUseInfiniteQuery,
     useQuery: mockUseQuery,
+    // Provide a basic mock for useMutation so imports don't fail,
+    // but we will override or inspect calls in tests
+    useMutation: vi.fn((opts) => opts),
+    useQueryClient: vi.fn(() => ({
+        invalidateQueries: vi.fn(),
+        setQueriesData: vi.fn(),
+        setQueryData: vi.fn(),
+    })),
 }))
 vi.mock('#app', () => ({
     useNuxtApp: mockUseNuxtApp,
@@ -139,7 +147,8 @@ describe('useTweetQueries', () => {
 
             const options = mockUseInfiniteQuery.mock.calls[0]?.[0]
             // When path is /search, it gets duplicated due to splice logic in source
-            const expectedKey = testPath === '/search' ? ['tweets', '/search', '/search'] : ['tweets', testPath]
+            const expectedKey =
+                testPath === '/search' ? ['tweets', '/search', '/search'] : ['tweets', testPath]
             expect(options.queryKey.value).toEqual(expectedKey)
 
             await options.queryFn({ pageParam: '' })
@@ -200,5 +209,154 @@ describe('useTweetDetailsQuery', () => {
             await options.queryFn()
             expect(localMockTweetService.fetchTweetDetails).toHaveBeenCalledWith(testId)
         }
+    })
+})
+
+describe('useTweetSummaryQuery', () => {
+    it('calls fetchTweetSummary with correct tweetId', async () => {
+        vi.clearAllMocks()
+        const localMockTweetService = {
+            fetchTweetSummary: vi.fn().mockResolvedValue({ summary: 'test' }),
+        }
+        mockUseNuxtApp.mockReturnValue({ $tweetService: localMockTweetService })
+        const { useTweetSummaryQuery } = await import('../../queries/useTweetQueries')
+
+        useTweetSummaryQuery('tweet123')
+
+        const options = mockUseQuery.mock.calls[0]?.[0]
+        await options.queryFn()
+
+        expect(localMockTweetService.fetchTweetSummary).toHaveBeenCalledWith('tweet123')
+    })
+})
+
+describe('Mutation Queries', () => {
+    let mutateTweetLikesQuery: any
+    let mutateTweetRepostsQuery: any
+    let mutateTweetBookmarkQuery: any
+    let useDeleteTweetMutation: any
+    let useUpdateTweetMutation: any
+    let localMockTweetService: any
+    let localMockQueryClient: any
+
+    beforeEach(async () => {
+        const module = await import('../../queries/useTweetQueries')
+        mutateTweetLikesQuery = module.mutateTweetLikesQuery
+        mutateTweetRepostsQuery = module.mutateTweetRepostsQuery
+        mutateTweetBookmarkQuery = module.mutateTweetBookmarkQuery
+        useDeleteTweetMutation = module.useDeleteTweetMutation
+        useUpdateTweetMutation = module.useUpdateTweetMutation
+
+        localMockTweetService = {
+            likeTweet: vi.fn(),
+            unlikeTweet: vi.fn(),
+            repostTweet: vi.fn(),
+            unrepostTweet: vi.fn(),
+            bookmarkTweet: vi.fn(),
+            unbookmarkTweet: vi.fn(),
+            deleteTweet: vi.fn(),
+            updateTweet: vi.fn(),
+        }
+
+        localMockQueryClient = {
+            setQueryData: vi.fn(),
+            setQueriesData: vi.fn(),
+            invalidateQueries: vi.fn(),
+        }
+
+        mockUseNuxtApp.mockReturnValue({
+            $tweetService: localMockTweetService,
+            $queryClient: localMockQueryClient,
+            $userStore: { getUser: () => ({ user_id: 'me' }) },
+        })
+    })
+
+    it('mutateTweetLikesQuery calls like/unlike', async () => {
+        vi.clearAllMocks()
+        mutateTweetLikesQuery('t1', true)
+        const options = (vi.mocked(await import('@tanstack/vue-query')).useMutation as any).mock
+            .calls[0][0]
+
+        await options.mutationFn(true)
+        expect(localMockTweetService.likeTweet).toHaveBeenCalledWith('t1')
+
+        await options.mutationFn(false)
+        expect(localMockTweetService.unlikeTweet).toHaveBeenCalledWith('t1')
+    })
+
+    it('mutateTweetRepostsQuery calls repost/unrepost', async () => {
+        vi.clearAllMocks()
+        mutateTweetRepostsQuery('t1', true, '/path')
+        const options = (vi.mocked(await import('@tanstack/vue-query')).useMutation as any).mock
+            .calls[0][0]
+
+        await options.mutationFn(true)
+        expect(localMockTweetService.repostTweet).toHaveBeenCalledWith('t1')
+
+        await options.mutationFn(false)
+        expect(localMockTweetService.unrepostTweet).toHaveBeenCalledWith('t1')
+    })
+
+    it('mutateTweetBookmarkQuery calls bookmark/unbookmark', async () => {
+        vi.clearAllMocks()
+        mutateTweetBookmarkQuery('t1', true)
+        const options = (vi.mocked(await import('@tanstack/vue-query')).useMutation as any).mock
+            .calls[0][0]
+
+        await options.mutationFn(true)
+        expect(localMockTweetService.bookmarkTweet).toHaveBeenCalledWith('t1')
+
+        await options.mutationFn(false)
+        expect(localMockTweetService.unbookmarkTweet).toHaveBeenCalledWith('t1')
+    })
+
+    it('useDeleteTweetMutation calls deleteTweet', async () => {
+        vi.clearAllMocks()
+        useDeleteTweetMutation('t1', 'parent1')
+        const options = (vi.mocked(await import('@tanstack/vue-query')).useMutation as any).mock
+            .calls[0][0]
+
+        await options.mutationFn()
+        expect(localMockTweetService.deleteTweet).toHaveBeenCalledWith('t1')
+    })
+
+    it('useUpdateTweetMutation calls updateTweet', async () => {
+        vi.clearAllMocks()
+        useUpdateTweetMutation('t1')
+        const options = (vi.mocked(await import('@tanstack/vue-query')).useMutation as any).mock
+            .calls[0][0]
+
+        await options.mutationFn('new content')
+        expect(localMockTweetService.updateTweet).toHaveBeenCalledWith('t1', 'new content')
+    })
+})
+
+describe('Other Queries', () => {
+    it('useTweetQuotesQuery calls fetchtweetquotes', async () => {
+        vi.clearAllMocks()
+        const localMockTweetService = {
+            fetchtweetquotes: vi.fn().mockResolvedValue([]),
+        }
+        mockUseNuxtApp.mockReturnValue({ $tweetService: localMockTweetService })
+        const { useTweetQuotesQuery } = await import('../../queries/useTweetQueries')
+
+        useTweetQuotesQuery('t1')
+        const options = mockUseQuery.mock.calls[0]?.[0]
+        await options.queryFn()
+        expect(localMockTweetService.fetchtweetquotes).toHaveBeenCalledWith('t1')
+    })
+
+    it('useTweetRepostsQuery calls fetchTweetReposts', async () => {
+        vi.clearAllMocks()
+        const localMockTweetService = {
+            fetchTweetReposts: vi.fn().mockResolvedValue([]),
+        }
+        mockUseNuxtApp.mockReturnValue({ $tweetService: localMockTweetService })
+        const { useTweetRepostsQuery } = await import('../../queries/useTweetQueries')
+
+        useTweetRepostsQuery('t1')
+        const options = mockUseQuery.mock.calls[0]?.[0]
+        await options.queryFn()
+        expect(localMockTweetService.fetchTweetReposts).toHaveBeenCalledWith('t1')
     })
 })
