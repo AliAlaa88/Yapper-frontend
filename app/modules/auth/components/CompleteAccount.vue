@@ -197,6 +197,7 @@ const onWhoToFollowFinish = (followedUsers: string[]) => {
     enableUserQuery.value = true
 }
 
+
 const onWhoToFollowBack = () => {
     showWhoToFollow.value = false
     showInterests.value = true

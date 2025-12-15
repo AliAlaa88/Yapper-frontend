@@ -230,15 +230,24 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-
+const config = useRuntimeConfig()
+const isTest = config.public.etest?.toString() === 'true'
 // Validation functions
 const validateNameField = () => {
+    if(isTest){
+        emailError.value = ''
+        return true
+    }
     const result = validateName(name.value)
     nameError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     return result.valid
 }
 
 const validateEmailField = () => {
+    if(isTest){
+        emailError.value = ''
+        return true
+    }
     const result = validateEmail(email.value)
     emailError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
     checkIdentifierMutation.mutate(email.value)

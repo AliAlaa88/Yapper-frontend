@@ -78,13 +78,8 @@
         <div class="sticky bottom-0 bg-primary pt-4 pb-8 -mx-8 px-8 sm:-mx-10 sm:px-10 z-10">
             <Button
                 id="button-next-follow"
-                :disabled="followedUsers.length < 1"
                 buttonClass="w-full font-semibold rounded-full py-3 transition"
-                :class="[
-                    followedUsers.length >= 1
-                        ? 'bg-alternate hover:bg-hover-alternate text-alternate'
-                        : 'bg-gray text-primary opacity-50 cursor-not-allowed',
-                ]"
+                class='bg-alternate hover:bg-hover-alternate text-alternate'                
                 :loading-text="$t('auth.common.loading')"
                 :is-loading="loading"
                 @click="onNext"
@@ -134,15 +129,14 @@ const toggleFollow = (userId: string) => {
 }
 
 const onNext = () => {
+    loading.value = true
     if (followedUsers.value.length >= 1) {
-        loading.value = true
         // Emit finish with followed users
         emit('finish', followedUsers.value)
+    } else {
+        // Emit skip if no followings
+        emit('skip')
     }
-}
-
-const onSkip = () => {
-    emit('skip')
 }
 </script>
 
