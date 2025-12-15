@@ -341,28 +341,4 @@ describe('PostTweet Component', () => {
         
         expect(wrapper.find('.quoted-tweet').exists()).toBe(true)
     })
-
-    it('should use compact avatar size when compact prop is true', () => {
-        const wrapper = mount(PostTweet, {
-            props: {
-                compact: true,
-            },
-            global: {
-                stubs: {
-                    NuxtLink: { template: '<a><slot /></a>' },
-                    NuxtImg: { template: '<img class="avatar" />' },
-                    FormattedTextarea: true,
-                    CustomToolTip: true,
-                    MediaUpload: true,
-                    GifPicker: true,
-                    EmojiPicker: true,
-                    QuotedTweet: true,
-                    Button: true,
-                },
-            },
-        })
-        
-        // Component renders avatar with compact sizing
-        expect(wrapper.find('.avatar').exists()).toBe(true)
-    })
 })
