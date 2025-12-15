@@ -4,19 +4,11 @@
         :class="{ 'bg-hover border-r-3 border-accent': isSelected }"
     >
         <div class="shrink-0">
-            <img
-                v-if="conversation.participant.avatar_url"
-                :src="conversation.participant.avatar_url"
-                :alt="conversation.participant.username"
-                class="w-12 h-12 rounded-full object-cover"
-                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}&background=random'`"
-            />
-            <img
-                v-else
-                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}&background=random`"
-                :alt="conversation.participant.username"
-                class="w-12 h-12 rounded-full object-cover"
-                :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.participant.name)}'&background=random'`"
+            <UserImage
+                :image-url="conversation.participant.avatar_url ?? ''"
+                :name="conversation.participant.name"
+                :size="12"
+                :compact="false"
             />
         </div>
         <div class="flex-1 min-w-0">
@@ -56,6 +48,7 @@ import type { Conversation, Message } from '~/modules/chat/types'
 import { shorterName, formatConversationDate } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useI18n } from 'vue-i18n'
+import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
 
 const props = defineProps<{
     conversation: Conversation
