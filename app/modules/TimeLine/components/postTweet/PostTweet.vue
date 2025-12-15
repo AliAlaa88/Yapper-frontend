@@ -341,7 +341,6 @@ const handleSubmit = async () => {
         // Add quote fields if this is a quote tweet
         if (props.quotedTweet) {
             tweetData.parent_tweet_id = props.quotedTweet.tweet_id
-            // tweetData.parent_tweet = props.quotedTweet
             tweetData.type = 'quote'
         }
         // Add reply fields if this is a reply

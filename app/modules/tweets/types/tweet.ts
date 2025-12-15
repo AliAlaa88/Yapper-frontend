@@ -31,6 +31,7 @@ interface Tweet {
     conversation_tweet?: Tweet | null
     replies?: Tweet[]
     mentions?: string[]
+    quoted_tweet?: Tweet | null
 }
 type TweetsPage = {
     data: Tweet[]
