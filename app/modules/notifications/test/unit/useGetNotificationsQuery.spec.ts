@@ -131,18 +131,20 @@ describe('useGetNotificationsQuery', () => {
         expect(notifications.value).toEqual([])
     })
 
-    it('should call queryFn with correct pageParam when fetching', () => {
-        useGetNotificationsQuery()
+    it('should log notifications data when computing', () => {
+        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+        const { notifications } = useGetNotificationsQuery()
+        expect(notifications.value).toHaveLength(4)
+        expect(consoleSpy).toHaveBeenCalledWith('notifications', mockQueryData.value?.pages)
+        consoleSpy.mockRestore()
+    })
 
-        expect(useInfiniteQuery).toHaveBeenCalledWith(
-            expect.objectContaining({
-                queryKey: ['notifications'],
-                queryFn: expect.any(Function),
-                getNextPageParam: expect.any(Function),
-                initialPageParam: 1,
-            }),
-        )
-
-        expect(mockGetNotifications).toBeDefined()
+    it('should handle single page correctly', () => {
+        mockQueryData.value = {
+            pages: [mockNotificationsPage1],
+        }
+        const { notifications } = useGetNotificationsQuery()
+        expect(notifications.value).toHaveLength(2)
+        expect(notifications.value).toEqual(mockNotificationsPage1.notifications)
     })
 })

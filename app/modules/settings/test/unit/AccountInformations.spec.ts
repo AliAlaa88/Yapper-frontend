@@ -13,10 +13,12 @@ const mockUser = {
     created_at: '2020-01-15T10:30:00Z',
 }
 
+const userRef = ref(mockUser)
+
 vi.mock('../../utils/calculations', () => ({
-    formatFullDateTime: (_date: string) => 'January 15, 2020 at 10:30 AM',
-    formatDate: (_date: string) => 'May 15, 1990',
-    calculateAge: (_date: string) => 34,
+    formatFullDateTime: (date: string) => date ? 'January 15, 2020 at 10:30 AM' : '',
+    formatDate: (date: string) => date ? 'May 15, 1990' : '',
+    calculateAge: (date: string) => date ? 34 : 0,
 }))
 
 vi.mock('vue-i18n', () => ({
@@ -28,7 +30,7 @@ vi.mock('vue-i18n', () => ({
 vi.mock('~/modules/auth/stores/userStore', () => {
     return {
         useUserStore: () => ({
-            user: ref(mockUser),
+            user: userRef,
         }),
     }
 })
@@ -44,30 +46,28 @@ interface AccountInformationInstance {
 describe('AccountInformation Component', () => {
     let wrapper: ReturnType<typeof mount>
 
-    beforeEach(() => {
-        wrapper = mount(AccountInformation, {
-            global: {
-                stubs: {
-                    DetailedPanel: {
-                        props: ['title'],
-                        template:
-                            '<div data-testid="panel"><div data-testid="title">{{ title }}</div><slot /></div>',
-                    },
-                    DetailedRow: {
-                        props: ['category'],
-                        template: `
-              <div class="row" :data-label="category.label" :data-content="category.content" :data-href="category.href">
-                <slot />
-              </div>
-            `,
-                    },
-                    ChevronRight: true,
+    const createWrapper = () => mount(AccountInformation, {
+        global: {
+            stubs: {
+                DetailedPanel: {
+                    props: ['title'],
+                    template: '<div data-testid="panel"><div data-testid="title">{{ title }}</div><slot /></div>',
                 },
-                mocks: {
-                    $t: (key: string) => key,
+                DetailedRow: {
+                    props: ['category'],
+                    template: `<div class="row" :data-label="category.label" :data-content="category.content" :data-href="category.href"><slot /></div>`,
                 },
+                ChevronRight: true,
             },
-        })
+            mocks: {
+                $t: (key: string) => key,
+            },
+        },
+    })
+
+    beforeEach(() => {
+        userRef.value = mockUser
+        wrapper = createWrapper()
     })
 
     it('renders all user information with correct data and navigation', () => {
@@ -77,36 +77,12 @@ describe('AccountInformation Component', () => {
         expect(rows.length).toBe(6)
 
         const expectedRows = [
-            {
-                label: 'settings.accountInfo.username',
-                content: 'hagar',
-                href: '/settings/screen_name',
-            },
-            {
-                label: 'settings.accountInfo.email',
-                content: 'hagar@gmail.com',
-                href: '/settings/email',
-            },
-            {
-                label: 'settings.accountInfo.country',
-                content: 'countries.Egypt',
-                href: '/settings/country',
-            },
-            {
-                label: 'settings.accountInfo.languages',
-                content: 'English, Arabic',
-                href: '/settings/languages',
-            },
-            {
-                label: 'settings.accountInfo.birthDate',
-                content: 'May 15, 1990',
-                href: '/hagar/settings/profile',
-            },
-            {
-                label: 'settings.accountInfo.age',
-                content: '34',
-                href: '/settings/your_yapper_data/age',
-            },
+            { label: 'settings.accountInfo.username', content: 'hagar', href: '/settings/screen_name' },
+            { label: 'settings.accountInfo.email', content: 'hagar@gmail.com', href: '/settings/email' },
+            { label: 'settings.accountInfo.country', content: 'countries.Egypt', href: '/settings/country' },
+            { label: 'settings.accountInfo.languages', content: 'English, Arabic', href: '/settings/languages' },
+            { label: 'settings.accountInfo.birthDate', content: 'May 15, 1990', href: '/hagar/settings/profile' },
+            { label: 'settings.accountInfo.age', content: '34', href: '/settings/your_yapper_data/age' },
         ]
 
         expectedRows.forEach((expected, index) => {
@@ -115,14 +91,10 @@ describe('AccountInformation Component', () => {
             expect(rows[index]?.attributes('data-href')).toBe(expected.href)
         })
 
-        // Check account creation section separately
         const accountSection = wrapper.find('.block.relative.px-5')
         expect(accountSection.exists()).toBe(true)
         expect(accountSection.text()).toContain('settings.accountInfo.accountCreation')
         expect(accountSection.text()).toContain('January 15, 2020 at 10:30 AM')
-
-        const countryRow = rows[2]
-        expect(countryRow?.attributes('data-content')).toBe('countries.Egypt')
     })
 
     it('computes categories with correct formatting and hrefs', () => {
@@ -157,4 +129,39 @@ describe('AccountInformation Component', () => {
         expect(accountSection.findComponent({ name: 'ChevronRight' }).exists()).toBe(true)
     })
 
+    it('uses fallback values when user data is null or undefined', async () => {
+        userRef.value = null as any
+        wrapper = createWrapper()
+
+        const component = wrapper.vm as unknown as AccountInformationInstance
+        const categories = component.categories
+
+        expect(categories[0]?.content).toBeUndefined()
+        expect(categories[1]?.content).toBeUndefined()
+        expect(categories[4]?.content).toBe('')
+        expect(categories[5]?.content).toBe('0')
+        expect(categories[6]?.content).toBe('')
+
+        const rows = wrapper.findAll('.row')
+        rows.forEach((row) => {
+            expect(row.attributes('data-label')).toBeDefined()
+        })
+
+        const accountSection = wrapper.find('.block.relative.px-5')
+        expect(accountSection.exists()).toBe(true)
+    })
+
+    it('handles partial user data with missing fields', async () => {
+        userRef.value = { username: 'partial_user' } as any
+        wrapper = createWrapper()
+
+        const component = wrapper.vm as unknown as AccountInformationInstance
+        const categories = component.categories
+
+        expect(categories[0]?.content).toBe('partial_user')
+        expect(categories[1]?.content).toBeUndefined()
+        expect(categories[4]?.href).toBe('/partial_user/settings/profile')
+        expect(categories[4]?.content).toBe('')
+        expect(categories[5]?.content).toBe('0')
+    })
 })

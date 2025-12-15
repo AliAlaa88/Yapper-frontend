@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { ref, nextTick } from 'vue'
 import UserListSettings from '~/modules/settings/components/MuteAndBlock/SubComponents/UserListSettings.vue'
 
-
 let observerCallback: Function
 const observeMock = vi.fn()
 const disconnectMock = vi.fn()
@@ -45,7 +44,7 @@ const createQuery = (overrides = {}) => ({
     ...overrides,
 })
 
-describe('MutedOrBlockedList.vue', () => {
+describe('UserListSettings.vue', () => {
     let wrapper: any
     let query: any
 
@@ -82,9 +81,7 @@ describe('MutedOrBlockedList.vue', () => {
 
     it('renders loading spinner when loading', async () => {
         wrapper = factory({ isLoading: ref(true) })
-
         await nextTick()
-
         expect(wrapper.find('.animate-spin').exists()).toBe(true)
     })
 
@@ -92,12 +89,10 @@ describe('MutedOrBlockedList.vue', () => {
         wrapper = factory({
             isSuccess: ref(true),
             data: ref({
-                pages: [{ data: { data: [{ user_id: 1 }, { user_id: 2 }] } }],
+                pages: [{ data: { data: [{ user_id: 1, is_blocked: true }, { user_id: 2, is_blocked: false }] } }],
             }),
         })
-
         await nextTick()
-
         const users = wrapper.findAll('.user-item')
         expect(users).toHaveLength(2)
     })
@@ -109,9 +104,7 @@ describe('MutedOrBlockedList.vue', () => {
                 pages: [{ data: { data: [] } }],
             }),
         })
-
         await nextTick()
-
         expect(wrapper.text()).toContain('Empty title')
         expect(wrapper.text()).toContain('Empty description')
     })
@@ -126,9 +119,7 @@ describe('MutedOrBlockedList.vue', () => {
                 ],
             }),
         })
-
         await nextTick()
-
         expect(wrapper.vm.users).toHaveLength(3)
     })
 
@@ -140,15 +131,12 @@ describe('MutedOrBlockedList.vue', () => {
                 pages: [{ data: { data: [] } }],
             }),
         })
-
         await nextTick()
-
         observerCallback([{ isIntersecting: true }])
-
         expect(fetchNextPageMock).toHaveBeenCalled()
     })
 
-    it('does not call fetchNextPage when already fetching', async () => {
+    it('does not call fetchNextPage when already fetching or not intersecting', async () => {
         wrapper = factory({
             isSuccess: ref(true),
             hasNextPage: ref(true),
@@ -157,20 +145,39 @@ describe('MutedOrBlockedList.vue', () => {
                 pages: [{ data: { data: [] } }],
             }),
         })
-
         await nextTick()
-
         observerCallback([{ isIntersecting: true }])
-
         expect(fetchNextPageMock).not.toHaveBeenCalled()
+
+        fetchNextPageMock.mockClear()
+        query.isFetchingNextPage.value = false
+        observerCallback([{ isIntersecting: false }])
+        expect(fetchNextPageMock).not.toHaveBeenCalled()
+    })
+
+    it('triggers watchers and logs data when query data changes with pages', async () => {
+        const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {})
+        const dataRef = ref<any>(null)
+        
+        wrapper = factory({
+            isSuccess: ref(true),
+            data: dataRef,
+        })
+        await nextTick()
+        
+        dataRef.value = { pages: [{ data: { data: [{ user_id: 1 }] } }] }
+        await nextTick()
+        
+        expect(consoleLog).toHaveBeenCalledWith('Blocked users response:', expect.anything())
+        expect(consoleLog).toHaveBeenCalledWith('Total pages loaded:', 1)
+        expect(consoleLog).toHaveBeenCalledWith('All pages:', expect.any(Array))
+        consoleLog.mockRestore()
     })
 
     it('disconnects observer on unmount', async () => {
         wrapper = factory()
-
         await nextTick()
         wrapper.unmount()
-
         expect(disconnectMock).toHaveBeenCalled()
     })
 })

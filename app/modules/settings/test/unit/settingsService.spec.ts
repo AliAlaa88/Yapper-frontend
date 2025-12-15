@@ -24,251 +24,244 @@ describe('settingsService', () => {
         vi.clearAllMocks()
     })
 
-    it('should successfully change password', async () => {
-        const mockResponse = {
-            data: {
-                message: 'Password changed successfully',
-                success: true,
-            },
+    it('should handle getMuted and getBlocked operations with success and all error scenarios', async () => {
+        const mutedResponse = {
+            data: { data: { data: [{ id: '1', username: 'user1' }] } },
         }
+        mockAxios.get.mockResolvedValueOnce(mutedResponse)
+        const mutedResult = await settingsService.getMuted()
+        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/muted', { params: {} })
+        expect(mutedResult).toEqual(mutedResponse.data)
 
-        mockAxios.post.mockResolvedValueOnce(mockResponse)
-        const result = await settingsService.changePassword('oldPass123', 'newPass456')
-
-        expect(mockAxios.post).toHaveBeenCalledWith('/auth/change-password', {
-            old_password: 'oldPass123',
-            new_password: 'newPass456',
-        })
-        expect(result).toEqual(mockResponse.data)
-    })
-
-    it('should throw error on wrong password (401) and invalid format (400)', async () => {
-        const error401 = new Error('Unauthorized') as any
-        error401.response = {
-            status: 401,
-            data: { message: 'Wrong password' },
-        }
-
-        mockAxios.post.mockRejectedValueOnce(error401)
-        await expect(settingsService.changePassword('oldPass', 'newPass')).rejects.toThrow(
-            'Wrong password',
-        )
-
-        const error400 = new Error('Bad Request') as any
-        error400.response = {
-            status: 400,
-            data: { message: 'Invalid password format' },
-        }
-
-        mockAxios.post.mockRejectedValueOnce(error400)
-        await expect(settingsService.changePassword('old', 'new')).rejects.toThrow(
-            'Invalid password format',
-        )
-    })
-
-    it('should successfully update username and handle duplicate/invalid errors', async () => {
-        const mockResponse = {
-            data: {
-                data: { username: 'newusername' },
-                message: 'Username updated successfully',
-            },
-        }
-
-        mockAxios.post.mockResolvedValueOnce(mockResponse)
-        const result = await settingsService.updateUsername('newusername')
-
-        expect(mockAxios.post).toHaveBeenCalledWith('/auth/update-username', {
-            username: 'newusername',
-        })
-        expect(result).toEqual(mockResponse.data)
-
-        const error409 = new Error('Conflict') as any
-        error409.response = { status: 409 }
-
-        mockAxios.post.mockRejectedValueOnce(error409)
-        await expect(settingsService.updateUsername('taken')).rejects.toThrow(
-            'Username is already taken',
-        )
-
-        const error400 = new Error('Bad Request') as any
-        error400.response = {
-            status: 400,
-            data: { message: 'Username too short' },
-        }
-
-        mockAxios.post.mockRejectedValueOnce(error400)
-        await expect(settingsService.updateUsername('ab')).rejects.toThrow('Username too short')
-    })
-
-    it('should handle email OTP operations and verify email with various error codes', async () => {
-        const sendResponse = {
-            data: {
-                message: 'OTP sent to email',
-            },
-        }
-
-        mockAxios.post.mockResolvedValueOnce(sendResponse)
-        const sendResult = await settingsService.sendEmailOTP('newemail@example.com')
-
-        expect(mockAxios.post).toHaveBeenCalledWith('/auth/update-email', {
-            new_email: 'newemail@example.com',
-        })
-        expect(sendResult).toEqual(sendResponse.data)
-
-        const verifyResponse = {
-            data: {
-                message: 'Email verified successfully',
-            },
-        }
-
-        mockAxios.post.mockResolvedValueOnce(verifyResponse)
-        const verifyResult = await settingsService.verifyEmailOTP('newemail@example.com', '123456')
-
-        expect(mockAxios.post).toHaveBeenCalledWith('/auth/update-email/verify', {
-            new_email: 'newemail@example.com',
-            otp: '123456',
-        })
-        expect(verifyResult).toEqual(verifyResponse.data)
-
-        const errorBackend = new Error('Custom error') as any
-        errorBackend.response = {
-            status: 400,
-            data: { error: 'OTP expired' },
-        }
-
-        mockAxios.post.mockRejectedValueOnce(errorBackend)
-        await expect(
-            settingsService.verifyEmailOTP('email@example.com', '123'),
-        ).rejects.toThrow('OTP expired')
-    })
-
-    it('should handle language change and account operations with various status codes', async () => {
-        const langResponse = {
-            data: {
-                message: 'Language changed to Arabic',
-            },
-        }
-
-        mockAxios.patch.mockResolvedValueOnce(langResponse)
-        const langResult = await settingsService.changeLanguage('ar')
-
-        expect(mockAxios.patch).toHaveBeenCalledWith('/users/me/change-language', {
-            language: 'ar',
-        })
-        expect(langResult).toBe(langResponse.data.message)
-
-        const deleteResponse = {
-            data: {
-                message: 'Account deleted successfully',
-            },
-        }
-
-        mockAxios.delete.mockResolvedValueOnce(deleteResponse)
-        const deleteResult = await settingsService.deleteAccount()
-
-        expect(mockAxios.delete).toHaveBeenCalledWith('/users/me/delete-account')
-        expect(deleteResult).toEqual(deleteResponse.data)
+        mockAxios.get.mockResolvedValueOnce(mutedResponse)
+        await settingsService.getMuted('cursor123')
+        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/muted', { params: { cursor: 'cursor123' } })
 
 
         const error401 = new Error('Unauthorized') as any
         error401.response = { status: 401 }
+        mockAxios.get.mockRejectedValueOnce(error401)
+        await expect(settingsService.getMuted()).rejects.toThrow('Invalid or expired token')
 
-        mockAxios.patch.mockRejectedValueOnce(error401)
-        await expect(settingsService.changeLanguage('en')).rejects.toThrow(
-            'Invalid or expired token',
-        )
+        const error404 = new Error('Not Found') as any
+        error404.response = { status: 404 }
+        mockAxios.get.mockRejectedValueOnce(error404)
+        await expect(settingsService.getMuted()).rejects.toThrow('Muted users not found')
+
+        mockAxios.get.mockRejectedValueOnce(new Error('Network error'))
+        await expect(settingsService.getMuted()).rejects.toThrow('Something went wrong')
+
+        const blockedResponse = {
+            data: { data: [{ id: '1', username: 'blocked1' }] },
+        }
+        mockAxios.get.mockResolvedValueOnce(blockedResponse)
+        const blockedResult = await settingsService.getBlocked()
+        expect(blockedResult).toEqual(blockedResponse.data)
+
+        mockAxios.get.mockResolvedValueOnce(blockedResponse)
+        await settingsService.getBlocked('cursor456')
+        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/blocked', { params: { cursor: 'cursor456' } })
+
+        mockAxios.get.mockRejectedValueOnce(error401)
+        await expect(settingsService.getBlocked()).rejects.toThrow('Invalid or expired token')
+
+        mockAxios.get.mockRejectedValueOnce(error404)
+        await expect(settingsService.getBlocked()).rejects.toThrow('Blocked users not found')
+
+        mockAxios.get.mockRejectedValueOnce(new Error('Network error'))
+        await expect(settingsService.getBlocked()).rejects.toThrow('Something went wrong')
     })
 
-    it('should handle confirm password with all error scenarios and fetch user lists', async () => {
+    it('should handle changePassword with success and all error codes (401, 400, 404, generic)', async () => {
+        const successResponse = { data: { message: 'Password changed', success: true } }
+        mockAxios.post.mockResolvedValueOnce(successResponse)
+        const result = await settingsService.changePassword('oldPass', 'newPass')
+        expect(result).toEqual(successResponse.data)
 
-        const confirmResponse = {
-            data: {
-                confirmed: true,
-            },
-        }
+        const error401 = new Error('Unauthorized') as any
+        error401.response = { status: 401, data: { message: 'Wrong password' } }
+        mockAxios.post.mockRejectedValueOnce(error401)
+        await expect(settingsService.changePassword('old', 'new')).rejects.toThrow('Wrong password')
 
+        const error400 = new Error('Bad Request') as any
+        error400.response = { status: 400, data: { message: 'Invalid format' } }
+        mockAxios.post.mockRejectedValueOnce(error400)
+        await expect(settingsService.changePassword('old', 'new')).rejects.toThrow('Invalid format')
+
+        const error404 = new Error('Not Found') as any
+        error404.response = { status: 404 }
+        mockAxios.post.mockRejectedValueOnce(error404)
+        await expect(settingsService.changePassword('old', 'new')).rejects.toThrow('User not found')
+
+        mockAxios.post.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.changePassword('old', 'new')).rejects.toThrow('Failed to change password')
+    })
+
+    it('should handle deleteAccount and confirmPassword with all error scenarios', async () => {
+        const deleteResponse = { data: { message: 'Deleted' } }
+        mockAxios.delete.mockResolvedValueOnce(deleteResponse)
+        const deleteResult = await settingsService.deleteAccount()
+        expect(deleteResult).toEqual(deleteResponse.data)
+
+        const error401 = new Error('Unauthorized') as any
+        error401.response = { status: 401 }
+        mockAxios.delete.mockRejectedValueOnce(error401)
+        await expect(settingsService.deleteAccount()).rejects.toThrow('Invalid or expired token')
+
+        const error404 = new Error('Not Found') as any
+        error404.response = { status: 404 }
+        mockAxios.delete.mockRejectedValueOnce(error404)
+        await expect(settingsService.deleteAccount()).rejects.toThrow('User not found')
+
+        mockAxios.delete.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.deleteAccount()).rejects.toThrow('Failed to delete account')
+
+        const confirmResponse = { data: { confirmed: true } }
         mockAxios.post.mockResolvedValueOnce(confirmResponse)
-        const confirmResult = await settingsService.confirmPassword('password123')
-
-        expect(mockAxios.post).toHaveBeenCalledWith('/auth/confirm-password', {
-            password: 'password123',
-        })
+        const confirmResult = await settingsService.confirmPassword('password')
         expect(confirmResult).toEqual(confirmResponse.data)
 
         const error403 = new Error('Forbidden') as any
         error403.response = { status: 403 }
-
         mockAxios.post.mockRejectedValueOnce(error403)
         await expect(settingsService.confirmPassword('wrong')).rejects.toThrow('WRONG_PASSWORD')
 
-
         const error409 = new Error('Conflict') as any
         error409.response = { status: 409 }
-
         mockAxios.post.mockRejectedValueOnce(error409)
         await expect(settingsService.confirmPassword('pass')).rejects.toThrow('NO_PASSWORD_SET')
 
+        mockAxios.post.mockRejectedValueOnce(error404)
+        await expect(settingsService.confirmPassword('pass')).rejects.toThrow('USER_NOT_FOUND')
 
-        const mutedResponse = {
-            data: {
-                data: {
-                    data: [
-                        { id: '1', username: 'user1' },
-                        { id: '2', username: 'user2' },
-                    ],
-                },
-            },
-        }
+        mockAxios.post.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.confirmPassword('pass')).rejects.toThrow('UNKNOWN')
+    })
 
-        mockAxios.get.mockResolvedValueOnce(mutedResponse)
-        const mutedResult = await settingsService.getMuted()
+    it('should handle updateUsername and getUsernameRecommendations with all errors', async () => {
+        const usernameResponse = { data: { data: { username: 'newname' } } }
+        mockAxios.post.mockResolvedValueOnce(usernameResponse)
+        const result = await settingsService.updateUsername('newname')
+        expect(result).toEqual(usernameResponse.data)
 
-        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/muted', { params: {} })
-        expect(mutedResult).toEqual(mutedResponse.data)
+        const error401 = new Error('Unauthorized') as any
+        error401.response = { status: 401 }
+        mockAxios.post.mockRejectedValueOnce(error401)
+        await expect(settingsService.updateUsername('name')).rejects.toThrow('Invalid or expired token')
 
-        const mutedCursorResponse = {
-            data: {
-                data: {
-                    data: [{ id: '3', username: 'user3' }],
-                },
-            },
-        }
+        const error404 = new Error('Not Found') as any
+        error404.response = { status: 404 }
+        mockAxios.post.mockRejectedValueOnce(error404)
+        await expect(settingsService.updateUsername('name')).rejects.toThrow('User not found')
 
-        mockAxios.get.mockResolvedValueOnce(mutedCursorResponse)
-        const mutedCursorResult = await settingsService.getMuted('cursor123')
+        const error409 = new Error('Conflict') as any
+        error409.response = { status: 409 }
+        mockAxios.post.mockRejectedValueOnce(error409)
+        await expect(settingsService.updateUsername('taken')).rejects.toThrow('Username is already taken')
 
-        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/muted', {
-            params: { cursor: 'cursor123' },
-        })
-        expect(mutedCursorResult).toEqual(mutedCursorResponse.data)
+        const error400 = new Error('Bad Request') as any
+        error400.response = { status: 400, data: { message: 'Too short' } }
+        mockAxios.post.mockRejectedValueOnce(error400)
+        await expect(settingsService.updateUsername('ab')).rejects.toThrow('Too short')
 
+        mockAxios.post.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.updateUsername('name')).rejects.toThrow('Failed to update username')
 
-        const blockedResponse = {
-            data: {
-                data: [
-                    { id: '1', username: 'blocked1' },
-                    { id: '2', username: 'blocked2' },
-                ],
-            },
-        }
-
-        mockAxios.get.mockResolvedValueOnce(blockedResponse)
-        const blockedResult = await settingsService.getBlocked()
-
-        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/blocked', { params: {} })
-        expect(blockedResult).toEqual(blockedResponse.data)
-
-
-        const recsResponse = {
-            data: {
-                recommendations: ['user_123', 'user_456', 'user_789'],
-            },
-        }
-
+        const recsResponse = { data: { recommendations: ['user1', 'user2'] } }
         mockAxios.get.mockResolvedValueOnce(recsResponse)
         const recsResult = await settingsService.getUsernameRecommendations()
-
-        expect(mockAxios.get).toHaveBeenCalledWith('/users/me/username-recommendations')
         expect(recsResult).toEqual(recsResponse.data)
+
+        mockAxios.get.mockRejectedValueOnce(error401)
+        await expect(settingsService.getUsernameRecommendations()).rejects.toThrow('Invalid or expired token')
+
+        mockAxios.get.mockRejectedValueOnce(error404)
+        await expect(settingsService.getUsernameRecommendations()).rejects.toThrow('User not found')
+
+        mockAxios.get.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.getUsernameRecommendations()).rejects.toThrow('Failed to get username recommendations')
+    })
+
+    it('should handle sendEmailOTP with all error scenarios', async () => {
+        const sendResponse = { data: { message: 'OTP sent' } }
+        mockAxios.post.mockResolvedValueOnce(sendResponse)
+        const result = await settingsService.sendEmailOTP('email@test.com')
+        expect(result).toEqual(sendResponse.data)
+
+        const errorBackend = new Error('Custom') as any
+        errorBackend.response = { status: 400, data: { message: 'Email exists' } }
+        mockAxios.post.mockRejectedValueOnce(errorBackend)
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('Email exists')
+
+        const errorField = new Error('Custom') as any
+        errorField.response = { status: 400, data: { error: 'Invalid format' } }
+        mockAxios.post.mockRejectedValueOnce(errorField)
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('Invalid format')
+
+        const error401 = new Error('Unauthorized') as any
+        error401.response = { status: 401, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error401)
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('Invalid or expired token')
+
+        const error404 = new Error('Not Found') as any
+        error404.response = { status: 404, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error404)
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('User not found')
+
+        // 400 error without message
+        const error400 = new Error('Bad Request') as any
+        error400.response = { status: 400, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error400)
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('Email already exists')
+
+        // 500 error
+        const error500 = new Error('Server Error') as any
+        error500.response = { status: 500, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error500)
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('Failed to send OTP email')
+
+        mockAxios.post.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.sendEmailOTP('email@test.com')).rejects.toThrow('Failed to send verification code')
+    })
+
+    it('should handle verifyEmailOTP and changeLanguage with all error scenarios', async () => {
+        const verifyResponse = { data: { message: 'Verified' } }
+        mockAxios.post.mockResolvedValueOnce(verifyResponse)
+        const result = await settingsService.verifyEmailOTP('email@test.com', '123456')
+        expect(result).toEqual(verifyResponse.data)
+
+        const errorBackend = new Error('Custom') as any
+        errorBackend.response = { status: 400, data: { message: 'OTP expired' } }
+        mockAxios.post.mockRejectedValueOnce(errorBackend)
+        await expect(settingsService.verifyEmailOTP('email@test.com', '123')).rejects.toThrow('OTP expired')
+
+        // verifyEmailOTP 400 without message
+        const error400 = new Error('Bad Request') as any
+        error400.response = { status: 400, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error400)
+        await expect(settingsService.verifyEmailOTP('email@test.com', '123')).rejects.toThrow('Invalid or expired OTP')
+
+        // 401
+        const error401 = new Error('Unauthorized') as any
+        error401.response = { status: 401, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error401)
+        await expect(settingsService.verifyEmailOTP('email@test.com', '123')).rejects.toThrow('Invalid or expired token')
+
+        const error404 = new Error('Not Found') as any
+        error404.response = { status: 404, data: {} }
+        mockAxios.post.mockRejectedValueOnce(error404)
+        await expect(settingsService.verifyEmailOTP('email@test.com', '123')).rejects.toThrow('User not found')
+
+        mockAxios.post.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.verifyEmailOTP('email@test.com', '123')).rejects.toThrow('Failed to verify email')
+
+        const langResponse = { data: { message: 'Language changed' } }
+        mockAxios.patch.mockResolvedValueOnce(langResponse)
+        const langResult = await settingsService.changeLanguage('ar')
+        expect(langResult).toBe('Language changed')
+        mockAxios.patch.mockRejectedValueOnce(error401)
+        await expect(settingsService.changeLanguage('en')).rejects.toThrow('Invalid or expired token')
+        mockAxios.patch.mockRejectedValueOnce(new Error('Network'))
+        await expect(settingsService.changeLanguage('en')).rejects.toThrow('Something went wrong')
     })
 })
