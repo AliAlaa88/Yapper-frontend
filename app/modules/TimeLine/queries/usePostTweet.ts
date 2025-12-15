@@ -11,19 +11,25 @@ export function usePostTweet() {
     return useMutation({
         mutationFn: (tweet: TweetBody) => {
             if (tweet.type === 'quote' && tweet.parent_tweet_id) {
-                return ($timelineService as any).createQuote(tweet, tweet.parent_tweet_id) as Promise<any>
+                return ($timelineService as any).createQuote(
+                    tweet,
+                    tweet.parent_tweet_id,
+                ) as Promise<any>
             }
             if (tweet.type === 'reply' && tweet.parent_tweet_id) {
-                return ($timelineService as any).createReply(tweet, tweet.parent_tweet_id) as Promise<any>
+                return ($timelineService as any).createReply(
+                    tweet,
+                    tweet.parent_tweet_id,
+                ) as Promise<any>
             }
             return ($timelineService as any).createTweet(tweet) as Promise<any>
         },
         onSuccess: (data, variables) => {
             const tweet = {
                 ...data.data,
-                user: {...userStore.getUser(), id: userStore.getUser()?.user_id},
+                user: { ...userStore.getUser(), id: userStore.getUser()?.user_id },
             }
-            
+
             // If this is a reply, update the parent tweet's replies count
             if (variables.type === 'reply' && variables.parent_tweet_id) {
                 cacheInvalidation.onReplyCreate(
@@ -42,6 +48,8 @@ export function usePostTweet() {
 
                     const newPages = [...oldData.pages]
                     if (newPages[0]) {
+                        console.log('tweet newPages[0] =======>', newPages[0])
+
                         newPages[0] = {
                             ...newPages[0],
                             data: [tweet, ...newPages[0].data],

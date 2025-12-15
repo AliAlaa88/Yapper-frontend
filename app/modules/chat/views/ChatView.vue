@@ -62,9 +62,12 @@ import type { Conversation } from '../types'
 
 import SnackBar from '~/modules/profile/components/ProfileContent/SubComponents/SnackBar.vue'
 import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import { useRouter } from 'vue-router'
 
 const snackbar = useSnackbar()
 provide('snackbar', snackbar)
+
+const router = useRouter()
 
 const props = defineProps<{
     chatId?: string
@@ -126,6 +129,8 @@ const handleSelectConversation = async (conversation: Conversation) => {
 const handleEscapeKey = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && selectedConversation.value) {
         selectedConversation.value = null
+        $chatSocketService.leaveChat()
+        router.push('/messages')
     }
 }
 
