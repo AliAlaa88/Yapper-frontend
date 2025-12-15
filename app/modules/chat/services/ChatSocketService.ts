@@ -187,6 +187,7 @@ export const createChatSocketService = (deps: ChatSocketServiceDependencies) => 
     }
 
     const enterChat = async (chatId: string) => {
+        
         if (currentChatId.value && currentChatId.value !== chatId) {
             try {
                 await leaveChat()

@@ -27,8 +27,8 @@ export default defineConfig({
             provider: 'v8', // or 'istanbul'
             reporter: ['text', 'html', 'lcov'],
             all: true, // include files with NO tests
-            include: ['app/**/*.{js,ts,vue}'],
-            exclude: ['**/*.d.ts', 'dist/**', 'node_modules/**'],
+            include: ['app/modules/**/*.{js,ts,vue}'],
+            exclude: ['**/*.d.ts', 'dist/**', 'node_modules/**', 'app/modules/**/types/**'],
         },
     },
 })

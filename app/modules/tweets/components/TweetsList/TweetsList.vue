@@ -194,7 +194,7 @@ const tweets = computed(() => {
 
 const getTweetKey = (tweet: TweetType): string => {
     const user = tweet.user
-    return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.likes_count}-${tweet.is_liked}-${tweet.is_reposted}-${tweet.is_bookmarked}-${tweet.type}`
+    return `${tweet.tweet_id}-${user.username}-${user.name}-${user.avatar_url || ''}-${tweet.type}`
 }
 
 watch(tweets, (newTweets) => {}, { deep: true })

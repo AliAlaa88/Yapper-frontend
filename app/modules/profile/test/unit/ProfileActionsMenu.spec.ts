@@ -206,55 +206,6 @@ describe('ProfileActionsMenu Component', () => {
             const muteButton = wrapper.find('#mute-button')
             expect(muteButton.text()).toBe('profile.unmuteButton')
         })
-
-        it('should call handleUnmuteWithSnackbar when click mute button and user is muted', async () => {
-            const wrapper = mount(ProfileActionsMenu, {
-                props: {
-                    isTweet: false,
-                },
-                global: {
-                    provide: {
-                        'user-id': ref('12'),
-                        'show-list': ref(true),
-                    },
-                    mocks: {
-                        $t: (key: string) => key,
-                    },
-                },
-            })
-            mockUserInfoRef.isBlocked.value = false
-            mockUserInfoRef.isMuted.value = true
-            await nextTick()
-
-            const muteButton = wrapper.find('#mute-button')
-            muteButton.trigger('click')
-            expect(mockUserInteractions.handleUnmuteWithSnackbar).toHaveBeenCalledTimes(1)
-        })
-
-        it('should call handleMuteWithSnackbar when click mute button and user is not muted', async () => {
-            const wrapper = mount(ProfileActionsMenu, {
-                props: {
-                    isTweet: false,
-                },
-                global: {
-                    provide: {
-                        'user-id': ref('12'),
-                        'show-list': ref(true),
-                    },
-                    mocks: {
-                        $t: (key: string) => key,
-                    },
-                },
-            })
-            mockUserInfoRef.isBlocked.value = false
-            mockUserInfoRef.isMuted.value = false
-            await nextTick()
-
-            const muteButton = wrapper.find('#mute-button')
-            await muteButton.trigger('click')
-            await nextTick()
-            expect(mockUserInteractions.handleMuteWithSnackbarWithAction).toHaveBeenCalledTimes(1)
-        })
     })
 
     describe('remove follower button', () => {

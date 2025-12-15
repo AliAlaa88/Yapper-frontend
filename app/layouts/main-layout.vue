@@ -2,7 +2,7 @@
     <main class="flex flex-row justify-center container mx-auto relative">
         <!-- Sidebar -->
         <aside
-            class="hidden sticky top-0 h-screen sm:flex shrink-0 transition-all duration-300 ease-in-out order-1"
+            class="hidden sticky top-0 h-screen sm:flex shrink-0 transition-all duration-300 ease-in-out order-1 z-10"
             :style="{ width: `${sidebarWidth}px`, minWidth: `${sidebarWidth}px` }"
         >
             <Sidebar />

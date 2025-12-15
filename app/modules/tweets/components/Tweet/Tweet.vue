@@ -385,6 +385,7 @@ const toggleSummary = async () => {
 
 // Tweet actions composable
 const tweetId = computed(() => props.tweet.tweet_id)
+const parentTweetId = computed(() => props.tweet.parent_tweet?.tweet_id)
 const {
     handleDeleteWithConfirmation,
     handleEdit,
@@ -392,7 +393,7 @@ const {
     handleCloseEditModal,
     showEditModal,
     isUpdateLoading,
-} = useTweetActions(tweetId)
+} = useTweetActions(tweetId, parentTweetId)
 
 // Check if the tweet belongs to the current user
 const isOwnTweet = computed(() => {
@@ -480,7 +481,10 @@ const content = computed(() => ({
     text: props.tweet.content,
     images: props.tweet.images || [],
     videos: props.tweet.videos || [],
-    parentTweet: props.tweet.type === 'quote' ? props.tweet.parent_tweet : undefined,
+    parentTweet:
+        props.tweet.type === 'quote'
+            ? (props.tweet.parent_tweet ?? props.tweet.quoted_tweet)
+            : undefined,
     mentions: props.tweet.mentions || [],
 }))
 
@@ -516,6 +520,7 @@ const parentContent = computed(() => {
             props.tweet.parent_tweet.type === 'quote'
                 ? props.tweet.parent_tweet.parent_tweet
                 : undefined,
+        mentions: props.tweet.parent_tweet.mentions || [],
     }
 })
 

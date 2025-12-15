@@ -34,6 +34,7 @@ import DetailedPanel from '../DetailedPanel.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
 import { userSettingsQueries } from '../../queries/userSettingsQueries'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)

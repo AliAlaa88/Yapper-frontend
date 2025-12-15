@@ -5,21 +5,7 @@
         @submit.prevent="handleSubmit"
     >
         <NuxtLink :to="`/${user?.username}`">
-            <NuxtImg
-                v-if="user?.avatar_url"
-                :src="user.avatar_url"
-                :alt="user.name"
-                :class="compact ? 'w-10 h-10' : 'w-16 h-16'"
-                class="object-cover rounded-full"
-                :onerror="(event: any) => handleImageError(user?.name ?? '', event)"
-            />
-            <NuxtImg
-                v-else
-                :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`"
-                :alt="user?.name"
-                :class="compact ? 'w-10 h-10' : 'w-14 h-14'"
-                class="object-cover rounded-full"
-            />
+            <UserImage :image-url="user?.avatar_url" :name="user?.name" :size="12" />
         </NuxtLink>
 
         <div class="flex-1">
@@ -200,7 +186,7 @@
                         </span>
                     </div>
                     <Button
-                        id="post-tweet-post-btn"
+                        :id="btnId"
                         :disabled="disablePostButton"
                         button-class="px-4 py-2 bg-alternate text-alternate rounded-full font-bold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         :button-text="buttonText"
@@ -233,6 +219,7 @@ import Button from '~/modules/Common/components/Button/Button.vue'
 import type { useSnackbar } from '~/modules/profile/composables/useSnackbar'
 import type { TweetBody } from '../../types/tweetBody'
 import type { Tweet } from '~/modules/tweets/types/tweet'
+import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
 
 const props = withDefaults(
     defineProps<{
@@ -266,7 +253,7 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
 const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
-
+const btnId = computed(() => (props.parentTweetId ? 'reply-tweet-btn' : props.quotedTweet ? 'quote-tweet-btn' : 'post-tweet-btn'))
 interface MediaItem {
     url: string
     type: 'image' | 'video'

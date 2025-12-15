@@ -78,28 +78,25 @@ describe('DisplaySettings', () => {
     })
 
     it('updates selected color when clicking a color option', async () => {
-        const wrapper = mount(DisplaySettings)
-        const redBtn = wrapper.find('[data-test="color-red"]')
+        const wrapper = mountComponent()
+        const redBtn = wrapper.find('#btn-color-red') 
         await redBtn.trigger('click')
-        await nextTick()
 
         expect(color.value).toBe('red')
     })
 
     it('updates background when clicking a background button', async () => {
-        const wrapper = mount(DisplaySettings)
-        const darkBtn = wrapper.find('[data-test="background-dark"]')
+        const wrapper = mountComponent()
+        const darkBtn = wrapper.find('#btn-background-dark') 
         await darkBtn.trigger('click')
-        await nextTick()
 
         expect(background.value).toBe('dark')
     })
 
     it('toggles system theme switch on click', async () => {
-        const wrapper = mount(DisplaySettings)
-        const switchBtn = wrapper.find('[data-test="system-theme"]')
+        const wrapper = mountComponent()
+        const switchBtn = wrapper.find('#btn-use-system-theme')
         await switchBtn.trigger('click')
-        await nextTick()
 
         expect(useSystemTheme.value).toBe(true)
     })
