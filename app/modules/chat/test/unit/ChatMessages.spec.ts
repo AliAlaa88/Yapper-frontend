@@ -101,6 +101,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -123,6 +124,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -149,6 +151,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -177,6 +180,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -198,11 +202,12 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
 
-            const backButton = wrapper.find('#back-to-messages-button')
+            const backButton = wrapper.find('#btn-back-to-messages')
             expect(backButton.exists()).toBe(true)
         })
 
@@ -220,6 +225,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -255,6 +261,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -283,6 +290,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -313,6 +321,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -341,6 +350,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -371,6 +381,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -398,6 +409,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -424,6 +436,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -454,6 +467,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -510,6 +524,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -538,6 +553,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -572,6 +588,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -603,6 +620,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -634,6 +652,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -665,6 +684,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -698,6 +718,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -737,6 +758,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -777,6 +799,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -817,6 +840,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -857,6 +881,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -883,6 +908,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -905,6 +931,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -928,6 +955,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -950,6 +978,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -972,6 +1001,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -994,6 +1024,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -1018,6 +1049,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -1040,6 +1072,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -1062,6 +1095,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -1096,6 +1130,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -1131,6 +1166,7 @@ describe('ChatMessages.vue', () => {
                         TypingIndicator: true,
                         LoadingSpinner: true,
                         ArrowLeft: true,
+                        NuxtLink: true,
                     },
                 },
             })
@@ -1140,3 +1176,4 @@ describe('ChatMessages.vue', () => {
         })
     })
 })
+

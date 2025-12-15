@@ -260,9 +260,10 @@ describe('ChatSocketService', () => {
             const chatId = 'chat-1'
             const content = 'Hello, world!'
 
-            chatSocketService.sendMessage(chatId, {
+            chatSocketService.sendMessage(chatId, mockMessage.sender, {
                 content,
                 messageType: 'text',
+                messagesLength: 0,
             })
 
             expect(mockSocketService.emit).toHaveBeenCalledWith(
@@ -281,10 +282,11 @@ describe('ChatSocketService', () => {
             const chatId = 'chat-1'
             const mediaUrl = 'https://example.com/image.jpg'
 
-            chatSocketService.sendMessage(chatId, {
+            chatSocketService.sendMessage(chatId, mockMessage.sender, {
                 content: 'Check this out',
-                mediaUrl,
+                imageUrl: mediaUrl,
                 messageType: 'image',
+                messagesLength: 5,
             })
 
             expect(mockSocketService.emit).toHaveBeenCalledWith(
@@ -292,8 +294,8 @@ describe('ChatSocketService', () => {
                 expect.objectContaining({
                     chat_id: chatId,
                     message: expect.objectContaining({
-                        media_url: mediaUrl,
-                        message_type: 'image',
+                        image_url: mediaUrl,
+                        content: 'Check this out',
                     }),
                 }),
             )
@@ -320,9 +322,10 @@ describe('ChatSocketService', () => {
                 pageParams: [],
             })
 
-            chatSocketService.sendMessage(chatId, {
+            chatSocketService.sendMessage(chatId, mockMessage.sender, {
                 content,
                 messageType: 'text',
+                messagesLength: 0,
             })
 
             // Verify message was added to cache

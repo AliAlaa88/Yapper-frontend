@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
-import type { MaybeRef } from 'vue'
+import { toValue, type MaybeRef } from 'vue'
+import { useNuxtApp } from '#app'
 import type { MessagesPage } from '../types'
 
 export const useMessagesQuery = (chatId: MaybeRef<string | undefined>) => {

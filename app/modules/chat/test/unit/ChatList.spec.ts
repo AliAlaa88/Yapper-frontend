@@ -108,6 +108,14 @@ vi.mock('~/modules/chat/queries/useGetConversation', () => ({
     })),
 }))
 
+// Mock useAddConversation
+vi.mock('~/modules/chat/queries/useAddConversation', () => ({
+    useAddConversation: vi.fn(() => ({
+        mutateAsync: vi.fn(),
+        isPending: ref(false),
+    })),
+}))
+
 // Mock @vueuse/core
 const mockUseIntersectionObserver = vi.fn()
 vi.mock('@vueuse/core', () => ({
@@ -118,13 +126,26 @@ vi.mock('@vueuse/core', () => ({
 const mockPush = vi.fn()
 const mockRouter = {
     push: mockPush,
+    currentRoute: {
+        value: {
+            params: {
+                chat_id: undefined,
+            },
+        },
+    },
 }
 const mockTotalUnreadCount = ref(5)
 const mockChatSocketService = {
     totalUnreadCount: mockTotalUnreadCount,
 }
 
-vi.mock('#app', () => ({
+vi.stubGlobal('useRouter', () => mockRouter)
+vi.stubGlobal('useNuxtApp', () => ({
+    $chatSocketService: mockChatSocketService,
+}))
+
+// Mock nuxt/app imports to prevent module resolution errors
+vi.mock('nuxt/app', () => ({
     useRouter: () => mockRouter,
     useNuxtApp: () => ({
         $chatSocketService: mockChatSocketService,
