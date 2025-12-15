@@ -27,16 +27,8 @@
                         ]"
                         @click="selectUser(user.user_id)"
                     >
-                        <NuxtImg
-                            :src="
-                                user?.avatar_url ||
-                                'https://ui-avatars.com/api/?name=' +
-                                    encodeURIComponent(user.name) +
-                                    '&background=random'
-                            "
-                            :alt="user.name"
-                            class="h-10 w-10 rounded-full object-cover shrink-0"
-                        />
+                        `
+                        <UserImage :image-url="user.avatar_url" :name="user.name" :size="12" />
                         <div class="flex-1 min-w-0">
                             <p class="font-semibold text-primary truncate text-sm">
                                 {{ shorterName(user.name) }}
@@ -76,6 +68,7 @@ import type { FollowUser } from '~/modules/profile/types/user'
 import { useAddConversation } from '~/modules/chat/queries/useAddConversation'
 import { shorterName } from '~/utils/helpers'
 import { useRouter } from 'vue-router'
+import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
 
 interface Props {
     searchQuery: string
