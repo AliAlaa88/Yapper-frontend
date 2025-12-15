@@ -6,7 +6,7 @@ export const listService = {
 
         const separator = path.includes('?') ? '&' : '?'
         const response = await $axios.get(
-            `${path}` + (nextCursor ? `${separator}cursor=${nextCursor}` : '')
+            `${path}` + (nextCursor ? `${separator}cursor=${nextCursor}` : ''),
         )
         const page = response.data.data
 

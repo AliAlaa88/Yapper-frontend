@@ -1,10 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
-import { useNuxtApp } from 'nuxt/app'
+// import { useNuxtApp } from 'nuxt/app'
 import type { ApiNotification, NotificationsApiData } from '../types/notifications'
 
 export const useGetNotificationsQuery = () => {
     const { $notificationsService } = useNuxtApp()
-    const query =  useInfiniteQuery({
+    const query = useInfiniteQuery({
         queryKey: ['notifications'],
         queryFn: ({ pageParam = 1 }: { pageParam?: number }) => {
             const res = $notificationsService.getNotifications(pageParam)
@@ -19,7 +19,10 @@ export const useGetNotificationsQuery = () => {
 
     const notifications = computed<ApiNotification[]>(() => {
         console.log('notifications', query.data.value?.pages)
-        return query.data.value?.pages.flatMap((page: NotificationsApiData) => page.notifications) ?? []
+        return (
+            query.data.value?.pages.flatMap((page: NotificationsApiData) => page.notifications) ??
+            []
+        )
     })
 
     return {
@@ -28,7 +31,7 @@ export const useGetNotificationsQuery = () => {
         isFetchingNotifications: query.isFetching,
         isErrorNotifications: query.isError,
         errorNotifications: query.error,
-        isSuccessfullyNotifications : query.isSuccess,
+        isSuccessfullyNotifications: query.isSuccess,
         hasNextNotifications: query.hasNextPage,
         hasPreviousNotifications: query.hasPreviousPage,
         isFetchingNextNotifications: query.isFetchingNextPage,

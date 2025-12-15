@@ -162,7 +162,7 @@ describe('TypingIndicator.vue', () => {
 
         it('should support v-for loops', () => {
             const TestComponent = {
-                template: `<div><span v-for="i in 3" :key="i">{{ i }}</span></div>`,
+                template: '<div><span v-for="i in 3" :key="i">{{ i }}</span></div>',
             }
             const wrapper = mount(TestComponent)
             const spans = wrapper.findAll('span')

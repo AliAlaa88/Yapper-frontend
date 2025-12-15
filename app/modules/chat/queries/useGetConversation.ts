@@ -49,8 +49,8 @@ export function useGetConversationById(chatId: string | Ref<string> | (() => str
         typeof chatId === 'function'
             ? computed(chatId)
             : typeof chatId === 'string'
-              ? ref(chatId)
-              : chatId
+                ? ref(chatId)
+                : chatId
     const chatIdValue = computed(() => unref(chatIdRef))
 
     return useQuery({

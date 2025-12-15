@@ -1,4 +1,4 @@
-import { userSettingsQueries } from '../queries/userSettingsQueries'
+import { userSettingsQueries } from '~/modules/settings/queries/userSettingsQueries'
 import { usePasswordConfirmationStore } from '../stores/usePasswordConfirmationStore'
 
 export function usePasswordProtection() {

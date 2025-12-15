@@ -1,33 +1,26 @@
 <template>
     <!-- Mobile: Bottom sheet overlay -->
-    <div
-        v-if="isOpen"
-        class="fixed inset-0 bg-black/50 z-50"
-        @click="$emit('close')"
-    ></div>
+    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50" @click="$emit('close')"/>
     <div
         v-if="isOpen"
         ref="gifPickerRef"
-        class="fixed z-60 bg-primary border border-primary shadow-lg overflow-hidden
-               md:rounded-lg rounded-t-2xl rounded-b-none
-               inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto
-               w-full md:w-72 h-[60vh] md:h-80"
+        class="fixed z-60 bg-primary border border-primary shadow-lg overflow-hidden md:rounded-lg rounded-t-2xl rounded-b-none inset-x-0 bottom-0 md:bottom-auto md:inset-x-auto w-full md:w-72 h-[60vh] md:h-80"
         :style="pickerStyle"
         @click.stop
     >
-        <div class="p-2 border-b border-primary flex gap-2" id="gif-picker-container">
+        <div id="gif-picker-container" class="p-2 border-b border-primary flex gap-2">
             <input
+                id="gif-picker-search-input"
                 v-model="query"
                 type="text"
                 placeholder="Search GIFs..."
-                id="gif-picker-search-input"
-                @input="searchGifs"
                 class="w-full px-2 py-1 rounded bg-primary outline-none text-sm text-primary placeholder:text-muted"
-            />
+                @input="searchGifs"
+            >
             <button
-                @click="$emit('close')"
-                class="text-muted hover:text-primary"
                 id="close-gif-picker-btn"
+                class="text-muted hover:text-primary"
+                @click="$emit('close')"
             >
                 <X class="w-4 h-4" />
             </button>
@@ -44,7 +37,7 @@
                     :src="gif.images.fixed_height_small.url"
                     :alt="gif.title"
                     class="rounded-md w-full h-full object-cover"
-                />
+                >
             </div>
         </div>
     </div>
@@ -89,15 +82,15 @@ const pickerStyle = computed(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
         return {}
     }
-    
+
     if (!triggerRect.value) {
         return {}
     }
-    
+
     const rect = triggerRect.value
     const pickerHeight = 320 // md:h-80 = 320px
     const pickerWidth = 288 // md:w-72 = 288px
-    
+
     if (props.position === 'top') {
         return {
             left: `${rect.left}px`,

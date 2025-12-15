@@ -52,7 +52,10 @@ const { width } = useWindowSize()
 const { locale, locales } = useI18n()
 const { sidebarWidth } = useSidebarState()
 const isSearch = computed(
-    () => route.path.startsWith('/explore') || route.path.startsWith('/search') || route.path.startsWith('/notifications'),
+    () =>
+        route.path.startsWith('/explore') ||
+        route.path.startsWith('/search') ||
+        route.path.startsWith('/notifications'),
 )
 
 const isRTL = computed(() => {

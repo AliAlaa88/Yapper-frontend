@@ -72,20 +72,38 @@ vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileAvatar.
     default: defineComponent({ name: 'ProfileAvatar', template: '<div class="avatar-stub" />' }),
 }))
 vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileEditButton.vue', () => ({
-    default: defineComponent({ name: 'ProfileEditButton', template: '<div class="edit-btn-stub" />' }),
+    default: defineComponent({
+        name: 'ProfileEditButton',
+        template: '<div class="edit-btn-stub" />',
+    }),
 }))
-vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileMessageButton.vue', () => ({
-    default: defineComponent({ name: 'ProfileMessageButton', template: '<div class="message-btn-stub" />' }),
-}))
+vi.mock(
+    '~/modules/profile/components/ProfileHeader/SubComponents/ProfileMessageButton.vue',
+    () => ({
+        default: defineComponent({
+            name: 'ProfileMessageButton',
+            template: '<div class="message-btn-stub" />',
+        }),
+    }),
+)
 vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileActions.vue', () => ({
     default: defineComponent({ name: 'ProfileActions', template: '<div class="actions-stub" />' }),
 }))
 vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileFollowAction.vue', () => ({
-    default: defineComponent({ name: 'ProfileFollowAction', template: '<div class="follow-action-stub" />' }),
+    default: defineComponent({
+        name: 'ProfileFollowAction',
+        template: '<div class="follow-action-stub" />',
+    }),
 }))
-vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileBlockedAction.vue', () => ({
-    default: defineComponent({ name: 'ProfileBlockedAction', template: '<div class="blocked-action-stub" />' }),
-}))
+vi.mock(
+    '~/modules/profile/components/ProfileHeader/SubComponents/ProfileBlockedAction.vue',
+    () => ({
+        default: defineComponent({
+            name: 'ProfileBlockedAction',
+            template: '<div class="blocked-action-stub" />',
+        }),
+    }),
+)
 vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileInfo.vue', () => ({
     default: defineComponent({ name: 'ProfileInfo', template: '<div class="info-stub" />' }),
 }))
@@ -102,7 +120,7 @@ const setProfile = (isMine: boolean) => {
             username: 'john',
             name: 'John',
         } as any,
-        isMine
+        isMine,
     )
 }
 

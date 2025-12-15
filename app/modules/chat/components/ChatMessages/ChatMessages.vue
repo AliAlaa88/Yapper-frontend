@@ -24,13 +24,13 @@
                                 :alt="participant.username"
                                 class="w-10 h-10 rounded-full object-cover"
                                 :onerror="`this.src = 'https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=random'`"
-                            />
+                            >
                             <img
                                 v-else
                                 :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name || 'User')}&background=random`"
                                 :alt="participant.username"
                                 class="w-10 h-10 rounded-full object-cover"
-                            />
+                            >
                             <div>
                                 <h2 class="font-bold text-primary">
                                     {{ participant.name || 'Chat' }}

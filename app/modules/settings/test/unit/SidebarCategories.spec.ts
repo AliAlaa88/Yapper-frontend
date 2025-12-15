@@ -49,7 +49,6 @@ describe('SidebarCategories Component', () => {
     })
 
     it('renders header, search input, and category links', () => {
-
         const links = wrapper.findAll('a')
         expect(links.length).toBe(3)
 
@@ -78,7 +77,6 @@ describe('SidebarCategories Component', () => {
         expect(links[1]?.classes()).not.toContain('bg-hover')
         expect(links[2]?.classes()).toContain('bg-hover')
 
-
         indicators = wrapper.findAll('.bg-accent')
         expect(indicators.length).toBe(1)
 
@@ -103,7 +101,7 @@ describe('SidebarCategories Component', () => {
 
     it('applies hover styles correctly', () => {
         const links = wrapper.findAll('a')
-        links.forEach(link => {
+        links.forEach((link) => {
             expect(link.classes()).toContain('hover:bg-hover')
             expect(link.classes()).toContain('transition-colors')
         })

@@ -23,7 +23,6 @@ export function useSnackbar() {
         setTimeout(() => (showSnackbar.value = false), 4000)
     }
 
-
     return {
         showSnackbar,
         snackbar,

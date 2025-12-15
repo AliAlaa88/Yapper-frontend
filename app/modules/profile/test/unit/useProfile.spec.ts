@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useProfile } from '../../composables/useProfile'
-import { useProfileStore } from '../../stores/profileStore'
 import { setActivePinia, createPinia } from 'pinia'
 
 const mockMeQuery = {

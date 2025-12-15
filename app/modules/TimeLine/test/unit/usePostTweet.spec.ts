@@ -89,10 +89,10 @@ describe('usePostTweet', () => {
 
         it('calls createReply for reply tweets', async () => {
             const result = usePostTweet()
-            const replyData = { 
-                content: 'Reply content', 
-                type: 'reply', 
-                parent_tweet_id: 'parent-123' 
+            const replyData = {
+                content: 'Reply content',
+                type: 'reply',
+                parent_tweet_id: 'parent-123',
             }
 
             await result.mutateAsync(replyData as any)
@@ -102,15 +102,18 @@ describe('usePostTweet', () => {
 
         it('calls createQuote for quote tweets', async () => {
             const result = usePostTweet()
-            const quoteData = { 
-                content: 'Quote content', 
-                type: 'quote', 
-                parent_tweet_id: 'quoted-tweet-123' 
+            const quoteData = {
+                content: 'Quote content',
+                type: 'quote',
+                parent_tweet_id: 'quoted-tweet-123',
             }
 
             await result.mutateAsync(quoteData as any)
 
-            expect(mockTimelineService.createQuote).toHaveBeenCalledWith(quoteData, 'quoted-tweet-123')
+            expect(mockTimelineService.createQuote).toHaveBeenCalledWith(
+                quoteData,
+                'quoted-tweet-123',
+            )
         })
     })
 

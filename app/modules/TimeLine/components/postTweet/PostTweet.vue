@@ -39,10 +39,10 @@
                         mediaUrls.length === 1
                             ? 'grid-cols-1'
                             : mediaUrls.length === 2
-                              ? 'grid-cols-2'
-                              : mediaUrls.length === 3
                                 ? 'grid-cols-2'
-                                : 'grid-cols-2'
+                                : mediaUrls.length === 3
+                                    ? 'grid-cols-2'
+                                    : 'grid-cols-2'
                     "
                 >
                     <div
@@ -53,8 +53,8 @@
                             mediaUrls.length === 1
                                 ? 'aspect-video'
                                 : mediaUrls.length === 3 && index === 0
-                                  ? 'col-span-2 aspect-video'
-                                  : 'aspect-square'
+                                    ? 'col-span-2 aspect-video'
+                                    : 'aspect-square'
                         "
                     >
                         <img
@@ -62,7 +62,7 @@
                             :src="media.url"
                             :alt="t('timeline.postTweet.uploadedMedia', { index: index + 1 })"
                             class="w-full h-full object-cover"
-                        />
+                        >
                         <video
                             v-else-if="media.type === 'video'"
                             :src="media.url"
@@ -77,7 +77,7 @@
                                 :src="`${media.url}.vtt`"
                                 srclang="en"
                                 label="English"
-                            />
+                            >
                             <p>{{ t('timeline.postTweet.videoNotSupported') }}</p>
                         </video>
                         <button
@@ -201,7 +201,7 @@
 </template>
 
 <script setup lang="ts">
-import { Smile, ImagePlay, X, User } from 'lucide-vue-next'
+import { Smile, ImagePlay, X } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'
@@ -253,7 +253,13 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
 const snackbar = inject<ReturnType<typeof useSnackbar>>('snackbar')
-const btnId = computed(() => (props.parentTweetId ? 'reply-tweet-btn' : props.quotedTweet ? 'quote-tweet-btn' : 'post-tweet-btn'))
+const btnId = computed(() =>
+    props.parentTweetId
+        ? 'reply-tweet-btn'
+        : props.quotedTweet
+            ? 'quote-tweet-btn'
+            : 'post-tweet-btn',
+)
 interface MediaItem {
     url: string
     type: 'image' | 'video'

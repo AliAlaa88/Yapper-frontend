@@ -40,7 +40,7 @@
                     <div
                         v-if="videoDurations[tweet.tweet_id]"
                         class="absolute bottom-1 left-1 bg-black/75 px-1.5 py-0.5 rounded text-xs font-semibold"
-                        style="color: white;"
+                        style="color: white"
                     >
                         {{ videoDurations[tweet.tweet_id] }}
                     </div>
@@ -89,19 +89,12 @@ const handleVideoMetadata = (event: Event, tweetId: string) => {
 const { $listService } = useNuxtApp()
 
 // Use the generic infinite query composable
-const {
-    items,
-    isFetching,
-    error,
-    refetch,
-    isFetchingNextPage,
-    isPending,
-    loadMoreTrigger,
-} = useGenericInfiniteQuery<TweetsPage, Tweet>({
-    queryKey: computed(() => ['tweets', fetchingSourceRef.value ?? '']),
-    queryFn: ({ pageParam }) =>
-        ($listService as any).fetchList(fetchingSourceRef.value ?? '', pageParam),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    getPageData: (page) => page.data,
-})
+const { items, isFetching, error, refetch, isFetchingNextPage, isPending, loadMoreTrigger } =
+    useGenericInfiniteQuery<TweetsPage, Tweet>({
+        queryKey: computed(() => ['tweets', fetchingSourceRef.value ?? '']),
+        queryFn: ({ pageParam }) =>
+            ($listService as any).fetchList(fetchingSourceRef.value ?? '', pageParam),
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        getPageData: (page) => page.data,
+    })
 </script>

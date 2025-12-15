@@ -1,6 +1,4 @@
-export function useTweetPageSeo(
-    interactionType?: 'likes' | 'retweets' | 'quotes'
-) {
+export function useTweetPageSeo(interactionType?: 'likes' | 'retweets' | 'quotes') {
     const { t, locale } = useI18n()
     const route = useRoute()
     const config = useRuntimeConfig()
@@ -39,8 +37,6 @@ export function useTweetPageSeo(
             { name: 'twitter:site', content: '@yapper' },
             { name: 'robots', content: 'index, follow' },
         ],
-        link: [
-            { rel: 'canonical', href: currentUrl },
-        ],
+        link: [{ rel: 'canonical', href: currentUrl }],
     })
 }

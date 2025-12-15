@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <TweetsList :fetchingSource="`tweets/bookmarks`" class="min-h-[650px] w-full" />
+    <TweetsList :fetching-source="`tweets/bookmarks`" class="min-h-[650px] w-full" />
 </template>
 
 <script setup lang="ts">

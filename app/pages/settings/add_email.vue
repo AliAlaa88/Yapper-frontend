@@ -1,5 +1,5 @@
 <template>
-    <ChangeEmailForm/>
+    <ChangeEmailForm />
 </template>
 
 <script setup lang="ts">

@@ -2,7 +2,6 @@
     <DisplaySettings />
 </template>
 
-
 <script setup lang="ts">
 import DisplaySettings from '~/modules/settings/components/Display/DisplaySettings.vue'
 import { useSeo } from '~/modules/Common/composables/useSeo'

@@ -1,34 +1,43 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="true"
+        :is-open="true"
+        :has-close-button="true"
         container-class="bg-auth-popup"
-        contentClass="sm:max-w-xl w-full"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
-        slotClass="py-8 px-10 sm:px-10 md:px-12 lg:px-14"
+        content-class="sm:max-w-xl w-full"
+        :header-class="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
+        slot-class="py-8 px-10 sm:px-10 md:px-12 lg:px-14"
+        @close="$emit('close')"
     >
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6 text-primary" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.title') }}</h2>
+        <!-- Title -->
+        <h2
+            class="text-3xl font-bold mb-6 text-primary"
+            :class="isArabic ? 'text-right' : 'text-left'"
+        >
+            {{ $t('auth.signup.title') }}
+        </h2>
 
-            <!-- Name Input -->
+        <!-- Name Input -->
         <form @submit.prevent="onNext">
             <div class="mb-4">
                 <input
                     id="input-name-signup-s1"
+                    v-model="name"
                     type="text"
                     :placeholder="$t('auth.signup.namePlaceholder')"
-                    v-model="name"
-                    @blur="validateNameField"
-                    @input="clearNameError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        nameError ? 'border-red focus:border-red' : ''
+                        nameError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validateNameField"
+                    @input="clearNameError"
+                >
                 <p v-if="nameError" class="text-red text-xs mt-1">{{ nameError }}</p>
             </div>
 
@@ -36,19 +45,21 @@
             <div class="mb-4">
                 <input
                     id="input-email-signup-s1"
+                    v-model="email"
                     type="email"
                     :placeholder="$t('auth.signup.emailPlaceholder')"
-                    v-model="email"
-                    @blur="validateEmailField"
-                    @input="clearEmailError"
                     :class="[
                         'w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-blue transition-colors shadow-sm',
-                        emailError ? 'border-red focus:border-red' : ''
+                        emailError ? 'border-red focus:border-red' : '',
                     ]"
-                />
+                    @blur="validateEmailField"
+                    @input="clearEmailError"
+                >
                 <p v-if="emailError" class="text-red text-xs mt-1">{{ emailError }}</p>
             </div>
-            <h3 class="text-l font-bold" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.dobTitle') }}</h3>
+            <h3 class="text-l font-bold" :class="isArabic ? 'text-right' : 'text-left'">
+                {{ $t('auth.signup.dobTitle') }}
+            </h3>
             <p class="text-primary mb-4 text-sm">{{ $t('auth.signup.dobInfo') }}</p>
             <p v-if="dobError" class="text-red text-xs mb-2">{{ dobError }}</p>
             <!-- Date of Birth Dropdowns -->
@@ -60,15 +71,27 @@
                         v-model="month"
                         class="w-full bg-primary text-primary cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected :class="isArabic? 'text-right':'text-left'">{{ $t('auth.signup.month') }}</option>
-                        <option v-for="m in months" :key="m.value" :value="m.value" :class="isArabic ? 'text-right' : 'text-left'">
+                        <option
+                            value=""
+                            disabled
+                            selected
+                            :class="isArabic ? 'text-right' : 'text-left'"
+                        >
+                            {{ $t('auth.signup.month') }}
+                        </option>
+                        <option
+                            v-for="m in months"
+                            :key="m.value"
+                            :value="m.value"
+                            :class="isArabic ? 'text-right' : 'text-left'"
+                        >
                             {{ m.label }}
                         </option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -79,13 +102,27 @@
                         v-model="day"
                         class="w-full bg-primary text-primary cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.signup.day') }}</option>
-                        <option v-for="d in days" :key="d" :value="d" :class="isArabic ? 'text-right' : 'text-left'">{{ d }}</option>
+                        <option
+                            value=""
+                            disabled
+                            selected
+                            :class="isArabic ? 'text-right' : 'text-left'"
+                        >
+                            {{ $t('auth.signup.day') }}
+                        </option>
+                        <option
+                            v-for="d in days"
+                            :key="d"
+                            :value="d"
+                            :class="isArabic ? 'text-right' : 'text-left'"
+                        >
+                            {{ d }}
+                        </option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -96,40 +133,54 @@
                         v-model="year"
                         class="w-full bg-primary text-primary cursor-pointer border border-primary rounded-md px-4 py-3 focus:outline-none focus:border-blue appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled selected :class="isArabic?'text-right':'text-left'">{{ $t('auth.signup.year') }}</option>
-                        <option v-for="y in years" :key="y" :value="y" :class="isArabic ? 'text-right' : 'text-left'">{{ y }}</option>
+                        <option
+                            value=""
+                            disabled
+                            selected
+                            :class="isArabic ? 'text-right' : 'text-left'"
+                        >
+                            {{ $t('auth.signup.year') }}
+                        </option>
+                        <option
+                            v-for="y in years"
+                            :key="y"
+                            :value="y"
+                            :class="isArabic ? 'text-right' : 'text-left'"
+                        >
+                            {{ y }}
+                        </option>
                     </select>
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-primary"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
             </div>
             <!-- Next Button -->
             <Button
                 id="button-next-signup-s1"
-                buttonClass="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
+                button-class="w-full bg-alternate hover:bg-hover-alternate text-alternate font-semibold cursor-pointer rounded-full py-2 transition mb-3"
                 :loading-text="t('auth.common.loading')"
                 :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
             </Button>
-            </form>
-            <!-- reCAPTCHA -->
-            <div class="flex justify-center mt-4">
-                <Recaptcha
-                    ref="recaptchaRef"
-                    class="w-fit cursor-pointer"
-                    @verified="onRecaptchaVerified"
-                    @error="onCaptchaError"
-                />
-            </div>
-            <h3 id="error-message-signup-s1" class="text-red text-sm mt-2" v-if="error">
-                {{ error }}
-            </h3>
-            <h3 class="text-green text-sm mt-2" v-if="success">{{ success }}</h3>
+        </form>
+        <!-- reCAPTCHA -->
+        <div class="flex justify-center mt-4">
+            <Recaptcha
+                ref="recaptchaRef"
+                class="w-fit cursor-pointer"
+                @verified="onRecaptchaVerified"
+                @error="onCaptchaError"
+            />
+        </div>
+        <h3 v-if="error" id="error-message-signup-s1" class="text-red text-sm mt-2">
+            {{ error }}
+        </h3>
+        <h3 v-if="success" class="text-green text-sm mt-2">{{ success }}</h3>
     </Popup>
 </template>
 <script setup lang="ts">
@@ -184,8 +235,7 @@ const recaptcha = ref('')
 const onRecaptchaVerified = (token: string) => {
     recaptcha.value = token
 }
-const onCaptchaError = () => {
-}
+const onCaptchaError = () => {}
 const registerMutation = useRegisterS1Query(
     (data) => {
         success.value = 'Registration successful! Please verify your email.'
@@ -204,23 +254,19 @@ const registerMutation = useRegisterS1Query(
 )
 const checkIdentifierMutation = checkIdentifier(
     (data) => {
-        if(data.data.identifier_type === 'email'){
-            if(emailError.value === '')
-                emailError.value = 'this identifier is already in use.'
-        }
-        else
-            if(emailError.value === '')
-                emailError.value = 'invalid email format.'
+        if (data.data.identifier_type === 'email') {
+            if (emailError.value === '') emailError.value = 'this identifier is already in use.'
+        } else if (emailError.value === '') emailError.value = 'invalid email format.'
     },
     (err: any) => {
         const errorMsg =
-            err?.response?.data?.message || err?.message || 'Identifier check failed. Please try again.'
-        if(errorMsg.includes('Email not found')){
-            if(emailError.value === '')
-                emailError.value = ''
+            err?.response?.data?.message ||
+            err?.message ||
+            'Identifier check failed. Please try again.'
+        if (errorMsg.includes('Email not found')) {
+            if (emailError.value === '') emailError.value = ''
         } else {
-            if(emailError.value === '')
-                emailError.value = 'invalid email format.'
+            if (emailError.value === '') emailError.value = 'invalid email format.'
         }
     },
 )
@@ -239,7 +285,7 @@ const validateNameField = () => {
         return true
     }
     const result = validateName(name.value)
-    nameError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    nameError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     return result.valid
 }
 
@@ -249,14 +295,14 @@ const validateEmailField = () => {
         return true
     }
     const result = validateEmail(email.value)
-    emailError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    emailError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     checkIdentifierMutation.mutate(email.value)
     return result.valid
 }
 
 const validateDobField = () => {
     const result = validateDateOfBirth(year.value, month.value, day.value)
-    dobError.value = result.valid ? '' : (result.messageKey ? t(result.messageKey) : '')
+    dobError.value = result.valid ? '' : result.messageKey ? t(result.messageKey) : ''
     return result.valid
 }
 

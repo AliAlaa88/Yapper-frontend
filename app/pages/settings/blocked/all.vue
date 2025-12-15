@@ -15,5 +15,4 @@ useSeo({
 })
 
 definePageMeta({ layout: 'settings' })
-
 </script>

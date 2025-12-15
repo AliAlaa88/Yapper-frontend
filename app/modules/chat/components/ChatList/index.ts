@@ -1,1 +1,1 @@
-export {default as ChatList} from './ChatList.vue' 
+export { default as ChatList } from './ChatList.vue'

@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
 
+// Import after mocks
+import { useSidebarState } from '../../composables/useSidebarState'
+
 // Mock localStorage
 const localStorageMock = (() => {
     let store: Record<string, string> = {}
@@ -32,9 +35,6 @@ vi.mock('@vueuse/core', () => {
         }),
     }
 })
-
-// Import after mocks
-import { useSidebarState } from '../../composables/useSidebarState'
 
 describe('useSidebarState', () => {
     beforeEach(() => {

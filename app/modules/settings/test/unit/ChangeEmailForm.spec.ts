@@ -49,7 +49,7 @@ describe('ChangeEmailForm', () => {
                     Popup: { template: '<div><slot /></div>' },
                     Logo: true,
                     Button: {
-                        template: `<button @click="$emit('click')"><slot /></button>`,
+                        template: '<button @click="$emit(\'click\')"><slot /></button>',
                     },
                     VerifyEmailOTP: {
                         template: '<div data-test="otp-modal"></div>',

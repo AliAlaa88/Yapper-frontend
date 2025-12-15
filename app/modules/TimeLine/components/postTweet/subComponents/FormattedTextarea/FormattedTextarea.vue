@@ -10,7 +10,7 @@
             <span v-if="!modelValue" class="text-muted">{{ placeholder }}</span>
 
             <span v-else v-html="formattedContent" />
-            <br v-if="modelValue.endsWith('\n')" />
+            <br v-if="modelValue.endsWith('\n')" >
         </div>
 
         <textarea

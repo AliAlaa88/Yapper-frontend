@@ -1,23 +1,18 @@
 <template>
     <DetailedPanel :title="t('settings.mutedAccounts')">
         <div class="w-full text-primary">
-            <div class="relative w-full border-b border-primary pb-4  px-5 py-2">
+            <div class="relative w-full border-b border-primary pb-4 px-5 py-2">
                 <p class="text-muted text-[13px] mt-0.5">
-                    {{  t('settings.mutedAccounts_desc')    }}
+                    {{ t('settings.mutedAccounts_desc') }}
                 </p>
             </div>
-            <div
-                v-if="myMutedUsersQuery.isLoading.value"
-                class="flex justify-center py-6">
+            <div v-if="myMutedUsersQuery.isLoading.value" class="flex justify-center py-6">
                 <div
                     class="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"
                 />
             </div>
             <div v-else-if="myMutedUsersQuery.isSuccess.value">
-                <UserAccountItem
-                    v-for="user in users"
-                    :key="user.user_id"
-                    :account="user">
+                <UserAccountItem v-for="user in users" :key="user.user_id" :account="user">
                     <SettingsMutedButton :user-id="user.user_id" :is-muted="user.is_muted" />
                 </UserAccountItem>
             </div>
@@ -72,13 +67,11 @@ watch(
     () => myMutedUsersQuery.isLoading.value,
     (val) => {
         console.log('isLoading users response:', val)
-
     },
     { immediate: true, deep: true },
 )
-const users = computed(() =>
-    myMutedUsersQuery.data.value?.pages
-        .flatMap(page => page.data.data) ?? [],
+const users = computed(
+    () => myMutedUsersQuery.data.value?.pages.flatMap((page) => page.data.data) ?? [],
 )
 
 const loadMore = ref<HTMLElement | null>(null)
@@ -108,12 +101,16 @@ onMounted(() => {
         },
     )
 
-    watch(loadMore, (newVal) => {
-        if (newVal) {
-            console.log('Observing loadMore')
-            observer.observe(newVal)
-        }
-    }, { immediate: true })
+    watch(
+        loadMore,
+        (newVal) => {
+            if (newVal) {
+                console.log('Observing loadMore')
+                observer.observe(newVal)
+            }
+        },
+        { immediate: true },
+    )
 
     onUnmounted(() => {
         observer.disconnect()

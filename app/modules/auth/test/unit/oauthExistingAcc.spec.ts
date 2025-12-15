@@ -129,7 +129,7 @@ vi.mock('~/modules/auth/queries/useGetuserQuery', () => ({
                     }
                 }
             },
-            { immediate: true }
+            { immediate: true },
         )
 
         return {
@@ -180,10 +180,7 @@ function mountSuccessPage(token: string = '') {
 
     return mount(SuccessPage, {
         global: {
-            plugins: [
-                [VueQueryPlugin, { queryClient }],
-                i18n,
-            ],
+            plugins: [[VueQueryPlugin, { queryClient }], i18n],
             mocks: {
                 useRouter: () => mockRouter,
                 useRoute: () => mockRoute,
@@ -200,7 +197,10 @@ function mountSuccessPage(token: string = '') {
             },
             stubs: {
                 NuxtLink: { template: '<a><slot /></a>' },
-                AuthLoadingPage: { template: '<div class="fixed inset-0 bg-black/10 flex items-center justify-center"><p>Loading...</p></div>' },
+                AuthLoadingPage: {
+                    template:
+                        '<div class="fixed inset-0 bg-black/10 flex items-center justify-center"><p>Loading...</p></div>',
+                },
             },
         },
     })
@@ -226,7 +226,6 @@ describe('OAuth Existing Account Flow - Success Page', () => {
             expect(wrapper.text()).toContain('Loading...')
             expect(wrapper.find('.fixed.inset-0').exists()).toBe(true)
         })
-
     })
 
     describe('Token Handling', () => {
@@ -255,7 +254,6 @@ describe('OAuth Existing Account Flow - Success Page', () => {
 
             expect(mockUserStore.accessToken).toBe(token)
         })
-
     })
 
     describe('User Data Fetching', () => {
@@ -303,7 +301,6 @@ describe('OAuth Existing Account Flow - Success Page', () => {
                 user: mockUserData.data,
             })
         })
-
     })
 
     describe('Error Handling', () => {
@@ -324,9 +321,7 @@ describe('OAuth Existing Account Flow - Success Page', () => {
 
             expect(mockUserStore.logout).toHaveBeenCalled()
         })
-
     })
-
 
     describe('Loading State Management', () => {
         it('should start with loading state showing', () => {
@@ -351,6 +346,5 @@ describe('OAuth Existing Account Flow - Success Page', () => {
 
             expect(wrapper.find('.fixed.inset-0').exists()).toBe(true)
         })
-
     })
 })

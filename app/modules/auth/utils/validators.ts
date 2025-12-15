@@ -109,7 +109,7 @@ export function validateOtp(otp: string): ValidationResult {
         return { valid: false, messageKey: 'auth.validation.otpRequired' }
     }
     // OTP can be digits or letters
-    const otpRegex = /^[A-Za-z0-9]{6}$/;
+    const otpRegex = /^[A-Za-z0-9]{6}$/
     if (!otpRegex.test(otp)) {
         return { valid: false, messageKey: 'auth.validation.otpInvalid' }
     }

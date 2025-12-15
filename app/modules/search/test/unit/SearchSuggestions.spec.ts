@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, nextTick, defineComponent, h } from 'vue'
+import { ref, nextTick } from 'vue'
 
 // Mock dependencies
 const mockRouterPush = vi.fn()
@@ -69,11 +69,13 @@ describe('SearchSuggestions', () => {
         mockSuggestionsData.value = null
         mockIsLoading.value = false
         mockIsError.value = false
-        Object.keys(mockLocalStorage).forEach(key => delete mockLocalStorage[key])
+        Object.keys(mockLocalStorage).forEach((key) => delete mockLocalStorage[key])
 
         vi.stubGlobal('localStorage', {
             getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
-            setItem: vi.fn((key: string, value: string) => { mockLocalStorage[key] = value }),
+            setItem: vi.fn((key: string, value: string) => {
+                mockLocalStorage[key] = value
+            }),
         })
     })
 
@@ -159,7 +161,10 @@ describe('SearchSuggestions', () => {
             await wrapper.findAll('li')[0].trigger('click')
 
             expect(wrapper.emitted('handleSearchSubmit')).toBeTruthy()
-            expect(wrapper.emitted('handleSearchSubmit')![0]).toEqual(['suggested query 1', 'typeahead_click'])
+            expect(wrapper.emitted('handleSearchSubmit')![0]).toEqual([
+                'suggested query 1',
+                'typeahead_click',
+            ])
         })
     })
 
@@ -251,7 +256,13 @@ describe('SearchSuggestions', () => {
 
         it('removes duplicate user from history before adding', async () => {
             mockLocalStorage['yapper-search-history'] = JSON.stringify([
-                { type: 'user', user_id: 'user1', name: 'Old Name', username: 'testuser1', timestamp: 1000 }
+                {
+                    type: 'user',
+                    user_id: 'user1',
+                    name: 'Old Name',
+                    username: 'testuser1',
+                    timestamp: 1000,
+                },
             ])
 
             mockSuggestionsData.value = {
@@ -268,7 +279,9 @@ describe('SearchSuggestions', () => {
 
         it('handles localStorage error gracefully', async () => {
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-            vi.mocked(localStorage.getItem).mockImplementation(() => { throw new Error('Storage error') })
+            vi.mocked(localStorage.getItem).mockImplementation(() => {
+                throw new Error('Storage error')
+            })
 
             mockSuggestionsData.value = {
                 suggested_queries: [],

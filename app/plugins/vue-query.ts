@@ -1,6 +1,5 @@
 import { defineNuxtPlugin } from 'nuxt/app'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 const createQueryClient = () =>
     new QueryClient({

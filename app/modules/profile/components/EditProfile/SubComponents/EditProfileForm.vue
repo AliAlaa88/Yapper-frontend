@@ -7,7 +7,7 @@
                 type="text"
                 :placeholder="$t('profile.editProfileModal.namePlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
-                style="unicode-bidi: plaintext;"
+                style="unicode-bidi: plaintext"
                 maxlength="50"
                 @input="updateField('name', ($event.target as HTMLInputElement).value)"
             >
@@ -29,7 +29,7 @@
                 rows="3"
                 :placeholder="$t('profile.editProfileModal.bioPlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200 resize-none"
-                style="unicode-bidi: plaintext;"
+                style="unicode-bidi: plaintext"
                 maxlength="160"
                 @input="updateField('bio', ($event.target as HTMLTextAreaElement).value)"
             />
@@ -51,7 +51,7 @@
                 type="text"
                 :placeholder="$t('profile.editProfileModal.locationPlaceholder')"
                 class="peer w-full bg-transparent border border-primary rounded-md px-3 pt-6 pb-2 text-primary text-[17px] outline-none focus:border-2 focus:border-accent transition-colors duration-200"
-                style="unicode-bidi: plaintext;"
+                style="unicode-bidi: plaintext"
                 maxlength="30"
                 @input="updateField('country', ($event.target as HTMLInputElement).value)"
             >
@@ -77,12 +77,17 @@
                         v-model="selectedMonth"
                         class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors"
                     >
-                        <option value="" disabled>{{ $t('profile.editProfileModal.month') }}</option>
+                        <option value="" disabled>
+                            {{ $t('profile.editProfileModal.month') }}
+                        </option>
                         <option v-for="m in months" :key="m.value" :value="m.value">
                             {{ m.label }}
                         </option>
                     </select>
-                    <span class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary">▼</span>
+                    <span
+                        class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                    >▼</span
+                    >
                 </div>
 
                 <div class="flex-1 relative">
@@ -94,7 +99,10 @@
                         <option value="" disabled>{{ $t('profile.editProfileModal.day') }}</option>
                         <option v-for="d in days" :key="d" :value="d">{{ formatNumber(d) }}</option>
                     </select>
-                    <span class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary">▼</span>
+                    <span
+                        class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                    >▼</span
+                    >
                 </div>
 
                 <div class="flex-1 relative">
@@ -104,9 +112,14 @@
                         class="w-full bg-primary text-primary cursor-pointer border-2 border-primary rounded-md px-4 py-3 focus:outline-none focus:border-accent appearance-none shadow-sm transition-colors"
                     >
                         <option value="" disabled>{{ $t('profile.editProfileModal.year') }}</option>
-                        <option v-for="y in years" :key="y" :value="y">{{ formatNumber(y) }}</option>
+                        <option v-for="y in years" :key="y" :value="y">
+                            {{ formatNumber(y) }}
+                        </option>
                     </select>
-                    <span class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary">▼</span>
+                    <span
+                        class="absolute end-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary"
+                    >▼</span
+                    >
                 </div>
             </div>
         </div>
@@ -238,6 +251,6 @@ watch(
     (isValid) => {
         emit('update:isBirthDateValid', isValid)
     },
-    { immediate: true }
+    { immediate: true },
 )
 </script>

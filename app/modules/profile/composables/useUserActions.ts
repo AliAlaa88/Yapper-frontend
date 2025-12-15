@@ -5,7 +5,7 @@ export function useUserActions(
     userId: Ref<string | undefined>,
     targetUsername?: Ref<string | undefined>,
     currentUserId?: Ref<string | undefined>,
-    enabled: Ref<boolean> = ref(true)
+    enabled: Ref<boolean> = ref(true),
 ) {
     const {
         unfollowMutation,

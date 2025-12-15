@@ -152,7 +152,12 @@ describe('useUserActions', () => {
         await vi.advanceTimersByTimeAsync(300)
         await promise
 
-        expect(useUserActionsQuery).toHaveBeenCalledWith(userId, targetUsername, currentUserId, enabled)
+        expect(useUserActionsQuery).toHaveBeenCalledWith(
+            userId,
+            targetUsername,
+            currentUserId,
+            enabled,
+        )
         expect(mockMutations.blockMutation.mutateAsync).toHaveBeenCalled()
     })
 })

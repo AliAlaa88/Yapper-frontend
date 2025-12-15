@@ -4,7 +4,7 @@
         v-if="visible && isMobile"
         class="fixed inset-0 bg-black/50 z-50"
         @click="$emit('close')"
-    ></div>
+    />
     <div
         v-if="visible"
         ref="mentionSuggestionRef"

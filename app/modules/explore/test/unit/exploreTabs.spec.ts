@@ -158,7 +158,9 @@ describe('ExploreTabs Component', () => {
             expect(wrapper.vm.translatedTabs.length).toBeGreaterThanOrEqual(2)
             // Check that for_you and trending are present
             const hasForYou = wrapper.vm.translatedTabs.some((tab: any) => tab.value === 'for_you')
-            const hasTrending = wrapper.vm.translatedTabs.some((tab: any) => tab.value === 'trending')
+            const hasTrending = wrapper.vm.translatedTabs.some(
+                (tab: any) => tab.value === 'trending',
+            )
             expect(hasForYou).toBe(true)
             expect(hasTrending).toBe(true)
         })

@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-col w-full">
         <div class="sticky top-0 z-10 bg-primary/80 backdrop-blur-md">
-            <Tabs :tabs="tabs" :activeTab="activeTab" @change="handleChange" />
+            <Tabs :tabs="tabs" :active-tab="activeTab" @change="handleChange" />
         </div>
 
         <PostTweet :border="true" :inlineborder="true" />
         <TweetsList
-            :fetchingSource="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/following'}`"
+            :fetching-source="`${activeTab === 'foryou' ? '/timeline/for-you' : '/timeline/following'}`"
             class="w-full"
         />
     </div>

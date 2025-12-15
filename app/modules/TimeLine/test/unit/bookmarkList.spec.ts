@@ -87,7 +87,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.exists()).toBe(true)
     })
 
@@ -103,7 +103,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const header = wrapper.find('.sticky')
         expect(header.exists()).toBe(true)
         expect(header.classes()).toContain('top-0')
@@ -121,7 +121,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const backButton = wrapper.find('#btn-back-bookmarks')
         expect(backButton.exists()).toBe(true)
     })
@@ -144,7 +144,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.text()).toContain('Bookmarks')
     })
 
@@ -160,7 +160,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         expect(wrapper.find('.tweets-list').exists()).toBe(true)
     })
 
@@ -176,10 +176,10 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const backButton = wrapper.find('#btn-back-bookmarks')
         await backButton.trigger('click')
-        
+
         expect(mockRouter.back).toHaveBeenCalled()
     })
 
@@ -195,7 +195,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const header = wrapper.find('.sticky')
         expect(header.classes()).toContain('backdrop-blur-md')
     })
@@ -212,7 +212,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const container = wrapper.find('.flex.items-center.gap-8')
         expect(container.classes()).toContain('px-4')
         expect(container.classes()).toContain('py-3')
@@ -230,7 +230,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const backButton = wrapper.find('#btn-back-bookmarks')
         expect(backButton.classes()).toContain('hover:bg-hover')
         expect(backButton.classes()).toContain('rounded-full')
@@ -248,7 +248,7 @@ describe('bookmarkList Component', () => {
                 },
             },
         })
-        
+
         const header = wrapper.find('.sticky')
         expect(header.classes()).toContain('z-10')
     })

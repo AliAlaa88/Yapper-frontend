@@ -15,14 +15,14 @@
                 id="category-link"
                 :key="category.href"
                 :to="category.href"
-                class="block relative px-5 py-3 rounded hover:bg-hover
-                transition-colors text-primary"
+                class="block relative px-5 py-3 rounded hover:bg-hover transition-colors text-primary"
             >
                 <div class="flex items-center">
                     <component
                         :is="category.icon"
                         class="shrink-0 opacity-50 w-4.5 h-4.5"
-                        :class="locale === 'ar' ? 'ml-8 mr-2' : 'mr-8 ml-2'" />
+                        :class="locale === 'ar' ? 'ml-8 mr-2' : 'mr-8 ml-2'"
+                    />
                     <div>
                         <span class="block text-[15px] text-primary"> {{ category.label }} </span>
                         <p v-if="category.description" class="text-muted max-w-[420px] text-[13px]">
@@ -32,7 +32,8 @@
                     <component
                         :is="locale === 'ar' ? ChevronLeft : ChevronRight"
                         class="opacity-40 group-hover:text-white absolute transition-colors"
-                        :class="locale === 'ar' ? 'left-3' : 'right-3'" />
+                        :class="locale === 'ar' ? 'left-3' : 'right-3'"
+                    />
                 </div>
             </NuxtLink>
         </div>
@@ -47,15 +48,15 @@ import { useI18n } from 'vue-i18n'
 const { locale } = useI18n()
 
 interface Category {
-    label: string,
-    description?: string,
-    icon?: Component,
+    label: string
+    description?: string
+    icon?: Component
     href: string
 }
 
 interface Item {
-    title: string,
-    description?: string,
+    title: string
+    description?: string
     categories: Category[]
 }
 

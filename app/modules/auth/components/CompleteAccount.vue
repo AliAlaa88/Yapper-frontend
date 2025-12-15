@@ -1,7 +1,7 @@
 <template>
     <ProfilePicture
         v-if="showProfilePicture"
-        v-model:profilePicture="profileData.profilePicture"
+        v-model:profile-picture="profileData.profilePicture"
         @next="onProfilePictureNext"
         @skip="onProfilePictureSkip"
         @close="onClose"
@@ -9,15 +9,15 @@
     <Username
         v-if="showUsername"
         v-model:username="profileData.username"
+        :Recommendations="props.Recommendations"
         @next="onUsernameNext"
         @skip="onUsernameSkip"
         @back="onUsernameBack"
         @close="onClose"
-        :Recommendations="props.Recommendations"
     />
     <Language
         v-if="showLanguage"
-        v-model:selectedLanguage="profileData.language"
+        v-model:selected-language="profileData.language"
         @next="onLanguageNext"
         @skip="onLanguageSkip"
         @back="onLanguageBack"
@@ -42,7 +42,7 @@
         v-if="showLoading"
         class="fixed inset-0 flex flex-col items-center justify-center bg-primary z-50"
     >
-        <Logo imgClass="w-16 mb-6 animate-pulse" />
+        <Logo img-class="w-16 mb-6 animate-pulse" />
         <div class="text-primary text-xl font-semibold">{{ $t('auth.common.loading') }}</div>
     </div>
 </template>
@@ -58,6 +58,7 @@ import Logo from '~/modules/Common/components/Logo'
 import { useRouter } from 'vue-router'
 import { useGetUserQuery } from '../queries/useGetuserQuery'
 import { useUserStore } from '~/modules/auth/stores/userStore'
+import { useI18n } from 'vue-i18n'
 const userStore = useUserStore()
 const router = useRouter()
 const showProfilePicture = ref(false)
@@ -67,7 +68,6 @@ const showInterests = ref(false)
 const showWhoToFollow = ref(false)
 const showLoading = ref(false)
 const enableUserQuery = ref(false)
-import { useI18n } from 'vue-i18n'
 const { locale } = useI18n()
 // Centralized profile completion state
 const profileData = reactive({

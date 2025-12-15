@@ -1,22 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref } from 'vue'
 import ProfileActions from '../../components/ProfileHeader/SubComponents/ProfileActions.vue'
 
 vi.mock('~/modules/profile/components/ProfileHeader/SubComponents/ProfileActionsMenu.vue', () => ({
     default: {
         name: 'ProfileActionsMenu',
         props: ['isTweet'],
-        template: '<div class="mock-menu">Mock Menu</div>'
-    }
+        template: '<div class="mock-menu">Mock Menu</div>',
+    },
 }))
 
 describe('ProfileActions', () => {
     it('renders actions button', () => {
         const wrapper = mount(ProfileActions, {
             props: {
-                isTweet: false
-            }
+                isTweet: false,
+            },
         })
 
         const button = wrapper.find('#menu-button')
@@ -27,8 +26,8 @@ describe('ProfileActions', () => {
     it('toggles menu visibility on button click', async () => {
         const wrapper = mount(ProfileActions, {
             props: {
-                isTweet: false
-            }
+                isTweet: false,
+            },
         })
 
         // Initially menu should not be visible
@@ -46,8 +45,8 @@ describe('ProfileActions', () => {
     it('displays backdrop when menu is open', async () => {
         const wrapper = mount(ProfileActions, {
             props: {
-                isTweet: false
-            }
+                isTweet: false,
+            },
         })
 
         await wrapper.find('#menu-button').trigger('click')
@@ -59,8 +58,8 @@ describe('ProfileActions', () => {
     it('passes isTweet prop to ProfileActionsMenu', async () => {
         const wrapper = mount(ProfileActions, {
             props: {
-                isTweet: true
-            }
+                isTweet: true,
+            },
         })
 
         await wrapper.find('#menu-button').trigger('click')
@@ -72,8 +71,8 @@ describe('ProfileActions', () => {
     it('provides showList to child components', async () => {
         const wrapper = mount(ProfileActions, {
             props: {
-                isTweet: false
-            }
+                isTweet: false,
+            },
         })
 
         const provided = wrapper.vm.$.provides

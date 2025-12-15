@@ -1,11 +1,8 @@
 <template>
-    <div
-        v-if="isBlocked"
-        class="pb-3">
+    <div v-if="isBlocked" class="pb-3">
         <Button
             id="profile-block-button"
-            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center
-            justify-center whitespace-nowrap rounded-full transition-colors duration-200"
+            class="cursor-pointer font-bold text-[15px] leading-5 flex items-center justify-center whitespace-nowrap rounded-full transition-colors duration-200"
             :button-class="`bg-red hover:opacity-95 text-primary
             px-[45px] py-[10px] w-[88px] h-[36px]`"
             :button-text="buttonText"
@@ -29,10 +26,7 @@ const profileStore = useProfileStore()
 const userStore = useUserStore()
 const userId = computed(() => profileStore.getProfileId() || '')
 const meId = computed(() => userStore.getUser()?.user_id)
-const {
-    isBlocked,
-    username,
-} = useUserInfo(userId)
+const { isBlocked, username } = useUserInfo(userId)
 const hover = ref(false)
 const { t } = useI18n()
 const buttonText = computed(() => {
@@ -41,8 +35,5 @@ const buttonText = computed(() => {
 })
 
 const userInteractions = useUserInteractions(userId, username, meId)
-const {
-    handleUnblockWithConfirmation,
-} = userInteractions
-
+const { handleUnblockWithConfirmation } = userInteractions
 </script>

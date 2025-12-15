@@ -32,7 +32,7 @@
                             :alt="parentUser?.name"
                             class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
                             @error="(event) => handleImageError(parentUser?.name, event)"
-                        />
+                        >
                     </NuxtLink>
                     <!-- Thread connecting line -->
                     <div class="w-0.5 flex-1 bg-gray-600 mt-1 min-h-5" />
@@ -73,7 +73,7 @@
                                     :alt="user.name"
                                     class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
                                     @error="(event) => handleImageError(user.name, event)"
-                                />
+                                >
                             </template>
                             <template #content="{ isOpen }">
                                 <UserCard
@@ -182,7 +182,7 @@
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all"
                                 @error="(event) => handleImageError(user.name, event)"
-                            />
+                            >
                         </template>
                         <template #content="{ isOpen }">
                             <UserCard
@@ -261,7 +261,7 @@
                         :href="parentProfileUrl"
                         class="text-accent font-medium hover:underline cursor-pointer"
                         @click.stop
-                        >@{{ parentUser?.username }}
+                    >@{{ parentUser?.username }}
                     </NuxtLink>
                 </div>
                 <Content :content="content" />
@@ -307,6 +307,7 @@
         :tweet-id="tweet.tweet_id"
         :initial-content="tweet.content"
         :is-loading="isUpdateLoading"
+        :mentions="props.tweet.mentions"
         @close="handleCloseEditModal"
         @save="handleSaveEdit"
     />
@@ -473,8 +474,8 @@ const repostedUsername = computed(() => {
     return currentUser.value?.user_id === props.tweet.reposted_by?.id
         ? 'You'
         : props.tweet.reposted_by === undefined
-          ? 'You'
-          : props.tweet.reposted_by.name
+            ? 'You'
+            : props.tweet.reposted_by.name
 })
 // Transform content string to Content object
 const content = computed(() => ({

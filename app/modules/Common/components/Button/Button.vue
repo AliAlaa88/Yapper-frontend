@@ -1,10 +1,13 @@
 <template>
     <button
         :id="id"
-        :class="[buttonClass, {
-            'cursor-not-allowed': isLoading || disabled,
-            'cursor-pointer': !isLoading && !disabled
-        }]"
+        :class="[
+            buttonClass,
+            {
+                'cursor-not-allowed': isLoading || disabled,
+                'cursor-pointer': !isLoading && !disabled,
+            },
+        ]"
         :disabled="isLoading || disabled"
         @click="handleClick"
         @mouseover="handleMouseOver"
@@ -21,14 +24,13 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-    id?: string;
-    buttonText?: string;
-    isLoading?: boolean;
-    disabled?: boolean;
-    buttonClass?: string;
-    loadingText?: string;
+    id?: string
+    buttonText?: string
+    isLoading?: boolean
+    disabled?: boolean
+    buttonClass?: string
+    loadingText?: string
 }>()
-
 
 const emit = defineEmits<{
     click: []
@@ -48,5 +50,4 @@ function handleMouseOver() {
 function handleMouseOut() {
     emit('mouseout')
 }
-
 </script>

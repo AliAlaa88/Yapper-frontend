@@ -43,11 +43,11 @@ describe('VerifyEmailOTP', () => {
                 stubs: {
                     Popup: {
                         props: ['isOpen'],
-                        template: `<div data-test="popup"><slot /></div>`,
+                        template: '<div data-test="popup"><slot /></div>',
                     },
                     Logo: true,
                     BackButton: {
-                        template: `<button data-test="back" @click="$emit('close')" />`,
+                        template: '<button data-test="back" @click="$emit(\'close\')" />',
                     },
                     Button: {
                         props: ['buttonText', 'disabled'],

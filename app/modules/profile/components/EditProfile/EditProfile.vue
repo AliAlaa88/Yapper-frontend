@@ -40,7 +40,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleCoverFileChange"
-                />
+                >
                 <input
                     id="avatar-file-input"
                     ref="avatarFileInput"
@@ -48,7 +48,7 @@
                     accept="image/*"
                     class="hidden"
                     @change="handleAvatarFileChange"
-                />
+                >
             </div>
         </div>
     </div>

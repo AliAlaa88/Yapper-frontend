@@ -7,10 +7,10 @@
             >
                 <div class="flex items-center gap-4">
                     <button
-                        @click="$router.back()"
                         class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[var(--color-x-gray-light)] transition-colors"
+                        @click="$router.back()"
                     >
-                        <ArrowLeft :size="20" class="cursor-pointer x-"/>
+                        <ArrowLeft :size="20" class="cursor-pointer x-" />
                     </button>
                     <h1 class="text-l font-bold text-white">Tweet</h1>
                 </div>
@@ -25,11 +25,11 @@
 </template>
 
 <script setup>
+import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
+import { ArrowLeft } from 'lucide-vue-next'
 definePageMeta({
     middleware: ['auth'],
 })
-import TweetDetails from '~/modules/tweets/components/TweetDetails/TweetDetails.vue'
-import { ArrowLeft } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()

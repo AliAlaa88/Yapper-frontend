@@ -1,13 +1,21 @@
 <template>
     <Popup
-        :isOpen="true"
+        :is-open="true"
+        :has-close-button="false"
+        content-class="sm:max-w-xl w-full"
+        :header-class="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
+        slot-class="py-2 px-10 sm:px-10 md:px-12 lg:px-14"
+        :has-back-button="true"
         @close="$emit('close')"
         :hasCloseButton="false"
         contentClass="sm:max-w-2xl w-full"
         :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
         slotClass="pt-4 px-8 pb-0 sm:pt-6 sm:px-10 sm:pb-0 flex flex-col"
         @back="$emit('back')"
-        :hasBackButton="true"
     >
         <!-- Logo at top -->
         <div class="flex justify-center mb-6">
@@ -95,20 +103,22 @@ interface Interest {
 
 const interests = ref<Interest[]>([])
 
-const fetchInterests = useFetchInterests((data: any) => {
+const fetchInterests = useFetchInterests(
+    (data: any) => {
+        interests.value = data.data.map((item: any, index: number) => ({
+            // id is index + 1
+            id: (index + 1).toString(),
+            name: item,
+        }))
+        //
+    },
+    (error: any) => {
+        console.error('Error fetching interests:', error)
+        errorMessage.value = 'Failed to load interests'
+    },
+)
 
-    interests.value = data.data.map((item: any, index: number) => ({
-        // id is index + 1
-        id: (index + 1).toString(),
-        name: item,
-    }))
-    //
-}, (error: any) => {
-    console.error('Error fetching interests:', error)
-    errorMessage.value = 'Failed to load interests'
-})
-
-fetchInterests.mutate();
+fetchInterests.mutate()
 // Use v-model for selected interests
 const selectedInterests = defineModel<string[]>('selectedInterests', { default: [] })
 
@@ -141,9 +151,10 @@ const interestsMutation = useUpdateInterestsMutation(
         console.error('Interests update error:', error)
         isSubmitting.value = false
         loading.value = false
-        const errorMsg = error?.response?.data?.message || error?.message || 'Failed to update interests'
+        const errorMsg =
+            error?.response?.data?.message || error?.message || 'Failed to update interests'
         errorMessage.value = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg
-    }
+    },
 )
 
 const onNext = () => {
@@ -153,7 +164,7 @@ const onNext = () => {
         loading.value = true
         errorMessage.value = '' // Clear previous errors
         // categoryIds are the selected interest ids
-        const categoryIds = selectedInterests.value.map(id => parseInt(id))
+        const categoryIds = selectedInterests.value.map((id) => parseInt(id))
         interestsMutation.mutate({ categoryIds })
     }
 }

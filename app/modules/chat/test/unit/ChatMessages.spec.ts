@@ -68,7 +68,9 @@ describe('ChatMessages.vue', () => {
     const createMockQueryResponse = (overrides: any = {}) => {
         return {
             data: ref(
-                overrides.data !== undefined ? overrides.data : { pages: [{ messages: mockMessages }] },
+                overrides.data !== undefined
+                    ? overrides.data
+                    : { pages: [{ messages: mockMessages }] },
             ),
             isLoading: overrides.isLoading ?? false,
             isError: ref(overrides.isError ?? false),
@@ -116,7 +118,7 @@ describe('ChatMessages.vue', () => {
             // Check for the link-chat-participant-profile which should render when not loading
             const participantLink = wrapper.find('#link-chat-participant-profile')
             expect(participantLink.exists()).toBe(true)
-            
+
             // Check text content
             expect(wrapper.text()).toContain(mockParticipant.name)
             expect(wrapper.text()).toContain(`@${mockParticipant.username}`)
@@ -1235,4 +1237,3 @@ describe('ChatMessages.vue', () => {
         })
     })
 })
-

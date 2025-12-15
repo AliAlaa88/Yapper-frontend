@@ -7,10 +7,7 @@
         slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
         @close="handleClose"
     >
-        <Logo
-            img-class="relative z-10 w-8 lg:w-10 mb-3"
-            div-class="flex justify-center mb-6"
-        />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-3" div-class="flex justify-center mb-6" />
 
         <h2 class="text-3xl font-bold mb-3">{{ $t('settings.accountInfo.change_email') }}</h2>
         <p class="text-muted mb-9 text-xs">
@@ -25,15 +22,18 @@
                 :placeholder="$t('settings.accountInfo.email_address')"
                 :disabled="sendEmailOTPMutation.isPending.value"
                 required
-                class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-2
-                focus:outline-none focus:border-2 mb-4 shadow-sm transition-colors
-                disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-primary text-primary border border-primary rounded-md px-4 py-2 focus:outline-none focus:border-2 mb-4 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 :class="[
-                    (!isValidEmail && newEmail !== '') || sendEmailOTPMutation.isError.value ? 'focus:border-red' :
-                    'focus:border-accent'
-                ]" >
+                    (!isValidEmail && newEmail !== '') || sendEmailOTPMutation.isError.value
+                        ? 'focus:border-red'
+                        : 'focus:border-accent',
+                ]"
+            >
 
-            <p v-if="errorMessage || (!isValidEmail && newEmail !== '')" class="text-red text-sm mb-4">
+            <p
+                v-if="errorMessage || (!isValidEmail && newEmail !== '')"
+                class="text-red text-sm mb-4"
+            >
                 {{ !isValidEmail ? 'Please enter a valid email.' : errorMessage }}
             </p>
             <div class="pt-8">
@@ -101,7 +101,7 @@ const isValidEmail = computed(() => {
 })
 
 const handleNext = async () => {
-    if(!isValidEmail.value) return
+    if (!isValidEmail.value) return
     errorMessage.value = ''
     try {
         console.log('Sending email OTP to:', newEmail.value)
@@ -113,7 +113,8 @@ const handleNext = async () => {
         }
         if (error && typeof error === 'object' && 'response' in error) {
             const axiosError = error as AxiosLikeError
-            errorMessage.value = axiosError.response?.data?.message || 'An error occurred. Please try again.'
+            errorMessage.value =
+                axiosError.response?.data?.message || 'An error occurred. Please try again.'
         } else if (error instanceof Error) {
             errorMessage.value = error.message
         } else {

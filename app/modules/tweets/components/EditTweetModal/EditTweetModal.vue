@@ -35,13 +35,14 @@
                                 :src="userAvatar"
                                 :alt="user?.name"
                                 class="w-10 h-10 rounded-full"
-                            />
+                            >
                             <div class="flex-1">
                                 <FormattedTextarea
                                     id="edit-tweet-textarea"
                                     v-model="editedContent"
                                     :placeholder="$t('timeline.postTweet.placeholder')"
                                     :inlineborder="false"
+                                    :mentions="mentions"
                                 />
                             </div>
                         </div>
@@ -65,6 +66,7 @@ const props = defineProps<{
     tweetId: string
     initialContent: string
     isLoading?: boolean
+    mentions?: string[]
 }>()
 
 const emit = defineEmits<{
@@ -101,13 +103,21 @@ const handleSave = () => {
         emit('save', editedContent.value)
     }
 }
-
+const paresMentions = (content: string) => {
+    if (props.mentions && props.mentions.length > 0) {
+        const mentionRegex = /\$\((\d+)\)/gu
+        return content.replace(mentionRegex, (match, p1) => {
+            const index = parseInt(p1, 10)
+            return props.mentions && props.mentions[index] ? '@' + props.mentions[index] : match
+        })
+    } else return content
+}
 // Initialize content when modal opens
 watch(
     () => props.isOpen,
     (isOpen) => {
         if (isOpen) {
-            editedContent.value = props.initialContent
+            editedContent.value = paresMentions(props.initialContent)
             document.body.style.overflow = 'hidden'
         } else {
             document.body.style.overflow = ''

@@ -1,23 +1,29 @@
 <template>
     <Popup
-        :isOpen="true"
-        @close="$emit('close')"
-        :hasCloseButton="true"
+        :is-open="true"
+        :has-close-button="true"
         container-class="bg-auth-popup"
-        contentClass="max-w-lg sm:max-w-xl w-full"
-        :headerClass="isArabic ? 'absolute top-4 right-4 z-10 bg-transparent p-0' : 'absolute top-4 left-4 z-10 bg-transparent p-0'"
-        slotClass="p-8 sm:p-10 md:p-14 lg:p-20"
+        content-class="max-w-lg sm:max-w-xl w-full"
+        :header-class="
+            isArabic
+                ? 'absolute top-4 right-4 z-10 bg-transparent p-0'
+                : 'absolute top-4 left-4 z-10 bg-transparent p-0'
+        "
+        slot-class="p-8 sm:p-10 md:p-14 lg:p-20"
+        @close="$emit('close')"
     >
         <!-- Logo -->
-        <Logo imgClass="relative z-10 w-8 lg:w-10 mb-6" divClass="flex justify-center mb-6" />
+        <Logo img-class="relative z-10 w-8 lg:w-10 mb-6" div-class="flex justify-center mb-6" />
 
-            <!-- Title -->
-            <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">{{ $t('auth.oauth.dobTitle') }}</h2>
-            <!-- Description -->
-            <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
+        <!-- Title -->
+        <h2 class="text-3xl font-bold mb-6" :class="isArabic ? 'text-right' : 'text-left'">
+            {{ $t('auth.oauth.dobTitle') }}
+        </h2>
+        <!-- Description -->
+        <p class="text-muted mb-6">{{ $t('auth.oauth.dobInfo') }}</p>
 
-            <!-- Date of Birth Dropdowns -->
-             <form @submit.prevent="onNext">
+        <!-- Date of Birth Dropdowns -->
+        <form @submit.prevent="onNext">
             <div class="flex gap-3 mb-4">
                 <!-- Month -->
                 <div class="flex-1 relative">
@@ -34,7 +40,7 @@
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -51,7 +57,7 @@
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
 
@@ -68,7 +74,7 @@
                     <span
                         class="absolute top-1/2 -translate-y-1/2 pointer-events-none text-muted"
                         :class="isArabic ? 'left-3' : 'right-3'"
-                        >▼</span
+                    >▼</span
                     >
                 </div>
             </div>
@@ -85,14 +91,14 @@
             <!-- Next Button -->
             <Button
                 id="button-signup-oauth-s1"
-                buttonClass="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
+                button-class="w-full bg-alternate text-alternate font-semibold rounded-full py-2 hover:bg-hover-alternate transition mb-3 duration-200"
                 :loading-text="$t('auth.common.loading')"
                 :is-loading="loading"
                 type="submit"
             >
                 {{ $t('auth.common.next') }}
             </Button>
-            </form>
+        </form>
     </Popup>
 </template>
 
@@ -100,11 +106,10 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Logo from '~/modules/Common/components/Logo'
-import { useOAuthCompleteStep1Query } from '~/modules/auth/queries/useOAuthQuery'
-import { useOAuthCompleteStep2Query } from '~/modules/auth/queries/useOAuthQuery'
+import { useOAuthCompleteStep1Query, useOAuthCompleteStep2Query  } from '~/modules/auth/queries/useOAuthQuery'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import { useUserStore } from '~/modules/auth/stores/userStore';
+import { useUserStore } from '~/modules/auth/stores/userStore'
 const userStore = useUserStore()
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')

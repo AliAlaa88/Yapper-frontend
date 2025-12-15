@@ -2,11 +2,11 @@
     <CustomToolTip side="bottom">
         <template #trigger>
             <button
-                type="button"
-                @click="openMediaDrawer"
-                :disabled="disabled"
                 id="post-tweet-media-upload-btn"
+                type="button"
+                :disabled="disabled"
                 class="cursor-pointer hover:bg-hover rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                @click="openMediaDrawer"
             >
                 <Image class="w-5 h-5 text-accent" />
             </button>
@@ -17,14 +17,14 @@
     </CustomToolTip>
 
     <input
+        id="post-tweet-media-upload-input"
         ref="fileInput"
         type="file"
         accept="image/*,video/*"
-        id="post-tweet-media-upload-input"
         style="display: none"
-        @change="onFileChange"
         multiple="true"
-    />
+        @change="onFileChange"
+    >
 </template>
 
 <script setup lang="ts">

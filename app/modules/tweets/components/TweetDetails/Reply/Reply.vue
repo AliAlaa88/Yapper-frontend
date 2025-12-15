@@ -29,7 +29,7 @@
                                 :alt="user.name"
                                 class="w-10 h-10 rounded-full cursor-pointer hover:brightness-95 transition-all relative z-0"
                                 @error="handleImageError"
-                            />
+                            >
                         </template>
                         <template #content>
                             <UserCard
@@ -80,7 +80,11 @@
                     </div>
                 </div>
                 <Content :content="content" />
-                <Stats :stats="stats" />
+                <Stats
+                    :stats="stats"
+                    @reply="showReplyModal = true"
+                    @quote="showQuoteModal = true"
+                />
             </div>
         </div>
 
@@ -90,11 +94,14 @@
             :tweet-id="reply.tweet_id"
             :initial-content="reply.content"
             :is-loading="isUpdateLoading"
+            :mentions="reply.mentions"
             @close="handleCloseEditModal"
             @save="handleSaveEdit"
         />
     </article>
 
+    <ReplyModal :is-open="showReplyModal" :parent-tweet="reply" @close="showReplyModal = false" />
+    <QuoteModal :is-open="showQuoteModal" :quoted-tweet="reply" @close="showQuoteModal = false" />
     <!-- Nested Replies -->
     <div v-if="hasNestedReplies">
         <Reply
@@ -123,6 +130,8 @@ import ProfileActionsMenu from '../../../../profile/components/ProfileHeader/Sub
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useTweetActions } from '../../../composables/useTweetActions'
 import EditTweetModal from '../../EditTweetModal/EditTweetModal.vue'
+import ReplyModal from '../../ReplyModal/ReplyModal.vue'
+import QuoteModal from '../../QuoteModal/QuoteModal.vue'
 
 const props = defineProps<{
     reply: Tweet
@@ -135,7 +144,8 @@ const userStore = useUserStore()
 // Get parent tweet ID from route for cache invalidation
 const route = useRoute()
 const parentTweetId = computed(() => route.params.tweetId as string)
-
+const showReplyModal = ref(false)
+const showQuoteModal = ref(false)
 // Actions menu state
 const showActionsMenu = ref(false)
 provide('show-list', showActionsMenu)
@@ -182,6 +192,7 @@ const content = computed(() => ({
     images: props.reply.images || [],
     videos: props.reply.videos || [],
     gifs: props.reply.gifs || [],
+    mentions: props.reply.mentions,
 }))
 
 // Transform user with avatar fallback

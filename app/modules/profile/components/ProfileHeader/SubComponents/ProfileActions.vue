@@ -8,12 +8,13 @@
                 id="menu-button"
                 class="text-primary text-xl font-bold leading-none"
                 @click.stop="toggleList"
-            >⋯</span>
+            >⋯</span
+            >
         </button>
 
         <div v-if="showList">
             <div class="fixed inset-0 bg-gray-700/50 z-40 sm:hidden" />
-            <ProfileActionsMenu :is-tweet="isTweet"/>
+            <ProfileActionsMenu :is-tweet="isTweet" />
         </div>
     </div>
 </template>

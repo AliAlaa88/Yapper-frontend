@@ -18,7 +18,7 @@ vi.mock('~/modules/settings/composables/usePasswordProtection', () => ({
         showPasswordConfirmation: ref(false),
         isProtectedContentVisible: ref(false),
         useConfirmPassword: {
-            isPending: ref(false), 
+            isPending: ref(false),
         },
     }),
 }))
