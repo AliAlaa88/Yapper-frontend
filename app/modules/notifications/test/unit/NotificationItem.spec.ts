@@ -92,57 +92,183 @@ describe('NotificationItem', () => {
         expect(wrapper.exists()).toBe(true)
     })
 
-    // it('marks notification as new on mount', async () => {
-    //     const wrapper = mountWrapper({ created_at: recentDate() })
-    //     await nextTick()
 
-    //     await new Promise((resolve) => setTimeout(resolve, 0))
-    //     vi.runAllTimers()
-    //     await nextTick()
+    it('computes correct notification message for follow type', () => {
+        const wrapper = mountWrapper({
+            type: 'follow',
+        })
+        const message = wrapper.vm.notificationMessage
+        expect(message).toBe('notifications.content.followedYou')
+    })
 
-    //     expect(wrapper.vm.isNew).toBe(true)
-    //     expect(wrapper.classes()).toContain('is-new')
-    // })
+    it('computes correct notification message for message type', () => {
+        const wrapper = mountWrapper({
+            type: 'message' as const,
+            sender: {
+                id: 'user1',
+                name: 'User One',
+                username: 'user1',
+                avatar_url: null,
+            } as any,
+            message_id: 'msg1',
+            chat_id: 'chat1',
+        } as any)
+        const message = (wrapper.vm as any).notificationMessage
+        expect(message).toBe('notifications.content.sentYouAMessage')
+    })
 
-    // it('removes isNew after timeout', async () => {
-    //     const wrapper = mountWrapper({ created_at: recentDate() })
-    //     await nextTick()
+    it('computes correct notification icon for follow', () => {
+        const wrapper = mountWrapper({
+            type: 'follow',
+        })
+        expect((wrapper.vm as any).notificationIcon).toBeDefined()
+    })
 
-    //     await new Promise((resolve) => setTimeout(resolve, 0))
-    //     vi.runAllTimers()
-    //     await nextTick()
+    it('computes correct notification icon for like', () => {
+        const wrapper = mountWrapper({
+            type: 'like' as const,
+            tweets: [],
+        } as any)
+        expect((wrapper.vm as any).notificationIcon).toBeDefined()
+    })
 
-    //     expect(wrapper.vm.isNew).toBe(true)
+    it('computes correct notification icon for repost', () => {
+        const wrapper = mountWrapper({
+            type: 'repost' as const,
+            tweets: [],
+        } as any)
+        expect((wrapper.vm as any).notificationIcon).toBeDefined()
+    })
 
-    //     // Advance time by 10 seconds to trigger the timeout that sets isNew to false
-    //     vi.advanceTimersByTime(10000)
-    //     await nextTick()
+    it('computes correct notification icon for message', () => {
+        const wrapper = mountWrapper({
+            type: 'message' as const,
+            sender: { id: 'u1', name: 'U', username: 'u', avatar_url: null } as any,
+            message_id: 'msg1',
+            chat_id: 'chat1',
+        } as any)
+        expect((wrapper.vm as any).notificationIcon).toBeDefined()
+    })
 
-    //     expect(wrapper.vm.isNew).toBe(false)
-    //     expect(wrapper.classes()).not.toContain('is-new')
-    // })
+    it('computes correct notification icon color for follow', () => {
+        const wrapper = mountWrapper({ type: 'follow' })
+        expect((wrapper.vm as any).notificationIconColor).toBe('#1d9bf0')
+    })
 
-    // it('reacts to created_at changes', async () => {
-    //     const wrapper = mountWrapper({ created_at: oldDate() })
-    //     await nextTick()
-    //     await new Promise((resolve) => setTimeout(resolve, 0))
-    //     vi.runAllTimers()
-    //     await nextTick()
+    it('computes correct notification icon color for like', () => {
+        const wrapper = mountWrapper({ type: 'like' as const, tweets: [] } as any)
+        expect((wrapper.vm as any).notificationIconColor).toBe('#f91880')
+    })
 
-    //     expect(wrapper.vm.isNew).toBe(false)
+    it('computes correct notification icon color for repost', () => {
+        const wrapper = mountWrapper({ type: 'repost' as const, tweets: [] } as any)
+        expect((wrapper.vm as any).notificationIconColor).toBe('#00ba7c')
+    })
 
-    //     await wrapper.setProps({
-    //         notification: { ...wrapper.props().notification, created_at: recentDate() },
-    //     })
+    it('computes correct notification icon color for message', () => {
+        const wrapper = mountWrapper({
+            type: 'message' as const,
+            sender: { id: 'u1', name: 'U', username: 'u', avatar_url: null } as any,
+            message_id: 'msg1',
+            chat_id: 'chat1',
+        } as any)
+        expect((wrapper.vm as any).notificationIconColor).toBe('#7856ff')
+    })
 
-    //     await nextTick()
-    //     await new Promise((resolve) => setTimeout(resolve, 0))
-    //     vi.runAllTimers()
-    //     await nextTick()
+    it('computes correct fill color for like', () => {
+        const wrapper = mountWrapper({ type: 'like' as const, tweets: [] } as any)
+        expect((wrapper.vm as any).notificationFillColor).toBe('#f91880')
+    })
 
-    //     expect(wrapper.vm.isNew).toBe(true)
-    //     expect(wrapper.classes()).toContain('is-new')
-    // })
+    it('computes correct fill color for follow', () => {
+        const wrapper = mountWrapper({ type: 'follow' })
+        expect((wrapper.vm as any).notificationFillColor).toBe('#1d9bf0')
+    })
+
+    it('computes notification link for single follower', () => {
+        const wrapper = mountWrapper({
+            type: 'follow',
+            followers: [
+                {
+                    id: 'user1',
+                    name: 'User One',
+                    username: 'user1',
+                    avatar_url: null,
+                } as any,
+            ],
+        })
+        expect(wrapper.vm.notificationLink).toBe('/user1')
+    })
+
+    it('computes notification link for like notification', () => {
+        const wrapper = mountWrapper({
+            type: 'like',
+            likers: [
+                {
+                    id: 'user1',
+                    name: 'User One',
+                    username: 'user1',
+                    avatar_url: null,
+                } as any,
+            ],
+            tweets: [
+                {
+                    tweet_id: 'tweet1',
+                    type: 'tweet',
+                    content: 'Hello',
+                    images: [],
+                    videos: [],
+                    created_at: '2025-12-15T10:00:00Z',
+                    updated_at: '2025-12-15T10:00:00Z',
+                } as any,
+            ],
+        })
+        expect(wrapper.vm.notificationLink).toContain('user1')
+        expect(wrapper.vm.notificationLink).toContain('status')
+    })
+
+    it('computes notification link for repost notification', () => {
+        const wrapper = mountWrapper({
+            type: 'repost',
+            reposters: [
+                {
+                    id: 'user1',
+                    name: 'User One',
+                    username: 'user1',
+                    avatar_url: null,
+                } as any,
+            ],
+            tweets: [
+                {
+                    tweet_id: 'tweet1',
+                    type: 'tweet',
+                    content: 'Hello',
+                    images: [],
+                    videos: [],
+                    created_at: '2025-12-15T10:00:00Z',
+                    updated_at: '2025-12-15T10:00:00Z',
+                } as any,
+            ],
+        })
+        expect(wrapper.vm.notificationLink).toContain('user1')
+        expect(wrapper.vm.notificationLink).toContain('status')
+    })
+
+    it('computes notification link for message notification', () => {
+        const wrapper = mountWrapper({
+            type: 'message',
+            sender: { id: 'u1', name: 'U', username: 'u', avatar_url: null } as any,
+            message_id: 'msg1',
+            chat_id: 'chat1',
+        })
+        expect(wrapper.vm.notificationLink).toBe('/messages/chat1')
+    })
+
+
+    it('exposes isNew to parent component', () => {
+        const wrapper = mountWrapper()
+        expect(wrapper.vm.isNew).toBeDefined()
+    })
 })
 
 afterAll(() => {

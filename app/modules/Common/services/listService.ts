@@ -1,3 +1,4 @@
+import { useNuxtApp } from '#app'
 
 export const listService = {
     async fetchList(path: string, nextCursor: string): Promise<any> {

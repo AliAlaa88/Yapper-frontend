@@ -94,6 +94,7 @@
             :tweet-id="reply.tweet_id"
             :initial-content="reply.content"
             :is-loading="isUpdateLoading"
+            :mentions="reply.mentions"
             @close="handleCloseEditModal"
             @save="handleSaveEdit"
         />
@@ -191,6 +192,7 @@ const content = computed(() => ({
     images: props.reply.images || [],
     videos: props.reply.videos || [],
     gifs: props.reply.gifs || [],
+    mentions: props.reply.mentions,
 }))
 
 // Transform user with avatar fallback

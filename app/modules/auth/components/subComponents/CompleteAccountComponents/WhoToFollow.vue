@@ -33,45 +33,12 @@
                 <p class="text-muted">{{ $t('common.error') }}</p>
             </div>
             
-            <!-- Users List -->
-            <div
+            <!-- Users List using WhoToFollowList component -->
+            <WhoToFollowList
                 v-else
-                v-for="user in suggestedUsers"
-                :key="user.id || user._id"
-                class="flex items-start gap-3 py-3"
-            >
-                <!-- Avatar with error handling -->
-                <UserImage
-                    :image-url="user.avatar_url || user.avatar"
-                    :name="user.name"
-                    :size="10"
-                />
-                
-                <!-- User Info -->
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-1">
-                        <span class="font-semibold text-primary truncate">{{ user.name }}</span>
-                        <svg v-if="user.verified || user.is_verified" class="w-4 h-4 text-blue flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.34 2.19c-1.39-.46-2.9-.2-3.91.81s-1.27 2.52-.81 3.91c-1.31.67-2.19 1.91-2.19 3.34s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.27 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.06 4.72l-3.75-3.75 1.41-1.41 2.34 2.34 4.59-4.59 1.41 1.41-6 5.99z"/>
-                        </svg>
-                    </div>
-                    <p class="text-muted text-sm truncate">@{{ user.username }}</p>
-                    <p v-if="user.bio" class="text-primary text-sm mt-1 line-clamp-2">{{ user.bio }}</p>
-                </div>
-                
-                <!-- Follow Button -->
-                <button
-                    @click="toggleFollow(user.id || user._id)"
-                    :class="[
-                        'px-4 py-1.5 rounded-full text-sm font-semibold transition flex-shrink-0',
-                        followedUsers.includes(user.id || user._id)
-                            ? 'bg-transparent border border-primary text-primary hover:border-red hover:text-red'
-                            : 'bg-primary text-secondary hover:bg-hover'
-                    ]"
-                >
-                    {{ followedUsers.includes(user.id || user._id) ? $t('auth.whoToFollow.following') : $t('auth.whoToFollow.follow') }}
-                </button>
-            </div>
+                :users="suggestedUsers"
+                :hide-bio="false"
+            />
         </div>
 
         <!-- Fixed Next Button at bottom -->
@@ -91,52 +58,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, provide } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Popup from '~/modules/Common/components/Popup/Popup.vue'
 import Logo from '~/modules/Common/components/Logo'
 import Button from '~/modules/Common/components/Button/Button.vue'
-import UserImage from '~/modules/Common/components/UserImage/UserImage.vue'
+import WhoToFollowList from '~/modules/explore/components/common/WhoToFollowList.vue'
 import { useGetWhoToFollowQuery } from '~/modules/explore/queries/useGetExploreQuery'
+import { useSnackbar } from '~/modules/profile/composables/useSnackbar'
+import { useConfirmation } from '~/modules/profile/composables/useConfirmation'
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
 
+// Provide snackbar and confirmation for ProfileFollowAction
+const snackbar = useSnackbar()
+const confirmation = useConfirmation()
+provide('snackbar', snackbar)
+provide('confirmation', confirmation)
+
 const loading = ref(false)
-const followedUsers = ref<string[]>([])
 
 // Use the whoToFollow query from explore
 const whoToFollowQuery = useGetWhoToFollowQuery(true)
 const isLoading = computed(() => whoToFollowQuery.isLoading.value)
 const isError = computed(() => whoToFollowQuery.isError.value)
 const suggestedUsers = computed(() => whoToFollowQuery.data.value?.data || [])
-
 const emit = defineEmits<{
-    (e: 'next', followedUsers: string[]): void
+    (e: 'next'): void
     (e: 'skip'): void
     (e: 'back'): void
     (e: 'close'): void
-    (e: 'finish', followedUsers: string[]): void
+    (e: 'finish'): void
 }>()
-
-const toggleFollow = (userId: string) => {
-    const index = followedUsers.value.indexOf(userId)
-    if (index === -1) {
-        followedUsers.value.push(userId)
-    } else {
-        followedUsers.value.splice(index, 1)
-    }
-}
 
 const onNext = () => {
     loading.value = true
-    if (followedUsers.value.length >= 1) {
-        // Emit finish with followed users
-        emit('finish', followedUsers.value)
-    } else {
-        // Emit skip if no followings
-        emit('skip')
-    }
+    // Follow actions are handled by ProfileFollowAction in UserCard
+    // Just emit finish to proceed to next step
+    emit('finish')
 }
 </script>
 
