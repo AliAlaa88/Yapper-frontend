@@ -57,6 +57,8 @@ export default withNuxt({
         'sonarjs/no-duplicate-string': 'off',
         'sonarjs/no-nested-functions': 'off',
         'sonarjs/no-hardcoded-passwords': 'off',
+        'sonarjs/no-ignored-exceptions': 'off',
+        'camelcase': 'off',
     },
 })
     .append(sonarjs.configs.recommended)

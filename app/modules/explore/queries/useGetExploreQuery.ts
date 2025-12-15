@@ -1,6 +1,6 @@
 import { useNuxtApp } from '#app'
 import { useQuery } from '@tanstack/vue-query'
-import { watch, type Ref } from 'vue'
+import type { Ref } from 'vue'
 
 export function useGetExploreQuery(enabled: Ref<boolean> | boolean = false) {
     const { $exploreService } = useNuxtApp()

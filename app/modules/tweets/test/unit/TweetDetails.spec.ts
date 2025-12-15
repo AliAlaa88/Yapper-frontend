@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import TweetDetails from '../../components/TweetDetails/TweetDetails.vue'
-import type { TweetDetails as tweetDetails } from '../../types'
 
 // Mock Nuxt composables
 vi.mock('#app', () => ({

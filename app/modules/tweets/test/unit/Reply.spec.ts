@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-import { mount, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { shallowReactive } from 'vue'
 import Reply from '../../components/TweetDetails/Reply/Reply.vue'
 

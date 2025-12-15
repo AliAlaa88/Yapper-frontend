@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, computed } from 'vue'
-
+import { ref } from 'vue'
 // Import after mocks are set up
 import { useTweetActions } from '../../composables/useTweetActions'
 

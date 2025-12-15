@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Conversation, Message } from '~/modules/chat/types'
+import type { Conversation } from '~/modules/chat/types'
 import { shorterName, formatConversationDate } from '~/utils/helpers'
 import { useUserStore } from '~/modules/auth/stores/userStore'
 import { useI18n } from 'vue-i18n'

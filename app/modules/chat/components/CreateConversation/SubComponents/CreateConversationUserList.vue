@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRef } from 'vue'
+import { ref, computed } from 'vue'
 import { useGenericInfiniteQuery } from '~/modules/Common/composables/useGenericInfiniteQuery'
 import { InfiniteList } from '~/modules/Common/components/InfiniteList'
 import Button from '~/modules/Common/components/Button/Button.vue'

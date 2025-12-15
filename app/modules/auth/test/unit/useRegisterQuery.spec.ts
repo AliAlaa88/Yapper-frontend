@@ -5,7 +5,6 @@ import {
     useRegisterS1Query,
     useRegisterS2Query,
     useRegisterS3Query,
-    useResendOTPQuery,
 } from '../../queries/useRegisterQuery'
 
 const mockAuthService = {

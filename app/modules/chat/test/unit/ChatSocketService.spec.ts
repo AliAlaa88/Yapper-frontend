@@ -1,12 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import type { QueryClient } from '@tanstack/vue-query'
 import { createChatSocketService } from '../../services/ChatSocketService'
 import type { Message, Conversation } from '../../types'
 import {
     SOCKET_EVENTS,
     type JoinedChatResponse,
     type LeftChatResponse,
-    type NewMessageEvent,
     type UnreadChatSummaryItem,
 } from '../../types/socketEvents'
 

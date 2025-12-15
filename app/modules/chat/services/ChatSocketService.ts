@@ -20,7 +20,7 @@ import {
     type UserTypingEvent,
     type UnreadChatSummaryItem,
 } from '../types/socketEvents'
-import type { Message, Conversation, MessageSender, participant as participantType } from '../types'
+import type { Message, Conversation, participant as participantType } from '../types'
 import { cacheInvalidation } from '~/modules/Common/queries/cacheInvalidation'
 type SocketService = ReturnType<typeof createSocketService>
 

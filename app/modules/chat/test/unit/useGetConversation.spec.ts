@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { Conversation } from '../../types'
 
 // Create mock functions first
 const mockGetConversations = vi.fn()

@@ -88,7 +88,6 @@
 
 <script setup lang="ts">
 import { useGetExploreQuery } from '../../queries/useGetExploreQuery'
-import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronRight } from 'lucide-vue-next'
 import LoadingSpinner from '~/modules/Common/components/Loading/LoadingSpinner.vue'

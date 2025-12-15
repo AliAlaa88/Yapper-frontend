@@ -1,4 +1,4 @@
-import type { Tweet, TweetDetails, TweetsPage, TweetSummary } from '../types'
+import type { Tweet, TweetsPage, TweetSummary } from '../types'
 
 export const tweetServiceReal = {
     async fetchTweets(path: string, nextCursor: string): Promise<TweetsPage> {

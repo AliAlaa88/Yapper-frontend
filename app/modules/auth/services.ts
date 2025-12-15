@@ -1,5 +1,4 @@
 import { useNuxtApp } from '#app'
-import OAuth from './components/subComponents/OAuth.vue'
 import type {
     RegisterPayload,
     verifyAccountPayload,

@@ -215,7 +215,7 @@
 </template>
 
 <script setup lang="ts">
-import { Smile, ImagePlay, X, User } from 'lucide-vue-next'
+import { Smile, ImagePlay, X } from 'lucide-vue-next'
 import { CustomToolTip } from '~/modules/Common/components/Tooltip'
 import MediaUpload from './subComponents/MediaUpload'
 import GifPicker from './subComponents/GifPicker/GifPicker.vue'

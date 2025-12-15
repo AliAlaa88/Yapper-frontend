@@ -1,4 +1,4 @@
-import type { Tweet, TweetDetails, User } from '../types'
+import type { Tweet, TweetDetails } from '../types'
 import { useNuxtApp } from '#app'
 
 // Map JSON server tweet structure to our Tweet type
