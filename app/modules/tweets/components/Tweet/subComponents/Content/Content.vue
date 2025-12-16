@@ -4,17 +4,10 @@
         <p
             class="mb-3 whitespace-pre-wrap wrap-break-word"
             style="unicode-bidi: plaintext"
-            v-html="displayText"
+            v-html="parseLinks(content.text, false, false, content.mentions)"
         />
 
-        <button
-            v-if="shouldShowMore"
-            @click.stop="toggleExpanded"
-            class="text-accent hover:underline font-medium text-sm mt-1"
-        >
-            {{ isExpanded ? 'Show less' : 'Show more' }}
-        </button>
-
+        <!-- Media (Images and Videos) -->
         <div @click.stop>
             <TweetMedia
                 v-if="
@@ -29,7 +22,7 @@
         <!-- Quoted Tweet -->
         <QuotedTweet
             v-if="content.parentTweet || content.quotedTweet"
-            :tweet="(content.parentTweet || content.quotedTweet)!"
+            :tweet="content.parentTweet || content.quotedTweet"
         />
     </div>
 </template>
@@ -39,7 +32,7 @@ import type { Content } from '~/modules/tweets/types'
 import TweetMedia from '../TweetMedia/TweetMedia.vue'
 import QuotedTweet from '../QuotedTweet/QuotedTweet.vue'
 
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { parseLinks } from '~/lib/utils'
 
@@ -49,28 +42,6 @@ const props = defineProps<{
 
 const root = ref<HTMLElement | null>(null)
 const router = useRouter()
-const isExpanded = ref(false)
-const MAX_LENGTH = 200
-
-const shouldShowMore = computed(() => {
-    return props.content.text.length > MAX_LENGTH
-})
-
-const displayText = computed(() => {
-    const text = props.content.text
-    const parsedText = parseLinks(text, false, false, props.content.mentions)
-
-    if (!shouldShowMore.value || isExpanded.value) {
-        return parsedText
-    }
-
-    const truncatedText = text.substring(0, MAX_LENGTH)
-    return parseLinks(truncatedText, false, false, props.content.mentions)
-})
-
-const toggleExpanded = () => {
-    isExpanded.value = !isExpanded.value
-}
 
 function onRootClick(e: Event) {
     const target = e.target as HTMLElement | null
