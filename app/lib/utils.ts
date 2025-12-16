@@ -35,7 +35,7 @@ export function parseLinks(
         withMentions = withUrls.replace(mentionRegex, (_match: string, user: string) => {
             const display = `@${escapeHtml(user)}`
             const href = `/${encodeURIComponent(user)}`
-            return `<NuxtLink href="${href}" data-mention="${escapeHtml(user)}" class="text-accent hover:underline">${display}</NuxtLink>`
+            return `<a href="${href}" data-mention="${escapeHtml(user)}" class="text-accent hover:underline">${display}</a>`
         })
     } else {
         const mentionRegex = /\$\((\d+)\)/gu
@@ -46,7 +46,7 @@ export function parseLinks(
             const display = `@${escapeHtml(user)}`
             const href = `/${encodeURIComponent(user)}`
 
-            return `<NuxtLink href="${href}" data-mention="${escapeHtml(user)}" class="text-accent hover:underline">${display}</NuxtLink>`
+            return `<a href="${href}" data-mention="${escapeHtml(user)}" class="text-accent hover:underline">${display}</a>`
         })
     }
 
@@ -59,7 +59,7 @@ export function parseLinks(
         withHashtags = withHashtags.replace(hashtagRegex, () => {
             const display = `#${escapeHtml(tag)}`
             const href = `/search?q=${encodeURIComponent('#' + tag)}`
-            return `<NuxtLink href="${href}" data-hashtag="${escapeHtml(tag)}" class="text-accent hover:underline">${display}</NuxtLink>`
+            return `<a href="${href}" data-hashtag="${escapeHtml(tag)}" class="text-accent hover:underline">${display}</a>`
         })
     })
 

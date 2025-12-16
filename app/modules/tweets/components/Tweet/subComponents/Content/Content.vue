@@ -47,15 +47,36 @@ function onRootClick(e: Event) {
     const target = e.target as HTMLElement | null
     if (!target) return
 
-    const anchor = target.closest('a[data-hashtag]') as HTMLElement | null
-    if (!anchor) return
+    // Handle hashtag clicks
+    const hashtagAnchor = target.closest('a[data-hashtag]') as HTMLElement | null
+    if (hashtagAnchor) {
+        const tag = hashtagAnchor.getAttribute('data-hashtag')
+        if (tag) {
+            e.preventDefault()
+            e.stopPropagation()
+            router.push({ path: '/search', query: { q: `#${tag}` } })
+            return
+        }
+    }
 
-    const tag = anchor.getAttribute('data-hashtag')
-    if (!tag) return
+    // Handle mention clicks
+    const mentionAnchor = target.closest('a[data-mention]') as HTMLElement | null
+    if (mentionAnchor) {
+        const user = mentionAnchor.getAttribute('data-mention')
+        if (user) {
+            e.preventDefault()
+            e.stopPropagation()
+            router.push(`/${user}`)
+            return
+        }
+    }
 
-    e.preventDefault()
-    e.stopPropagation()
-    router.push({ path: '/search', query: { q: `#${tag}` } })
+    // Handle URL clicks - let them open in new tab
+    const urlAnchor = target.closest('a[href^="http"]') as HTMLElement | null
+    if (urlAnchor) {
+        e.stopPropagation()
+        // Don't prevent default - let it open the URL
+    }
 }
 
 onMounted(() => {
